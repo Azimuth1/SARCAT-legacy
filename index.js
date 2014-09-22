@@ -36,28 +36,3 @@ $('.step').map(function(d,e) {
     //var type = controlgroup.find('input').map(function() {return $(this).attr('type')});
     return {group:group,data:data}
 });
-
-
-var geojson2heat = function(geojson,options){
-options = options || {};
-console.log(options)
-var heat = geojson.features.map(function(d) {
-    var lng = d.geometry.coordinates[0];
-    var lat = d.geometry.coordinates[1];
-    var compounds = d.properties.Compounds;
-    var sum = 0;
-    for (var key in compounds) {
-        var number = compounds[key].replace(',', '');
-        var val = !isNaN(number) ? +number : null;
-        if (val) {sum += val;}
-    }
-    if(sum==15897){sum=0}
-    return [lat, lng, sum];
-});
-
-
-if(options.filter){heat=heat.filter(function(array){return array[2]!==0})}
-
-
-return heat;
-}
