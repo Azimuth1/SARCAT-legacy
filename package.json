@@ -1,0 +1,27 @@
+{
+  "name": "SARCAT",
+  "version": "0.0.0",
+  "description": "SAR database entry",
+  "main": "index.js",
+  "scripts": {
+    "test": "test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azimuth1/SARCAT.git"
+  },
+  "keywords": [
+    "SAR",
+    "ISRID"
+  ],
+  "author": "Azimuth1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Azimuth1/SARCAT/issues"
+  },
+  "homepage": "https://github.com/Azimuth1/SARCAT",
+  "dependencies": {
+    "bower": "^1.3.11",
+  },
+  "private": true
+}

@@ -12,7 +12,7 @@ $('.step').map(function() {
 
 
 
-$('.step').map(function(d,e) {
+a = $('.step').map(function(d,e) {
     var group = $(this).text();
     var step = $('#step'+(d+1));
 
@@ -31,8 +31,26 @@ $('.step').map(function(d,e) {
 			return obj
 		})
     	return {type:type}
-    });
+    }).get();
+
+ 
 
     //var type = controlgroup.find('input').map(function() {return $(this).attr('type')});
     return {group:group,data:data}
 });
+
+
+
+
+{
+  "globals": {
+  "L": false,
+  "require": false,
+  "module": false,
+  "console": false,
+  "document": false,
+  "window": false
+  },
+  "globalstrict": true,
+  "loopfunc": true
+}

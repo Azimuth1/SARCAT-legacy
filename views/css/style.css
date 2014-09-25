@@ -1,0 +1,61 @@
+html,body {
+    font-family:"Lucida Grande",Tahoma,Arial,Verdana,sans-serif;
+    height:100%;
+    background-color:#369;
+    background-image:linear-gradient(#477FB8,#369)
+}
+
+body {
+    padding:50px 10px
+}
+
+#form-container {
+    background-color:#FFF;
+    border-top:40px solid #69C;
+    box-shadow:0 2px 30px #111
+}
+
+.progress-bar-info {
+    background-color:#369
+}
+
+.modal {
+    top:calc(50% - 200px)!important
+}
+
+.step {
+    text-align:center;
+    display:flex;
+    flex-wrap:wrap
+}
+
+.step :hover {
+    background-color:#369;
+    cursor:pointer;
+    color:#fff
+}
+
+.step .activestep {
+    background-color:#369;
+    background-image:linear-gradient(#477FB8,#369);
+    color:#fff
+}
+
+.steps {
+    color:#369;
+    background:#fff;
+    border:1px solid #369;
+    flex-grow:1
+}
+
+.border {
+    border:1px solid #494949!important
+}
+
+.pad0 {
+    padding:0
+}
+
+.pad5y {
+    padding:5px 0
+}
