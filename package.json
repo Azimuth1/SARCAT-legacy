@@ -1,5 +1,5 @@
 {
-  "name": "template",
+  "name": "SARCAT",
   "devDependencies": {
     "apache-server-configs": "^2.7.1",
     "grunt": "^0.4.5",
@@ -36,6 +36,6 @@
     "passport-local": "^1.0.0",
     "q": "^1.0.1",
     "sqlite3": "^3.0.0"
-  }
   },
+  "private":true
 }
