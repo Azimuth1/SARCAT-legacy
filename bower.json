@@ -1,28 +1,11 @@
 {
-  "name": "SARCAT",
-  "version": "0.0.0",
-  "homepage": "https://github.com/Azimuth1/SARCAT",
-  "authors": [
-    "kkalwarski@azimuth1.com"
-  ],
-  "description": "SAR database entry",
-  "main": "index.js",
-  "keywords": [
-    "SAR",
-    "ISRID"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
+  "name": "template",
+  "private": true,
   "dependencies": {
     "bootstrap": "~3.2.0",
+    "modernizr": "~2.8.2",
     "d3": "~3.4.11",
     "underscore": "~1.7.0",
-    "jquery": "~2.1.1"
+    "mapbox.js": "~2.1.1"
   }
 }
