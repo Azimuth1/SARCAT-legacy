@@ -1,0 +1,407 @@
+{"config":[{
+    "name": "Welcome",
+    "step": 0
+}, {
+    "name": "Initial Incident Information",
+    "step": 1,
+    "data": [{
+        "name": "Incident Status",
+        "type": "radio",
+        "vals": ["Open", "Closed", "Suspended",
+            "Closed Post Suspension"]
+    }, {
+        "name": "Record #",
+        "data": [{
+            "name": "Incident #",
+            "type": "text"
+        }, {
+            "name": "Mission #",
+            "type": "text"
+        }]
+    }, {
+        "name": "Incident Type",
+        "type": "select",
+        "vals": ["ATL", "Aircraft", "Assist", "Attempt to Locate",
+            "Beacon", "Cave", "Disaster", "Evidence",
+            "False Report", "Fugitive", "Fugutive", "IFE",
+            "INREQ", "OTHER", "PRECAUTIONARY", "Recovery",
+            "Rescue", "Search", "Standby", "Training",
+            "URT-144", "VEHICLE", "Water"]
+    }, {
+        "name": "# Subjects",
+        "type": "text"
+    }, {
+        "name": "Contact Method",
+        "type": "select",
+        "vals": ["Distress Signal", "ELT/PLB/EPIRP", "Radio",
+            "Registration Card", "Reported Missing",
+            "Satellite Alerting Technology",
+            "Subject Cell Phone", "Vehicle Found"]
+    }, {
+        "name": "Subject",
+        "type": "select",
+        "vals": ["ATV", "Abduction", "Aircraft",
+            "Aircraft-nonpowered", "Angler", "Animal", "Assist",
+            "Autistic", "BASE Jumper", "BOAT", "Base Jumper",
+            "Beacon", "Boater", "Camper", "Caver", "Child",
+            "Climber", "Criminal", "Dementia", "Despondent",
+            "Diver", "ELT/EPIRB", "Elderly", "Extreme Sports",
+            "Fisher", "Fugative", "Gatherer",
+            "Gatherer-Mushroom", "Golfer", "Hiker",
+            "Hiker-Tramper", "Horseback Rider",
+            "Horseback rider", "Hunter", "IFE", "INREQ",
+            "Ice Skater", "Intellectual disability", "MERCY",
+            "MISSING PERSON", "Mental Illness",
+            "Mental Retardation", "Motorcycle",
+            "Mountain Biker", "OTHER", "Other-student",
+            "PRECAUTIONARY", "Parachutist", "Person In Water",
+            "Prayer", "Psychotic", "RESCUE", "Runaway",
+            "Runner", "Signal", "Skier", "Skier - Alpine",
+            "Skier - Nordic", "Skier-Alpine", "Skier-Nordic",
+            "Sledder", "Snowboarder", "Snowmobile",
+            "Snowmobiler", "Snowmobilier", "Snowshoer",
+            "Soldier", "Substance Abuse",
+            "Substance Intoxication", "Swimmer", "Vehicle",
+            "Vehicle-4wd", "Vehicle-Left", "Vision Quest",
+            "Walkaway", "Water", "Wheelchair", "Worker",
+            "Workers", "Youth"]
+    }, {
+        "name": "Subject Sub-Category",
+        "type": "text"
+    }, {
+        "name": "Subject Activity",
+        "type": "text"
+    }, {
+        "name": "Response Area",
+        "type": "select",
+        "vals": ["Air", "Cave", "Land", "Water"]
+    }, {
+        "name": "Land Owner",
+        "type": "select",
+        "vals": ["BLM", "Commercial", "County", "Military", "NPS",
+            "Native/Tribal", "Navigable Water", "Other",
+            "Private", "State", "USFS"]
+    }, {
+        "name": "Address-Location",
+        "type": "text"
+    }]
+}, {
+    "name": "Map Information",
+    "step": 2,
+    "data": [{
+        "name": "Find Location",
+        "data": [{
+            "name": "Lat",
+            "type": "number"
+        }, {
+            "name": "Lng",
+            "type": "number"
+        }]
+    }, {
+        "name": "Initial Planning Point",
+        "data": [{
+            "name": "Lat",
+            "type": "number"
+        }, {
+            "name": "Lng",
+            "type": "number"
+        }]
+    }, {
+        "name": "Subject Destination",
+        "data": [{
+            "name": "Lat",
+            "type": "number"
+        }, {
+            "name": "Lng",
+            "type": "number"
+        }]
+    }, {
+        "name": "Revised LKP/PLS",
+        "data": [{
+            "name": "Lat",
+            "type": "number"
+        }, {
+            "name": "Lng",
+            "type": "number"
+        }]
+    }, {
+        "name": "Decision Point",
+        "data": [{
+            "name": "Lat",
+            "type": "number"
+        }, {
+            "name": "Lng",
+            "type": "number"
+        }]
+    }]
+}, {
+    "name": "Incident Mapping",
+    "step": 3,
+    "data": [{
+        "name": "Weather",
+        "type": "text"
+    }, {
+        "name": "Find Feature",
+        "type": "select",
+        "vals": ["Brush", "Canyon", "Drainage", "Field", "Forest",
+            "Forest/woods", "Ice/snow", "Lake/Pond/Water",
+            "Linear", "Residence", "Ridge", "Road", "Rock",
+            "Scrub", "Structure", "Trail", "Underground",
+            "Valley", "Vehicle", "Water", "Wetland", "Yard"]
+    }, {
+        "name": "IPP Type",
+        "type": "text"
+    }, {
+        "name": "IPP Classification",
+        "type": "select",
+        "vals": ["Airport", "Beacon", "Building/Developed Area",
+            "Field", "Forested Area", "N/A",
+            "Perennial Ice/Snow", "Radar", "Residence", "Road",
+            "Rock/Barren", "Shrub/Scrub", "Signal", "Trail",
+            "Trailhead", "Unknown", "Vehicle", "Water",
+            "Wetlands"]
+    }, {
+        "name": "Revised How Determined",
+        "type": "select",
+        "vals": ["Other", "Physical Clue", "Sighting", "Tracks",
+            "Trail Register"]
+    }, {
+        "name": "Revised DOT",
+        "type": "text"
+    }, {
+        "name": "Type of Decision Point",
+        "type": "select",
+        "vals": ["Other", "Saddle", "Shortcut", "Trail Animal",
+            "Trail Crossed", "Trail Junction", "Trail Lost",
+            "Trail Social", "Trail Turnoff"]
+    }, {
+        "name": "Decision Point Factor",
+        "type": "text"
+    }, {
+        "name": "Find Resource",
+        "type": "select",
+        "vals": ["ATV", "Air", "Air-Fixed", "Air-Heli",
+            "Attraction", "Bike", "Boat", "CERT", "Canvass",
+            "Cave", "Confinement", "Containment", "DF", "Dive",
+            "Diver", "Dog", "Dog-Air", "Dog-Airscent",
+            "Dog-Cadaver", "Dog-Disaster", "Dog-Track",
+            "Dog-Tracking/Trailing", "Dog-Trailing",
+            "Dog-Water", "Family", "Family/Friend", "Fire",
+            "Fixed Wing", "Grid", "Ground", "Hasty",
+            "Helicopter", "Horse", "Horseback rider",
+            "Interview", "Investigation", "Kayak", "Law",
+            "Media", "Motocycle", "Motorcycle", "Other",
+            "Passive", "Patrol", "Posse", "Probe", "Public",
+            "Ranger", "Rescuer", "SAR", "SNOWCAT", "Self",
+            "Ski Patrol", "Snowmobile", "Snowshoe", "Sweep",
+            "Technical", "Tracker", "USAR", "Vehicle", "Water"]
+    }]
+}, {
+    "name": "Subject Information",
+    "step": 4,
+    "data": [{
+        "name": "Group Outcome",
+        "type": "text"
+    }, {
+        "name": "Group Type",
+        "type": "text"
+    }, {
+        "name": "Missing Persons Descriptions",
+        "data": [{
+            "name": "Age",
+            "type": "number",
+            "vals": []
+        }, {
+            "name": "Sex",
+            "type": "select",
+            "vals": ["Male", "Female", "N/A"]
+        }, {
+            "name": "Local",
+            "type": "select",
+            "vals": ["Yes", "No"]
+        }, {
+            "name": "Weight",
+            "type": "number",
+            "vals": []
+        }, {
+            "name": "Height",
+            "type": "number",
+            "vals": []
+        }, {
+            "name": "Build",
+            "type": "select",
+            "vals": ["Medium", "Normal", "Obese",
+                "Overweight", "Thin", "Underweight"]
+        }, {
+            "name": "Physical Fitness",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Experience",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Equipment",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Clothing",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Survival training",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Mental Fitness",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Mental Fitness",
+            "type": "select",
+            "vals": ["Excellent", "Good", "Fair", "Poor"]
+        }, {
+            "name": "Personality",
+            "type": "select",
+            "vals": ["Confident", "Outgoing", "Suicidal",
+                "Unsure", "Withdrawn"]
+        }]
+    }]
+}, {
+    "name": "Time Log",
+    "step": 5,
+    "data": [{
+        "name": "Last Seen Date/Time",
+        "type": "date"
+    }, {
+        "name": "SAR Notified Date/Time",
+        "type": "date"
+    }, {
+        "name": "Subject Located Date/Time",
+        "type": "date"
+    }, {
+        "name": "Incident Closed Date/Time",
+        "type": "date"
+    }, {
+        "name": "Total Cost",
+        "type": "date"
+    }, {
+        "name": "Incident Time",
+        "type": "date"
+    }]
+}, {
+    "name": "Incident Outcome",
+    "step": 6,
+    "data": [{
+        "name": "Distance from IPP (meters)",
+        "type": "number"
+    }, {
+        "name": "Find Bearing",
+        "type": "number"
+    }, {
+        "name": "Detectability",
+        "type": "select",
+        "vals": ["Excellent", "Good", "Fair", "Poor"]
+    }, {
+        "name": "Lost Strategy",
+        "type": "select",
+        "vals": ["Back Tracking", "Backtracking", "Cross-country",
+            "Direction Sampling", "Direction Travelling",
+            "Direction sampling", "Direction traveling",
+            "Discard gear", "Downhill", "Evasive",
+            "Folk Wisdom", "Folk wisdom", "Followed Terrain",
+            "Followed travel aid", "Landmark", "Moved",
+            "Nothing", "Other", "Paniced", "Panicked",
+            "Paradoxical undressing", "Route Sampled",
+            "Route sampling", "Seek cell signal", "Signaled",
+            "Sought Shelter", "Stayed Put", "Stayed put",
+            "Travel Aid", "View Enhancing", "View enhancing",
+            "Walked out", "Wandered"]
+    }, {
+        "name": "Mobility (hours)",
+        "type": "number"
+    }, {
+        "name": "Track Offset (meters)",
+        "type": "number"
+    }, {
+        "name": "Elevation Change",
+        "type": "number"
+    }, {
+        "name": "Signalling",
+        "type": "select",
+        "vals": ["Cell + GPS", "ELT", "EPIRB", "FRS/GMRS",
+            "Fire/Smoke", "Flare", "Mirror", "N/A", "None",
+            "Other", "Other visual", "PERS", "PLB", "Radio",
+            "SPOT", "Satellite Alerting", "Sound",
+            "Subject Phone"]
+    }, {
+        "name": "Scenario",
+        "type": "select",
+        "vals": ["Avalanche", "Criminal", "Despondent", "Drowning",
+            "Evading", "Investigative", "Lost", "Medical",
+            "Overdue", "Stranded", "Trauma"]
+    }]
+}, {
+    "name": "Resource Information",
+    "step": 7,
+    "data": [{
+        "name": "Resources Used",
+        "type": "number"
+    }, {
+        "name": "# Tasks",
+        "type": "number"
+    }, {
+        "name": "# Dogs",
+        "type": "number"
+    }, {
+        "name": "# Air Tasks",
+        "type": "number"
+    }, {
+        "name": "# Aircraft",
+        "type": "number"
+    }, {
+        "name": "# Air Hours",
+        "type": "number"
+    }, {
+        "name": "Emergent Volunters",
+        "type": "number"
+    }, {
+        "name": "Total Personnel",
+        "type": "number"
+    }, {
+        "name": "Total Man Hours",
+        "type": "number"
+    }, {
+        "name": "Total Dog Hours",
+        "type": "number"
+    }, {
+        "name": "# Vehicles",
+        "type": "number"
+    }, {
+        "name": "Distance Traveled",
+        "type": "number"
+    }]
+}, {
+    "name": "Summary",
+    "step": 8,
+    "data": [{
+        "name": "Comments",
+        "type": "textarea",
+        "placeholder": "Please include a brief narrative of the incident. Describe how and where found and how they got lost."
+    }, {
+        "name": "Lessons Learned",
+        "type": "textarea",
+        "placeholder": "Describe any significant lessons learned, near misses, methods to mitigate future incidents."
+    }, {
+        "name": "Attachments",
+        "type": "upload",
+        "placeholder": "Please attach any information that may be useful. Examples include lost person questionnaire, copy of find team tasks, photos of rescue or find, etc."
+    }]
+}, {
+    "name": "Complete",
+    "step": 9,
+    "data": [{
+        "name": "Submit",
+        "type": "submit"
+    }]
+}]}
