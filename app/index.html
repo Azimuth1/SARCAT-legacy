@@ -11,6 +11,7 @@
         <!-- build:css(.) styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/mapbox.js/mapbox.css" />
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -21,68 +22,44 @@
 </head>
 
 <body>
-        <!--[if lt IE 10]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
 
-        <div class="container" id='form-container'>
-                <div class="page-header">
-                        <h2>SARCAT <small>Missing persons database entry.</small></h2>
-                </div>
-                <div class="row pad0">
-                        <div class="col-md-12 paxd5">
-                                <div class="progress">
-                                        <div class="progress-bar progress-bar-info progress-bar-striped">
-                                                0%
-                                        </div>
-                                </div>
-                        </div>
-                        <div class="col-md-12 pad5y">
-                                <div class="step"></div>
-                        </div>
-                </div>
-                <div class="row formContainer">
-                        
-                </div>
+
+  
+<div class="login">
+    <div class="intro-text">
+        <div class="intro-lead-in">
+            Missing persons database entry.
         </div>
 
+        <div class="intro-heading">
+            SARCAT
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <form action="#sarcat" class="form-signin" method="get">
+            <h2 class="form-signin-heading">Login</h2><input autofocus=""
+            class="form-control" name="username" placeholder="Email Address"
+            required="" type="text" value="testUser@sarcat.org"> <input class=
+            "form-control" name="password" placeholder="Password" required=""
+            type="password" value="gfgfgfgf"> <label class=
+            "checkbox"><input id="rememberMe" name="rememberMe" type="checkbox"
+            value="remember-me"> Remember me</label> <button class=
+            "btn btn-lg btn-primary btn-block demoLogin" type=
+            "button">Login</button> <button class=
+            "btn btn-lg btn-success btn-block" type="button">Not
+            Registered?</button>
+        </form>
+    </div>
+</div>
 
 
 
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1">
-                <div class="modal-dialog">
-                        <div class="modal-content">
-                                <div class="modal-header">
-                                        <button class="close" data-dismiss="modal" type="button"><span>&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Login</h4>
-                                </div>
 
-                                <div class="modal-body">
-                                        <form action="/login" class="form-horizontal" method="post">
-                                                <div class="form-group has-success has-feedback">
-                                                        <label class="control-label col-sm-3" for="inputSuccess3">Username</label>
 
-                                                        <div class="col-sm-9">
-                                                                <input class="form-control" name="username" type="text" value="testUser"> <span class=
-                                                                "glyphicon glyphicon-ok form-control-feedback"></span>
-                                                        </div><label class="control-label col-sm-3" for="inputSuccess3">Password</label>
 
-                                                        <div class="col-sm-9">
-                                                                <input class="form-control" name="password" type="password" value="gfgfgfgf"> <span class=
-                                                                "glyphicon glyphicon-ok form-control-feedback"></span>
-                                                        </div>
-                                                </div>
-                                                <hr>
-                                                <div>
-                                                        <input class="btn btn-primary btn-sm" type="submit" value="Register"> <input class="btn btn-primary pull-right" type=
-                                                        "submit" value="Login"> <input class="btn pull-right" type="submit" value="Close">
-                                                </div>
-                                        </form>
-                                </div>
-                        </div>
-                </div>
-        </div><!-- build:js(.) scripts/vendor.js -->
+
+<!-- build:js(.) scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/d3/d3.js"></script>

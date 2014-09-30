@@ -12,11 +12,9 @@
   "newcap": true,
   "noarg": true,
   "quotmark": "single",
-  "undef": true,
-  "unused": true,
   "strict": true,
   "trailing": true,
   "smarttabs": true,
   "jquery": true,
-  "globals":{"d3":true}
+  "globals":{"d3":true,'L':true}
 }
