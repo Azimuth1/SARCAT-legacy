@@ -1,4 +1,4 @@
-// Generated on 2014-09-27 using
+// Generated on 2014-10-01 using
 // generator-webapp 0.5.0
 'use strict';
 
@@ -71,13 +71,7 @@ module.exports = function (grunt) {
         open: true,
         livereload: 35729,
         // Change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost',
-        //onCreateServer: function(server, connect, options) {console.log('!');}
-
-
-
-
-
+        hostname: 'localhost'
       },
       livereload: {
         options: {
@@ -183,6 +177,7 @@ module.exports = function (grunt) {
             '<%= config.dist %>/scripts/{,*/}*.js',
             '<%= config.dist %>/styles/{,*/}*.css',
             '<%= config.dist %>/images/{,*/}*.*',
+          '<%= config.dist %>/data/{,*/}*.*',
             '<%= config.dist %>/styles/fonts/{,*/}*.*',
             '<%= config.dist %>/*.{ico,png}'
           ]
@@ -314,23 +309,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Generates a custom Modernizr build that includes only the tests you
-    // reference in your app
-    modernizr: {
-      dist: {
-        devFile: 'bower_components/modernizr/modernizr.js',
-        outputFile: '<%= config.dist %>/scripts/vendor/modernizr.js',
-        files: {
-          src: [
-            '<%= config.dist %>/scripts/{,*/}*.js',
-            '<%= config.dist %>/styles/{,*/}*.css',
-            '!<%= config.dist %>/scripts/vendor/*'
-          ]
-        },
-        uglify: true
-      }
-    },
-
     // Run some tasks in parallel to speed up build process
     concurrent: {
       server: [
@@ -396,7 +374,6 @@ module.exports = function (grunt) {
     'cssmin',
     'uglify',
     'copy:dist',
-    'modernizr',
     'rev',
     'usemin',
     'htmlmin'
