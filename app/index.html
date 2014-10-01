@@ -1,75 +1,67 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html class="no-js">
-<head>
-        <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
+    <title>aa</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/mapbox.css" />
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-        <title>templates</title>
-        <meta content="" name="description">
-        <meta content="width=device-width" name="viewport">
-        <link href="/favicon.ico" rel="shortcut icon"><!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <!-- build:css(.) styles/vendor.css -->
-        <!-- bower:css -->
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="bower_components/mapbox.js/mapbox.css" />
-        <!-- endbower -->
+
+
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/mapbox.js/mapbox.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+        <!-- build:js(.) scripts/plugins.js -->
+        <script src="bower_components/bootstrap/js/affix.js"></script>
+        <script src="bower_components/bootstrap/js/alert.js"></script>
+        <script src="bower_components/bootstrap/js/dropdown.js"></script>
+        <script src="bower_components/bootstrap/js/tooltip.js"></script>
+        <script src="bower_components/bootstrap/js/modal.js"></script>
+        <script src="bower_components/bootstrap/js/transition.js"></script>
+        <script src="bower_components/bootstrap/js/button.js"></script>
+        <script src="bower_components/bootstrap/js/popover.js"></script>
+        <script src="bower_components/bootstrap/js/carousel.js"></script>
+        <script src="bower_components/bootstrap/js/scrollspy.js"></script>
+        <script src="bower_components/bootstrap/js/collapse.js"></script>
+        <script src="bower_components/bootstrap/js/tab.js"></script>
         <!-- endbuild -->
-        <!-- build:css(.tmp) styles/main.css -->
-        <link href="styles/main.css" rel="stylesheet"><!-- endbuild -->
-        <!-- build:js scripts/vendor/modernizr.js -->
 
-        <script src="bower_components/modernizr/modernizr.js"></script><!-- endbuild -->
-</head>
-
-<body>
-
-
-  
-<div class="login">
-    <div class="intro-text">
-        <div class="intro-lead-in">
-            Missing persons database entry.
-        </div>
-
-        <div class="intro-heading">
-            SARCAT
-        </div>
-    </div>
-
-    <div class="wrapper">
-        <form action="#sarcat" class="form-signin" method="get">
-            <h2 class="form-signin-heading">Login</h2><input autofocus=""
-            class="form-control" name="username" placeholder="Email Address"
-            required="" type="text" value="testUser@sarcat.org"> <input class=
-            "form-control" name="password" placeholder="Password" required=""
-            type="password" value="gfgfgfgf"> <label class=
-            "checkbox"><input id="rememberMe" name="rememberMe" type="checkbox"
-            value="remember-me"> Remember me</label> <button class=
-            "btn btn-lg btn-primary btn-block demoLogin" type=
-            "button">Login</button> <button class=
-            "btn btn-lg btn-success btn-block" type="button">Not
-            Registered?</button>
-        </form>
-    </div>
-</div>
-
-
-
-
-
-
-
-<!-- build:js(.) scripts/vendor.js -->
-        <!-- bower:js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/d3/d3.js"></script>
-        <script src="bower_components/underscore/underscore.js"></script>
-        <script src="bower_components/mapbox.js/mapbox.js"></script>
-        <!-- endbower -->
-         <!-- endbuild -->
-<!-- build:js(.) scripts/plugins.js -->
-         <script src="bower_components/bootstrap/js/affix.js"></script> <script src="bower_components/bootstrap/js/alert.js"></script> <script src="bower_components/bootstrap/js/dropdown.js"></script> <script src="bower_components/bootstrap/js/tooltip.js"></script> <script src="bower_components/bootstrap/js/modal.js"></script> <script src="bower_components/bootstrap/js/transition.js"></script> <script src="bower_components/bootstrap/js/button.js"></script> <script src="bower_components/bootstrap/js/popover.js"></script> <script src="bower_components/bootstrap/js/carousel.js"></script> <script src="bower_components/bootstrap/js/scrollspy.js"></script> <script src="bower_components/bootstrap/js/collapse.js"></script> <script src="bower_components/bootstrap/js/tab.js"></script> <!-- endbuild -->
-         <!-- build:js({app,.tmp}) scripts/main.js -->
-         <script src="scripts/main.js"></script> <!-- endbuild -->
+        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
 </body>
 </html>

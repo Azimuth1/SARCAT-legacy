@@ -1,14 +1,14 @@
 'use strict';
 
 
-
-
 var SARCAT = function() {
     var sarcat = {};
-var appendInput = function(d, elem, horz) {
+    sarcat.config = {};
+    var appendInput = function(d, elem, horz) {
         var div = d3.select(elem);
         var type = d.type;
         type = (type === 'select' && d.vals.length < 6) ? 'radio' : type;
+        var activeVal = d.value;
         if (horz) {
             div = div.append('div').attr('class', 'col-xs-6');
             div.append('h4').attr('class', 'control-label').style('text-align', 'left').text(function() {
@@ -28,6 +28,8 @@ var appendInput = function(d, elem, horz) {
             }).text(function(e) {
                 return e;
             });
+            var index = d.vals.indexOf(activeVal);
+            select.property('selectedIndex', index);
         }
         if (type === 'text') {
             div.append('input').attr('type', 'text').attr('class', 'form-control').attr('placeholder', function() {
@@ -35,14 +37,15 @@ var appendInput = function(d, elem, horz) {
             });
         }
         if (type === 'number') {
-            div.append('input').attr('type', 'number').attr('class', 'form-control').attr('placeholder', function() {
-                return d.name;
-            });
+            div.append('input').attr('type', 'number').attr('class', 'form-control').attr('value', activeVal);
         }
         if (type === 'radio') {
             div = div.append('div').classed('btn-group', true).attr('data-toggle', 'buttons');
             var radios = div.selectAll('radio').data(d.vals);
-            var labels = radios.enter().append('label').attr('class', 'btn btn-primary');
+            var labels = radios.enter().append('label').attr('class', function(e) {
+                var _active = (activeVal === e) ? 'active' : '';
+                return 'btn btn-primary ' + _active;
+            });
             labels.text(function(d) {
                 return d;
             });
@@ -51,9 +54,8 @@ var appendInput = function(d, elem, horz) {
             });
         }
         if (type === 'date') {
-            div.append('input').attr('type', 'date').attr('class', 'form-control').attr('placeholder', function() {
-                return d.name;
-            });
+            var date = new Date().toISOString().substr(0, 10);
+            div.append('input').attr('type', 'date').attr('class', 'form-control').attr('value', date);
         }
         if (type === 'textarea') {
             div.append('textarea').attr('class', 'form-control').attr('rows', '3').attr('placeholder', function() {
@@ -61,7 +63,7 @@ var appendInput = function(d, elem, horz) {
             });
         }
     };
-var generatePage = function(d) {
+    var generatePage = function(d) {
         var tabs = d.config;
         var form = d3.select('body').append('div').attr('id', 'form-container').attr('class', 'container');
         form.append('div').attr('class', 'page-header');
@@ -112,8 +114,8 @@ var generatePage = function(d) {
             return d.name;
         });
     };
-var addMap = function(elem, callback) {
-        var map = elem.insert('div', ':first-child').attr('id', 'map').style({
+    var addMap = function(elem, callback) {
+        elem.insert('div', ':first-child').attr('id', 'map').style({
             height: '500px',
             width: '100%'
         });
@@ -123,17 +125,37 @@ var addMap = function(elem, callback) {
             callback();
         }
     };
-sarcat.dashboard = function() {
-        d3.json('data/login.json', function(d) {
+    sarcat.login = function() {
+        sarcat.dashboard();
+    };
+    sarcat.generateLoginPage = function() {
+        var login = d3.select('body').append('div').attr('class', 'login');
+        var introtText = login.append('div').attr('class', 'intro-text');
+        introtText.append('div').attr('class', 'intro-lead-in').text('Missing persons database entry.');
+        introtText.append('div').attr('class', 'iintro-heading').text('SARCAT');
+        var form = login.append('div').attr('class', 'wrapper').append('form').attr('class', 'form-signin');
+        form.append('h2').attr('class', 'form-signin-heading').text('Login');
+        form.append('input').attr('autofocus', '').attr('class', 'form-control').attr('name', 'username').attr('value', 'SARCATUser@sarcat.org').attr('type', 'text').attr('required', '');
+        form.append('input').attr('autofocus', '').attr('class', 'form-control').attr('name', 'username').attr('value', 'aaaaaa').attr('type', 'password').attr('required', '');
+        var remember = form.append('label').attr('class', 'checkbox');
+        remember.append('input').attr('type', 'checkbox');
+        remember.append('p').text('Remember Me');
+        form.append('button').attr('class', 'btn btn-lg btn-primary btn-block demoLogin').attr('type', 'button').text('Login').on('click', function() {
+            sarcat.login();
+        });
+        form.append('button').attr('class', 'btn btn-lg btn-default btn-block demoLogin').attr('type', 'button').text('Not Registered?');
+    };
+    sarcat.dashboard = function() {
+        d3.json('data/login.json', function() {
             d3.select('.wrapper').style({
                 display: 'none'
             });
-            var data = d.login;
+            /*var data = d.login;*/
             var elem = d3.select('.login').append('div').attr('class', 'form-welcome');
             elem.append('h1').text('Welcome User!');
             elem.append('hr');
             /*
-elem.append('h3').text('Recent Records');
+        elem.append('h3').text('Recent Records');
     var list = elem.append('div').attr('class', 'col-md-12').append('div')
         .attr('class', 'list-group')
         .selectAll('a')
@@ -167,9 +189,7 @@ elem.append('h3').text('Recent Records');
                 display: 'none'
             });
             generatePage(d);
-            addMap(d3.select('.step2'), function() {
-                $('.btnStep0').click();
-            });
+            addMap(d3.select('.step2'), function() {$('.btnStep0').click();});
         });
     };
     return sarcat;
@@ -180,13 +200,19 @@ elem.append('h3').text('Recent Records');
 
 (function() {
     var sarcat = SARCAT();
-    d3.select('.demoLogin').on('click', function() {
+    sarcat.generateLoginPage();
+
+
+
+
+
+    /*d3.select('.demoLogin').on('click', function() {
         sarcat.dashboard();
-        /*sarcat.generateForm();
+        sarcat.generateForm();
         window.location.hash = '#sarcat';
-        location.reload();*/
+        location.reload();
     });
     if (window.location.hash == '#sarcat') {
         sarcat.generateForm();
-    }
+    }*/
 })();
