@@ -1,2 +1,2 @@
-sarcat.ui = function(context){
-}
+sarcat.ui = function(){
+};

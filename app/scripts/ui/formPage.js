@@ -48,6 +48,7 @@ sarcat.formPage = function(context, data) {
             div.append('input')
                 .attr('type', 'number')
                 .attr('class', 'form-control')
+                .attr('id', function(e){return d.name+'-'+e.name.replace(/ /g,'_').replace(/\//g,'');})
                 .attr('value', activeVal);
         }
         if (type === 'radio') {
@@ -180,8 +181,12 @@ sarcat.formPage = function(context, data) {
         .text(function(d) {
             return d.name;
         });
+
+
     sarcat.map(d3.select('.step2'), function() {
         $('.btnStep0')
             .click();
     });
+
+
 };

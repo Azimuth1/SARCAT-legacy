@@ -1,4 +1,21 @@
 sarcat.map = function(elem, callback) {
+
+
+    elem.insert('iframe', ':first-child')
+    .attr('src','tmp/mapview.html')
+        .attr('id', 'map')
+        .style({
+            height: '500px',
+            width: '100%'
+        });
+
+    if (callback) {
+        callback();
+    }
+return;
+//<iframe src="tmp/mapview.html" width="100%" height="600px" border="0" frameborder="0" style="float:left; z-index:999;"></iframe>
+/*
+
     elem.insert('div', ':first-child')
         .attr('id', 'map')
         .style({
@@ -10,5 +27,5 @@ sarcat.map = function(elem, callback) {
         .setView([40, -74.50], 9);
     if (callback) {
         callback();
-    }
+    }*/
 };

@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+ <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport' />
+
+
+        <!--[if lt IE 9]>
+        <script src='assets/javascripts/html5shiv.js' type='text/javascript'></script>
+        <![endif]-->
+        <link href='assets/stylesheets/bootstrap/bootstrap.css' media='all' rel='stylesheet' type='text/css' />
+        <link href='assets/stylesheets/bootstrap/bootstrap-responsive.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / jquery ui -->
+        <link href='assets/stylesheets/jquery_ui/jquery-ui-1.10.0.custom.css' media='all' rel='stylesheet' type='text/css' />
+        <link href='assets/stylesheets/jquery_ui/jquery.ui.1.10.0.ie.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / switch buttons -->
+        <link href='assets/stylesheets/plugins/bootstrap_switch/bootstrap-switch.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / xeditable -->
+        <link href='assets/stylesheets/plugins/xeditable/bootstrap-editable.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / wysihtml5 (wysywig) -->
+        <link href='assets/stylesheets/plugins/common/bootstrap-wysihtml5.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / jquery file upload -->
+        <link href='assets/stylesheets/plugins/jquery_fileupload/jquery.fileupload-ui.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / full calendar -->
+        <link href='assets/stylesheets/plugins/fullcalendar/fullcalendar.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / select2 -->
+        <link href='assets/stylesheets/plugins/select2/select2.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / mention -->
+        <link href='assets/stylesheets/plugins/mention/mention.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / tabdrop (responsive tabs) -->
+        <link href='assets/stylesheets/plugins/tabdrop/tabdrop.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / datetime picker -->
+        <link href='assets/stylesheets/plugins/bootstrap_datetimepicker/bootstrap-datetimepicker.min.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / fuelux (wizard) -->
+        <link href='assets/stylesheets/plugins/fuelux/wizard.css' media='all' rel='stylesheet' type='text/css' />
+        <!-- / flatty theme -->
+        <link href='assets/stylesheets/light-theme.css' id='color-settings-body-color' media='all' rel='stylesheet' type='text/css' />
+        <!-- / demo -->
+        <link href='assets/stylesheets/demo.css' media='all' rel='stylesheet' type='text/css' />
+        <link href='assets/stylesheets/custom.css' media='all' rel='stylesheet' type='text/css' />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+<!-- / jquery -->
+<script src='assets/javascripts/jquery/jquery.min.js' type='text/javascript'></script>
+<!-- / jquery mobile events (for touch and slide) -->
+<script src='assets/javascripts/plugins/mobile_events/jquery.mobile-events.min.js' type='text/javascript'></script>
+<!-- / jquery migrate (for compatibility with new jquery) -->
+<script src='assets/javascripts/jquery/jquery-migrate.min.js' type='text/javascript'></script>
+<!-- / jquery ui -->
+<script src='assets/javascripts/jquery_ui/jquery-ui.min.js' type='text/javascript'></script>
+<!-- / bootstrap -->
+<script src='assets/javascripts/bootstrap/bootstrap.min.js' type='text/javascript'></script>
+<script src='assets/javascripts/plugins/flot/excanvas.js' type='text/javascript'></script>
+<!-- / bootstrap switch -->
+<script src='assets/javascripts/plugins/bootstrap_switch/bootstrapSwitch.min.js' type='text/javascript'></script>
+<!-- / fullcalendar -->
+<script src='assets/javascripts/plugins/fullcalendar/fullcalendar.min.js' type='text/javascript'></script>
+<!-- / select2 -->
+<script src='assets/javascripts/plugins/select2/select2.js' type='text/javascript'></script>
+<!-- / mention -->
+<script src='assets/javascripts/plugins/mention/mention.min.js' type='text/javascript'></script>
+<!-- / fileinput -->
+<script src='assets/javascripts/plugins/fileinput/bootstrap-fileinput.js' type='text/javascript'></script>
+<!-- / modernizr -->
+<script src='assets/javascripts/plugins/modernizr/modernizr.min.js' type='text/javascript'></script>
+<!-- / retina -->
+<script src='assets/javascripts/plugins/retina/retina.js' type='text/javascript'></script>
+<!-- / timeago -->
+<script src='assets/javascripts/plugins/timeago/jquery.timeago.js' type='text/javascript'></script>
+<!-- / autosize (for textareas) -->
+<script src='assets/javascripts/plugins/autosize/jquery.autosize-min.js' type='text/javascript'></script>
+<!-- / charCount -->
+<script src='assets/javascripts/plugins/charCount/charCount.js' type='text/javascript'></script>
+<!-- / validate -->
+<script src='assets/javascripts/plugins/validate/jquery.validate.min.js' type='text/javascript'></script>
+<script src='assets/javascripts/plugins/validate/additional-methods.js' type='text/javascript'></script>
+<!-- / nestable -->
+<script src='assets/javascripts/plugins/nestable/jquery.nestable.js' type='text/javascript'></script>
+<!-- / datetime picker
+<script src='assets/javascripts/plugins/bootstrap_datetimepicker/bootstrap-datetimepicker.js' type='text/javascript'></script>
+<!-- / max length -->
+<script src='assets/javascripts/plugins/bootstrap_maxlength/bootstrap-maxlength.min.js' type='text/javascript'></script>
+<!-- / fuelux -->
+<script src='assets/javascripts/plugins/fuelux/wizard.js' type='text/javascript'></script>
+<!-- / flatty theme -->
+<script src='assets/javascripts/nav.js' type='text/javascript'></script>
+<script src='assets/javascripts/tables.js' type='text/javascript'></script>
+<script src='assets/javascripts/theme.js' type='text/javascript'></script>
+<!-- / demo -->
+<script src='assets/javascripts/demo/jquery.mockjax.js' type='text/javascript'></script>
+<script src='assets/javascripts/demo/demo.js' type='text/javascript'></script>
+
+
+
+<link rel="stylesheet" type="text/css" href="./jquery.datetimepicker.css"/ >
+<script src="./jquery.datetimepicker.js"></script>
+
+<title>ISRID</title>
+
+
+
+</head>
+
+    <body class='contrast-fb '>
+        <header>
+            <div class='navbar'>
+                <div class='navbar-inner'>
+                    <div class='container-fluid'>
+                        <a class='brand' href='#'>
+                            <img src="images/ISRIDlogo-notagline.jpg" title="ISRID Logo" alt="ISRID Logo" width="140px" style="padding-bottom: 10px;"/>
+                            <span class='hidden-phone'>ISRID</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       <div id='wrapper'>
+            <section>
+                <div class='container-fluid'>
+                    <div class='row-fluid' id='content-wrapper'>
+                        <div class='span12'>
+                            <div class='row-fluid'>
+                                <div class='span12'>
+                                    <div class='page-header'>
+                                        <div class='box-content box-padding'>
+                                            <div class='fuelux'>
+                                                <div class='wizard'>
+
+
+                                                    <div class="_wizardHolder">
+                                                    <ul class='steps'>
+                                                        <li class='active' data-target='#step1'>
+                                                            <span class='step'>Initial Incident Information</span>
+                                                        </li>
+                                                        <li data-target='#step2'>
+                                                            <span class='step'>Map Information</span>
+                                                        </li>
+                                                        <li data-target='#step3'>
+                                                            <span class='step'>Incident Mapping</span>
+                                                        </li>
+                                                        <li data-target='#step4'>
+                                                            <span class='step'>Subject Information</span>
+                                                        </li>
+                                                        <li data-target='#step5'>
+                                                            <span class='step'>Time Log</span>
+                                                        </li>
+                                                        <li data-target='#step6'>
+                                                            <span class='step'>Incident Outcomes</span>
+                                                        </li>
+                                                        <li data-target='#step7'>
+                                                            <span class='step'>Resource Information</span>
+                                                        </li>
+                                                        <li data-target='#step8'>
+                                                            <span class='step'>Summary</span>
+                                                        </li>
+                                                        <li data-target='#step9'>
+                                                            <span class='step'>Subject Option</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+
+
+                                                    <div class='actions'>
+                                                        <button class='btn btn-mini btn-prev'><i class='icon-arrow-left'></i>Prev
+                                                        </button>
+                                                        <button class='btn btn-mini btn-success btn-next' data-last='Finish'>
+                                                            Next
+                                                            <i class='icon-arrow-right'></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class='step-content center'>
+                                                    <hr class='hr-normal' />
+                                                    <form accept-charset="UTF-8" action="#" class="form" method="post" style="margin-bottom: 0;">
+                                                        <div style="margin:0;padding:0;display:inline">
+                                                            <input name="utf8" type="hidden" value="&#x2713;" />
+                                                            <input name="authenticity_token" type="hidden" value="CFC7d00LWKQsSahRqsfD+e/mHLqbaVIXBvlBGe/KP+I=" />
+                                                        </div>
+
+
+
+                                                        <div class='step-pane active' id='step1'>
+                                                           <!-- <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content' style="padding-bottom: 0px;">
+                                                                            <div class='control-group'>
+                                                                                <label class='control-label'><strong>Incident Status</strong></label>
+                                                                                <div class='controls'>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Open
+                                                                                    </label>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Closed
+                                                                                    </label>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Suspended
+                                                                                    </label>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Closed Post Suspension
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>-->
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+
+				<!--														 <div class='control-group' id='wrapper_IncStat'>
+				<div class='control-label' >
+					<label for='IncStat'><strong>Incident Status</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='IncStat' id='IncStat' >
+					<option value=''>--Select--</option><option>Active</option><option>Closed</option><option>Closed after Open</option><option>Open</option></select> 
+				</div>
+				</div>-->
+
+
+                <div class='control-group'>
+                                                                           <div class='control-label' >
+                    <label for='IncEnv'><strong>Incident Status</strong></label>
+                </div>
+                                                                                <div class='controls'>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Open
+                                                                                    </label>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Closed
+                                                                                    </label>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Suspended
+                                                                                    </label>
+                                                                                    <label class='radio inline'>
+                                                                                        <input type='radio' value='' />
+                                                                                        Closed Post Suspension
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+
+
+
+
+
+
+
+
+    <div class='_group control-group'>      
+
+           <!-- <div class='control-label aa' >
+                    <label for='SubAct'><strong>Tracking</strong></label>
+                </div>
+-->
+
+
+
+     <div class='control-group' id='wrapper_IncNum'>
+                <div class='control-label' >
+                    <label for='IncNum'><strong>Incident #</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name='IncNum' id='IncNum'  placeholder='Incident #' ></input> 
+                </div>
+                </div>
+
+
+
+
+
+             <div class='control-group' id='wrapper_MisNum'>
+                <div class='control-label' >
+                    <label for='MisNum'><strong>Mission #</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name='MisNum' id='MisNum'  placeholder='Mission #' ></input> 
+                </div>
+                </div>
+            </div>
+
+
+
+
+ <div class='_group control-group'>     
+
+                 <div class='control-group' id='wrapper_IncTyp'>
+                <div class='control-label' >
+                    <label for='IncTyp'><strong>Incident Type</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                     <select name='IncTyp' id='IncTyp' >
+                    <option value=''>--Select--</option><option>ATL</option><option>Aircraft</option><option>Assist</option><option>Attempt to Locate</option><option>Beacon</option><option>Cave</option><option>Disaster</option><option>Evidence</option><option>False Report</option><option>Fugitive</option><option>Fugutive</option><option>IFE</option><option>INREQ</option><option>OTHER</option><option>PRECAUTIONARY</option><option>Recovery</option><option>Rescue</option><option>Search</option><option>Standby</option><option>Training</option><option>URT-144</option><option>VEHICLE</option><option>Water</option></select> 
+                </div>
+                </div>
+
+
+
+
+
+                 <div class='control-group' id='wrapper_SubjNum'>
+                <div class='control-label' >
+                    <label for='SubjNum'><strong># Subjects</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='number' name='SubjNum' id='SubjNum' min=0 placeholder='#' ></input> 
+                </div>
+                </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 <div class='control-group' id='wrapper_CntMtd'>
+                <div class='control-label' >
+                    <label for='CntMtd'><strong>Contact Method</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                     <select name='CntMtd' id='CntMtd' >
+                    <option value=''>--Select--</option><option>Distress Signal</option><option>ELT/PLB/EPIRP</option><option>Radio</option><option>Registration Card</option><option>Reported Missing</option><option>Satellite Alerting Technology</option><option>Subject Cell Phone</option><option>Vehicle Found</option></select> 
+                </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <div class='_group control-group'>      
+<!--
+            <div class='control-label aa' >
+                    <label for='SubAct'><strong>Subject Activity</strong></label>
+                </div>
+-->
+
+                 <div class='control-group' id='wrapper_SubCat'>
+                <div class='control-label' >
+                    <label for='SubCat'><strong>Subject</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                     <select name='SubCat' id='SubCat' >
+                    <option value=''>--Select--</option><option>ATV</option><option>Abduction</option><option>Aircraft</option><option>Aircraft-nonpowered</option><option>Angler</option><option>Animal</option><option>Assist</option><option>Autistic</option><option>BASE Jumper</option><option>BOAT</option><option>Base Jumper</option><option>Beacon</option><option>Boater</option><option>Camper</option><option>Caver</option><option>Child</option><option>Climber</option><option>Criminal</option><option>Dementia</option><option>Despondent</option><option>Diver</option><option>ELT/EPIRB</option><option>Elderly</option><option>Extreme Sports</option><option>Fisher</option><option>Fugative</option><option>Gatherer</option><option>Gatherer-Mushroom</option><option>Golfer</option><option>Hiker</option><option>Hiker-Tramper</option><option>Horseback Rider</option><option>Horseback rider</option><option>Hunter</option><option>IFE</option><option>INREQ</option><option>Ice Skater</option><option>Intellectual disability</option><option>MERCY</option><option>MISSING PERSON</option><option>Mental Illness</option><option>Mental Retardation</option><option>Motorcycle</option><option>Mountain Biker</option><option>OTHER</option><option>Other-student</option><option>PRECAUTIONARY</option><option>Parachutist</option><option>Person In Water</option><option>Prayer</option><option>Psychotic</option><option>RESCUE</option><option>Runaway</option><option>Runner</option><option>Signal</option><option>Skier</option><option>Skier - Alpine</option><option>Skier - Nordic</option><option>Skier-Alpine</option><option>Skier-Nordic</option><option>Sledder</option><option>Snowboarder</option><option>Snowmobile</option><option>Snowmobiler</option><option>Snowmobilier</option><option>Snowshoer</option><option>Soldier</option><option>Substance Abuse</option><option>Substance Intoxication</option><option>Swimmer</option><option>Vehicle</option><option>Vehicle-4wd</option><option>Vehicle-Left</option><option>Vision Quest</option><option>Walkaway</option><option>Water</option><option>Wheelchair</option><option>Worker</option><option>Workers</option><option>Youth</option></select> 
+                </div>
+                </div>
+                 <div class='control-group' id='wrapper_SubCatSub'>
+                <div class='control-label' >
+                    <label for='SubCatSub'><strong>Subject Sub-Category</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name='SubCatSub' id='SubCatSub'  placeholder='Subject Sub-Category' ></input> 
+                </div>
+                </div>
+                 <div class='control-group' id='wrapper_SubAct'>
+                <div class='control-label' >
+                    <label for='SubAct'><strong>Subject Activity</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name='SubAct' id='SubAct'  placeholder='Subject Activity' ></input> 
+                </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class='_group control-group'>
+
+<!--
+    <div class='control-label aa' >
+                    <label for='SubCat'><strong>Location</strong></label>
+                </div>
+-->
+
+				 <div class='control-group' id='wrapper_IncEnv'>
+				    <div class='control-label' >
+                    <label for='PrimeArea'><strong>Response Area</strong></label>
+                </div>
+				
+					<div class='controls'>
+
+					 <select name='IncEnv' id='IncEnv' >
+					<option value=''>--Select--</option><option>Air</option><option>Cave</option><option>Land</option><option>Water</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_PrimeArea'>
+				<div class='control-label' >
+					<label for='PrimeArea'><strong>Response Area</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='PrimeArea' id='PrimeArea'  placeholder='Response Area' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Owner'>
+				<div class='control-label' >
+					<label for='Owner'><strong>Land Owner</strong></label>
+				</div>
+					<div class='controls'>
+					 <select name='Owner' id='Owner' >
+					<option value=''>--Select--</option><option>BLM</option><option>Commercial</option><option>County</option><option>Military</option><option>NPS</option><option>Native/Tribal</option><option>Navigable Water</option><option>Other</option><option>Private</option><option>State</option><option>USFS</option></select> 
+				</div>
+				</div>
+
+
+      <div class='control-group' id='wrapper_MisNum'>
+                <div class='control-label' >
+                    <label for='MisNum'><strong>Address-Location</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name='MisNum' id='MisNum'  placeholder='Street/City/State' ></input> 
+                </div>
+                </div>
+
+
+
+
+
+</div>  
+
+
+
+
+			
+
+
+
+
+
+
+
+
+          
+
+
+
+
+
+				                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+
+
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+                                                        <div class='step-pane' id='step2'>
+
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+
+  <iframe src="mapview.html" width="100%" height="600px" border="0" frameborder="0" style="float:left; z-index:999;"></iframe>
+					
+
+<div style='text-align: left;'>Note: All information should be entered using WGS84 Datum</div>
+<br>
+   <div class='_group control-group'>      
+
+  
+
+
+                <div class='control-group' id='wrapper_Flat'>
+				<div class='control-label' >
+					<label for='Flat'><strong>Find Coord (N/S)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Flat' id='Flat' step=0.1 placeholder='Find Coord (N/S)' ></input> 
+				</div>
+				</div>
+
+
+
+
+				 <div class='control-group' id='wrapper_Flong'>
+				<div class='control-label' >
+					<label for='Flong'><strong>Find Coord (E/W)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Flong' id='Flong' step=0.1 placeholder='Find Coord (E/W)' ></input> 
+				</div>
+				</div>
+
+
+</div>
+
+
+
+
+
+
+   <div class='_group control-group'>      
+
+          
+
+				 <div class='control-group' id='wrapper_IPPLat'>
+				<div class='control-label' >
+					<label for='IPPLat'><strong>IPP Coord. (N/S)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='IPPLat' id='IPPLat' step=0.1 placeholder='IPP Coord. (N/S)' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_IPPLong'>
+				<div class='control-label' >
+					<label for='IPPLong'><strong>IPP Coord. (E/W)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='IPPLong' id='IPPLong' step=0.1 placeholder='IPP Coord. (E/W)' ></input> 
+				</div>
+				</div>
+            </div>
+      
+
+   <div class='_group control-group'>      
+
+          
+				 <div class='control-group' id='wrapper_DesLat'>
+				<div class='control-label' >
+					<label for='DesLat'><strong>Destination Coord. (N/S)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='DesLat' id='DesLat' step=0.1 placeholder='Destination Coord. (N/S)' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_DesLong'>
+				<div class='control-label' >
+					<label for='DesLong'><strong>Destination Coord. (E/W)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='DesLong' id='DesLong' step=0.1 placeholder='Destination Coord. (E/W)' ></input> 
+				</div>
+				</div>
+            </div>
+
+
+               <div class='_group control-group'>   
+				 <div class='control-group' id='wrapper_RPLSLat'>
+				<div class='control-label' >
+					<label for='RPLSLat'><strong>Revised LKP/PLS (N/S)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='RPLSLat' id='RPLSLat' step=0.1 placeholder='Revised LKP/PLS (N/S)' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_RPLSLong'>
+				<div class='control-label' >
+					<label for='RPLSLong'><strong>Revised LKP/PLS (E/W)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='RPLSLong' id='RPLSLong' step=0.1 placeholder='Revised LKP/PLS (E/W)' ></input> 
+				</div>
+				</div>
+</div>
+   <div class='_group control-group'>      
+
+         
+				 <div class='control-group' id='wrapper_DECLat'>
+				<div class='control-label' >
+					<label for='DECLat'><strong>Decision Point Coord. (N/S)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='DECLat' id='DECLat' step=0.1 placeholder='Decision Point Coord. (N/S)' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_DECLong'>
+				<div class='control-label' >
+					<label for='DECLong'><strong>Decision Point Coord. (E/W)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='DECLong' id='DECLong' step=0.1 placeholder='Decision Point Coord. (E/W)' ></input> 
+				</div>
+				</div>
+            </div>
+				                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='step-pane' id='step3' >
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+                                                                            																																																	 <div class='control-group' id='wrapper_Weather'>
+				<div class='control-label' >
+					<label for='Weather'><strong>Weather</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='Weather' id='Weather'  placeholder='Weather' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Ffeat'>
+				<div class='control-label' >
+					<label for='Ffeat'><strong>Find Feature</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='Ffeat' id='Ffeat' >
+					<option value=''>--Select--</option><option>Brush</option><option>Canyon</option><option>Drainage</option><option>Field</option><option>Forest</option><option>Forest/woods</option><option>Ice/snow</option><option>Lake/Pond/Water</option><option>Linear</option><option>Residence</option><option>Ridge</option><option>Road</option><option>Rock</option><option>Scrub</option><option>Structure</option><option>Trail</option><option>Underground</option><option>Valley</option><option>Vehicle</option><option>Water</option><option>Wetland</option><option>Yard</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_IPPType'>
+				<div class='control-label' >
+					<label for='IPPType'><strong>IPP Type</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='IPPType' id='IPPType'  placeholder='IPP Type' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_IPPClass'>
+				<div class='control-label' >
+					<label for='IPPClass'><strong>IPP Classification</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='IPPClass' id='IPPClass' >
+					<option value=''>--Select--</option><option>Airport</option><option>Beacon</option><option>Building/Developed Area</option><option>Field</option><option>Forested Area</option><option>N/A</option><option>Perennial Ice/Snow</option><option>Radar</option><option>Residence</option><option>Road</option><option>Rock/Barren</option><option>Shrub/Scrub</option><option>Signal</option><option>Trail</option><option>Trailhead</option><option>Unknown</option><option>Vehicle</option><option>Water</option><option>Wetlands</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_RevPLS'>
+				<div class='control-label' >
+					<label for='RevPLS'><strong>Revised How Determined</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='RevPLS' id='RevPLS' >
+					<option value=''>--Select--</option><option>Other</option><option>Physical Clue</option><option>Sighting</option><option>Tracks</option><option>Trail Register</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_RevDOT'>
+				<div class='control-label' >
+					<label for='RevDOT'><strong>Revised DOT</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='RevDOT' id='RevDOT' step=0.1 placeholder='Revised DOT' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_DECTyp'>
+				<div class='control-label' >
+					<label for='DECTyp'><strong>Type of Decision Point</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='DECTyp' id='DECTyp' >
+					<option value=''>--Select--</option><option>Other</option><option>Saddle</option><option>Shortcut</option><option>Trail Animal</option><option>Trail Crossed</option><option>Trail Junction</option><option>Trail Lost</option><option>Trail Social</option><option>Trail Turnoff</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Dec'>
+				<div class='control-label' >
+					<label for='Dec'><strong>Decision Point Factor</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='Dec' id='Dec'  placeholder='Decision Point Factor' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_FndRes'>
+				<div class='control-label' >
+					<label for='FndRes'><strong>Find Resource</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='FndRes' id='FndRes' >
+					<option value=''>--Select--</option><option>ATV</option><option>Air</option><option>Air-Fixed</option><option>Air-Heli</option><option>Attraction</option><option>Bike</option><option>Boat</option><option>CERT</option><option>Canvass</option><option>Cave</option><option>Confinement</option><option>Containment</option><option>DF</option><option>Dive</option><option>Diver</option><option>Dog</option><option>Dog-Air</option><option>Dog-Airscent</option><option>Dog-Cadaver</option><option>Dog-Disaster</option><option>Dog-Track</option><option>Dog-Tracking/Trailing</option><option>Dog-Trailing</option><option>Dog-Water</option><option>Family</option><option>Family/Friend</option><option>Fire</option><option>Fixed Wing</option><option>Grid</option><option>Ground</option><option>Hasty</option><option>Helicopter</option><option>Horse</option><option>Horseback rider</option><option>Interview</option><option>Investigation</option><option>Kayak</option><option>Law</option><option>Media</option><option>Motocycle</option><option>Motorcycle</option><option>Other</option><option>Passive</option><option>Patrol</option><option>Posse</option><option>Probe</option><option>Public</option><option>Ranger</option><option>Rescuer</option><option>SAR</option><option>SNOWCAT</option><option>Self</option><option>Ski Patrol</option><option>Snowmobile</option><option>Snowshoe</option><option>Sweep</option><option>Technical</option><option>Tracker</option><option>USAR</option><option>Vehicle</option><option>Water</option></select> 
+				</div>
+				</div>
+				
+                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                            </div>
+
+
+                                                        <div class='step-pane' id='step4'>
+                                                            <div class='row-fluid' style="overflow:auto;">
+
+
+
+                 <div class='control-group' id='wrapper_SubjNum'>
+                <div class='control-label' >
+                    <label for='SubjNum'><strong>Group Outcome</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name="SubGrp"  ></input> 
+                </div>
+                </div>
+
+
+
+
+                 <div class='control-group' id='wrapper_SubjNum'>
+                <div class='control-label' >
+                    <label for='SubjNum'><strong>Group Type</strong></label>
+                </div>
+                
+                    <div class='controls'>
+                            <input data-rule-buga='true' data-rule-required='true' type='text' name="GrpTyp"  ></input> 
+                </div>
+                </div>
+                                                                            																																																	<table style='overflow:auto;' id='4_table'>
+		<div></div>
+
+  <div class='control-group' id='wrapper_SubjNum'>
+                <div class='control-label' >
+                    <label for='SubjNum'><strong>Missing Persons Descriptions</strong></label>
+                </div>
+</div>
+
+
+
+
+        <thead>
+		<tr>
+		<th>Age</th><th>Sex</th><th>Local</th><th>Weight</th><th>Height</th><th>Build</th><th>Physical Fitness</th><th>Experience</th><th>Equipment</th>
+
+
+        <th>Clothing</th><th>Survival training</th><th>Mental Fitness</th><th>Mental Fitness</th><th>Personality</th></tr>
+		</thead>
+		<tbody>
+		<tr class='4_row'><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Age' id='Age'  placeholder='Age'  style="width:100px !important;" ></input> </td><td> <select name='Sex' id='Sex'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>F</option><option>Female</option><option>M</option><option>Male</option></select> </td><td> <select name='Local' id='Local'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>No</option><option>Yes</option></select> </td><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Wgt' id='Wgt' min=0 step=0.1 placeholder='Weight'  style="width:100px !important;" ></input> </td><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Hgt' id='Hgt' min=0 step=0.1 placeholder='Height'  style="width:100px !important;" ></input> </td><td> <select name='Bld' id='Bld'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Medium</option><option>Normal</option><option>Obese</option><option>Overweight</option><option>Thin</option><option>Underweight</option></select> </td><td> <select name='Fit' id='Fit'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Exp' id='Exp'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Experience</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Eq' id='Eq'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Cl' id='Cl'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Sur' id='Sur'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Mnt' id='Mnt'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Mild</option><option>Moderate</option><option>Normal</option><option>Severe</option></select> </td><td> <select name='Personality' id='Personality'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Confident</option><option>Outgoing</option><option>Suicidal</option><option>Unsure</option><option>Withdrawn</option></select> </td></tr><tr class='4_row'><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Age' id='Age'  placeholder='Age'  style="width:100px !important;" ></input> </td><td> <select name='Sex' id='Sex'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>F</option><option>Female</option><option>M</option><option>Male</option></select> </td><td> <select name='Local' id='Local'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>No</option><option>Yes</option></select> </td><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Wgt' id='Wgt' min=0 step=0.1 placeholder='Weight'  style="width:100px !important;" ></input> </td><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Hgt' id='Hgt' min=0 step=0.1 placeholder='Height'  style="width:100px !important;" ></input> </td><td> <select name='Bld' id='Bld'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Medium</option><option>Normal</option><option>Obese</option><option>Overweight</option><option>Thin</option><option>Underweight</option></select> </td><td> <select name='Fit' id='Fit'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Exp' id='Exp'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Experience</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Eq' id='Eq'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Cl' id='Cl'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Sur' id='Sur'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Mnt' id='Mnt'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Mild</option><option>Moderate</option><option>Normal</option><option>Severe</option></select> </td><td> <select name='Personality' id='Personality'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Confident</option><option>Outgoing</option><option>Suicidal</option><option>Unsure</option><option>Withdrawn</option></select> </td></tr><tr class='4_row'><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Age' id='Age'  placeholder='Age'  style="width:100px !important;" ></input> </td><td> <select name='Sex' id='Sex'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>F</option><option>Female</option><option>M</option><option>Male</option></select> </td><td> <select name='Local' id='Local'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>No</option><option>Yes</option></select> </td><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Wgt' id='Wgt' min=0 step=0.1 placeholder='Weight'  style="width:100px !important;" ></input> </td><td>		<input data-rule-buga='true' data-rule-required='true' type='number' name='Hgt' id='Hgt' min=0 step=0.1 placeholder='Height'  style="width:100px !important;" ></input> </td><td> <select name='Bld' id='Bld'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Medium</option><option>Normal</option><option>Obese</option><option>Overweight</option><option>Thin</option><option>Underweight</option></select> </td><td> <select name='Fit' id='Fit'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Exp' id='Exp'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Experience</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Eq' id='Eq'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Cl' id='Cl'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Sur' id='Sur'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option></select> </td><td> <select name='Mnt' id='Mnt'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Mild</option><option>Moderate</option><option>Normal</option><option>Severe</option></select> </td><td> <select name='Personality' id='Personality'  style="width:100px !important;" >
+					<option value=''>--Select--</option><option>Confident</option><option>Outgoing</option><option>Suicidal</option><option>Unsure</option><option>Withdrawn</option></select> </td></tr>
+			</tbody>
+			</table>
+            <div style='text-align:right'><a style='color:blue;cursor:pointer'>Add Person</a></div>
+			
+                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                            </div>
+
+														</div>
+
+                                                        <div class='step-pane' id='step5'>
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+ <div class='control-group' id='wrapper_TLS'>
+				<div class='control-label' >
+					<label for='TLS'><strong>Last Seen Date/Time</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='TLS' id='TLS'  class='datetime'  placeholder='Last Seen Date/Time' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_TSN'>
+				<div class='control-label' >
+					<label for='TSN'><strong>SAR Notified Date/Time</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='TSN' id='TSN'  class='datetime'  placeholder='SAR Notified Date/Time' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_SF'>
+				<div class='control-label' >
+					<label for='SF'><strong>Subject Located Date/Time</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='SF' id='SF'  class='datetime'  placeholder='Subject Located Date/Time' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Iclose'>
+				<div class='control-label' >
+					<label for='Iclose'><strong>Incident Closed Date/Time</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='Iclose' id='Iclose'  class='datetime'  placeholder='Incident Closed Date/Time' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Cost'>
+				<div class='control-label' >
+					<label for='Cost'><strong>Total Cost</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Cost' id='Cost' min=0 step=0.1 placeholder='Total Cost' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_IncTimeRp'>
+				<div class='control-label' >
+					<label for='IncTimeRp'><strong>Incident Time</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='IncTimeRp' id='IncTimeRp'  placeholder='Incident Time' ></input> 
+				</div>
+				</div>
+				
+
+                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+
+                                                        <div class='step-pane' id='step6'>
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+ <div class='control-group' id='wrapper_DisIPP'>
+				<div class='control-label' >
+					<label for='DisIPP'><strong>Distance IPP</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='DisIPP' id='DisIPP' min=0 step=0.1 placeholder='Distance IPP' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_BFnd'>
+				<div class='control-label' >
+					<label for='BFnd'><strong>Find Bearing</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='BFnd' id='BFnd' step=0.1 placeholder='Find Bearing' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Det'>
+				<div class='control-label' >
+					<label for='Det'><strong>Detectability</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='Det' id='Det' >
+					<option value=''>--Select--</option><option>Excellent</option><option>Fair</option><option>Good</option><option>Poor</option><option>Verbal</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Strat'>
+				<div class='control-label' >
+					<label for='Strat'><strong>Lost Strategy</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='Strat' id='Strat' >
+					<option value=''>--Select--</option><option>Back Tracking</option><option>Backtracking</option><option>Cross-country</option><option>Direction Sampling</option><option>Direction Travelling</option><option>Direction sampling</option><option>Direction traveling</option><option>Discard gear</option><option>Downhill</option><option>Evasive</option><option>Folk Wisdom</option><option>Folk wisdom</option><option>Followed Terrain</option><option>Followed travel aid</option><option>Landmark</option><option>Moved</option><option>Nothing</option><option>Other</option><option>Paniced</option><option>Panicked</option><option>Paradoxical undressing</option><option>Route Sampled</option><option>Route sampling</option><option>Seek cell signal</option><option>Signaled</option><option>Sought Shelter</option><option>Stayed Put</option><option>Stayed put</option><option>Travel Aid</option><option>View Enhancing</option><option>View enhancing</option><option>Walked out</option><option>Wandered</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Mob'>
+				<div class='control-label' >
+					<label for='Mob'><strong>Mobility (hours)</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Mob' id='Mob' min=0 step=0.1 placeholder='Mobility (hours)' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_TrkOff'>
+				<div class='control-label' >
+					<label for='TrkOff'><strong>Track Offset</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='TrkOff' id='TrkOff' min=0 step=0.1 placeholder='Track Offset' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Elv, ElvFt'>
+				<div class='control-label' >
+					<label for='Elv, ElvFt'><strong>Elevation Change</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='Elv, ElvFt' id='Elv, ElvFt'  placeholder='Elevation Change' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Sig'>
+				<div class='control-label' >
+					<label for='Sig'><strong>Signalling</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='Sig' id='Sig' >
+					<option value=''>--Select--</option><option>Cell + GPS</option><option>ELT</option><option>EPIRB</option><option>FRS/GMRS</option><option>Fire/Smoke</option><option>Flare</option><option>Mirror</option><option>N/A</option><option>None</option><option>Other</option><option>Other visual</option><option>PERS</option><option>PLB</option><option>Radio</option><option>SPOT</option><option>Satellite Alerting</option><option>Sound</option><option>Subject Phone</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Scen'>
+				<div class='control-label' >
+					<label for='Scen'><strong>Scenario</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='Scen' id='Scen' >
+					<option value=''>--Select--</option><option>Avalanche</option><option>Criminal</option><option>Despondent</option><option>Drowning</option><option>Evading</option><option>Investigative</option><option>Lost</option><option>Medical</option><option>Overdue</option><option>Stranded</option><option>Trauma</option></select> 
+				</div>
+				</div>
+				
+
+                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class='step-pane' id='step7'>
+
+                                                            <!--
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+                                                                        <div class='inline pull-left'>
+                                                                            <div class='controls'>
+                                                                                <label class='checkbox inline'>
+                                                                                    <input type='checkbox' value='' />
+                                                                                    <strong>Hide Subject Information</strong>
+                                                                                </label>
+                                                                                <label class='checkbox inline'>
+                                                                                    <input type='checkbox' value='' />
+                                                                                    <strong>Display Subject Information</strong>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+-->
+
+
+                                                            <div class='row-fluid'>
+
+                                                                            																																																	 <div class='control-group' id='wrapper_Unit'>
+				<div class='control-label' >
+					<label for='Unit'><strong>Unit Type</strong></label>
+				</div>
+				
+					<div class='controls'>
+					 <select name='Unit' id='Unit' >
+					<option value=''>--Select--</option><option>English</option><option>Metric</option></select> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Resources_Used'>
+				<div class='control-label' >
+					<label for='Resources_Used'><strong>Resources Used</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='text' name='Resources_Used' id='Resources_Used'  placeholder='Resources Used' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Tasks'>
+				<div class='control-label' >
+					<label for='Tasks'><strong># Tasks</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Tasks' id='Tasks' min=0 step=0.1 placeholder='# Tasks' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_DogNum'>
+				<div class='control-label' >
+					<label for='DogNum'><strong># Dogs</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='DogNum' id='DogNum' min=0 step=0.1 placeholder='# Dogs' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_AirTsk'>
+				<div class='control-label' >
+					<label for='AirTsk'><strong># Air Tasks</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='AirTsk' id='AirTsk' min=0 step=0.1 placeholder='# Air Tasks' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_AirNum'>
+				<div class='control-label' >
+					<label for='AirNum'><strong># Aircraft</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='AirNum' id='AirNum' min=0 step=0.1 placeholder='# Aircraft' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_AirHrs'>
+				<div class='control-label' >
+					<label for='AirHrs'><strong># Air Hours</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='AirHrs' id='AirHrs' min=0 step=0.1 placeholder='# Air Hours' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Evol'>
+				<div class='control-label' >
+					<label for='Evol'><strong>Emergent Volunters</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Evol' id='Evol' min=0 step=0.1 placeholder='Emergent Volunters' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Peop'>
+				<div class='control-label' >
+					<label for='Peop'><strong>Total Personnel</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Peop' id='Peop' min=0 step=0.1 placeholder='Total Personnel' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Manhrs'>
+				<div class='control-label' >
+					<label for='Manhrs'><strong>Total Man Hours</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Manhrs' id='Manhrs' min=0 step=0.1 placeholder='Total Man Hours' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_Doghrs'>
+				<div class='control-label' >
+					<label for='Doghrs'><strong>Total Dog Hours</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='Doghrs' id='Doghrs' min=0 step=0.1 placeholder='Total Dog Hours' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_VehNum'>
+				<div class='control-label' >
+					<label for='VehNum'><strong># Vehicles</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='VehNum' id='VehNum' min=0 step=0.1 placeholder='# Vehicles' ></input> 
+				</div>
+				</div>
+				 <div class='control-group' id='wrapper_MilesDrv'>
+				<div class='control-label' >
+					<label for='MilesDrv'><strong>Distance Traveled</strong></label>
+				</div>
+				
+					<div class='controls'>
+							<input data-rule-buga='true' data-rule-required='true' type='number' name='MilesDrv' id='MilesDrv' min=0 step=0.1 placeholder='Distance Traveled' ></input> 
+				</div>
+				</div>
+				
+
+
+                                                            </div>
+
+
+                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Next
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                        </div>
+
+
+
+
+
+
+
+
+
+                                                        <div class='step-pane' id='step8'>
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+
+
+
+
+<div class='control-label' >
+                    <label for='SubjNum'><strong>Comments</strong></label>
+                </div>
+
+
+
+
+  <textarea name="comments" rows=10 cols=40 placeholder="Please include a brief narrative of the incident. Describe how and where found and how they got lost."></textarea>
+
+
+<div class='control-label' >
+                    <label for='SubjNum'><strong>Lessons Learned</strong></label>
+                </div>
+
+  <textarea name="lessons_learned" rows=10 cols=40 placeholder="Describe any significant lessons learned, near misses, methods to mitigate future incidents."></textarea>
+
+
+
+
+<div class='control-label' >
+                    <label for='SubjNum'><strong>Attachments</strong></label>
+                </div>
+
+
+<small>Please attach any information that may be useful. Examples include lost person questionnaire, copy of find team tasks, photos of rescue or find, etc.
+</small>
+<br>
+<input type="file" name="files" multiple title="Please attach any additional information">
+
+<br>
+<hr>
+
+<br>
+
+
+<div class='control-label' >
+                    <label for='SubjNum'><strong>Submit</strong></label>
+                </div>
+Agency having jurisdiction: <input type="text" name="agency">
+<br>
+
+
+<br>
+Agency Completing form: <input type="text" name="agency2">
+<br>
+
+
+<br>
+Prepared by: <input type="text" name="prepared_by">
+<br>
+
+
+<br>
+Email: <input type="text" name="prepared_email">
+<br>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+                                                        <div class='step-pane' id='step9'>
+                                                            <div class='row-fluid'>
+                                                                <div class='span12 box'>
+                                                                    <div class='box-content'>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                                            <div class='form-actions' style='margin-bottom:0'>
+                                                                                <button  class='btn btn-inverse' onclick="jQuery('.wizard .actions .btn-prev').click(); return false;"><i class='icon-arrow-left'></i>Prev
+                                                                                </button>
+                                                                                <button class='btn btn-next' onclick="jQuery('.wizard .actions .btn-next').trigger('click'); return false;">
+                                                                                    Submit
+                                                                                    <i class='icon-arrow-right'></i>
+                                                                                </button>
+                                                                            </div>
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+<script>
+
+
+/*
+function unBlock(div){
+div.remove();
+$('.control-group .freeze').eq(0);
+}
+
+$('.control-group').append('<div class="freeze"></div>')
+$('.control-group .freeze').eq(0).remove()
+
+*/
+
+
+//$('.control-group').append('<div class="freeze"></div>')
+//
+
+
+
+$('.control-group').each(function(d,e,f){
+    if($(this).parent().hasClass('_group')){return;}
+    //$(this).append('<div class="freeze"></div>')
+    $(this).find('input').prop('disabled', true);
+    $(this).find('select').prop('disabled', true);
+});
+
+
+
+
+
+$('.step-pane').each(function(d,e,f){
+//$(this).find('.freeze').first().remove();
+var clear = $(this).find('.control-group').eq(0).find('input');
+if(!clear.length){
+  clear = $(this).find('.control-group').eq(0).find('select');  
+}
+clear.prop('disabled', false);
+});
+
+
+
+
+$('.control-group').click(function(d,e,f){
+if($(this).children().last().hasClass('freeze')){return;}
+
+if($(this).children().find('input').prop('disabled')==true){return}
+    if($(this).children().find('select').prop('disabled')==true){return}
+
+
+    var index = $(this).index();
+    var next = $(this).next();
+    //var last = next.children().last();
+    //if(last.hasClass('freeze')){last.remove();}
+
+
+    var last = next.children().find('input')
+    if(last.prop('disabled', true)){last.prop('disabled', false)}
+
+    var last2 = next.children().find('select')
+    if(last2.prop('disabled', true)){last2.prop('disabled', false)}
+
+})
+
+
+function clone_subjects()
+{
+	console.log('setting up cloning subjects function');
+
+    $("#SubjNum").blur( function(){
+
+		console.log('cloning subjects: ' + $("#SubjNum").val());
+			diff = $("#SubjNum").val() - $(".5_row").length;
+
+		if( diff>0 )
+		{
+			for(a=0; a<diff; a++){
+				$(".5_row:last").clone().appendTo( "#5_table" );
+			}
+		}else if(diff<0)
+		{
+			for(a=diff; a<0; a++){
+				$(".5_row:last").remove();
+			}
+		}
+
+	} );
+}
+setTimeout("clone_subjects()", 1000);
+</script>
+
+<script>
+jQuery('.datetime').datetimepicker();
+</script>
+	</body>
+
+</html>
