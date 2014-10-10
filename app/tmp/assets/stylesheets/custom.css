@@ -1,0 +1,138 @@
+
+
+.center{
+	text-align: center;
+	}
+
+
+.control-group {
+background: #F5F5F5;
+border-radius: 7px;
+margin-bottom: 30px;
+border: 2px solid rgb(221, 221, 221);
+position:relative;
+display:inline-block;
+}
+
+
+
+
+.control-group thead{
+background: #F5F5F5;
+border-radius: 7px;
+margin-bottom: 30px;
+border: 2px solid rgb(221, 221, 221);
+}
+
+
+
+.control-label strong{
+font-weight: bold;
+font-size: 18px;
+background: #3d579d;
+padding: 3px;
+padding-top: 10px;
+display: block;
+color: #fff;
+}
+
+._group .control-label strong{
+font-size: 14px;
+background: #3d579d;
+color:rgb(197, 197, 197);
+
+}
+
+
+._group .control-label.aa strong{
+font-weight: bold;
+font-size: 18px;
+background: #3d579d;
+padding: 3px;
+padding-top: 10px;
+display: block;
+color: #fff;
+}
+
+
+
+.controls{
+padding: 0 100px;
+}
+
+#step1 input[type='number']{
+	width:30px;
+}
+
+._wizardHolder{
+	width: 100%;
+display: inline-block;
+
+}
+
+
+.fuelux .wizard ._wizardHolder ul li {
+padding: 4px;
+margin: 4px;
+font-size: 12px;
+font-weight: bold;
+}
+
+._group{
+background: #F5F5F5;
+margin-right: 20px;
+}
+
+._group .control-group{
+	display:inline-block;
+border-radius: 7px;
+background: rgb(231, 231, 231);
+border: none;
+margin-bottom: 10px;
+}
+
+
+
+._group .controls{
+padding: 0 10px;
+
+}
+
+#button-group{
+position: absolute;
+width: 20%;
+left: 0;
+}
+.mapwrapper{
+position: absolute;
+width: 80%;
+right: 0;
+}
+
+
+#step8 textarea{
+	width:80%;
+}
+
+
+.freeze {
+position: absolute;
+/* border: 1px solid red; */
+background:#dddddd;
+top: 33px;
+bottom: 0;
+width: 100%;
+/* height: 100%; */
+opacity: 0.5;
+}
+
+
+select:disabled
+{
+background:#CBCBCB;
+}
+
+input:disabled
+{
+background:#CBCBCB;
+}

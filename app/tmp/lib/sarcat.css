@@ -1,0 +1,51 @@
+html, body {height: 100%;}
+.fill {min-height: 100%;height: 100%;}
+.navbar-default {
+    background-color: #3366ff;
+    border-color: #6600ff;
+}
+.navbar-default .navbar-brand {
+    color: #d6d6d6;
+}
+.redicon {color:red;}
+.greenicon {color:green;}
+.blueicon {color: blue;}
+.brownicon {color: #8B4513;}
+i {vertical-align: middle;}
+
+navbar-simple .brand {
+ 	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.navbar-simple .navbar-inner {
+	background: #fff;
+	filter: none !important;
+	box-shadow: 0 2px 15px rgba(0,0,0,0.25);
+	-moz-box-shadow: 0 2px 15px rgba(0,0,0,0.25);
+	-webkit-box-shadow: 0 2px 15px rgba(0,0,0,0.25);
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.navbar-simple .navbar-inner .nav {
+	float: right;
+}
+.navbar-simple .navbar-inner .nav li a {
+	background: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	color: #777;
+	font-size: 13px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	font-weight: 600;
+}
+.navbar-simple .navbar-inner .nav li a:hover {
+	background: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	color: #bf3604;
+}		
+.navbar-simple .navbar-inner .nav li.active a {
+	color: #bf3604;
+}

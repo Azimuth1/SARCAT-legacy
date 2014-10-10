@@ -1,0 +1,91 @@
+Subject,Region, Subject / Region,# Cases,km,95%,75%,50%,25%,95%,75%,50%,25%,In good weather,In good weather,In bad weather,In bad weather,In bad weather,In good weather,n,25%,50%,75%,95%,n,Uninjured,Injured,Fatality,No Trace
+
+Aircraft,All,Aircraft/All,216,0.8,45.4,5.5,0.8,0.4,16,#REF!,16,144,39,11,47,2
+Angler,Temperate domain MTN,Angler/Temperate domain MTN,25,1.5,9.9,5.5,1.5,0.3,170,122,70,31,16,#REF!,16,195,78,10,12,
+Angler,Temperate domain Flat,Angler/Temperate domain Flat,62,1.6,14.9,3.9,1.6,0.8,111,59,50,28,16,#REF!,16,195,78,10,12,
+Angler,Dry Domain All,Angler/Dry Domain All,15,9.7,13,10.5,9.7,3.2,111,59,50,28,16,#REF!,16,195,78,10,12,
+ATV,Temperate MTN,ATV/Temperate MTN,19,3.2,8,5.6,3.2,1.6,16,#REF!,16,162,66,29,5,0.5
+Autistic,Temperate ,Autistic/Temperate ,20,1.6,15.2,3.7,1.6,0.6,16,#REF!,16,54,88,10,2,
+Autistic,Urban-City,Autistic/Urban-City,16,1,8,3.8,1,0.3,16,#REF!,16,96,4,
+Camper,Temperate MTN,Camper/Temperate MTN,17,1.4,24.7,1.9,1.4,0.1,16,#REF!,16,805,82,10,8,2
+Camper,Temperate Flat,Camper/Temperate Flat,18,0.7,8,2,0.7,0.1,16,#REF!,16,805,82,10,8,2
+Camper,Dry MTN,Camper/Dry MTN,26,1,20.3,2.6,1,0.4,16,#REF!,16,805,82,10,8,2
+Caver,All,Caver/All,7,0.1,0.1,16,#REF!,16,1050,50,44,6,
+Child 1-3,Temperate MTN,Child 1-3/Temperate MTN,58,0.3,4.5,0.6,0.3,0.2,137,66,23,0,16,#REF!,16,159,87,6,6,2
+Child 1-3,Temperate Flat,Child 1-3/Temperate Flat,61,0.3,3.2,1,0.3,0.2,137,66,23,0,16,#REF!,16,159,87,6,6,2
+Child 1-3,Dry All,Child 1-3/Dry All,13,1.3,9,3.9,1.3,0.6,137,66,23,0,16,#REF!,16,159,87,6,6,2
+Child 1-3,Urban-City,Child 1-3/Urban-City,17,0.5,1.1,0.8,0.5,0.2,16,#REF!,16,95,5,
+Child 4-6,Temperate MTN,Child 4-6/Temperate MTN,38,0.8,3.7,1.5,0.8,0.2,137,66,23,0,16,#REF!,16,199,90,4,4,2
+Child 4-6,Temperate Flat,Child 4-6/Temperate Flat,90,0.6,6.6,1.5,0.6,0.2,137,66,23,0,16,#REF!,16,199,90,4,4,2
+Child 4-6,Dry All,Child 4-6/Dry All,19,1.9,8.2,3.2,1.9,0.6,137,66,23,0,16,#REF!,16,199,90,4,4,2
+Child 4-6,Urban-City,Child 4-6/Urban-City,25,0.5,3.4,1,0.5,0.1,16,#REF!,16,98,2,
+Child 7-9,Temperate MTN,Child 7-9/Temperate MTN,38,1.6,11.3,3.2,1.6,0.8,146,57,40,21,16,#REF!,16,189,91,4,4,1
+Child 7-9,Temperate Flat,Child 7-9/Temperate Flat,79,0.8,8,2,0.8,0.2,146,57,40,21,16,#REF!,16,189,91,4,4,1
+Child 7-9,Dry All,Child 7-9/Dry All,18,1.2,7.2,3.2,1.2,0.4,146,57,40,21,16,#REF!,16,189,91,4,4,1
+Child 7-9,Urban-City,Child 7-9/Urban-City,22,0.3,3.2,0.9,0.3,0.1,16,#REF!,16,96,2,1,
+Child 10-12,Temperate MTN,Child 10-12/Temperate MTN,72,1.6,9,3.2,1.6,0.8,146,57,40,21,16,#REF!,16,279,93,4,2,1
+Child 10-12,Temperate Flat,Child 10-12/Temperate Flat,57,1.6,10,4.8,1.6,0.4,146,57,40,21,16,#REF!,16,279,93,4,2,1
+Child 10-12,Dry All,Child 10-12/Dry All,22,2,16.1,7.2,2,0.8,146,57,40,21,16,#REF!,16,279,93,4,2,1
+Child 10-12,Urban-City,Child 10-12/Urban-City,18,1.5,5.8,2.9,1.5,0.3,16,#REF!,16,96,2,1,
+Child/Youth 13-15,Temperate MTN,Child/Youth 13-15/Temperate MTN,74,2.1,21.4,4.8,2.1,0.8,139,48,6,0,16,#REF!,16,294,92,6,2,
+Child/Youth 13-15,Temperate Flat,Child/Youth 13-15/Temperate Flat,80,1.3,10,3.2,1.3,0.6,139,48,6,0,16,#REF!,16,294,92,6,2,
+Child/Youth 13-15,Dry Mtn,Child/Youth 13-15/Dry Mtn,19,3.2,11.9,4.8,3.2,2.4,16,#REF!,16,294,92,6,2,
+Climber - day,All,Climber - day/All,8,0.3,1.8,0.8,0.3,0.01,71,50,28,5,16,#REF!,16,58,52,32,14,1
+Climber - Mountaineer,All,Climber - Mountaineer/All,17,1,10.5,3,1,0.1,71,50,28,5,16,#REF!,16,36,75,15,10,
+Dementia,Temperate MTN,Dementia/Temperate MTN,95,0.8,8.3,1.9,0.8,0.3,70,66,23,11,16,#REF!,16,110,4,15,71,307,815,73,17,8,2
+Dementia,Temperate Flat,Dementia/Temperate Flat,175,1,12.8,2.4,1,0.3,70,66,23,11,16,#REF!,16,110,4,15,71,307,815,73,17,8,2
+Dementia,Dry MTN,Dementia/Dry MTN,14,1.9,6.1,3.1,1.9,1,70,66,23,11,16,#REF!,16,110,4,15,71,307,815,73,17,8,2
+Dementia,Dry Flat,Dementia/Dry Flat,15,1.6,11.8,3.6,1.6,0.5,70,66,23,11,16,#REF!,16,110,4,15,71,307,815,73,17,8,2
+Dementia,Urban-City,Dementia/Urban-City,336,1.1,12.6,3.2,1.1,0.3,70,66,23,11,16,#REF!,16,110,4,15,71,307,80,14,6,5
+Despondent,Temperate MTN,Despondent/Temperate MTN,103,1.1,21.6,3.2,1.1,0.3,30,3,0,0,16,#REF!,16,18,30,50,100,275,618,50,15,36,
+Despondent,Temperate Flat,Despondent/Temperate Flat,193,0.8,17.3,2.3,0.8,0.3,30,3,0,0,16,#REF!,16,18,30,50,100,275,618,50,15,36,
+Despondent,Dry MTN,Despondent/Dry MTN,20,1.6,18,3.4,1.6,0.8,30,3,0,0,16,#REF!,16,18,30,50,100,275,618,50,15,36,
+Despondent,Dry Flat,Despondent/Dry Flat,14,1.9,20.7,3.7,1.9,0.5,30,3,0,0,16,#REF!,16,18,30,50,100,275,618,50,15,36,
+Despondent,Urban-City,Despondent/Urban-City,96,0.5,13.1,1.5,0.5,0.1,30,3,0,0,16,#REF!,16,18,30,50,100,275,54,15,31,15
+Gatherer,Temperate MTN,Gatherer/Temperate MTN,94,3.2,12.9,6.4,3.2,1.5,16,#REF!,16,180,89,7,3,2
+Gatherer,Dry All,Gatherer/Dry All,14,2.6,11.1,5.8,2.6,1.6,16,#REF!,16,180,89,7,3,2
+Hikers,ISRID Temperate domain-MTN,Hikers/ISRID Temperate domain-MTN,568,3.1,18.3,5.8,3.1,1.1,132,64,23,2,16,#REF!,16,40,50,100,238,424,2821,78,16,6,
+Hikers,Temperate domain -Flat,Hikers/Temperate domain -Flat,274,1.1,6.1,2,1.1,0.4,132,64,23,2,16,#REF!,16,40,50,100,238,424,2821,78,16,6,
+Hikers,Dry Domain -MTN,Hikers/Dry Domain -MTN,221,2,11.9,4,2,1,175,124,47,20,16,#REF!,16,40,50,100,238,424,2821,78,16,6,
+Hikers,Dry domain -Flat,Hikers/Dry domain -Flat,58,1.3,8.1,4.1,1.3,0.8,175,124,47,20,16,#REF!,16,40,50,100,238,424,2821,78,16,6,
+Hikers,Urban-City,Hikers/Urban-City,8,1.6,1.6,16,#REF!,16,59,24,12,6
+Horseback,All,Horseback/All,17,3.2,19.8,8.1,3.2,0.3,16,#REF!,16,62,63,27,10,
+Hunter,Temperate MTN,Hunter/Temperate MTN,355,2.1,17.2,4.8,2.1,1,156,90,45,12,16,#REF!,16,17,12,45,90,156,1549,86,9,4,
+Hunter,Temperate Flat,Hunter/Temperate Flat,465,1.6,13.7,3.1,1.6,0.6,156,90,45,12,16,#REF!,16,17,12,45,90,156,1549,86,9,4,
+Hunter,Dry MTN,Hunter/Dry MTN,138,4.8,22.2,8.1,4.8,2.1,16,#REF!,16,17,12,45,90,156,1549,86,9,4,
+Hunter,Dry Flat,Hunter/Dry Flat,40,3.1,11.3,6.4,3.1,1.6,16,#REF!,16,17,12,45,90,156,1549,86,9,4,
+Mental Illness,Temperate MTN,Mental Illness/Temperate MTN,23,2.3,14.6,8.3,2.3,0.6,16,#REF!,16,8,23,120,66,19,15,
+Mental Illness,Temperate Flat,Mental Illness/Temperate Flat,23,1,8.1,2.3,1,0.8,16,#REF!,16,8,23,120,66,19,15,
+Mental Illness,All,Mental Illness/All,8,1,1,16,#REF!,16,8,23,120,66,19,15,
+Mental Illness,Urban-City,Mental Illness/Urban-City,38,0.6,12.5,1.5,0.6,0.3,16,#REF!,16,8,23,64,20,16,10
+Mental Retardation,Temperate MTN,Mental Retardation/Temperate MTN,31,1.6,11.3,3.2,1.6,0.6,16,#REF!,16,16,11,15,49,230,207,83,11,6,
+Mental Retardation,Temperate Flat,Mental Retardation/Temperate Flat,36,1,11.8,2.1,1,0.3,16,#REF!,16,16,11,15,49,230,207,83,11,6,
+Mental Retardation,Dry all,Mental Retardation/Dry all,21,4,62.6,8.7,4,1.1,16,#REF!,16,16,11,15,49,230,207,83,11,6,
+Mental Retardation,Urban-City,Mental Retardation/Urban-City,44,0.8,9.9,3.7,0.8,0.3,16,#REF!,16,16,11,15,49,230,92,5,3,3
+Mountain Biker,Temperate MTN,Mountain Biker/Temperate MTN,25,4,25,11.3,4,3.1,115,68,37,15,16,#REF!,16,189,67,30,4,
+Mountain Biker,Dry MTN,Mountain Biker/Dry MTN,32,6.4,29.1,13.2,6.4,2.7,115,68,37,15,16,#REF!,16,189,67,30,4,
+Extreme Sports,All,Extreme Sports/All,8,2.6,13.4,5.7,2.6,0.5,16,#REF!,16,12,85,15,
+Motorcycle,All,Motorcycle/All,13,11.7,24.3,17.5,11.7,6.5,16,#REF!,16,63,59,36,3,1
+Runner,Temperate All,Runner/Temperate All,14,2.6,5.8,3.4,2.6,1.4,16,#REF!,16,21,74,13,13,
+Skier-Alpine,Temperate MTN,Skier-Alpine/Temperate MTN,16,2.7,15.2,4.8,2.7,1.1,16,#REF!,16,134,58,34,7,1
+Skier-Alpine,Dry - Mtn,Skier-Alpine/Dry - Mtn,8,4.8,4.8,16,#REF!,16,134,58,34,7,1
+Skier-Nordic,Temperate MTN,Skier-Nordic/Temperate MTN,29,3.5,19.6,6.4,3.5,1.6,165,149,48,16,16,#REF!,16,73,64,29,6,
+Skier-Nordic,Dry MTN,Skier-Nordic/Dry MTN,41,4.3,19.5,6.4,4.3,1.9,165,149,48,16,16,#REF!,16,73,64,29,6,
+Snowboarder,All,Snowboarder/All,31,3.2,15.4,6.2,3.2,1.6,16,#REF!,16,71,86,8,5,
+Snowmobiler,Temperate Mtn,Snowmobiler/Temperate Mtn,26,6.4,16.1,11.1,6.4,3.2,169,58,11,7,16,#REF!,16,358,62,35,3,
+Snowmobiler,Temperate Flat,Snowmobiler/Temperate Flat,14,4.7,96.1,41.1,4.7,1.3,169,58,11,7,16,#REF!,16,358,62,35,3,
+Snowmobiler,Dry MTN,Snowmobiler/Dry MTN,22,4.8,30.4,14,4.8,1.6,169,58,11,7,16,#REF!,16,358,62,35,3,
+Snowshoer,All,Snowshoer/All,7,1.6,4.9,1.6,16,#REF!,16,18,50,28,22,
+Substance Abuse,Temperate All,Substance Abuse/Temperate All,15,1.1,9.7,4.2,1.1,0.5,16,#REF!,16,51,59,19,22,
+Vehicle,All,Vehicle/All,84,5,62.7,12.6,5,2,16,#REF!,16,343,72,10,13,5
+Vehicle 4wd,All,Vehicle 4wd/All,19,5.3,18.8,10.4,5.3,0.1,16,#REF!,16,106,62,35,3,
+Vehicle Abandoned,All,Vehicle Abandoned/All,11,2,9.1,4.4,2,0.6,16,#REF!,16,24,54,25,21,
+Water Powered Boat,Water,Water Powered Boat/Water,45,1.5,10.7,5,1.5,0.2,16,#REF!,16,85,74,9,14,3
+Watercraft,Water,Watercraft/Water,34,2,15.6,7.4,2,0.4,16,#REF!,16,62,70,14,14,3
+Person in Water,Flat (no current),Person in Water/Flat (no current),16,0.02,0.45,0.02,0.005,16,#REF!,16,180,61,10,25,4
+Person in Water,River/Stream,Person in Water/River/Stream,26,1,6.4,1,16,#REF!,16,180,61,10,25,4
+Person in Water,Flood Stage,Person in Water/Flood Stage,9,19,62,28,19,3,16,#REF!,16,180,61,10,25,4
+Worker,Temperate MTN,Worker/Temperate MTN,29,1.9,11.8,3.2,1.9,1,16,#REF!,16,10,212,1000,2558,7345,152,80,9,10,
+,
+,
+,
