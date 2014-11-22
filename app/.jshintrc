@@ -13,8 +13,8 @@
     "newcap": true,
     "noarg": true,
     "quotmark": "single",
-    "undef": true,
-    "unused": true,
+    "undef": false,
+    "unused": false,
     "trailing": true,
     "smarttabs": true,
     "jquery": true,
@@ -25,3 +25,4 @@
         "scope": true,
         "config": true
     }
+}
