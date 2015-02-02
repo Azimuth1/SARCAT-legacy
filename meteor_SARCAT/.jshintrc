@@ -1,0 +1,30 @@
+{
+    "strict": false,
+    "node": true,
+    "browser": true,
+    "esnext": true,
+    "bitwise": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "immed": true,
+    "indent": 2,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "quotmark": "single",
+    "undef": false,
+    "unused": true,
+    "trailing": true,
+    "smarttabs": true,
+    "jquery": true,
+    "globals": {
+        "Flotr": true,
+        "ionic": true,
+        "angular": true,
+        "_": true,
+        "d3": true,
+        "scope": true,
+        "config": true
+    }
+}
