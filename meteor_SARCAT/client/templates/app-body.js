@@ -39,6 +39,7 @@ Template.appBody.rendered = function() {
         .hide()
         .insertBefore(next)
         .fadeIn(function () {
+          //console.log(Meteor.user())
           //listFadeInHold.release();
         });
     },
@@ -86,7 +87,12 @@ Template.appBody.helpers({
     } else {
       return true;
     }
-  }
+  },
+  samplerecords: function() {
+    var test=sampleRecords.find();
+    console.log(test)
+    return sampleRecords.find();
+  },
 });
 
 Template.appBody.events({
