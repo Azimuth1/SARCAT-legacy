@@ -12,6 +12,13 @@ Meteor.publish('privateLists', function() {
 
 Meteor.publish('todos', function(listId) {
   check(listId, String);
-
   return Todos.find({listId: listId});
 });
+
+
+Meteor.publish('sampleRecords', function(listId) {
+  check(listId, String);
+  return Todos.find();
+});
+
+

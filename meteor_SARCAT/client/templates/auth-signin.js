@@ -1,5 +1,11 @@
 var ERRORS_KEY = 'signinErrors';
 
+/*
+Accounts.ui.config({
+  passwordSignupFields: "USERNAME_ONLY"
+});*/
+
+
 Template.signin.created = function() {
   Session.set(ERRORS_KEY, {});
 };
@@ -40,7 +46,8 @@ Template.signin.events({
         return Session.set(ERRORS_KEY, {'none': error.reason});
       }
       
-      Router.go('home');
+      //Router.go('home');
+      Router.go('listsShow', Lists.findOne());
     });
   }
 });

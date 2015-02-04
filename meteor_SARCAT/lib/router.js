@@ -29,6 +29,7 @@ if (Meteor.isClient) {
 }
 Router.map(function() {
     this.route('join');
+    this.route('form');
     this.route('signin');
     this.route('listsShow', {
         path: '/lists/:_id',
@@ -39,6 +40,7 @@ Router.map(function() {
             if (this.ready()) {
                 // Handle for launch screen defined in app-body.js
                 dataReadyHold.release();
+                this.next();
             }
         },
         data: function() {

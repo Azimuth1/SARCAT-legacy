@@ -13,3 +13,5 @@ Lists.defaultName = function() {
 };
 
 Todos = new Meteor.Collection('todos');
+
+sampleRecords = new Meteor.Collection('samplerecords');

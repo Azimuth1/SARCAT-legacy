@@ -22,13 +22,11 @@
             {{/if}}
             <div class="list-todos">
                 <a class="js-new-list link-list-new"><span class="icon-plus"></span>New Template</a>
-           
-
-                <!--
+            
 
 
-                {{#each lists}}
-                    <a href="{{pathFor 'listsShow'}}" class="list-todo {{activeListClass}}" title="{{name}}">
+<!--            {{#each lists}}
+            <a href="{{pathFor 'listsShow'}}" class="list-todo {{activeListClass}}" title="{{name}}">
             {{#if userId}}
               <span class="icon-lock"></span>
             {{/if}}
@@ -36,9 +34,22 @@
               <span class="count-list">{{incompleteCount}}</span>
             {{/if}}
             {{name}}
-          </a> {{/each}}
-
+          </a>
+        {{/each}}
 -->
+
+
+            {{#each lists}}
+            <a href="{{pathFor 'listsShow'}}" class="list-todo {{activeListClass}}" title="{{name}}">
+            {{#if userId}}
+              <span class="icon-lock"></span>
+            {{/if}}
+         
+              <span class="count-list">{{status}}</span>
+           
+            {{name}}
+          </a>
+        {{/each}}
 
 
 
