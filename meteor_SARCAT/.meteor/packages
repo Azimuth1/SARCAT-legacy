@@ -11,3 +11,6 @@ accounts-password
 houston:admin
 autopublish
 insecure
+aldeed:autoform
+aldeed:collection2
+twbs:bootstrap
