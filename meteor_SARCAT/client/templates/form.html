@@ -12,7 +12,7 @@
                 <div class="nav-group">
                     <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a>
                 </div>
-                <h1 class="js-edit-list title-page"><span class="title-wrapper">{{name}}</span> <span class="count-list">{{date}}</span></h1>
+                <h1 class="js-edit-list title-page"><span contenteditable="true" class="title-wrapper">{{name}}</span> <span class="count-list">{{created}}</span></h1>
                 <div class="nav-group right">
                     <div class="nav-item options-mobile">
                         <select class="list-edit">
@@ -41,25 +41,43 @@
                 </div>
             {{/if}}
             <form class="js-todo-new todo-new input-symbol">
-                <input type="text" placeholder="Type to add new tasks">
-                <span class="icon-add js-todo-add"></span>
+                <input type="text" placeholder="Type to add new tasks" class="hide" >
+
+
+<!--
+
+        {{#autoForm id="demo" collection="Records" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
+    {{> afQuickField name='status' options="auto" }}
+{{/autoForm}}
+
+
+
+{{> quickForm collection="Records" doc=this id="updateBookForm1" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" fields='status'}}
+
+
+                <span class="icon-add js-todo-add"></span>-->
             </form>
         </nav>
-
-
-
-
-
-<!--
+        <!--
 {{> quickForm collection="Records" id="insertBookForm" type="insert"}}
 -->
-
-<div class="content-scrollable list-items">
- {{> quickForm collection="Records" doc=this id="updateBookForm" type="update"  template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
-</div>
+        <div class="content-scrollable list-items">
 
 
-<!--
+
+
+
+
+
+
+
+
+
+
+
+            {{> quickForm collection="Records" doc=this id="updateBookForm" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" omitFields='name,created'}}
+        </div>
+        <!--
 {{#autoForm id="afUpdateDemo" type=formType collection=Collections.People doc=selectedPersonDoc autosave=autoSaveMode}}
   {{> afQuickField name="firstName"}}
   {{> afQuickField name="lastName"}}
@@ -72,8 +90,7 @@
   {{/unless}}
 {{/autoForm}}
 -->
-
-<!--
+        <!--
         <div class="content-scrollable list-items">
             {{#if todosReady}}
                 {{#with _id}} {{! Establish new data context with only the '_id' field. This way, when the 'incompleteCount' field changes, we don't re-render the list contents }}

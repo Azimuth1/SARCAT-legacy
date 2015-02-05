@@ -2,7 +2,6 @@
 Records = new Mongo.Collection('records');
 // Calculate a default name for a list in the form of 'List A'
 Records.defaultName = function() {
-    console.log('!')
     var nextLetter = 'A',
         nextName = 'New Record ' + nextLetter;
     while (Records.findOne({
@@ -26,6 +25,9 @@ Records.attachSchema(new SimpleSchema({
         max: 200,
         optional: false
     },
+    userId: {
+        type: String,
+    },
     status: {
         type: String,
         allowedValues: [
@@ -38,23 +40,23 @@ Records.attachSchema(new SimpleSchema({
             if (this.isInsert) {
                 return 'Open';
             }
-        }
+        },
     },
     created: {
         type: String,
         autoValue: function() {
-            if (this.isInsert) {
-                return new Date().toDateString();
-            } else {
-                this.unset();
-            }
+            return new Date()
+                .toDateString();
         }
     },
     leadagency: {
         type: String,
         label: 'Lead Agency',
         max: 200,
-        optional: true
+        optional: true,
+        autoValue: function() {
+            return 'Default Agency';
+        }
     },
     incidentnum: {
         type: Number,
@@ -66,19 +68,18 @@ Records.attachSchema(new SimpleSchema({
         label: 'Mission #',
         optional: true
     },
-    incidentdate: {
+    'time.incidentdate': {
         type: Date,
         label: 'Incident Date',
         //min: 0
-        optional: true
+        optional: true,
+        autoValue: function() {
+            if (this.isInsert) {
+                return new Date();
+            }
+        }
     },
-    /*incidenttime: {
-        type: Number,
-        label: 'Incident Time',
-        min: 0,
-        optional: true
-    },*/
-    incidenttime: {
+    'time.incidenttime': {
         type: String,
         label: 'Incident Time',
         optional: true,
@@ -104,7 +105,10 @@ Records.attachSchema(new SimpleSchema({
         label: 'Email',
         regEx: SimpleSchema.RegEx.Email,
         max: 200,
-        optional: true
+        optional: true,
+        autoValue: function() {
+            return Meteor.user().emails[0].address;
+        }
     },
     phonenum: {
         type: Number,
@@ -124,12 +128,18 @@ Records.attachSchema(new SimpleSchema({
     country: {
         type: String,
         label: 'Country',
-        optional: true
+        optional: true,
+        autoValue: function() {
+            return 'Default Country';
+        }
     },
     stateregion: {
         type: String,
         label: 'State/Region',
-        optional: true
+        optional: true,
+        autoValue: function() {
+            return 'Default State/Region';
+        }
     }
 }));
 Schemas.Person = new SimpleSchema({
