@@ -4,7 +4,7 @@ Session.setDefault(EDITING_KEY, false);
 var firstRender = true;
 var listRenderHold = LaunchScreen.hold();
 listFadeInHold = null;
-Template.listsShow.rendered = function() {
+Template.form.rendered = function() {
     if (firstRender) {
         // Released in app-body.js
         listFadeInHold = LaunchScreen.hold();
@@ -12,28 +12,32 @@ Template.listsShow.rendered = function() {
         listRenderHold.release();
         firstRender = false;
     }
-    this.find('.js-title-nav')._uihooks = {
-        insertElement: function(node, next) {
-            $(node)
-                .hide()
-                .insertBefore(next)
-                .fadeIn();
-        },
-        removeElement: function(node) {
-            $(node).fadeOut(function() {
-                this.remove();
-            });
-        }
-    };
+    this.find('.js-title-nav')
+        ._uihooks = {
+            insertElement: function(node, next) {
+                $(node)
+                    .hide()
+                    .insertBefore(next)
+                    .fadeIn();
+            },
+            removeElement: function(node) {
+                $(node)
+                    .fadeOut(function() {
+                        this.remove();
+                    });
+            }
+        };
 };
-Template.listsShow.helpers({
+Template.form.helpers({
     editing: function() {
         return Session.get(EDITING_KEY);
     },
     todosReady: function() {
-      var a = Router.current().todosHandle.ready();
-      console.log('a');
-        return Router.current().todosHandle.ready();
+        var a = Router.current()
+            .todosHandle.ready();
+        console.log('a');
+        return Router.current()
+            .todosHandle.ready();
     },
     todos: function(listId) {
         return Todos.find({
@@ -68,34 +72,39 @@ var editList = function(list, template) {
     Session.set(EDITING_KEY, true);
     // force the template to redraw based on the reactive change
     Tracker.flush();
-    template.$('.js-edit-form input[type=text]').focus();
+    template.$('.js-edit-form input[type=text]')
+        .focus();
 };
 var saveList = function(list, template) {
     Session.set(EDITING_KEY, false);
-    Lists.update(list._id, {
+
+    Records.update(list._id, {
         $set: {
-            name: template.$('[name=name]').val()
+            name: template.$('[name=name]')
+                .val()
         }
     });
 }
 var deleteList = function(list) {
     // ensure the last public list cannot be deleted.
-    if (!list.userId && Lists.find({
+    if (!list.userId && Records.find({
             userId: {
                 $exists: false
             }
-        }).count() === 1) {
+        })
+        .count() === 1) {
         return alert('Sorry, you cannot delete the final public list!');
     }
     var message = 'Are you sure you want to delete the list ' + list.name + '?';
     if (confirm(message)) {
         // we must remove each item individually from the client
         Todos.find({
-            listId: list._id
-        }).forEach(function(todo) {
-            Todos.remove(todo._id);
-        });
-        Lists.remove(list._id);
+                listId: list._id
+            })
+            .forEach(function(todo) {
+                Todos.remove(todo._id);
+            });
+        Records.remove(list._id);
         Router.go('home');
         return true;
     } else {
@@ -103,40 +112,44 @@ var deleteList = function(list) {
     }
 };
 var toggleListPrivacy = function(list) {
+
+    console.log(list,list.userId);
+    a=Meteor.userId();
+    console.log(a)
     if (!Meteor.user()) {
         return alert('Please sign in or create an account to make private lists.');
     }
     if (list.userId) {
-        Lists.update(list._id, {
+        Records.update(list._id, {
             $unset: {
                 userId: true
             }
         });
     } else {
         // ensure the last public list cannot be made private
-        if (Lists.find({
+        if (Records.find({
                 userId: {
                     $exists: false
                 }
-            }).count() === 1) {
+            })
+            .count() === 1) {
             return alert('Sorry, you cannot make the final public list private!');
         }
-        Lists.update(list._id, {
+        Records.update(list._id, {
             $set: {
                 userId: Meteor.userId()
             }
         });
     }
 };
-Template.listsShow.events({
-    'click .js-cancel': function() {
-        Session.set(EDITING_KEY, false);
-    },
+Template.form.events({
+
     'keydown input[type=text]': function(event) {
         // ESC
         if (27 === event.which) {
             event.preventDefault();
-            $(event.target).blur();
+            $(event.target)
+                .blur();
         }
     },
     'blur input[type=text]': function(event, template) {
@@ -144,6 +157,7 @@ Template.listsShow.events({
         if (Session.get(EDITING_KEY))
             saveList(this, template);
     },
+
     'submit .js-edit-form': function(event, template) {
         event.preventDefault();
         saveList(this, template);
@@ -155,9 +169,12 @@ Template.listsShow.events({
         Session.set(EDITING_KEY, false);
     },
     'change .list-edit': function(event, template) {
-        if ($(event.target).val() === 'edit') {
+
+        if ($(event.target)
+            .val() === 'edit') {
             editList(this, template);
-        } else if ($(event.target).val() === 'delete') {
+        } else if ($(event.target)
+            .val() === 'delete') {
             deleteList(this, template);
         } else {
             toggleListPrivacy(this, template);
@@ -174,11 +191,13 @@ Template.listsShow.events({
         deleteList(this, template);
     },
     'click .js-todo-add': function(event, template) {
-        template.$('.js-todo-new input').focus();
+        template.$('.js-todo-new input')
+            .focus();
     },
     'submit .js-todo-new': function(event) {
         event.preventDefault();
-        var $input = $(event.target).find('[type=text]');
+        var $input = $(event.target)
+            .find('[type=text]');
         if (!$input.val())
             return;
         Todos.insert({
@@ -187,7 +206,7 @@ Template.listsShow.events({
             checked: false,
             createdAt: new Date()
         });
-        Lists.update(this._id, {
+        Records.update(this._id, {
             $inc: {
                 incompleteCount: 1
             }
@@ -199,5 +218,5 @@ Template.listsShow.events({
     },
     'change .autosave-toggle': function() {
         Session.set('autoSaveMode', !Session.get('autoSaveMode'));
-    }
+    },
 });
