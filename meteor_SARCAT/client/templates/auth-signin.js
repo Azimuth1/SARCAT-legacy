@@ -47,7 +47,7 @@ Template.signin.events({
       }
       
       //Router.go('home');
-      Router.go('listsShow', Lists.findOne());
+      Router.go('listsShow', Records.findOne());
     });
   }
 });

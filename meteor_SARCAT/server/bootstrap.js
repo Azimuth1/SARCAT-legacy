@@ -1,39 +1,7 @@
 // if the database is empty on server start, create some sample data.
 Meteor.startup(function() {
-    if (Lists.find().count() === 0) {
-        console.log('new list');
-        /*var data = [{
-            name: 'Meteor Principles',
-            items: ['Data on the Wire',
-                'One Language',
-                'Database Everywhere',
-                'Latency Compensation',
-                'Full Stack Reactivity',
-                'Embrace the Ecosystem',
-                'Simplicity Equals Productivity'
-            ]
-        }, {
-            name: 'Languages',
-            items: ['Lisp',
-                'C',
-                'C++',
-                'Python',
-                'Ruby',
-                'JavaScript',
-                'Scala',
-                'Erlang',
-                '6502 Assembly'
-            ]
-        }, {
-            name: 'Favorite Scientists',
-            items: ['Ada Lovelace',
-                'Grace Hopper',
-                'Marie Curie',
-                'Carl Friedrich Gauss',
-                'Nikola Tesla',
-                'Claude Shannon'
-            ]
-        }];*/
+    if (Records.find().count() === 0) {
+        console.log('new Records');
         var data = [{
             'name': 'John Doe',
             'date': '1/5/2013',
@@ -73,18 +41,26 @@ Meteor.startup(function() {
             ]
         }];
         var timestamp = (new Date()).getTime();
-        _.each(data, function(list) {
-          list.incompleteCount = list.items.length;
-            var list_id = Lists.insert(list);
-            _.each(list.items, function(text) {
+        _.each(data, function(record) {
+
+
+            record.incompleteCount = record.items.length;
+            var list_id = Records.insert(record);
+//console.log(list_id)
+
+            _.each(record.items, function(text) {
                 Todos.insert({
                     listId: list_id,
                     text: text,
                     createdAt: new Date(timestamp)
                 });
+                /*Records.insert({
+                    listId: list_id,
+                    text: text,
+                    createdAt: new Date(timestamp)
+                });*/
                 timestamp += 1; // ensure unique timestamp.
             });
         });
-
     }
 });
