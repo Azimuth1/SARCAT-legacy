@@ -1,3 +1,24 @@
+Lists = new Meteor.Collection('lists');
+
+// Calculate a default name for a list in the form of 'List A'
+Lists.defaultName = function() {
+  var nextLetter = 'A', nextName = 'List ' + nextLetter;
+  while (Lists.findOne({name: nextName})) {
+    // not going to be too smart here, can go past Z
+    nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
+    nextName = 'List ' + nextLetter;
+  }
+
+  return nextName;
+};
+
+
+
+
+
+
+
+
 //Records = new Meteor.Collection('titles');
 Records = new Mongo.Collection('records');
 // Calculate a default name for a list in the form of 'List A'
@@ -19,14 +40,15 @@ Schemas = {};
 //Template.registerHelper('Schemas', Schemas);
 //Schemas.Records = new SimpleSchema({
 Records.attachSchema(new SimpleSchema({
+    userId: {
+        type: String,
+        optional: true
+    },
     name: {
         type: String,
         label: 'Save As',
         max: 200,
         optional: false
-    },
-    userId: {
-        type: String,
     },
     status: {
         type: String,
@@ -105,10 +127,12 @@ Records.attachSchema(new SimpleSchema({
         label: 'Email',
         regEx: SimpleSchema.RegEx.Email,
         max: 200,
-        optional: true,
-        autoValue: function() {
-            return Meteor.user().emails[0].address;
+        optional: true
+        /*autoValue: function() {
+            if(this.user()){
+            return this.user().emails[0].address;
         }
+        }*/
     },
     phonenum: {
         type: Number,
