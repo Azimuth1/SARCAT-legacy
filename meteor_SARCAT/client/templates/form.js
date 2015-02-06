@@ -76,6 +76,7 @@ var editList = function(list, template) {
         .focus();
 };
 var saveList = function(list, template) {
+    console.log(list,template)
     Session.set(EDITING_KEY, false);
 
     Records.update(list._id, {
@@ -120,12 +121,14 @@ var toggleListPrivacy = function(list) {
         return alert('Please sign in or create an account to make private lists.');
     }
     if (list.userId) {
+        console.log(1)
         Records.update(list._id, {
             $unset: {
                 userId: true
             }
         });
     } else {
+          console.log(2)
         // ensure the last public list cannot be made private
         if (Records.find({
                 userId: {

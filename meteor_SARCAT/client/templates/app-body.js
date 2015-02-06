@@ -69,7 +69,8 @@ Template.appBody.helpers({
     },
     activeListClass: function() {
         var current = Router.current();
-        if (current.route.name === 'form' && current.params._id === this._id) {
+        //if (current.route.name === 'form' && current.params._id === this._id) {
+        if (current.params._id === this._id) {
             return 'active';
         }
     },
@@ -113,7 +114,6 @@ Template.appBody.events({
         }
     },
     'click .js-new-list': function() {
-      console.log(1)
         var list = {
             name: Records.defaultName(),
             incompleteCount: 0
