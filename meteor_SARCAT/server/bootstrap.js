@@ -2,7 +2,20 @@
 Meteor.startup(function() {
 
     if (Records.find().count() === 0) {
-        console.log('new Records');
+
+
+
+
+        Accounts.createUser({
+            email: 'a@a.com',
+            password: 'a',
+            username: 'admin',
+            profile:{test:'aaaa'}
+        });
+
+
+
+
         var data = [{
             'name': 'John Doe',
           
@@ -81,7 +94,7 @@ Meteor.startup(function() {
 
 
 
-
+/*
 
 
 
@@ -89,35 +102,35 @@ Meteor.startup(function() {
 Meteor.startup(function () {
   if (Lists.find().count() === 0) {
     var data = [
-      {name: "Meteor Principles",
-       items: ["Data on the Wire",
-         "One Language",
-         "Database Everywhere",
-         "Latency Compensation",
-         "Full Stack Reactivity",
-         "Embrace the Ecosystem",
-         "Simplicity Equals Productivity"
+      {name: 'Meteor Principles',
+       items: ['Data on the Wire',
+         'One Language',
+         'Database Everywhere',
+         'Latency Compensation',
+         'Full Stack Reactivity',
+         'Embrace the Ecosystem',
+         'Simplicity Equals Productivity'
        ]
       },
-      {name: "Languages",
-       items: ["Lisp",
-         "C",
-         "C++",
-         "Python",
-         "Ruby",
-         "JavaScript",
-         "Scala",
-         "Erlang",
-         "6502 Assembly"
+      {name: 'Languages',
+       items: ['Lisp',
+         'C',
+         'C++',
+         'Python',
+         'Ruby',
+         'JavaScript',
+         'Scala',
+         'Erlang',
+         '6502 Assembly'
          ]
       },
-      {name: "Favorite Scientists",
-       items: ["Ada Lovelace",
-         "Grace Hopper",
-         "Marie Curie",
-         "Carl Friedrich Gauss",
-         "Nikola Tesla",
-         "Claude Shannon"
+      {name: 'Favorite Scientists',
+       items: ['Ada Lovelace',
+         'Grace Hopper',
+         'Marie Curie',
+         'Carl Friedrich Gauss',
+         'Nikola Tesla',
+         'Claude Shannon'
        ]
       }
     ];
@@ -135,4 +148,4 @@ Meteor.startup(function () {
       });
     });
   }
-});
+});*/
