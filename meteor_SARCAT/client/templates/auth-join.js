@@ -15,6 +15,9 @@ Template.join.events({
   
     'submit': function(event, template) {
         event.preventDefault();
+
+        var username = template.$('[name=username]')
+            .val();
         var email = template.$('[name=email]')
             .val();
         var password = template.$('[name=password]')
@@ -22,6 +25,12 @@ Template.join.events({
         var confirm = template.$('[name=confirm]')
             .val();
         var errors = {};
+
+        console.log(username);
+  
+        if (!username) {
+            errors.username = 'Username required';
+        }
         if (!email) {
             errors.email = 'Email required';
         }
@@ -31,14 +40,18 @@ Template.join.events({
         if (confirm !== password) {
             errors.confirm = 'Please confirm your password';
         }
+
         Session.set(ERRORS_KEY, errors);
         if (_.keys(errors)
             .length) {
             return;
         }
+     
         Accounts.createUser({
             email: email,
-            password: password
+            password: password,
+            //username: username,
+            profile:{test:'aaaa'}
         }, function(error) {
             if (error) {
                 return Session.set(ERRORS_KEY, {
