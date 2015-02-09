@@ -33,13 +33,10 @@ Template.form.helpers({
         return Session.get(EDITING_KEY);
     },
     todosReady: function() {
-        var a = Router.current()
-            .todosHandle.ready();
-        console.log('a');
         return Router.current()
             .todosHandle.ready();
     },
-    todos: function(listId) {
+    /*todos: function(listId) {
         return Todos.find({
             listId: listId
         }, {
@@ -47,7 +44,7 @@ Template.form.helpers({
                 createdAt: -1
             }
         });
-    },
+    },*/
     autoSaveMode: function() {
         return Session.get('autoSaveMode') ? true : false;
     },
@@ -197,25 +194,7 @@ Template.form.events({
         template.$('.js-todo-new input')
             .focus();
     },
-    'submit .js-todo-new': function(event) {
-        event.preventDefault();
-        var $input = $(event.target)
-            .find('[type=text]');
-        if (!$input.val())
-            return;
-        Todos.insert({
-            listId: this._id,
-            text: $input.val(),
-            checked: false,
-            createdAt: new Date()
-        });
-        Records.update(this._id, {
-            $inc: {
-                incompleteCount: 1
-            }
-        });
-        $input.val('');
-    },
+
     'click .person-row': function() {
         Session.set('selectedPersonId', this._id);
     },
