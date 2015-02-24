@@ -1,4 +1,4 @@
-/*Meteor.publish('publicLists', function() {
+Meteor.publish('publicLists', function() {
     return Records.find({
         userId: {
             $exists: false
@@ -20,37 +20,10 @@ Meteor.publish('todos', function(listId) {
         listId: listId
     });
 });
-*/
-
-
-Meteor.publish('publicLists', function() {
-  return Records.find({userId: {$exists: false}});
+Meteor.publish('userData', function() {
+    return Meteor.users.find({}, {
+        fields: {
+            'test': 1
+        }
+    });
 });
-
-Meteor.publish('privateLists', function() {
-  if (this.userId) {
-    return Records.find({userId: this.userId});
-  } else {
-    this.ready();
-  }
-});
-
-Meteor.publish('todos', function(listId) {
-  check(listId, String);
-
-  return Todos.find({listId: listId});
-});
-
-
-
-// server
-Meteor.publish("userData", function () {
-  if (this.userId) {
-    return Meteor.users.find({_id: this.userId},
-                             {fields: {'other': 1, 'things': 1}});
-  } else {
-    this.ready();
-  }
-});
-
-

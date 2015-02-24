@@ -10,7 +10,8 @@ Router.configure({
     waitOn: function() {
         return [
             Meteor.subscribe('publicLists'),
-            Meteor.subscribe('privateLists')
+            Meteor.subscribe('privateLists'),
+            Meteor.subscribe('userData')
         ];
     }
 });
@@ -30,34 +31,10 @@ if (Meteor.isClient) {
 Router.map(function() {
     this.route('join');
     this.route('signin');
-    this.route('listsShow', {
-        path: '/list/:_id',
-        // subscribe to todos before the page is rendered but don't wait on the
-        // subscription, we'll just render the items as they arrive
-        onBeforeAction: function() {
-            this.todosHandle = Meteor.subscribe('todos', this.params._id);
-            if (this.ready()) {
-                // Handle for launch screen defined in app-body.js
-                dataReadyHold.release();
-                this.next();
-            }
-        },
-        data: function() {
-            return Records.findOne(this.params._id);
-        },
-        action: function() {
-            this.render();
-        }
-    });
-
-
-
     this.route('form', {
         path: '/form/:_id',
-        // subscribe to todos before the page is rendered but don't wait on the
-        // subscription, we'll just render the items as they arrive
         onBeforeAction: function() {
-            this.todosHandle = Meteor.subscribe('todos', this.params._id);
+            this.todosHandle = Meteor.subscribe('Records', this.params._id);
             if (this.ready()) {
                 // Handle for launch screen defined in app-body.js
                 dataReadyHold.release();
@@ -71,13 +48,9 @@ Router.map(function() {
             this.render();
         }
     });
-
-
-
     this.route('home', {
         path: '/',
         action: function() {
-            //Router.go('listsShow', Records.findOne());
             Router.go('signin');
         }
     });
