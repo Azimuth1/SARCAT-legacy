@@ -7,8 +7,15 @@
         </nav>
         <div class="content-scrollable">
             <div class="wrapper-auth">
-                <h1 class="title-auth">SARCAT</h1>
-                <p class="subtitle-auth">Missing Persons Database Entry</p>
+                {{#if adminCreation}}
+                    <h2 class="title-auth">Welcome to SARCAT</h2>
+                    <p class="subtitle-auth">Missing Persons Database Entry</p>
+                    <p class="subtitle-auth text-warning"><i>Please create you administrator account</i>
+                    </p>
+                {{else}}
+                    <h1 class="title-auth">SARCAT</h1>
+                    <p class="subtitle-auth">Missing Persons Database Entry</p>
+                {{/if}}
                 <form>
                     {{#if errorMessages}}
                         <div class="list-errors">
@@ -24,6 +31,18 @@
                     <div class="input-symbol {{errorClass 'password'}}">
                         <input type="password" name="password" placeholder="Password" />
                         <span class="icon-lock" title="Password"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="First Name" />
+                        <span class="icon-lock" title="First Name"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="Last Name" />
+                        <span class="icon-lock" title="Last Name"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="Agency" />
+                        <span class="icon-lock" title="Agency"></span>
                     </div>
                     <button type="submit" class="btn-primary">Sign in</button>
                 </form>

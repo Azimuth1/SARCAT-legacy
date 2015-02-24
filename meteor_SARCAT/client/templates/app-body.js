@@ -7,15 +7,16 @@ Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 var CONNECTION_ISSUE_TIMEOUT = 5000;
 Meteor.startup(function() {
     // set up a swipe left / right handler
-    $(document.body).touchwipe({
-        wipeLeft: function() {
-            Session.set(MENU_KEY, false);
-        },
-        wipeRight: function() {
-            Session.set(MENU_KEY, true);
-        },
-        preventDefaultEvents: false
-    });
+    $(document.body)
+        .touchwipe({
+            wipeLeft: function() {
+                Session.set(MENU_KEY, false);
+            },
+            wipeRight: function() {
+                Session.set(MENU_KEY, true);
+            },
+            preventDefaultEvents: false
+        });
     // Only show the connection error box if it has been 5 seconds since
     // the app started
     setTimeout(function() {
@@ -26,22 +27,25 @@ Meteor.startup(function() {
     }, CONNECTION_ISSUE_TIMEOUT);
 });
 Template.appBody.rendered = function() {
-    this.find('#content-container')._uihooks = {
-        insertElement: function(node, next) {
-            $(node)
-                .hide()
-                .insertBefore(next)
-                .fadeIn(function() {
-                    //console.log(Meteor.user())
-                    //listFadeInHold.release();
-                });
-        },
-        removeElement: function(node) {
-            $(node).fadeOut(function() {
-                $(this).remove();
-            });
-        }
-    };
+    this.find('#content-container')
+        ._uihooks = {
+            insertElement: function(node, next) {
+                $(node)
+                    .hide()
+                    .insertBefore(next)
+                    .fadeIn(function() {
+                        //console.log(Meteor.user())
+                        //listFadeInHold.release();
+                    });
+            },
+            removeElement: function(node) {
+                $(node)
+                    .fadeOut(function() {
+                        $(this)
+                            .remove();
+                    });
+            }
+        };
 };
 Template.appBody.helpers({
     // We use #each on an array of one item so that the "list" template is
@@ -58,7 +62,8 @@ Template.appBody.helpers({
         return Meteor.isCordova && 'cordova';
     },
     emailLocalPart: function() {
-        var email = Meteor.user().emails[0].address;
+        var email = Meteor.user()
+            .emails[0].address;
         return email.substring(0, email.indexOf('@'));
     },
     userMenuOpen: function() {
@@ -76,7 +81,8 @@ Template.appBody.helpers({
     },
     connected: function() {
         if (Session.get(SHOW_CONNECTION_ISSUE_KEY)) {
-            return Meteor.status().connected;
+            return Meteor.status()
+                .connected;
         } else {
             return true;
         }
@@ -105,7 +111,8 @@ Template.appBody.events({
         Meteor.logout();
         // if we are on a private list, we'll need to go to a public one
         var current = Router.current();
-        if (current.route.name === 'form' && current.data().userId) {
+        if (current.route.name === 'form' && current.data()
+            .userId) {
             Router.go('form', Records.findOne({
                 userId: {
                     $exists: false
