@@ -1,0 +1,65 @@
+{
+    leadagency: {
+        type: String,
+        label: "Lead Agency",
+        max: 200
+    },
+    incidentnum: {
+        type: Number,
+        label: "Incident #"
+    },
+    missionnum: {
+        type: Number,
+        label: "Mission #",
+        optional: true
+    },
+    incidentdate: {
+        type: Date,
+        label: "Incident Date",
+        min: 0
+    },
+    incidenttime: {
+        type: Number,
+        label: "Incident Time",
+        min: 0
+    },
+    preparedby: {
+        type: String,
+        label: "Prepared By",
+    },
+    organizationagency: {
+        type: String,
+        label: "Organization/Agency",
+        max: 200
+    },
+    email: {
+        type: String,
+        label: "Email",
+        max: 200
+    },
+    phonenum: {
+        type: Number,
+        label: "Phone #",
+    },
+    incidenttype: {
+        choose: {
+            type: String,
+            allowedValues: [
+                "Hiker",
+                "ATV",
+                "Camper"
+            ],
+            optional: false,
+            label: "Incident Type"
+        }
+    },
+    Country: {
+        type: String,
+        label: "Country",
+    },
+    stateregion: {
+        type: String,
+        label: "State/Region",
+    }
+}
+

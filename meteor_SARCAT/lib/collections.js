@@ -1,4 +1,8 @@
 Records = new Mongo.Collection('records');
+
+
+
+
 Records.defaultName = function() {
     var nextLetter = 'A',
         nextName = 'New Record ' + nextLetter;
@@ -12,16 +16,25 @@ Records.defaultName = function() {
     return nextName;
 };
 Schemas = {};
+
+
+
+
+
+
+
+
+
+
 Schemas.admin = new SimpleSchema({
     username: {
         type: String,
-        optional: true,
+        optional: false,
         autoValue: function() {
-            return 'a';
             if (this.isInsert) {
-                var user = Meteor.user();
-                var name = (user && user.username) ? user.username : '';
-                return name;
+                return this.userId || 'default';//Meteor.user();
+                //var name = (user && user.username) ? user.username : '';
+                //return name;
             }
         }
     },
@@ -134,6 +147,9 @@ Schemas.admin = new SimpleSchema({
         }
     }
 });
+
+
+
 Schemas.incident = new SimpleSchema({
     subjectcategory: {
         type: String,
