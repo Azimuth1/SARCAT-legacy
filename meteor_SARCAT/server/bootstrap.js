@@ -1,20 +1,17 @@
 // if the database is empty on server start, create some sample data.
 Meteor.startup(function() {
-    if (Records.find()
-        .count() === 0) {
-        var admin;
-        Accounts.createUser({
-            email: 'admin@a.com',
-            password: 'a',
-            username: 'admin',
-            admin: true,
-            test: 'ff',
+    //if (Records.find().count() === 0) {
+    if (!Meteor.users.find()
+        .count()) {
+        /*Accounts.createUser({
+            email: 'admin@sarcat.com',
+            password: 'blindmelon',
             profile: {
                 admin: true,
                 vv: 'ff',
                 test: 'vv'
             }
-        });
+        });*/
         var data = [{
             'name': 'John Doe',
             'status': 'Open',
@@ -35,5 +32,11 @@ Meteor.startup(function() {
             Records.insert(record);
             timestamp += 1;
         });
+    }
+});
+Meteor.methods({
+    test: function() {
+        //should print the user details if logged in, undefined otherwise.
+        console.log(Meteor.user());
     }
 });

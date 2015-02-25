@@ -73,8 +73,9 @@ var editList = function(list, template) {
         .focus();
 };
 var saveList = function(list, template) {
-    console.log(list, template)
+    console.log(list,template)
     Session.set(EDITING_KEY, false);
+
     Records.update(list._id, {
         $set: {
             name: template.$('[name=name]')
@@ -109,8 +110,9 @@ var deleteList = function(list) {
     }
 };
 var toggleListPrivacy = function(list) {
-    console.log(list, list.userId);
-    a = Meteor.userId();
+
+    console.log(list,list.userId);
+    a=Meteor.userId();
     console.log(a)
     if (!Meteor.user()) {
         return alert('Please sign in or create an account to make private lists.');
@@ -123,8 +125,8 @@ var toggleListPrivacy = function(list) {
             }
         });
     } else {
-        console.log(2)
-            // ensure the last public list cannot be made private
+          console.log(2)
+        // ensure the last public list cannot be made private
         if (Records.find({
                 userId: {
                     $exists: false
@@ -141,6 +143,7 @@ var toggleListPrivacy = function(list) {
     }
 };
 Template.form.events({
+
     'keydown input[type=text]': function(event) {
         // ESC
         if (27 === event.which) {
@@ -151,8 +154,10 @@ Template.form.events({
     },
     'blur input[type=text]': function(event, template) {
         // if we are still editing (we haven't just clicked the cancel button)
-        if (Session.get(EDITING_KEY)) saveList(this, template);
+        if (Session.get(EDITING_KEY))
+            saveList(this, template);
     },
+
     'submit .js-edit-form': function(event, template) {
         event.preventDefault();
         saveList(this, template);
@@ -164,6 +169,7 @@ Template.form.events({
         Session.set(EDITING_KEY, false);
     },
     'change .list-edit': function(event, template) {
+
         if ($(event.target)
             .val() === 'edit') {
             editList(this, template);
@@ -188,6 +194,7 @@ Template.form.events({
         template.$('.js-todo-new input')
             .focus();
     },
+
     'click .person-row': function() {
         Session.set('selectedPersonId', this._id);
     },
