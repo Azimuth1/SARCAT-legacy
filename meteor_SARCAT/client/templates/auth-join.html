@@ -7,16 +7,8 @@
         </nav>
         <div class="content-scrollable">
             <div class="wrapper-auth">
-            
-                {{#if initConfig}}
-                    <h2 class="title-auth">Welcome to SARCAT</h2>
-                    <p class="subtitle-auth">Missing Persons Database Entry
-                        <br><i>Please setup your administrator account</i>
-                    </p>
-                {{else}}
-                    <h1 class="title-auth">Join.</h1>
-                    <p class="subtitle-auth">Create and edit SARCAT records</p>
-                {{/if}}
+                <h1 class="title-auth">Join.</h1>
+                <p class="subtitle-auth">Create and edit SARCAT records</p>
                 <form>
                     {{#if errorMessages}}
                         <div class="list-errors">

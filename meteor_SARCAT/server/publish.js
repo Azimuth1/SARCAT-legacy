@@ -14,7 +14,6 @@ Meteor.publish('privateLists', function() {
         this.ready();
     }
 });
-
 Meteor.publish('userData', function() {
     if (this.userId) {
         return Meteor.users.find({
@@ -23,7 +22,4 @@ Meteor.publish('userData', function() {
     } else {
         this.ready();
     }
-});
-Meteor.publish('clientState', function() {
-    return State.find();
 });

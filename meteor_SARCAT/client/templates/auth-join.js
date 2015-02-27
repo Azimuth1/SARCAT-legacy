@@ -1,6 +1,10 @@
 var ERRORS_KEY = 'joinErrors';
 Template.join.created = function() {
     Session.set(ERRORS_KEY, {});
+    /*Meteor.call('getCount', function(error, result) {
+        Session.set('initConfig', result);
+        return result;
+    });*/
 };
 Template.join.helpers({
     errorMessages: function() {
@@ -9,13 +13,20 @@ Template.join.helpers({
     errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    initConfig: function() {
-        return State.findOne({
+    //initConfig: function() {
+    //    return Session.get('initConfig');
+        /* Meteor.call('getCount', function(error, result) {
+             console.log(error, result);
+             Session.set('initConfig', result);
+             return result;
+             
+         });*/
+        /*return Config.findOne({
             initSetup: {
                 $exists: true
             }
-        });
-    }
+        });*/
+   // }
 });
 Template.join.events({
     'submit': function(event, template) {
@@ -47,16 +58,17 @@ Template.join.events({
             email: email,
             password: password,
             //username: username,
-            profile: {
+            /*profile: {
                 test: 'aaaa'
-            }
+            }*/
         }, function(error) {
             if (error) {
                 return Session.set(ERRORS_KEY, {
                     'none': error.reason
                 });
             }
-            Router.go('home');
+            Router.go('user-home', Meteor.user());
+
         });
     }
 });

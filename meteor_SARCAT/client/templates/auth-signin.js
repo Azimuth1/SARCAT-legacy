@@ -12,6 +12,20 @@ Template.signin.helpers({
     },
     errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
+    },
+    initConfig: function() {
+        return Session.get('initConfig');
+        /* Meteor.call('getCount', function(error, result) {
+             console.log(error, result);
+             Session.set('initConfig', result);
+             return result;
+             
+         });*/
+        /*return Config.findOne({
+            initSetup: {
+                $exists: true
+            }
+        });*/
     }
 });
 Template.signin.events({
@@ -39,7 +53,9 @@ Template.signin.events({
                     'none': error.reason
                 });
             }
-            Router.go('form', Records.findOne());
+            //Router.go('user-home', Meteor.user());
+            //Router.go('form', Records.findOne());
+            Router.go('user-home', Meteor.user());
             //Router.go('listsShow', Records.findOne());
         });
     }
