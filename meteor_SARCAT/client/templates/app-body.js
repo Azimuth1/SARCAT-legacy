@@ -109,8 +109,9 @@ Template.appBody.events({
     },
     'click .js-logout': function() {
         Meteor.logout();
+        Router.go('signin');
         // if we are on a private list, we'll need to go to a public one
-        var current = Router.current();
+        /*var current = Router.current();
         if (current.route.name === 'form' && current.data()
             .userId) {
             Router.go('form', Records.findOne({
@@ -118,16 +119,18 @@ Template.appBody.events({
                     $exists: false
                 }
             }));
-        }
+        }*/
     },
     'click .js-new-list': function() {
         var list = {
             name: Records.defaultName(),
-            incompleteCount: 0
+            userId: Meteor.userId()
         };
-        console.log(list)
-        //list._id = Records.insert(list);
-        list._id = Meteor.call("addRecord", list);
-       // Router.go('form', list);
+        list._id = Meteor.call('addRecord', list, function(error, d) {
+            if (error) {console.log(error)}
+                console.log(d)
+            list._id = d;
+            Router.go('form', list);
+        });
     }
 });

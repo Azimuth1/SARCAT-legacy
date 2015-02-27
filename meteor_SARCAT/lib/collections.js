@@ -1,5 +1,4 @@
 Records = new Mongo.Collection('records');
-State = new Mongo.Collection('state');
 Records.defaultName = function() {
     var nextLetter = 'A',
         nextName = 'New Record ' + nextLetter;
@@ -14,13 +13,12 @@ Records.defaultName = function() {
 };
 Schemas = {};
 Schemas.admin = new SimpleSchema({
-    username: {
+    userId: {
         type: String,
         optional: false,
         autoValue: function() {
-            //return 'a';
             if (this.isInsert) {
-                return this.userId || 'unknown';
+                return Meteor.userId();
             }
         }
     },
@@ -187,14 +185,74 @@ Schemas.incident = new SimpleSchema({
 });
 Records.attachSchema(Schemas.admin);
 Records.attachSchema(Schemas.incident);
-Meteor.methods({
-    /*checkState: function() {
-        return State.find().fetch();
-    },*/
-    addRecord: function(list) {
-        if (!Meteor.userId()) {
-            // throw new Meteor.Error('not-authorized');
+Schemas.UserProfile = new SimpleSchema({
+    firstName: {
+        type: String,
+        regEx: /^[a-zA-Z-]{2,25}$/,
+        optional: true,
+        autoValue: function() {
+            return 'kyle';
         }
-        Records.insert(list);
+    },
+    lastName: {
+        type: String,
+        regEx: /^[a-zA-Z]{2,25}$/,
+        optional: true,
+        autoValue: function() {
+            return 'kalwa';
+        }
+    },
+    /*birthday: {
+        type: Date,
+        optional: true
+    },
+    gender: {
+        type: String,
+        allowedValues: ['Male', 'Female'],
+        optional: true
+    },
+    organization: {
+        type: String,
+        regEx: /^[a-z0-9A-z .]{3,30}$/,
+        optional: true
+    },*/
+});
+Schemas.User = new SimpleSchema({
+    username: {
+        optional: true,
+        type: String,
+        regEx: /^[a-z0-9A-Z_]{3,15}$/,
+        custom: function() {
+            console.log(this);
+        }
+    },
+    emails: {
+        optional: true,
+        type: [Object],
+        custom: function() {
+            console.log(this);
+        }
+    },
+    'emails.$.address': {
+        optional: true,
+        type: String,
+        regEx: SimpleSchema.RegEx.Email
+    },
+    'emails.$.verified': {
+        optional: true,
+        type: Boolean
+    },
+    createdAt: {
+        type: Date
+    },
+    profile: {
+        type: Schemas.UserProfile,
+        optional: false
+    },
+    services: {
+        type: Object,
+        optional: true,
+        blackbox: true
     }
 });
+Meteor.users.attachSchema(Schemas.User);

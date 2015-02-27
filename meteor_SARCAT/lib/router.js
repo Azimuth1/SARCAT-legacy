@@ -12,13 +12,11 @@ Router.configure({
             Meteor.subscribe('publicLists'),
             Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
-            Meteor.subscribe('clientState')
+            //Meteor.subscribe('clientState')
         ];
     }
 });
 dataReadyHold = null;
-
-
 if (Meteor.isClient) {
     // Keep showing the launch screen on mobile devices until we have loaded
     // the app's data
@@ -31,17 +29,30 @@ if (Meteor.isClient) {
         except: ['join', 'signin']
     });
 }
-
 Router.map(function() {
     this.route('join', {
         path: '/join',
         data: function() {
             return {
                 test: 'aaa'
-            }
+            };
         },
     });
     this.route('signin');
+    this.route('user-home', {
+        path: '/user/:_id',
+        onBeforeAction: function() {
+            this.todosHandle = Meteor.subscribe('Records', this.params._id);
+            if (this.ready()) {
+                // Handle for launch screen defined in app-body.js
+                dataReadyHold.release();
+                this.next();
+            }
+        },
+        action: function() {
+            this.render();
+        }
+    });
     this.route('form', {
         path: '/form/:_id',
         onBeforeAction: function() {
@@ -62,24 +73,14 @@ Router.map(function() {
     this.route('home', {
         path: '/',
         action: function() {
-            var userCount = Meteor.users.find()
-                .count();
-            var admin = userCount > 0;
-            if (!admin || !userCount) {
-                Router.go('join');
-                //this.render('join');
+            if (Meteor.user()) {
+                Router.go('form', Records.findOne());
             } else {
                 Router.go('signin');
             }
         }
     });
 });
-
-
-
-
-
-
 /*
 meteor add insecure
 meteor add autopublish

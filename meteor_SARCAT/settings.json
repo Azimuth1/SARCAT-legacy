@@ -1,1 +1,23 @@
-{"test":"kyle"}
+{
+    "development": {
+        "public": {
+            "package": {
+                "name": "jquery-datatables",
+                "description": "Sort, page, and filter millions of records. Reactively.",
+                "owner": "LumaPictures",
+                "repo": "meteor-jquery-datatables"
+            }
+        },
+        "private": {}
+    },
+    "staging": {
+        "public": {},
+        "private": {}
+    },
+    "production": {
+        "public": {
+            "initSetup": true
+        },
+        "private": {}
+    }
+}

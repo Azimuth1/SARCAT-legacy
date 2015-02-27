@@ -22,19 +22,7 @@
             {{/if}}
             
             <div class="list-todos">
-                <a class="js-new-list link-list-new"><span class="icon-plus"></span>New Record</a>
-                <!--            {{#each lists}}
-            <a href="{{pathFor 'listsShow'}}" class="list-todo {{activeListClass}}" title="{{name}}">
-            {{#if userId}}
-              <span class="icon-lock"></span>
-            {{/if}}
-            {{#if incompleteCount}}
-              <span class="count-list">{{incompleteCount}}</span>
-            {{/if}}
-            {{name}}
-          </a>
-        {{/each}}
--->
+               {{#if currentUser}} <a class="js-new-list link-list-new"><span class="icon-plus"></span>New Record</a>{{/if}}
                 {{#each lists}}
                     <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}}" title="{{name}}">
             {{#if userId}}

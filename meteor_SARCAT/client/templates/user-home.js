@@ -1,33 +1,7 @@
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
-// Track if this is the first time the list template is rendered
-var firstRender = true;
-var listRenderHold = LaunchScreen.hold();
 listFadeInHold = null;
-Template.form.rendered = function() {
-    if (firstRender) {
-        // Released in app-body.js
-        listFadeInHold = LaunchScreen.hold();
-        // Handle for launch screen defined in app-body.js
-        listRenderHold.release();
-        firstRender = false;
-    }
-    this.find('.js-title-nav')
-        ._uihooks = {
-            insertElement: function(node, next) {
-                $(node)
-                    .hide()
-                    .insertBefore(next)
-                    .fadeIn();
-            },
-            removeElement: function(node) {
-                $(node)
-                    .fadeOut(function() {
-                        this.remove();
-                    });
-            }
-        };
-};
+Template.form.rendered = function() {};
 Template.form.helpers({
     editing: function() {
         return Session.get(EDITING_KEY);
@@ -36,31 +10,8 @@ Template.form.helpers({
         return Router.current()
             .todosHandle.ready();
     },
-    /*todos: function(listId) {
-        return Todos.find({
-            listId: listId
-        }, {
-            sort: {
-                createdAt: -1
-            }
-        });
-    },*/
-    autoSaveMode: function() {
-        return Session.get('autoSaveMode') ? true : false;
-    },
-    selectedPersonDoc: function() {
-        return People.findOne(Session.get('selectedPersonId'));
-    },
-    isSelectedPerson: function() {
-        return Session.equals('selectedPersonId', this._id);
-    },
-    formType: function() {
-        if (Session.get('selectedPersonId')) {
-            return 'update';
-        } else {
-            return 'disabled';
-        }
-    },
+
+
     disableButtons: function() {
         return !Session.get('selectedPersonId');
     }
@@ -103,14 +54,30 @@ var deleteList = function(list) {
     }
 };
 var toggleListPrivacy = function(list) {
-
+    console.log(list, list.userId);
+    a = Meteor.userId();
+    console.log(a)
+    if (!Meteor.user()) {
+        return alert('Please sign in or create an account to make private lists.');
+    }
     if (list.userId) {
+        console.log(1)
         Records.update(list._id, {
             $unset: {
                 userId: true
             }
         });
     } else {
+        console.log(2)
+            // ensure the last public list cannot be made private
+        if (Records.find({
+                userId: {
+                    $exists: false
+                }
+            })
+            .count() === 1) {
+            return alert('Sorry, you cannot make the final public list private!');
+        }
         Records.update(list._id, {
             $set: {
                 userId: Meteor.userId()
@@ -149,8 +116,7 @@ Template.form.events({
             .val() === 'delete') {
             deleteList(this, template);
         } else {
-            Meteor.call('toggleListPrivacy', 'this', 'template');
-            //toggleListPrivacy(this, template);
+            toggleListPrivacy(this, template);
         }
         event.target.selectedIndex = 0;
     },
@@ -158,8 +124,7 @@ Template.form.events({
         editList(this, template);
     },
     'click .js-toggle-list-privacy': function(event, template) {
-        Meteor.call('toggleListPrivacy', 'this', 'template');
-        //toggleListPrivacy(this, template);
+        toggleListPrivacy(this, template);
     },
     'click .js-delete-list': function(event, template) {
         deleteList(this, template);
