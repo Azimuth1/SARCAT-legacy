@@ -1,8 +1,19 @@
 // if the database is empty on server start, create some sample data.
+
+
 Meteor.startup(function() {
-    //if (Records.find().count() === 0) {
-    if (!Meteor.users.find()
-        .count()) {
+
+
+if(!State.find().count()){
+    State.insert({initSetup:true});
+}
+
+
+
+
+
+if (!Meteor.users.find().count()) {
+     
         /*Accounts.createUser({
             email: 'admin@sarcat.com',
             password: 'blindmelon',
@@ -12,6 +23,28 @@ Meteor.startup(function() {
                 test: 'vv'
             }
         });*/
+        }
+
+
+
+
+ 
+
+
+    if (Records.find().count() === 0) {
+
+    //if (!Meteor.users.find().count()) {
+        /*Accounts.createUser({
+            email: 'admin@sarcat.com',
+            password: 'blindmelon',
+            profile: {
+                admin: true,
+                vv: 'ff',
+                test: 'vv'
+            }
+        });*/
+
+/*
         var data = [{
             'name': 'John Doe',
             'status': 'Open',
@@ -31,12 +64,7 @@ Meteor.startup(function() {
             record.incompleteCount = record.items.length;
             Records.insert(record);
             timestamp += 1;
-        });
+        });*/
     }
 });
-Meteor.methods({
-    test: function() {
-        //should print the user details if logged in, undefined otherwise.
-        console.log(Meteor.user());
-    }
-});
+

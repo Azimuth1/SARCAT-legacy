@@ -11,3 +11,5 @@ accounts-password
 aldeed:autoform
 aldeed:collection2
 twbs:bootstrap
+insecure
+autopublish

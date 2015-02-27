@@ -125,7 +125,9 @@ Template.appBody.events({
             name: Records.defaultName(),
             incompleteCount: 0
         };
-        list._id = Records.insert(list);
-        Router.go('form', list);
+        console.log(list)
+        //list._id = Records.insert(list);
+        list._id = Meteor.call("addRecord", list);
+       // Router.go('form', list);
     }
 });

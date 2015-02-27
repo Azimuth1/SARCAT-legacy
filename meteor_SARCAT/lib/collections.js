@@ -1,8 +1,5 @@
 Records = new Mongo.Collection('records');
-
-
-
-
+State = new Mongo.Collection('state');
 Records.defaultName = function() {
     var nextLetter = 'A',
         nextName = 'New Record ' + nextLetter;
@@ -16,25 +13,14 @@ Records.defaultName = function() {
     return nextName;
 };
 Schemas = {};
-
-
-
-
-
-
-
-
-
-
 Schemas.admin = new SimpleSchema({
     username: {
         type: String,
         optional: false,
         autoValue: function() {
+            //return 'a';
             if (this.isInsert) {
-                return this.userId || 'default';//Meteor.user();
-                //var name = (user && user.username) ? user.username : '';
-                //return name;
+                return this.userId || 'unknown';
             }
         }
     },
@@ -147,9 +133,6 @@ Schemas.admin = new SimpleSchema({
         }
     }
 });
-
-
-
 Schemas.incident = new SimpleSchema({
     subjectcategory: {
         type: String,
@@ -204,3 +187,14 @@ Schemas.incident = new SimpleSchema({
 });
 Records.attachSchema(Schemas.admin);
 Records.attachSchema(Schemas.incident);
+Meteor.methods({
+    /*checkState: function() {
+        return State.find().fetch();
+    },*/
+    addRecord: function(list) {
+        if (!Meteor.userId()) {
+            // throw new Meteor.Error('not-authorized');
+        }
+        Records.insert(list);
+    }
+});
