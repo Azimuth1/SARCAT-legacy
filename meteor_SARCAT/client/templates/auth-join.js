@@ -9,10 +9,12 @@ Template.join.helpers({
     errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    adminCreation: function() {
-        var admin = Meteor.users.find()
-            .count() > 0;
-        return admin ? true : false;
+    initConfig: function() {
+        return State.findOne({
+            initSetup: {
+                $exists: true
+            }
+        });
     }
 });
 Template.join.events({
