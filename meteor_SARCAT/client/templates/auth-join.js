@@ -13,20 +13,20 @@ Template.join.helpers({
     errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    //initConfig: function() {
+    initConfig: function() {
     //    return Session.get('initConfig');
-        /* Meteor.call('getCount', function(error, result) {
+         Meteor.call('getCount', function(error, result) {
              console.log(error, result);
              Session.set('initConfig', result);
              return result;
              
-         });*/
+         });
         /*return Config.findOne({
             initSetup: {
                 $exists: true
             }
         });*/
-   // }
+    }
 });
 Template.join.events({
     'submit': function(event, template) {

@@ -1,0 +1,76 @@
+<template name="adminSetup">
+    <div class="page auth">
+        <nav>
+            <div class="nav-group">
+                <a href="#" class="js-menu nav-item"><span class="icon-list-unordered"></span></a>
+            </div>
+        </nav>
+        <div class="content-scrollable">
+            <div class="wrapper-auth">
+
+                <h2 class="title-auth">Welcome to SARCAT</h2>
+                <p class="subtitle-audth">Missing Persons Database Entry</p>
+
+
+
+
+
+                {{#if defaultSignin}}
+                <p>
+                    <i class="strong"><strong>Please login with default admin account</strong></i>
+                </p>
+                <form>
+                    {{#if errorMessages}}
+                    <div class="list-errors">
+                        {{#each errorMessages}}
+                        <div class="list-item">{{this}}</div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <div class="input-symbol {{errorClass 'email'}}">
+                        <input type="email" name="email" placeholder="Email" />
+                        <span class="icon-email" title="Email"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="Password" />
+                        <span class="icon-lock" title="Password"></span>
+                    </div>
+                    <button type="submit" class="btn-primary">Sign in</button>
+                </form>
+                {{/if}}
+
+
+                
+                <!--
+                {{#if defaultSignin}
+
+                <p>
+                    <i><strong>Create your admin account!</strong></i>
+                </p>
+                <form>
+                    {{#if errorMessages}}
+                    <div class="list-errors">
+                        {{#each errorMessages}}
+                        <div class="list-item">{{this}}</div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <div class="input-symbol {{errorClass 'email'}}">
+                        <input type="email" name="email" placeholder="Email" />
+                        <span class="icon-email" title="Email"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="Password" />
+                        <span class="icon-lock" title="Password"></span>
+                    </div>
+                    <button type="submit" class="btn-primary">Sign in</button>
+                </form>
+-->
+
+
+
+            </div>
+
+        </div>
+    </div>
+</template>
