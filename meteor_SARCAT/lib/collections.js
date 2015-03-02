@@ -190,17 +190,17 @@ Schemas.UserProfile = new SimpleSchema({
         type: String,
         regEx: /^[a-zA-Z-]{2,25}$/,
         optional: true,
-        autoValue: function() {
+        /*autoValue: function() {
             return 'kyle';
-        }
+        }*/
     },
     lastName: {
         type: String,
         regEx: /^[a-zA-Z]{2,25}$/,
         optional: true,
-        autoValue: function() {
+        /*autoValue: function() {
             return 'kalwa';
-        }
+        }*/
     },
     /*birthday: {
         type: Date,
@@ -217,20 +217,21 @@ Schemas.UserProfile = new SimpleSchema({
         optional: true
     },*/
 });
+
 Schemas.User = new SimpleSchema({
     username: {
         optional: true,
         type: String,
         regEx: /^[a-z0-9A-Z_]{3,15}$/,
         custom: function() {
-            console.log(this);
+            //console.log(this);
         }
     },
     emails: {
         optional: true,
         type: [Object],
         custom: function() {
-            console.log(this);
+            //console.log(this);
         }
     },
     'emails.$.address': {
@@ -247,7 +248,7 @@ Schemas.User = new SimpleSchema({
     },
     profile: {
         type: Schemas.UserProfile,
-        optional: false
+        optional: true
     },
     services: {
         type: Object,

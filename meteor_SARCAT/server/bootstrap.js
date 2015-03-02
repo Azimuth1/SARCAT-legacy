@@ -8,34 +8,30 @@
 Meteor.startup(function() {
     if (!Meteor.users.find()
         .count()) {
+        Accounts.createUser({
+            email: 'admin@sarcat',
+            password: 'admin',
+            defaultAdmin:true,
+            role: 'default',
+            profile: {
+                role: 'default'
+            }
+        });
         /*
-                var defaultUser = Accounts.createUser({
-                    email: 'a@a', //dmin@sarcat.com',
-                    password: 'a', //dmin',
-                    profile: {
-                        admin: true,
-                        vv: 'ff',
-                        test: 'vv'
-                    }
-                });
 
-
-
-
-                var list = {
-                    name: Records.defaultName(),
-                    userId: defaultUser
-                };
-                var record = Records.insert(list);
-               */
+                        var list = {
+                            name: Records.defaultName(),
+                            userId: defaultUser
+                        };
+                        var record = Records.insert(list);
+                       */
         /*list._id = Meteor.call('addRecord', list, function(error, d) {
             if (error) {}
             list._id = d;
             Router.go('form', list);
         });*/
     }
-    if (Records.find()
-        .count() === 0) {
+    if (Records.find().count() === 0) {
         /*
                 var data = [{
                     'name': 'Default Template',
@@ -67,9 +63,9 @@ Meteor.methods({
         return Records.insert(list);
     },
     toggleListPrivacy: function(list) {
-        console.log(list, list.userId);
+        //console.log(list, list.userId);
         a = Meteor.userId();
-        console.log(a);
+        //console.log(a);
         if (!Meteor.user()) {
             return alert('Please sign in or create an account to make private lists.');
         }
@@ -80,7 +76,7 @@ Meteor.methods({
                 }
             });
         } else {
-            console.log(2);
+            // console.log(2);
             // ensure the last public list cannot be made private
             if (Records.find({
                     userId: {
@@ -100,8 +96,14 @@ Meteor.methods({
     checkState: function() {
         return Meteor.settings.initSetup;
     },
-    getCount: function() {
-        return Meteor.users.find()
-            .count();
-    }
+    defaultAdmin: function() {
+        var defaultAdmin = Meteor.users.find({
+            emails: {
+                $elemMatch: {
+                    address: 'admin@sarcat'
+                }
+            }
+        }).count();
+        return defaultAdmin ? true : false;
+    } 
 });

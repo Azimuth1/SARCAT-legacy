@@ -5,6 +5,10 @@ Accounts.ui.config({
 });*/
 Template.signin.created = function() {
     Session.set(ERRORS_KEY, {});
+
+
+
+
 };
 Template.signin.helpers({
     errorMessages: function() {
@@ -14,19 +18,8 @@ Template.signin.helpers({
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
     initConfig: function() {
-        return Session.get('initConfig');
-        /* Meteor.call('getCount', function(error, result) {
-             console.log(error, result);
-             Session.set('initConfig', result);
-             return result;
-             
-         });*/
-        /*return Config.findOne({
-            initSetup: {
-                $exists: true
-            }
-        });*/
-    }
+            return Session.get('initConfig');
+        }
 });
 Template.signin.events({
     'submit': function(event, template) {
