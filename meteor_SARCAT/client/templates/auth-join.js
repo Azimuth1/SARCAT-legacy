@@ -57,10 +57,10 @@ Template.join.events({
         Accounts.createUser({
             email: email,
             password: password,
-            //username: username,
-            /*profile: {
-                test: 'aaaa'
-            }*/
+            profile:{
+                firstName:'kyle',
+                lastName:'Kal'
+            }
         }, function(error) {
             if (error) {
                 return Session.set(ERRORS_KEY, {

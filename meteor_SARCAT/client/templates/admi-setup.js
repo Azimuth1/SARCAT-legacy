@@ -1,9 +1,9 @@
 var ERRORS_KEY = 'signinErrors';
 Template.adminSetup.created = function() {
     Session.set(ERRORS_KEY, {});
-    Meteor.call('defaultAdmin', function(error, result) {
+    /*Meteor.call('defaultAdmin', function(error, result) {
         Session.set('defaultAdmin', result);
-    });
+    });*/
 };
 Template.adminSetup.helpers({
     errorMessages: function() {
@@ -12,19 +12,13 @@ Template.adminSetup.helpers({
     errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    initConfig: function() {
-        return Session.get('initConfig');
-    },
-    defaultAdmin: function() {
-        return Session.get('defaultAdmin');
-    },
-    defaultSignin: function() {
-        console.log(Session.get('defaultAdmin') && !Meteor.user())
-        return Session.get('defaultAdmin') && !Meteor.user();
-    }
+    /*message: function(){
+        return message
+    };*/
 });
 Template.adminSetup.events({
     'submit': function(event, template) {
+        var self = this;
         event.preventDefault();
         var email = template.$('[name=email]')
             .val();
@@ -43,32 +37,63 @@ Template.adminSetup.events({
             return;
         }
         if (!Meteor.user()) {
+
             Meteor.loginWithPassword(email, password, function(error) {
                 if (error) {
                     return Session.set(ERRORS_KEY, {
                         'none': error.reason
                     });
                 }
+
+                var user = Meteor.user();
+                var role = user.profile.role;
+                if (role !== 'admin' && role !== 'default') {
+                    var errors = {};
+                    errors.email = 'You do not have admin rights';
+                    Session.set(ERRORS_KEY, errors);
+                    Meteor.logout();
+                    return;
+                }
+
                 template.$('[name=email]')
                     .val('');
                 template.$('[name=password]')
                     .val('');
             });
+
         } else {
-            Meteor.users.remove({
-                _id: Meteor.userId()
-            });
-            Accounts.createUser({
+            //var user = Meteor.user();
+            //var role = user.profile.role;
+            //var _id = user._id;
+            /*Meteor.call('createUsers', {
                 email: email,
                 password: password,
-            }, function(error) {
-                if (error) {
-                    return Session.set(ERRORS_KEY, {
-                        'none': error.reason
-                    });
+                profile: {
+                    role: 'admin'
                 }
-                Router.go('user-home', Meteor.user());
-            });
+            });*/
+             Accounts.createUser({
+                 email: email,
+                 password: password,
+                 profile: {
+                     role: 'admin'
+                 }
+             }, function(error) {
+                 if (error) {
+                     return Session.set(ERRORS_KEY, {
+                         'none': error.reason
+                     });
+                 }
+                 Meteor.call('updateConfig',self._id, {initSetup: false});
+             });
+            /*if (role === 'default') {
+                Meteor.users.remove({
+                    _id: _id
+                });
+
+            }*/
+            //  Router.go('user-home', Meteor.user());
+            //});
         }
     }
 });

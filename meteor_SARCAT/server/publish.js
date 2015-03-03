@@ -27,6 +27,9 @@ Meteor.publish('userData', function() {
         this.ready();
     }
 });
+Meteor.publish('config', function() {
+    return Config.find();
+});
 Meteor.publish('adminDefault', function() {
     return Meteor.users.find({
         emails: {

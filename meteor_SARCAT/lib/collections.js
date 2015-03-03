@@ -1,4 +1,5 @@
 Records = new Mongo.Collection('records');
+Config = new Mongo.Collection('config');
 Records.defaultName = function() {
     var nextLetter = 'A',
         nextName = 'New Record ' + nextLetter;
@@ -202,11 +203,11 @@ Schemas.UserProfile = new SimpleSchema({
             return 'kalwa';
         }*/
     },
-    /*birthday: {
-        type: Date,
+    role: {
+        type: String,
         optional: true
     },
-    gender: {
+    /*gender: {
         type: String,
         allowedValues: ['Male', 'Female'],
         optional: true
