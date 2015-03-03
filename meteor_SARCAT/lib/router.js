@@ -12,7 +12,7 @@ Router.configure({
             Meteor.subscribe('publicLists'),
             Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
-            Meteor.subscribe('adminDefault'),
+            Meteor.subscribe('config'),
             //Meteor.subscribe('clientState')
         ];
     }
@@ -31,72 +31,123 @@ if (Meteor.isClient) {
         except: ['join', 'signin']
     });
 }
+
+var IR_Filters = {
+    initSetup: function() {
+        if (Config.findOne({
+                initSetup: true
+            })) {
+            Router.go('adminSetup',Config.findOne());
+
+        }
+        this.next();
+        //if (Meteor.users.find().count()) {
+        //this.render('adminSetup');
+        //Router.go('adminSetup');
+        //}
+        /*else {
+                        _this.render('signin');
+                    }*/
+    },
+    // All standard subscriptions you need before anything works
+    // the .wait() makes sure that it continues only if the subscription
+    // is ready and the data available
+    // Use: global
+    baseSubscriptions: function() {
+        this.subscribe('userData').wait();
+    },
+    // show login if a guest wants to access private areas
+    // Use: {only: [privateAreas] }
+    isLoggedIn: function(pause) {
+        if (!(Meteor.loggingIn() || Meteor.user())) {
+            Notify.setError(__('Please login.')); // some custom packages
+            this.render('login');
+            pause();
+        }
+    },
+    // make sure to scroll to the top of the page on a new route
+    // Use: global
+    scrollUp: function() {
+        $('body,html').scrollTop(0);
+    },
+    // if this route depends on data, show the NProgess loading indicator
+    // http://ricostacruz.com/nprogress/
+    // Use: global
+    startNProgress: function() {
+        if (_.isFunction(this.data)) {
+            NProgress.start();
+        }
+    },
+    // only show route if you are an admin
+    // using https://github.com/alanning/meteor-roles
+    // Use: {only: [adminAreas]}
+    isAdmin: function(pause) {
+        if (!Roles.userIsInRole(Meteor.userId(), ['admin'])) {
+            this.render('login');
+            pause();
+        }
+    },
+};
+
 Router.map(function() {
-    var routeDefaults = {
-        noAdmin: function(_this) {
+
+    //this.onBeforeAction(IR_BeforeHooks.noAdmin);
+
+    this.onBeforeAction(IR_Filters.initSetup);
+
+
+    this.route('home', {
+        path: '/',
+        /*onBeforeAction: function() {
+            //var _this = this;
+            routeDefaults.noAdmin(this);
+            //Router.go('join');
+            //Router.go('signin');
+            /*var defaultAdmin = Meteor.users.find().count();
             if (Meteor.users.find().count()) {
-                //_this.render('adminSetup');
-                Router.go('adminSetup');
-            } /*else {
+                _this.render('adminSetup');
+            } else {
                 _this.render('signin');
             }*/
-        }
-    };
-    this.route('adminSetup', {
-        path: '/adminSetup',
-        /* onBeforeAction: function() {
-             var self = this;
-
-
-             Meteor.call('defaultAdmin', function(error, result) {
-                 Session.set('defaultAdmin', result);
-                 dataReadyHold.release();
-                 self.next();
-             });
-             if (this.ready()) {
-                 // Handle for launch screen defined in app-body.js
-                 //dataReadyHold.release();
-                 this.next();
-             }            
-         },*/
+            //this.render('join');
+            /* if (Meteor.user()) {
+                 Router.go('form', Records.findOne());
+             } else {
+                 Router.go('signin');
+                // this.render('adminSetup')
+             }
+        },*/
         action: function() {
-            /*Meteor.call('defaultAdmin', function(error, result) {
-                Session.set('defaultAdmin', result);
-                dataReadyHold.release();
-                this.next();
-            });*/
-            //if (this.ready()) {
-            // Handle for launch screen defined in app-body.js
-            //dataReadyHold.release();
-            //console.log('!')
+            //Router.go('signin');
             this.render();
-            //}
         }
     });
-    this.route('join', {
-        path: '/join',
-        onBeforeAction: function() {
-            routeDefaults.noAdmin(this);
-            /*this.todosHandle = Meteor.subscribe('Records', this.params._id);
-            if (this.ready()) {
-                // Handle for launch screen defined in app-body.js
-                dataReadyHold.release();
-                this.next();
-            }
+
+    this.route('adminSetup', {
+        path: '/adminSetup/:_id',
+        data: function() {
+            return Config.findOne();
         },
+
         action: function() {
-            this.render();*/
+            this.render();
         }
     });
+
+
+    this.route('join');
     this.route('signin');
     this.route('user-home', {
         path: '/user/:_id',
         onBeforeAction: function() {
-            this.todosHandle = Meteor.subscribe('Records', this.params._id);
-            if (this.ready()) {
-                dataReadyHold.release();
+            //this.todosHandle = Meteor.subscribe('Records', this.params._id);
+            //if (this.ready()) {
+            //    dataReadyHold.release();
                 this.next();
-            }
+            //}
+        },
+        data: function() {
+            return Meteor.user();
         },
         action: function() {
             this.render();
@@ -119,38 +170,9 @@ Router.map(function() {
             this.render();
         }
     });
-    this.route('home', {
-        path: '/',
-        onBeforeAction: function() {
-            //var _this = this;
 
-alert('!')
-            routeDefaults.noAdmin(this);
-            //Router.go('join');
-
-
-
-            //Router.go('signin');
-            /*var defaultAdmin = Meteor.users.find().count();
-            if (Meteor.users.find().count()) {
-                _this.render('adminSetup');
-            } else {
-                _this.render('signin');
-            }*/
-            //this.render('join');
-            /* if (Meteor.user()) {
-                 Router.go('form', Records.findOne());
-             } else {
-                 Router.go('signin');
-                // this.render('adminSetup')
-             }*/
-        },
-        action: function() {
-            //Router.go('signin');
-            //this.render();
-        }
-    });
 });
+
 /*
 meteor add insecure
 meteor add autopublish

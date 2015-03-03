@@ -62,7 +62,7 @@
                     <h3 class="panel-title">User Profile</h3>
                 </div>
                 <div class="panel-body">
-                    {{> quickForm type="update" collection="Records" id="fields1" schema="Schemas.UserProfile"}}
+                    {{> quickForm type="update" autosave="true" collection="Records" id="fields1" doc=this schema="Schemas.UserProfile" omitFields='role'}}
 
 
 

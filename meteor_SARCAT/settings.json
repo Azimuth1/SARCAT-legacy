@@ -18,6 +18,7 @@
         "public": {
             "initSetup": true
         },
+        "private":{"test":"gg"},
         "private": {}
     }
 }
