@@ -62,13 +62,16 @@ Template.appBody.helpers({
         return Meteor.isCordova && 'cordova';
     },
     emailLocalPart: function() {
-        var email = Meteor.user()
-            .emails[0].address;
+        var user = Meteor.user();
+
+        var firstName = user.profile.firstName;
+        if(firstName){return firstName;}
+        var email = user.emails[0].address;
         return email.substring(0, email.indexOf('@'));
     },
-    userMenuOpen: function() {
+    /*userMenuOpen: function() {
         return Session.get(USER_MENU_KEY);
-    },
+    },*/
     lists: function() {
         return Records.find();
     },
@@ -99,36 +102,25 @@ Template.appBody.events({
         Session.set(MENU_KEY, false);
         event.preventDefault();
     },
-    'click .js-user-menu': function(event) {
-        Session.set(USER_MENU_KEY, !Session.get(USER_MENU_KEY));
-        // stop the menu from closing
-        event.stopImmediatePropagation();
-    },
     'click #menu a': function() {
         Session.set(MENU_KEY, false);
     },
     'click .js-logout': function() {
         Meteor.logout();
         Router.go('signin');
-        // if we are on a private list, we'll need to go to a public one
-        /*var current = Router.current();
-        if (current.route.name === 'form' && current.data()
-            .userId) {
-            Router.go('form', Records.findOne({
-                userId: {
-                    $exists: false
-                }
-            }));
-        }*/
     },
-    'click .js-new-list': function() {
+    'click .js-userProfile': function() {
+        Router.go('user-home', Meteor.user());
+    },
+    'click .js-newRecord': function() {
         var list = {
-            name: Records.defaultName(),
+            //name: Records.defaultName(),
             userId: Meteor.userId()
         };
         list._id = Meteor.call('addRecord', list, function(error, d) {
-            if (error) {console.log(error)}
-                console.log(d)
+            if (error) {
+                console.log(error)
+            }
             list._id = d;
             Router.go('form', list);
         });

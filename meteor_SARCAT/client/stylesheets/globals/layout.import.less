@@ -27,19 +27,22 @@ body {
     .position(absolute, 0, 0, 0, 0);
     .transition(all 200ms ease-out);
     .transform(translate3d(0, 0, 0));
-    background: @color-tertiary;
+    //background: @color-tertiary;
+    background: none;
     opacity: 1;
+
     @media screen and (min-width: 40em) {
         left: @menu-width;
     }
-    /*
     .content-scrollable {
-        .position(absolute, 80px, 0, 0, 0);
+        //.position(absolute, 3em, 0, 0, 0);
+        .position(absolute, 3em, 0, 0, 0);
         .transform(translate3d(0, 0, 0));
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        //background: @color-empty;
+        background: @color-tertiary;
     }
-    */
     // Toggle menu on mobile
     .menu-open & {
         .transform(translate3d(@menu-width, 0, 0));
