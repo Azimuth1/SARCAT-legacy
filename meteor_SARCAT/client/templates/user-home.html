@@ -1,6 +1,8 @@
 <template name="userHome">
     <div class="page lists-show">
-        <nav class="js-title-nav">
+        <nav class="js-title-nav nav-bg">
+            <h1 class="js-edit-list title-page">SARCAT</h1>
+            <!--
             {{#if editing}}
                 <form class="js-edit-form list-edit-form">
                     <input type="text" name="name" value="{{name}}">
@@ -46,53 +48,18 @@
             <form class="js-todo-new todo-new input-symbol">
                 <input type="text" placeholder="Type to add new tasks" class="hide">
             </form>
+            -->
         </nav>
-
-
-
         <div class="content-scrollable list-items">
-            
-
-
-
-
-
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">User Profile</h3>
-                </div>
+                 <!--<div class="panel-heading">
+                   <h3 class="panel-title">Welcome</h3> </div>-->
                 <div class="panel-body">
-                    {{> quickForm type="update" autosave="true" collection="Meteor.users" doc=profile id="profileUpdateForm" schema="Schemas.UserProfile" omitFields='role'}}
-
-
-
-<!--
-
-
-        {{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" omitFields='name,username,created'}}
-
--->
-
-
-
-
-
+                    {{#autoForm collection="Meteor.users" doc=this id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role"}}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    {{/autoForm}}
                 </div>
             </div>
-
-
-
-
         </div>
-
-
-
-
-
-
-
-
-
-
     </div>
 </template>

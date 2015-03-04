@@ -189,49 +189,52 @@ Records.attachSchema(Schemas.incident);
 Schemas.UserProfile = new SimpleSchema({
     firstName: {
         type: String,
-        regEx: /^[a-zA-Z-]{2,25}$/,
+        //regEx: /^[a-zA-Z-]{2,25}$/,
         optional: true,
-        /*autoValue: function() {
-            return 'kyle';
+        /*defaultValue: function() {
+            return 'a';
         }*/
     },
     lastName: {
         type: String,
-        regEx: /^[a-zA-Z]{2,25}$/,
+        //regEx: /^[a-zA-Z]{2,25}$/,
         optional: true,
-        /*autoValue: function() {
-            return 'kalwa';
+        /*defaultValue: function() {
+            return 'b';
         }*/
     },
     role: {
         type: String,
+        optional: false,
+        defaultValue: function() {
+            return 'user';
+        }
+    },
+    Agency: {
+        type: String,
         optional: true
     },
-    /*gender: {
-        type: String,
-        allowedValues: ['Male', 'Female'],
-        optional: true
-    },
-    organization: {
-        type: String,
-        regEx: /^[a-z0-9A-z .]{3,30}$/,
-        optional: true
-    },*/
 });
 
+
+
 Schemas.User = new SimpleSchema({
-    username: {
-        optional: true,
+    /*_id: {
         type: String,
+        regEx: SimpleSchema.RegEx.Id
+    },*/
+    username: {
+        type: String,
+        optional: true,
         regEx: /^[a-z0-9A-Z_]{3,15}$/,
-        custom: function() {
+        custom: function () {
             //console.log(this);
         }
     },
     emails: {
-        optional: true,
+        
         type: [Object],
-        custom: function() {
+        custom: function () {
             //console.log(this);
         }
     },
@@ -255,6 +258,20 @@ Schemas.User = new SimpleSchema({
         type: Object,
         optional: true,
         blackbox: true
+    },
+    // Add `roles` to your schema if you use the meteor-roles package.
+    // Note that when using this package, you must also specify the
+    // `Roles.GLOBAL_GROUP` group whenever you add a user to a role.
+    // Roles.addUsersToRoles(userId, ['admin'], Roles.GLOBAL_GROUP);
+    // You can't mix and match adding with and without a group since
+    // you will fail validation in some cases.
+    roles: {
+        type: String,
+        optional: true,
+        blackbox: true,
+        allowedValues: ['booker', 'provider', 'admin']
     }
 });
+
 Meteor.users.attachSchema(Schemas.User);
+//Meteor.users.attachSchema(Schemas.UserProfile);

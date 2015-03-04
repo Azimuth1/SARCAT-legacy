@@ -1,7 +1,7 @@
 //process.env.GG='tt';
 //console.log(process.env);
-settings = JSON.parse(process.env.METEOR_SETTINGS);
-console.log(Meteor.settings.production);
+//settings = JSON.parse(process.env.METEOR_SETTINGS);
+//console.log(Meteor.settings.production);
 //process.env.METEOR_SETTINGS.initSetup=false;
 //console.log(process.env.METEOR_;SETTINGS.initSetup);
 //var config
@@ -25,7 +25,6 @@ Meteor.startup(function() {
 });
 Meteor.methods({
     updateConfig: function(id, list) {
-        console.log(id,list)
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -39,6 +38,15 @@ Meteor.methods({
         }
         return Records.insert(list);
     },
+    removeRecord: function(id) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+        return Records.remove(id);
+    },
+
+
+    
     toggleListPrivacy: function(list) {
         //console.log(list, list.userId);
         a = Meteor.userId();
