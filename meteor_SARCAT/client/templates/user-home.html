@@ -1,65 +1,22 @@
 <template name="userHome">
     <div class="page lists-show">
+    <!--
         <nav class="js-title-nav nav-bg">
             <h1 class="js-edit-list title-page">SARCAT</h1>
-            <!--
-            {{#if editing}}
-                <form class="js-edit-form list-edit-form">
-                    <input type="text" name="name" value="{{name}}">
-                    <div class="nav-group right">
-                        <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a>
-                    </div>
-                </form>
-            {{else}}
-                <div class="nav-group">
-                    <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a>
-                </div>
-                <h1 class="js-edit-list title-page">
-                <span class="title-wrapper">SARCAT</span>  
-            
-                </h1>
-                <div class="nav-group right">
-                    <div class="nav-item options-mobile">
-                        <select class="list-edit">
-                            <option disabled selected>Select an action</option>
-                            {{#if userId}}
-                                <option value="public">Make Public</option>
-                            {{else}}
-                                <option value="private">Make Private</option>
-                            {{/if}}
-                            <option value="delete">Delete</option>
-                        </select>
-                        <span class="icon-cog"></span>
-                    </div>
-                    <div class="options-web">
-                        <a class="js-toggle-list-privacy nav-item">
-              {{#if userId}}
-                <span class="icon-lock" title="Make list public"></span>
-              {{else}}
-                <span class="icon-unlock" title="Make list private"></span>
-              {{/if}}
-            </a>
-                        <a class="js-delete-list nav-item">
-                            <span class="icon-trash" title="Delete list"></span>
-                        </a>
-                    </div>
-                </div>
-            {{/if}}
-            <form class="js-todo-new todo-new input-symbol">
-                <input type="text" placeholder="Type to add new tasks" class="hide">
-            </form>
-            -->
         </nav>
-        <div class="content-scrollable list-items">
-            <div class="panel panel-default">
-                 <!--<div class="panel-heading">
-                   <h3 class="panel-title">Welcome</h3> </div>-->
-                <div class="panel-body">
-                    {{#autoForm collection="Meteor.users" doc=this id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role"}}
+        -->
+        <div class="content-scrollable">
+
+            <div class="row col-md-10 col-md-offset-1 mar2y">
+          
+                    <div class="panel-body">
+                        {{#autoForm collection="Meteor.users" doc=this id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role"}}
                         <button type="submit" class="btn btn-primary">Update</button>
-                    {{/autoForm}}
-                </div>
+                        {{/autoForm}}
+                    </div>
+               
             </div>
+
         </div>
     </div>
 </template>

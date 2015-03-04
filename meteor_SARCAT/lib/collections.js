@@ -13,6 +13,7 @@ Records.defaultName = function() {
     return nextName;
 };
 Schemas = {};
+
 Schemas.admin = new SimpleSchema({
     userId: {
         type: String,
@@ -23,27 +24,16 @@ Schemas.admin = new SimpleSchema({
             }
         }
     },
-    name: {
+    user: {
         type: String,
-        label: 'Save As',
-        max: 200,
-        optional: false
-    },
-    status: {
-        type: String,
-        allowedValues: ['Active', 'Closed', 'Open'],
-        label: 'Status',
+        label: 'Prepared By',
+        optional: false,
         autoValue: function() {
             if (this.isInsert) {
-                return 'Open';
+                var first = Meteor.user().profile.firstName;
+                var last = Meteor.user().profile.lastName;
+                return [first, last].join(' ');
             }
-        },
-    },
-    created: {
-        type: String,
-        autoValue: function() {
-            return new Date()
-                .toDateString();
         }
     },
     leadagency: {
@@ -53,7 +43,7 @@ Schemas.admin = new SimpleSchema({
         optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                return 'Default Agency';
+                return Meteor.user().profile.Agency;
             }
         }
     },
@@ -64,7 +54,7 @@ Schemas.admin = new SimpleSchema({
         optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                return 'Default Agency';
+                return Meteor.user().profile.Agency;
             }
         }
     },
@@ -184,8 +174,49 @@ Schemas.incident = new SimpleSchema({
         },
     }
 });
-Records.attachSchema(Schemas.admin);
-Records.attachSchema(Schemas.incident);
+
+Schemas.SARCAT = new SimpleSchema({
+    name: {
+        type: String,
+        label: 'Save As',
+        optional: false,
+        autoValue: function() {
+            if (this.isInsert) {
+                return Records.defaultName();
+            }
+        }
+    },
+    status: {
+        type: String,
+        allowedValues: ['Active', 'Closed', 'Open'],
+        label: 'Status',
+        autoValue: function() {
+            if (this.isInsert) {
+                return 'Open';
+            }
+        },
+    },
+    created: {
+        type: String,
+        autoValue: function() {
+            return new Date()
+                .toDateString();
+        }
+    },
+    admin: {
+        type: Schemas.admin,
+        //optional: true
+    },
+    incident: {
+        type: Schemas.incident,
+        //optional: true
+    }
+
+});
+
+Records.attachSchema(Schemas.SARCAT);
+//Records.attachSchema(Schemas.incident);
+
 Schemas.UserProfile = new SimpleSchema({
     firstName: {
         type: String,
@@ -203,10 +234,27 @@ Schemas.UserProfile = new SimpleSchema({
             return 'b';
         }*/
     },
+    phoneNum: {
+        type: String,
+        //regEx: /^[a-zA-Z]{2,25}$/,
+        optional: true,
+        /*defaultValue: function() {
+            return 'b';
+        }*/
+    },
+    /*email: {
+        type: String,
+        //regEx: /^[a-zA-Z]{2,25}$/,
+        optional: true,
+        defaultValue: function() {
+            return Meteor.user.emails[0].address;
+        }
+    },*/
     role: {
         type: String,
         optional: false,
-        defaultValue: function() {
+        custom: function() {
+            console.log(this)
             return 'user';
         }
     },
@@ -215,8 +263,6 @@ Schemas.UserProfile = new SimpleSchema({
         optional: true
     },
 });
-
-
 
 Schemas.User = new SimpleSchema({
     /*_id: {
@@ -227,14 +273,14 @@ Schemas.User = new SimpleSchema({
         type: String,
         optional: true,
         regEx: /^[a-z0-9A-Z_]{3,15}$/,
-        custom: function () {
+        custom: function() {
             //console.log(this);
         }
     },
     emails: {
-        
+
         type: [Object],
-        custom: function () {
+        custom: function() {
             //console.log(this);
         }
     },
@@ -252,7 +298,7 @@ Schemas.User = new SimpleSchema({
     },
     profile: {
         type: Schemas.UserProfile,
-        optional: true
+        optional: false
     },
     services: {
         type: Object,
@@ -265,12 +311,12 @@ Schemas.User = new SimpleSchema({
     // Roles.addUsersToRoles(userId, ['admin'], Roles.GLOBAL_GROUP);
     // You can't mix and match adding with and without a group since
     // you will fail validation in some cases.
-    roles: {
+    /*roles: {
         type: String,
         optional: true,
         blackbox: true,
-        allowedValues: ['booker', 'provider', 'admin']
-    }
+        allowedValues: ['user', 'provider', 'admin']
+    }*/
 });
 
 Meteor.users.attachSchema(Schemas.User);

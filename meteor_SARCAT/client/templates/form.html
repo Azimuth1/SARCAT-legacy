@@ -7,15 +7,15 @@
                     <div class="nav-group right"> <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a> </div>
                 </form> {{else}}
                 <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
-                <h1 class="_js-edit-list _title-page">
-
-
-<a href="{{pathFor 'user-home'}}" class="glyphicon glyphicon-home text-default"></a>
-<div class="_title-wrapper">{{name}}</div>
+                <h1 class="js-edit-list title-page">
 
 
 
-                <span class="count-list">{{username}}: {{created}}</span>
+<div class="title-wrapper">{{name}}</div>
+
+
+
+                <span class="count-list">Created: {{created}}</span>
                 </h1>
                 <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
                 <div class="nav-group right">
@@ -45,14 +45,41 @@
         <div class="content-scrollable list-items">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Administrative Information</h3> </div>
-                <div class="panel-body"> {{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" omitFields='name,username,created'}} </div>
+                <h3 class="panel-title">Administrative Information</h3>
+                </div>
+                
+                <div class="panel-body"> {{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" omitFields='userId, name,created'}} </div>
             </div>
+
+
+<!--
+{{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" omitFields='userId, name,created'}}
+
+
+{{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" fields='status'}}
+-->
+
+<!--
+                    <div class="panel-body">
+                        {{#autoForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this type="update" }} 
+
+                        {{> afObjectField name='profile' omitFields="profile.role"}}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        {{/autoForm}}
+                    </div>
+
+
+
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Incident Information</h3> </div>
                 <div class="panel-body"> {{> quickForm schema="Schemas.incident" doc=this id="updateBookForm2" type="update" template="bootstrap3-inline" label-class=""}} </div>
             </div>
+-->
+
+
+
         </div>
     </div>
 </template>

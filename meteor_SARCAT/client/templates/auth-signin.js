@@ -46,10 +46,7 @@ Template.signin.events({
                     'none': error.reason
                 });
             }
-            //Router.go('user-home', Meteor.user());
-            //Router.go('form', Records.findOne());
             Router.go('user-home', Meteor.user());
-            //Router.go('listsShow', Records.findOne());
         });
     }
 });
