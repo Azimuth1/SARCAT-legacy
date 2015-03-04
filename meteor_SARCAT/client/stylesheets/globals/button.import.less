@@ -1,9 +1,14 @@
-[class^="btn-"],
-[class*=" btn-"] {
-  // Sizing
+
+.btn-secondary{
+    // Sizing
   .font-s2;
   line-height: 20px !important; //override line-height always so we can use em's to size
   padding: 1em 1.25em; // 48px tall
+}
+
+[class^="btn-"],
+[class*=" btn-"] {
+
 
   // Style
   .title-caps;
@@ -18,6 +23,7 @@
 
   &[class*="primary"] {
     background-color: @color-primary;
+    border:none;
     color: @color-empty;
 
     &:hover { background-color: darken(@color-primary, 5%); }

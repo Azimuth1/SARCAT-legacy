@@ -95,7 +95,8 @@ var deleteList = function(list) {
             .forEach(function(todo) {
                 Records.remove(todo._id);
             });
-        Records.remove(list._id);
+        //Records.remove(list._id);
+        Meteor.call('removeRecord',list._id);
         Router.go('home');
         return true;
     } else {

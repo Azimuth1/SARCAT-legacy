@@ -119,12 +119,18 @@ Router.map(function() {
         },*/
         action: function() {
             //Router.go('signin');
-            this.render();
+            if(Meteor.user()){
+                Router.go('user-home', Meteor.user());
+            }
+            else{
+                Router.go('signin');
+            }
         }
     });
 
     this.route('adminSetup', {
         path: '/adminSetup/:_id',
+        layoutTemplate:null,
         data: function() {
             return Config.findOne();
         },
