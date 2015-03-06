@@ -7,19 +7,18 @@
 //var config
 Meteor.startup(function() {
     //Config.insert(Meteor.settings.production.public)
-
     if (!Config.find().count()) {
         Config.insert(Meteor.settings.production.public);
     }
-
     if (!Meteor.users.find()
         .count()) {
         Accounts.createUser({
             email: 'a@a', //dmin@sarcat',
             password: 'a', //dmin',
-            profile: {
+            role: 'default'
+            /*profile: {
                 role: 'default'
-            }
+            }*/
         });
     }
 });
@@ -44,9 +43,16 @@ Meteor.methods({
         }
         return Records.remove(id);
     },
-
-
-    
+    updateRecord: function(id, name) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+        return Records.update(id, {
+            $set: {
+                name: name
+            }
+        });
+    },
     toggleListPrivacy: function(list) {
         //console.log(list, list.userId);
         a = Meteor.userId();
@@ -78,7 +84,6 @@ Meteor.methods({
             });
         }
     },
-
     defaultAdmin: function() {
         var defaultAdmin = Meteor.users.find({
             emails: {
@@ -91,6 +96,17 @@ Meteor.methods({
     }
 });
 
+
+
+  Records.allow({
+    'update': function (userId,doc) {
+      /* user and doc checks ,
+      return true to allow insert */
+      return true; 
+    }
+  });
+
+
 /*
 Meteor.users.deny({
   update: function() {
@@ -98,7 +114,6 @@ Meteor.users.deny({
   }
 });
 */
-
 /* if (Records.find().count() === 0) {
      
              var data = [{

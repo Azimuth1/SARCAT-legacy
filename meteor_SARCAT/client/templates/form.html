@@ -43,43 +43,169 @@
                 <input type="text" placeholder="Type to add new tasks" class="hide"> </form>
         </nav>
         <div class="content-scrollable list-items">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                <h3 class="panel-title">Administrative Information</h3>
-                </div>
-                
-                <div class="panel-body"> {{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" omitFields='userId, name,created'}} </div>
-            </div>
+
+            {{#autoForm 
+            collection="Records" 
+            doc=this 
+            schema="Schemas.SARCAT" 
+            id="recordAdminForm" 
+            type="update"}} 
+
+            {{> afObjectField name='admin'}} 
 
 
+
+            {{> afObjectField name='recordInfo'}} 
+
+
+
+
+            {{> afObjectField name='incident'}} 
 <!--
-{{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" omitFields='userId, name,created'}}
+            {{> afObjectField name='subjectInfo'}} 
 
+            {{> afObjectField name='incidentOperations'}}
 
-{{> quickForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this template="bootstrap3-inline" slabel-class="" fields='status'}}
+            {{> afObjectField name='incidentOutcome'}} 
+
+            {{> afObjectField name='medical'}} 
+
+            {{> afObjectField name='resources'}}
 -->
 
+<button type="submit" class="btn btn-primary">Submit</button>
+            {{/autoForm}}
+
+
+
+
+
+
+
 <!--
-                    <div class="panel-body">
-                        {{#autoForm type="update" autosave=true collection="Records" schema="Schemas.admin" doc=this type="update" }} 
-
-                        {{> afObjectField name='profile' omitFields="profile.role"}}
-                        <button type="submit" class="btn btn-primary">Update</button>
-                        {{/autoForm}}
-                    </div>
+ <div class="panel panel-default">
 
 
+<div class="panel-heading">
+<h3 class="panel-title">Admin</h3>
+</div>
 
 
-            <div class="panel panel-default">
+                <div class="panel-body"> 
+                {{> quickForm 
+                type="update" 
+                collection="Records" 
+                schema="Schemas.admin" 
+                doc=this.admin
+                id="recordAdminForm" 
+                }}
+</div>
+</div>
+-->
+
+
+<!--
+ <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Incident Information</h3> </div>
                 <div class="panel-body"> {{> quickForm schema="Schemas.incident" doc=this id="updateBookForm2" type="update" template="bootstrap3-inline" label-class=""}} </div>
-            </div>
+</div>
+-->
+
+<!--
+
+                {{> quickForm 
+                type="update" 
+                autosave=true 
+                collection="Records" 
+                schema="Schemas.SARCAT" 
+                doc=this 
+                omitFields='userId, name,created'}}
+-->
+<!--
+<div class="panel-body"> {{> quickForm schema="Schemas.SARCAT" id="contactForm" collection="Records" type="update" doc=this template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}} </div>
+-->
+<!--
+<div class="panel-body"> {{> quickForm schema="Schemas.admin" id="contactForm" collection="Records" type="update" doc=this template="bootstrap3-inline" }} </div>
 -->
 
 
 
+          <!--
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Administrative Information</h3> </div>
+                <div class="panel-body"> 
+                {{> quickForm 
+                type="update" 
+                autosave=true 
+                collection="Records" 
+                schema="Schemas.SARCAT" 
+                doc=this 
+                omitFields='userId, name,created'}} </div>
+            </div>-->
+
+<!--
+            {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update"}} 
+
+            {{> afObjectField name='admin'}} 
+
+            {{> afObjectField name='recordInfo'}} 
+
+            {{> afObjectField name='incident'}} 
+
+            {{> afObjectField name='subjectInfo'}} 
+
+            {{> afObjectField name='incidentOperations'}}
+
+            {{> afObjectField name='incidentOutcome'}} 
+
+            {{> afObjectField name='medical'}} 
+
+            {{> afObjectField name='resources'}}
+
+            {{/autoForm}}
+-->
+
+
+            <!-- <div class="panel-body"> {{> quickForm schema="Schemas.admin" id="contactForm" collection="Records" type="update" doc=this template="bootstrap3-inline" }} </div>-->
+<!--
+            <div class="panel panel-default">
+                <div class="panel-body"> {{> quickForm type="update" autosave=true collection="Records" schema="Schemas.SARCAT" doc=this template="bootstrap3-inline" slabel-class="" autosave=true  omitFields='userId, name,created'}} </div>
+            </div>
+-->
+
+<!--
+            {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }} {{> afObjectField name='admin' template="bootstrap3-inline" template="bootstrap3-inline" }} {{> afObjectField name='recordInfo'}} {{> afObjectField name='incident'}} {{> afObjectField name='subjectInfo'}} {{> afObjectField name='incidentOperations'}} {{> afObjectField name='incidentOutcome'}} {{> afObjectField name='medical'}} {{> afObjectField name='resources'}}
+
+
+                
+{{#each afFieldNames}}
+{{> afQuickField 
+name=this 
+Schema=this.admin
+options="auto"
+}}
+{{/each}}
+-->
+                <!--
+{{> afObjectField 
+name='admin' 
+schema="Schemas.admin"
+template="bootstrap3-inline"
+label-class="col-sm-4" 
+input-col-class="col-sm-8" }} 
+
+
+{{> afQuickField 
+name='admin'
+template="bootstrap3-horizontal"
+label-class="col-sm-3" 
+input-col-class="col-sm-9"
+}}
+
+            {{/autoForm}}
+-->
         </div>
     </div>
 </template>

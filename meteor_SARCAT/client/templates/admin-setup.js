@@ -46,9 +46,10 @@ Template.adminSetup.events({
             Accounts.createUser({
                 email: email,
                 password: password,
-                profile: {
+                role: 'admin'
+                /*profile: {
                     role: 'admin'
-                }
+                }*/
             }, function(error) {
                 if (error) {
                     return Session.set(ERRORS_KEY, {

@@ -1,22 +1,26 @@
 <template name="userHome">
     <div class="page lists-show">
-    <!--
+        <!--
         <nav class="js-title-nav nav-bg">
             <h1 class="js-edit-list title-page">SARCAT</h1>
         </nav>
         -->
         <div class="content-scrollable">
-
             <div class="row col-md-10 col-md-offset-1 mar2y">
-          
-                    <div class="panel-body">
-                        {{#autoForm collection="Meteor.users" doc=this id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role"}}
+                <div class="panel-body">
+                    {{#autoForm collection="Meteor.users" doc=this id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role"}}
                         <button type="submit" class="btn btn-primary">Update</button>
-                        {{/autoForm}}
-                    </div>
-               
-            </div>
+                    {{/autoForm}}
+                </div>
 
+                <!--
+                {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
+                    {{#each afFieldNames}}
+                        <div class="panel-body"> {{> afQuickField name=this options="auto" }} </div>
+                    {{/each}}
+                {{/autoForm}}
+                -->
+            </div>
         </div>
     </div>
 </template>
