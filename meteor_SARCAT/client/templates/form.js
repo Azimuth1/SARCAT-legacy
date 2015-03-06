@@ -75,12 +75,17 @@ var editList = function(list, template) {
 var saveList = function(list, template) {
     console.log(list, template)
     Session.set(EDITING_KEY, false);
-    Records.update(list._id, {
+    /*Records.update(list._id, {
         $set: {
-            name: template.$('[name=name]')
-                .val()
+            name: template.$('[name=name]').val()
         }
-    });
+    });*/
+    var name = template.$('[name=name]').val();
+    console.log('!')
+    Meteor.call('updateRecords', list._id, name, function(err) {
+        console.log('!!')
+        console.log(err)
+    })
 };
 var deleteList = function(list) {
     if (list.userId !== Meteor.userId()) {
@@ -96,7 +101,7 @@ var deleteList = function(list) {
                 Records.remove(todo._id);
             });
         //Records.remove(list._id);
-        Meteor.call('removeRecord',list._id);
+        Meteor.call('removeRecord', list._id);
         Router.go('home');
         return true;
     } else {
@@ -104,7 +109,6 @@ var deleteList = function(list) {
     }
 };
 var toggleListPrivacy = function(list) {
-
     if (list.userId) {
         Records.update(list._id, {
             $unset: {
@@ -175,4 +179,26 @@ Template.form.events({
     'change .autosave-toggle': function() {
         Session.set('autoSaveMode', !Session.get('autoSaveMode'));
     },
+});
+
+
+
+AutoForm.hooks({
+    recordAdminForm: {
+        onSubmit: function(doc) {
+            alert('!!!');
+            console.log(doc);
+            Schemas.SARCAT.clean(doc);
+            this.done();
+            return false;
+        },
+        onSuccess: function(operation, result, template) {
+            console.log(operation, result, template)
+            console.log('updated');
+            //Router.go('users.show',{'username':template.data.doc.username});
+        },
+        onError: function(operation, error, template) {
+            console.log(operation, error)
+        },
+    }
 });
