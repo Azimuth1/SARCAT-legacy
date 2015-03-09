@@ -37,7 +37,7 @@ var IR_Filters = {
         if (Config.findOne({
                 initSetup: true
             })) {
-            Router.go('adminSetup',Config.findOne());
+            Router.go('adminSetup', Config.findOne());
 
         }
         this.next();
@@ -83,7 +83,7 @@ var IR_Filters = {
     // Use: {only: [adminAreas]}
     isAdmin: function(pause) {
         if (!Roles.userIsInRole(Meteor.userId(), ['admin'])) {
-            this.render('login');
+            this.render();
             pause();
         }
     },
@@ -94,7 +94,6 @@ Router.map(function() {
     //this.onBeforeAction(IR_BeforeHooks.noAdmin);
 
     this.onBeforeAction(IR_Filters.initSetup);
-
 
     this.route('home', {
         path: '/',
@@ -109,8 +108,8 @@ Router.map(function() {
             } else {
                 _this.render('signin');
             }*/
-            //this.render('join');
-            /* if (Meteor.user()) {
+        //this.render('join');
+        /* if (Meteor.user()) {
                  Router.go('form', Records.findOne());
              } else {
                  Router.go('signin');
@@ -119,10 +118,9 @@ Router.map(function() {
         },*/
         action: function() {
             //Router.go('signin');
-            if(Meteor.user()){
+            if (Meteor.user()) {
                 Router.go('user-home', Meteor.user());
-            }
-            else{
+            } else {
                 Router.go('signin');
             }
         }
@@ -130,16 +128,21 @@ Router.map(function() {
 
     this.route('adminSetup', {
         path: '/adminSetup/:_id',
-        layoutTemplate:null,
+        layoutTemplate: null,
+        onBeforeAction: function() {
+            //this.onBeforeAction(IR_Filters.initSetup;
+            this.next();
+            //}
+        },
         data: function() {
             return Config.findOne();
         },
 
         action: function() {
+            
             this.render();
         }
     });
-
 
     this.route('join');
     this.route('signin');
@@ -149,7 +152,7 @@ Router.map(function() {
             //this.todosHandle = Meteor.subscribe('Records', this.params._id);
             //if (this.ready()) {
             //    dataReadyHold.release();
-                this.next();
+            this.next();
             //}
         },
         data: function() {

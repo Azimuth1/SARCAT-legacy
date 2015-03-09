@@ -2,47 +2,55 @@
     <div class="page lists-show">
         <nav class="js-title-nav">
             {{#if editing}}
-                <form class="js-edit-form list-edit-form">
-                    <input type="text" name="name" value="{{name}}">
-                    <div class="nav-group right"> <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a> </div>
-                </form> {{else}}
-                <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
-                <h1 class="js-edit-list title-page">
+            <!--<form class="js-edit-form list-edit-form">
+                <input type="text" name="name" value="{{name}}">
+                <div class="nav-group right"> <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a> </div>
+            </form> -->
+
+
+            {{else}}
+            <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
+            <h1 class="js-edit-list title-page">
 
 
 
-<div class="title-wrapper">{{name}}</div>
+<div class="title-wrapper">{{recordInfo.name}}</div>
 
 
 
                 <span class="count-list">Created: {{created}}</span>
                 </h1>
-                <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
-                <div class="nav-group right">
-                    <div class="nav-item options-mobile">
-                        <select class="list-edit">
-                            <option disabled selected>Select an action</option>
-                            {{#if userId}}
-                                <option value="public">Make Public</option> {{else}}
-                                <option value="private">Make Private</option>
-                            {{/if}}
-                            <option value="delete">Delete</option>
-                        </select> <span class="icon-cog"></span> </div>
-                    <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
+            <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
+            <div class="nav-group right">
+                <div class="nav-item options-mobile">
+                    <select class="list-edit">
+                        <option disabled selected>Select an action</option>
+                        {{#if userId}}
+                        <option value="public">Make Public</option> {{else}}
+                        <option value="private">Make Private</option>
+                        {{/if}}
+                        <option value="delete">Delete</option>
+                    </select> <span class="icon-cog"></span> </div>
+                <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
               {{#if userId}}
                 <span class="icon-lock" title="Make list public"></span>
               {{else}}
                 <span class="icon-unlock" title="Make list private"></span>
               {{/if}}
             </a>
-                        <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
-                    </div>
+                    <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
                 </div>
+            </div>
             {{/if}}
             <form class="js-todo-new todo-new input-symbol">
                 <input type="text" placeholder="Type to add new tasks" class="hide"> </form>
         </nav>
         <div class="content-scrollable list-items">
+
+
+
+
+
 
             {{#autoForm 
             collection="Records" 
@@ -51,17 +59,22 @@
             id="recordAdminForm" 
             type="update"}} 
 
+           <!-- {{> afQuickField name='name' 
+            template="bootstrap3-horizontal" 
+            label-class="col-sm-2" 
+            input-col-class="col-sm-10"}} 
+-->
+
+
             {{> afObjectField name='admin'}} 
-
-
 
             {{> afObjectField name='recordInfo'}} 
 
+            {{> afObjectField name='incident'}}
 
+            <div id="map" style="width: 100%; height: 400px"></div>
 
-
-            {{> afObjectField name='incident'}} 
-<!--
+            <!--
             {{> afObjectField name='subjectInfo'}} 
 
             {{> afObjectField name='incidentOperations'}}
@@ -73,16 +86,10 @@
             {{> afObjectField name='resources'}}
 -->
 
-<button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
             {{/autoForm}}
 
-
-
-
-
-
-
-<!--
+            <!--
  <div class="panel panel-default">
 
 
@@ -103,8 +110,7 @@
 </div>
 -->
 
-
-<!--
+            <!--
  <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Incident Information</h3> </div>
@@ -112,7 +118,7 @@
 </div>
 -->
 
-<!--
+            <!--
 
                 {{> quickForm 
                 type="update" 
@@ -122,16 +128,14 @@
                 doc=this 
                 omitFields='userId, name,created'}}
 -->
-<!--
+            <!--
 <div class="panel-body"> {{> quickForm schema="Schemas.SARCAT" id="contactForm" collection="Records" type="update" doc=this template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}} </div>
 -->
-<!--
+            <!--
 <div class="panel-body"> {{> quickForm schema="Schemas.admin" id="contactForm" collection="Records" type="update" doc=this template="bootstrap3-inline" }} </div>
 -->
 
-
-
-          <!--
+            <!--
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Administrative Information</h3> </div>
@@ -145,7 +149,7 @@
                 omitFields='userId, name,created'}} </div>
             </div>-->
 
-<!--
+            <!--
             {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update"}} 
 
             {{> afObjectField name='admin'}} 
@@ -167,15 +171,14 @@
             {{/autoForm}}
 -->
 
-
             <!-- <div class="panel-body"> {{> quickForm schema="Schemas.admin" id="contactForm" collection="Records" type="update" doc=this template="bootstrap3-inline" }} </div>-->
-<!--
+            <!--
             <div class="panel panel-default">
                 <div class="panel-body"> {{> quickForm type="update" autosave=true collection="Records" schema="Schemas.SARCAT" doc=this template="bootstrap3-inline" slabel-class="" autosave=true  omitFields='userId, name,created'}} </div>
             </div>
 -->
 
-<!--
+            <!--
             {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }} {{> afObjectField name='admin' template="bootstrap3-inline" template="bootstrap3-inline" }} {{> afObjectField name='recordInfo'}} {{> afObjectField name='incident'}} {{> afObjectField name='subjectInfo'}} {{> afObjectField name='incidentOperations'}} {{> afObjectField name='incidentOutcome'}} {{> afObjectField name='medical'}} {{> afObjectField name='resources'}}
 
 
@@ -188,7 +191,7 @@ options="auto"
 }}
 {{/each}}
 -->
-                <!--
+            <!--
 {{> afObjectField 
 name='admin' 
 schema="Schemas.admin"

@@ -1,3 +1,12 @@
+/*AdminConfig = {
+    //adminEmails: ['a@a'],
+    roles: ['admin'],
+    collections: {
+        Records: {}
+    }
+};*/
+
+
 Meteor.publish('publicLists', function() {
     return Records.find({
         userId: {
@@ -24,7 +33,7 @@ Meteor.publish('userData', function() {
             _id: this.userId
         }, {
             fields: {
-                'role': 0
+                'roles': 1
             }
         });
     } else {
@@ -43,6 +52,9 @@ Meteor.publish('adminDefault', function() {
         }
     });
 });
+
+
+
 /*
 Meteor.publish('adminDefault', function() {
     return Meteor.users.find({

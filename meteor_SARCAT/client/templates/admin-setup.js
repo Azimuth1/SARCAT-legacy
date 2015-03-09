@@ -43,6 +43,36 @@ Template.adminSetup.events({
                     .val('');
             });
         } else {
+
+
+
+        event.preventDefault();
+        /*var username = template.$('[name=username]')
+            .val();*/
+        var email = template.$('[name=email]')
+            .val();
+        var password = template.$('[name=password]')
+            .val();
+        var confirm = template.$('[name=confirm]')
+            .val();
+        var errors = {};
+        if (!email) {
+            errors.email = 'Email required';
+        }
+        if (!password) {
+            errors.password = 'Password required';
+        }
+        if (confirm !== password) {
+            errors.confirm = 'Please confirm your password';
+        }
+        Session.set(ERRORS_KEY, errors);
+        if (_.keys(errors)
+            .length) {
+            return;
+        }
+
+
+            
             Accounts.createUser({
                 email: email,
                 password: password,

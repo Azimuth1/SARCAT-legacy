@@ -6,20 +6,33 @@
 //console.log(process.env.METEOR_;SETTINGS.initSetup);
 //var config
 Meteor.startup(function() {
+
+/*
+AdminConfig = {
+    //adminEmails: ['a@a'],
+    roles: ['admin'],
+    collections: {
+        Records: {}
+    }
+};*/
+
+
     //Config.insert(Meteor.settings.production.public)
     if (!Config.find().count()) {
         Config.insert(Meteor.settings.production.public);
     }
     if (!Meteor.users.find()
         .count()) {
-        Accounts.createUser({
+        var admin = Accounts.createUser({
             email: 'a@a', //dmin@sarcat',
             password: 'a', //dmin',
-            role: 'default'
-            /*profile: {
-                role: 'default'
-            }*/
+            //role: 'default',
+            //roles: ['admin']
         });
+
+    Roles.addUsersToRoles(admin, ['admin'], Roles.GLOBAL_GROUP);
+
+
     }
 });
 Meteor.methods({

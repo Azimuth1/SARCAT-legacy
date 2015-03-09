@@ -1,11 +1,27 @@
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
 // Track if this is the first time the list template is rendered
-var firstRender = true;
-var listRenderHold = LaunchScreen.hold();
+//var firstRender = true;
+//var listRenderHold = LaunchScreen.hold();
 listFadeInHold = null;
 Template.form.rendered = function() {
-    if (firstRender) {
+
+
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+
+
+
+
+
+    /*if (firstRender) {
         // Released in app-body.js
         listFadeInHold = LaunchScreen.hold();
         // Handle for launch screen defined in app-body.js
@@ -26,7 +42,7 @@ Template.form.rendered = function() {
                         this.remove();
                     });
             }
-        };
+        };*/
 };
 Template.form.helpers({
     editing: function() {
@@ -48,7 +64,7 @@ Template.form.helpers({
     autoSaveMode: function() {
         return Session.get('autoSaveMode') ? true : false;
     },
-    selectedPersonDoc: function() {
+    /*selectedPersonDoc: function() {
         return People.findOne(Session.get('selectedPersonId'));
     },
     isSelectedPerson: function() {
@@ -63,17 +79,24 @@ Template.form.helpers({
     },
     disableButtons: function() {
         return !Session.get('selectedPersonId');
-    }
+    }*/
 });
 var editList = function(list, template) {
+    console.log(list);
     Session.set(EDITING_KEY, true);
     // force the template to redraw based on the reactive change
     Tracker.flush();
-    template.$('.js-edit-form input[type=text]')
-        .focus();
+    template.$('.js-edit-form input[type=text]').focus();
+
+
+    var name = template.$('[name=name]').val();
+    Meteor.call('updateRecords', list._id, name, function(err) {
+        console.log(err);
+    });
+
+
 };
 var saveList = function(list, template) {
-    console.log(list, template)
     Session.set(EDITING_KEY, false);
     /*Records.update(list._id, {
         $set: {
@@ -81,11 +104,9 @@ var saveList = function(list, template) {
         }
     });*/
     var name = template.$('[name=name]').val();
-    console.log('!')
     Meteor.call('updateRecords', list._id, name, function(err) {
-        console.log('!!')
-        console.log(err)
-    })
+        console.log(err);
+    });
 };
 var deleteList = function(list) {
     if (list.userId !== Meteor.userId()) {
@@ -159,17 +180,17 @@ Template.form.events({
         }
         event.target.selectedIndex = 0;
     },
-    'click .js-edit-list': function(event, template) {
+    /*'click .js-edit-list': function(event, template) {
         editList(this, template);
     },
     'click .js-toggle-list-privacy': function(event, template) {
         Meteor.call('toggleListPrivacy', 'this', 'template');
         //toggleListPrivacy(this, template);
-    },
+    },*/
     'click .js-delete-list': function(event, template) {
         deleteList(this, template);
     },
-    'click .js-todo-add': function(event, template) {
+    /*'click .js-todo-add': function(event, template) {
         template.$('.js-todo-new input')
             .focus();
     },
@@ -178,7 +199,7 @@ Template.form.events({
     },
     'change .autosave-toggle': function() {
         Session.set('autoSaveMode', !Session.get('autoSaveMode'));
-    },
+    },*/
 });
 
 
@@ -193,12 +214,12 @@ AutoForm.hooks({
             return false;
         },
         onSuccess: function(operation, result, template) {
-            console.log(operation, result, template)
+            console.log(operation, result, template);
             console.log('updated');
             //Router.go('users.show',{'username':template.data.doc.username});
         },
         onError: function(operation, error, template) {
-            console.log(operation, error)
+            console.log(operation, error);
         },
     }
 });
