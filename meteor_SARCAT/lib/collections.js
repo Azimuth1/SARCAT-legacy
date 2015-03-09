@@ -1,3 +1,4 @@
+
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
 Records.defaultName = function() {
@@ -57,13 +58,19 @@ Schemas.User = new SimpleSchema({
         type: Schemas.UserProfile,
         defaultValue: {}
     },
-    role: {
+    /*role: {
         type: String,
         //optional: true,
         optional: false,
         blackbox: true,
         allowedValues: ['user', 'admin', 'default'],
         defaultValue: 'user'
+    },*/
+roles: {
+        type: String,
+        optional: true,
+        blackbox: true,
+        allowedValues: ['user', 'admin']
     },
     services: {
         type: Object,
@@ -107,6 +114,17 @@ Schemas.admin = new SimpleSchema({
     }
 });
 Schemas.recordInfo = new SimpleSchema({
+    name: {
+        type: String,
+        //optional: true,
+        label: 'Record Name',
+        optional: false,
+        autoValue: function() {
+            if (this.isInsert) {
+                return Records.defaultName();
+            }
+        }
+    },
     status: {
         type: String,
         optional: true,
@@ -791,17 +809,6 @@ Schemas.SARCAT = new SimpleSchema({
             }
         }
     },
-    name: {
-        type: String,
-        //optional: true,
-        label: 'Save As',
-        optional: false,
-        autoValue: function() {
-            if (this.isInsert) {
-                return Records.defaultName();
-            }
-        }
-    },
     created: {
         type: String,
         optional: true,
@@ -814,7 +821,7 @@ Schemas.SARCAT = new SimpleSchema({
         type: Schemas.admin,
         defaultValue: {}
     },
-    
+
     recordInfo: {
         type: Schemas.recordInfo,
         defaultValue: {}
@@ -849,3 +856,12 @@ Schemas.SARCAT = new SimpleSchema({
     },
 });
 Records.attachSchema(Schemas.SARCAT);
+
+
+/*
+AdminConfig = {
+    //adminEmails: [' ben@code2create.com'],
+    collections: {
+        Records: {}
+    }
+};*/

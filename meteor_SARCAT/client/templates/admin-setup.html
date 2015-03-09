@@ -107,10 +107,14 @@
                                     <input type="email" name="email" placeholder="Email" />
                                     <span class="icon-email" title="Email"></span>
                                 </div>
-                                <div class="input-symbol {{errorClass 'password'}}">
-                                    <input type="password" name="password" placeholder="Password" />
-                                    <span class="icon-lock" title="Password"></span>
-                                </div>
+                          <div class="input-symbol  {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="Password" />
+                        <span class="icon-lock" title="Password"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'confirm'}}">
+                        <input type="password" name="confirm" placeholder="Confirm Password" />
+                        <span class="icon-lock" title="Confirm Password"></span>
+                    </div>
                                 <button type="submit" class="btn-primary admin2 btn-pad">Sign in</button>
                             </form>
                         {{else}}

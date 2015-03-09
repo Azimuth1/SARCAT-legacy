@@ -35,14 +35,14 @@
 
 
                 {{#each lists}}
-                <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}}" title="{{name}}">
+                <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}}" title="{{recordInfo.name}}">
             {{#if userId}}
               <span class="icon-lock"></span>
             {{/if}}
          
               <span class="count-list">{{recordInfo.status}}</span>
            
-            {{name}}
+            {{recordInfo.name}}
           </a> {{/each}}
             </div>
         </section>
