@@ -1,3 +1,6 @@
+
+
+
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
 // Track if this is the first time the list template is rendered
@@ -6,20 +9,18 @@ Session.setDefault(EDITING_KEY, false);
 listFadeInHold = null;
 Template.form.rendered = function() {
 
-/*
-        var map = L.map('map').setView([51.505, -0.09], 13);
+    /*
+            var map = L.map('map').setView([51.505, -0.09], 13);
 
-        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            id: 'examples.map-i875mjb7'
-        }).addTo(map);
+            L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                id: 'examples.map-i875mjb7'
+            }).addTo(map);
 
-*/
-
-
+    */
 
     /*if (firstRender) {
         // Released in app-body.js
@@ -45,6 +46,22 @@ Template.form.rendered = function() {
         };*/
 };
 Template.form.helpers({
+     /* selectedForm: function (a) {
+    return this[a];
+  },*/
+    autoSaveMode: function () {
+    return true;//Session.get("autoSaveMode") ? true : false;
+  },
+    schemaCompleteClass: function(a) {
+        console.log(a)
+        var complete =  Match.test(this[a],Schemas[a]);
+        return complete ? 'panel-success' : 'panel-warning';
+    },
+    schemaComplete: function(a) {
+        return false
+        console.log(Match.test(this[a],Schemas[a]))
+        return Match.test(this[a],Schemas[a]);
+    },
     editing: function() {
         return Session.get(EDITING_KEY);
     },
@@ -53,8 +70,16 @@ Template.form.helpers({
             .todosHandle.ready();
     },
     records: function() {
-        console.log(this)
-        return this;
+
+        //console.log(this);
+
+        result = [];
+        for (var key in this) result.push({
+            name: key,
+            value: this[key]
+        });
+        //console.log(result);
+        return result;
     },
     /*todos: function(listId) {
         return Todos.find({
@@ -92,12 +117,10 @@ var editList = function(list, template) {
     Tracker.flush();
     template.$('.js-edit-form input[type=text]').focus();
 
-
     var name = template.$('[name=name]').val();
     Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
     });
-
 
 };
 var saveList = function(list, template) {
@@ -149,14 +172,15 @@ var toggleListPrivacy = function(list) {
     }
 };
 Template.form.events({
-    'keydown input[type=text]': function(event) {
+    /*'keydown input[type=text]': function(event) {
         // ESC
+        console.log(this,event)
         if (27 === event.which) {
             event.preventDefault();
             $(event.target)
                 .blur();
         }
-    },
+    },*/
     'blur input[type=text]': function(event, template) {
         // if we are still editing (we haven't just clicked the cancel button)
         if (Session.get(EDITING_KEY)) saveList(this, template);
@@ -206,8 +230,6 @@ Template.form.events({
     },*/
 });
 
-
-
 AutoForm.hooks({
     recordAdminForm: {
         onSubmit: function(doc) {
@@ -218,11 +240,13 @@ AutoForm.hooks({
             return false;
         },
         onSuccess: function(operation, result, template) {
+            alert('!!!');
             console.log(operation, result, template);
             console.log('updated');
             //Router.go('users.show',{'username':template.data.doc.username});
         },
         onError: function(operation, error, template) {
+            alert('!!!');
             console.log(operation, error);
         },
     }

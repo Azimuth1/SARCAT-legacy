@@ -5,7 +5,7 @@ Records.defaultName = function() {
     var nextLetter = 'A',
         nextName = 'New Record ' + nextLetter;
     while (Records.findOne({
-            name: nextName
+            'recordInfo.name': nextName
         })) {
         // not going to be too smart here, can go past Z
         nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
@@ -107,7 +107,7 @@ Schemas.admin = new SimpleSchema({
     phonenum: {
         type: String,
         label: 'Phone #',
-        optional: true,
+        //optional: true,
         /*autoValue: function() {
             if (this.isInsert) {
                 return Meteor.user().profile.phoneNum;
@@ -821,7 +821,8 @@ Schemas.SARCAT = new SimpleSchema({
     },
     admin: {
         type: Schemas.admin,
-        defaultValue: {}
+        blackbox: true,
+        //defaultValue: {}
     },
 
     recordInfo: {
