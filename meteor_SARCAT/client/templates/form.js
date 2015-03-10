@@ -6,7 +6,7 @@ Session.setDefault(EDITING_KEY, false);
 listFadeInHold = null;
 Template.form.rendered = function() {
 
-
+/*
         var map = L.map('map').setView([51.505, -0.09], 13);
 
         L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
@@ -17,7 +17,7 @@ Template.form.rendered = function() {
             id: 'examples.map-i875mjb7'
         }).addTo(map);
 
-
+*/
 
 
 
@@ -51,6 +51,10 @@ Template.form.helpers({
     todosReady: function() {
         return Router.current()
             .todosHandle.ready();
+    },
+    records: function() {
+        console.log(this)
+        return this;
     },
     /*todos: function(listId) {
         return Todos.find({

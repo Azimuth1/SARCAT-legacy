@@ -18,22 +18,24 @@ Schemas.UserProfile = new SimpleSchema({
     firstName: {
         type: String,
         optional: true,
-        defaultValue: ''
+        //defaultValue: '',
+        regEx: /^[a-zA-Z-]{2,25}$/,
     },
     lastName: {
         type: String,
         optional: true,
-        defaultValue: ''
+        //defaultValue: ''
     },
     phoneNum: {
         type: String,
         optional: true,
-        defaultValue: ''
+        //defaultValue: ''
     },
     Agency: {
         type: String,
         optional: true,
-        defaultValue: ''
+        regEx: /^[a-z0-9A-z .]{3,30}$/,
+        //defaultValue: ''
     }
 });
 Schemas.User = new SimpleSchema({
@@ -41,11 +43,11 @@ Schemas.User = new SimpleSchema({
         type: [Object],
         // this must be optional if you also use other login services like facebook,
         // but if you use only accounts-password, then it can be required
-        optional: true
+        //optional: true
     },
     'emails.$.address': {
         type: String,
-        optional: true,
+        //optional: true,
         regEx: SimpleSchema.RegEx.Email
     },
     'emails.$.verified': {
@@ -84,7 +86,7 @@ Schemas.admin = new SimpleSchema({
         type: String,
         //optional: true,
         label: 'Prepared By',
-        optional: false,
+        optional: true,
         autoValue: function() {
             if (this.isInsert) {
                 var first = Meteor.user().profile.firstName;
@@ -106,11 +108,11 @@ Schemas.admin = new SimpleSchema({
         type: String,
         label: 'Phone #',
         optional: true,
-        autoValue: function() {
+        /*autoValue: function() {
             if (this.isInsert) {
                 return Meteor.user().profile.phoneNum;
             }
-        }
+        }*/
     }
 });
 Schemas.recordInfo = new SimpleSchema({
