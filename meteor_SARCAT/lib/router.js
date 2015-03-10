@@ -19,6 +19,7 @@ Router.configure({
 });
 dataReadyHold = null;
 if (Meteor.isClient) {
+      //AutoForm.setDefaultTemplateForType('afQuickField', 'addOptions');
     //console.log(Session.get('defaultAdmin'));
     // Keep showing the launch screen on mobile devices until we have loaded
     // the app's data
@@ -191,3 +192,4 @@ meteor remove autopublish
 
 
 */
+
