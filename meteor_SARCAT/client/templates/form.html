@@ -49,8 +49,20 @@
 
 
 
+  {{#each admin}}
+       {{this}}
+  {{/each}}
 
+<!--
+    {{#each record}}
+    <h4>{{ this }}</h4>
+  {{/each}}
 
+    {{#each test}}
+    <h4>{{ this }}</h4>
+  {{/each}}
+
+-->
 
             {{#autoForm 
             collection="Records" 
@@ -58,6 +70,14 @@
             schema="Schemas.SARCAT" 
             id="recordAdminForm" 
             type="update"}} 
+
+ 
+<!--
+  {{#each afFieldNames}}
+    {{this}}
+  {{/each}}
+-->
+
 
            <!-- {{> afQuickField name='name' 
             template="bootstrap3-horizontal" 

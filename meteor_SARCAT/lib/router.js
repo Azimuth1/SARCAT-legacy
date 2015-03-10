@@ -31,14 +31,12 @@ if (Meteor.isClient) {
         except: ['join', 'signin']
     });
 }
-
 var IR_Filters = {
     initSetup: function() {
         if (Config.findOne({
                 initSetup: true
             })) {
             Router.go('adminSetup', Config.findOne());
-
         }
         this.next();
         //if (Meteor.users.find().count()) {
@@ -88,13 +86,9 @@ var IR_Filters = {
         }
     },
 };
-
 Router.map(function() {
-
     //this.onBeforeAction(IR_BeforeHooks.noAdmin);
-
     this.onBeforeAction(IR_Filters.initSetup);
-
     this.route('home', {
         path: '/',
         /*onBeforeAction: function() {
@@ -125,7 +119,6 @@ Router.map(function() {
             }
         }
     });
-
     this.route('adminSetup', {
         path: '/adminSetup/:_id',
         layoutTemplate: null,
@@ -137,13 +130,10 @@ Router.map(function() {
         data: function() {
             return Config.findOne();
         },
-
         action: function() {
-            
             this.render();
         }
     });
-
     this.route('join');
     this.route('signin');
     this.route('user-home', {
@@ -165,6 +155,17 @@ Router.map(function() {
     this.route('form', {
         path: '/form/:_id',
         data: function() {
+            /*var obj = {};
+            obj.posts = [{
+                title: 'Did you know that...',
+                text: 'If you yelled for 8 years, 7 months and 6 days, you would have produced enough sound energy to heat up one cup of coffee.'
+            }, {
+                title: 'Hello World',
+                text: 'Hi, i am new here!'
+            }];
+            obj.record=Records.findOne(this.params._id);
+            obj.test=['aaa','bbbb','ccc'];
+            return obj;*/
             return Records.findOne(this.params._id);
         },
         onBeforeAction: function() {
@@ -179,9 +180,7 @@ Router.map(function() {
             this.render();
         }
     });
-
 });
-
 /*
 meteor add insecure
 meteor add autopublish
