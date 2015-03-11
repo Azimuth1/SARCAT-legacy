@@ -167,6 +167,9 @@ Router.map(function() {
             obj.record=Records.findOne(this.params._id);
             obj.test=['aaa','bbbb','ccc'];
             return obj;*/
+            //var obj = {};
+            //obj.currentData=Records.findOne(this.params._id);
+            //return obj;
             return Records.findOne(this.params._id);
         },
         onBeforeAction: function() {
@@ -182,6 +185,11 @@ Router.map(function() {
         }
     });
 });
+
+
+
+
+
 /*
 meteor add insecure
 meteor add autopublish

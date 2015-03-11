@@ -1,0 +1,48 @@
+<template name="form1">
+    <div class="panel panel-default {{schemaCompleteClass2 this}}">
+        <div class="panel-heading collapsed" role="tab" id="heading_{{this}}" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{this}}" aria-expanded="false" aria-controls="collapse_{{this}}">
+            <h4 class="panel-title"><span>{{this}}</span></h4> </div>
+        <div id="collapse_{{this}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this}}">
+            <div class="panel-body">
+                {{#if isEqual this 'subjectInfo'}} {{> formTimeLog}}
+                    <hr> {{/if}}
+
+
+
+
+                {{#if isEqual this 'incidentOperations'}} {{> formMap}}
+                    <hr> {{/if}}
+
+
+
+                {{#each afFieldNames name=this}} {{> afQuickField class="afInput" name=this options="auto"}} {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
+<template name="formTimeLog">
+    {{#autoForm id="afInsertDemo" type="insert" collection=Collections.People}}
+        <div class="form-group {{#if afFieldIsInvalid name='firstName'}}has-error{{/if}}">
+            <label class="control-label">{{afFieldLabelText name='firstName'}}</label> {{> afFieldInput name='firstName'}}
+            {{#if afFieldIsInvalid name='firstName' }} <span class="help-block">{{{afFieldMessage name='firstName'}}}</span> {{/if}}
+        </div>
+        <div class="form-group {{#if afFieldIsInvalid name='lastName'}}has-error{{/if}}">
+            <label class="control-label">{{afFieldLabelText name='lastName'}}</label> {{> afFieldInput name='lastName'}}
+            {{#if afFieldIsInvalid name='lastName' }} <span class="help-block">{{{afFieldMessage name='lastName'}}}</span> {{/if}}
+        </div>
+        <div class="form-group {{#if afFieldIsInvalid name='age'}}has-error{{/if}}">
+            <label class="control-label">{{afFieldLabelText name='age'}}</label> {{> afFieldInput name='age'}}
+            {{#if afFieldIsInvalid name='age' }} <span class="help-block">{{{afFieldMessage name='age'}}}</span> {{/if}}
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Add Person</button>
+            <button type="reset" class="btn btn-default">Reset Form</button>
+        </div>
+    {{/autoForm}}
+</template>
+
+
+
+<template name="formMap">
+    <div id='map' style="width:100%;height:400px"></div>
+</template>
