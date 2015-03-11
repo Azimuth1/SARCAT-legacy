@@ -1,27 +1,27 @@
-
-
-
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
+currentRecord=null;
 // Track if this is the first time the list template is rendered
 //var firstRender = true;
 //var listRenderHold = LaunchScreen.hold();
 listFadeInHold = null;
 Template.form.rendered = function() {
-
+    Session.set('currentRecord', this.currentData);
+    Session.set('formChanged', new Date());
+    currentRecord = this.currentData;
+    console.log(1)
     /*
             var map = L.map('map').setView([51.505, -0.09], 13);
 
             L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
                 maxZoom: 18,
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                attribution: 'Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, ' +
+                    '<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, ' +
+                    'Imagery © <a href='http://mapbox.com'>Mapbox</a>',
                 id: 'examples.map-i875mjb7'
             }).addTo(map);
 
     */
-
     /*if (firstRender) {
         // Released in app-body.js
         listFadeInHold = LaunchScreen.hold();
@@ -45,22 +45,47 @@ Template.form.rendered = function() {
             }
         };*/
 };
+var checkComplete = function(name) {
+console.log(this,name);
+    var currentRecord = Session.get('currentRecord');
+    //console.log(name,currentRecord[name],Schemas[name]);
+    var complete = Match.test(currentRecord[name], Schemas[name]);
+    console.log(complete)
+    var result = complete ? 'panel-success' : 'panel-warning';
+    Session.set('afComplete_' + name, result);
+    return complete;
+};
 Template.form.helpers({
-     /* selectedForm: function (a) {
-    return this[a];
-  },*/
-    autoSaveMode: function () {
-    return true;//Session.get("autoSaveMode") ? true : false;
-  },
-    schemaCompleteClass: function(a) {
-        console.log(a)
-        var complete =  Match.test(this[a],Schemas[a]);
+    data: function(name) {
+        //console.log(this.currentData);
+        return this.currentData;
+    },
+    formChanged: function(name) {
+        return Session.get('formChanged');
+    },
+    formComplete: function() {
+        return Session.get('afComplete');
+    },
+    autoSaveMode: function() {
+        return true; //Session.get('autoSaveMode') ? true : false;
+    },
+    isSchema: function(obj, obj2) {
+        return obj === obj2;
+    },
+    schemaCompleteClass: function(name) {
+        checkComplete()
+        //return 'g'
+        
+        //var currentRecord = Session.get('currentRecord');
+        console.log(this,name,currentRecord);
+        var complete = Match.test(currentRecord[name], Schemas[name]);
+        //Session.set('afComplete_' + a, complete);
+        console.log(complete)
         return complete ? 'panel-success' : 'panel-warning';
+        //checkComplete(name);
     },
     schemaComplete: function(a) {
-        return false
-        console.log(Match.test(this[a],Schemas[a]))
-        return Match.test(this[a],Schemas[a]);
+        return Match.test(this[a], Schemas[a]);
     },
     editing: function() {
         return Session.get(EDITING_KEY);
@@ -70,9 +95,7 @@ Template.form.helpers({
             .todosHandle.ready();
     },
     records: function() {
-
         //console.log(this);
-
         result = [];
         for (var key in this) result.push({
             name: key,
@@ -116,12 +139,10 @@ var editList = function(list, template) {
     // force the template to redraw based on the reactive change
     Tracker.flush();
     template.$('.js-edit-form input[type=text]').focus();
-
     var name = template.$('[name=name]').val();
     Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
     });
-
 };
 var saveList = function(list, template) {
     Session.set(EDITING_KEY, false);
@@ -171,17 +192,31 @@ var toggleListPrivacy = function(list) {
         });
     }
 };
+/*
+Template.tax_line_fields.events({
+ 'change': function(){
+    Session.set('form_changed', this.Date());
+    obj = form2js t.find("form")
+    _.extend(@, obj)
+  }
+});
+Template.tax_line_fields.form_changed = function(){
+  return Session.get('form_changed');
+};
+
+*/
 Template.form.events({
-    /*'keydown input[type=text]': function(event) {
+    'keydown input[type=text]': function(event) {
         // ESC
-        console.log(this,event)
+        //console.log(this,event)
         if (27 === event.which) {
             event.preventDefault();
             $(event.target)
                 .blur();
         }
-    },*/
+    },
     'blur input[type=text]': function(event, template) {
+        //console.log('!')
         // if we are still editing (we haven't just clicked the cancel button)
         if (Session.get(EDITING_KEY)) saveList(this, template);
     },
@@ -224,30 +259,60 @@ Template.form.events({
     },
     'click .person-row': function() {
         Session.set('selectedPersonId', this._id);
-    },
-    'change .autosave-toggle': function() {
-        Session.set('autoSaveMode', !Session.get('autoSaveMode'));
     },*/
-});
+    'change .afInput': function(event, template) {
+        //var name = event.target.name.split('.')[0];
+        //return checkComplete(name);
+        /*
+        console.log(name)
 
+
+                var currentRecord = Session.get('currentRecord');
+                var complete = true;//Match.test(currentRecord[name], Schemas[name]);
+                var result = complete ? 'panel-success' : 'panel-warning';
+                Session.set('afComplete_' + name, result);
+                return result;
+        */
+    }
+});
 AutoForm.hooks({
     recordAdminForm: {
+        /*formToDoc: function(doc, ss, formId) {
+            console.log(doc)
+        },*/
+        /*before: {
+            update: function(modifier) {
+                //console.log(this.name,modifier)
+                //return modifier;// (synchronous)
+                //return false; (synchronous, cancel)
+                return this.result(modifier);// (asynchronous)
+                //this.result(false); (asynchronous, cancel)
+            }
+        },*/
         onSubmit: function(doc) {
-            alert('!!!');
-            console.log(doc);
+            console.log('submit');
+            //console.log(doc);
             Schemas.SARCAT.clean(doc);
             this.done();
             return false;
         },
         onSuccess: function(operation, result, template) {
-            alert('!!!');
-            console.log(operation, result, template);
-            console.log('updated');
+            //console.log(operation, result, template);
+            //Session.set('formChanged', new Date());
+            //Session.get('form_changed');
+            //checkCompelte
+            //console.log(operation, result, template);
             //Router.go('users.show',{'username':template.data.doc.username});
         },
         onError: function(operation, error, template) {
-            alert('!!!');
-            console.log(operation, error);
+            //var name = template.data.fields;
+            //return checkComplete(name);
         },
+        /*docToForm: function(doc, ss) {
+            console.log(doc);
+            this.done();
+        },*/
     }
 });
+
+

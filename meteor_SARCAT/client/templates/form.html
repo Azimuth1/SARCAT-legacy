@@ -1,9 +1,13 @@
 <template name="form">
     <div class="page lists-show">
         <nav class="js-title-nav">
-            {{#if editing}} {{else}}
-            <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
-            <h1 class="js-edit-list title-page">
+            {{#if editing}}
+                <!--<form class="js-edit-form list-edit-form">
+                <input type="text" name="name" value="{{name}}">
+                <div class="nav-group right"> <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a> </div>
+            </form> -->{{else}}
+                <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
+                <h1 class="js-edit-list title-page">
 
 
 
@@ -13,76 +17,213 @@
 
                 <span class="count-list">Created: {{created}}</span>
                 </h1>
-            <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
-            <div class="nav-group right">
-                <div class="nav-item options-mobile">
-                    <select class="list-edit">
-                        <option disabled selected>Select an action</option>
-                        {{#if userId}}
-                        <option value="public">Make Public</option> {{else}}
-                        <option value="private">Make Private</option>
-                        {{/if}}
-                        <option value="delete">Delete</option>
-                    </select> <span class="icon-cog"></span> </div>
-                <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
+                <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
+                <div class="nav-group right">
+                    <div class="nav-item options-mobile">
+                        <select class="list-edit">
+                            <option disabled selected>Select an action</option>
+                            {{#if userId}}
+                                <option value="public">Make Public</option> {{else}}
+                                <option value="private">Make Private</option>
+                            {{/if}}
+                            <option value="delete">Delete</option>
+                        </select> <span class="icon-cog"></span> </div>
+                    <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
               {{#if userId}}
                 <span class="icon-lock" title="Make list public"></span>
               {{else}}
                 <span class="icon-unlock" title="Make list private"></span>
               {{/if}}
             </a>
-                    <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
+                        <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
+                    </div>
                 </div>
-            </div>
             {{/if}}
             <form class="js-todo-new todo-new input-symbol">
                 <input type="text" placeholder="Type to add new tasks" class="hide"> </form>
         </nav>
         <div class="content-scrollable list-items">
 
-          <!--  {{#autoForm collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" autosave=autoSaveMode}}
-{{> afQuickField name="admin.user"}}
-{{> afQuickField name="admin.phonenum"}}-->
-           <!--{{#each afFieldNames}} 
-            {{> afQuickField name=this options="auto" }} 
-            {{/each}} 
+<div class="row">
+<div class="col-md-8">
+<button type="button" class="btn btn-primary mar1 pull-right">Submit as Final</button>
+</div>
+</div>   
 
-            {{/autoForm}}-->
-
-            <!--{{> quickForm doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" autosave=autoSaveMode fields="admin" autosave=autoSaveMode template="inline"}} -->
-
-            {{#autoForm collection="Records" doc=this id="recordAdminForm" type="update" autosave=autoSaveMode}}
-
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-
-                <div class="panel panel-default {{schemaCompleteClass 'admin'}}">
-                    <div class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        <h4 class="panel-title"><span>Admin</span></h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                        <div class="panel-body">
-                            {{> afQuickField name='admin.user'}}
-                            <!-- {{> quickForm 
-                schema="Schemas.admin" 
+            {{#autoForm 
+                collection="Records" 
                 doc=this
-                fields="admin"
+                autosave=true
                 id="recordAdminForm" 
-                type="update" 
-                template="bootstrap3-inline" 
-                label-class=""}}-->
+                type="update"
+                fields="admin"
+                }} 
 
-                            <!--{{> quickForm type="update" autosave=autoSaveMode collection="Records" doc=this id="updateBookForm" fields="admin" }}-->
 
-                            {{> afObjectField name='admin' label-class="col-sm-2" }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'admin'}}
+                    
 
-                        </div>
-                    </div>
-                </div>
 
-            </div>
+{{> form1}}
 
-            {{> afObjectField name='recordInfo'}} {{> afObjectField name='incident'}} {{> afObjectField name='subjectInfo'}} {{> afObjectField name='incidentOperations'}} {{> afObjectField name='incidentOutcome'}} {{> afObjectField name='medical'}} {{> afObjectField name='resources'}} {{/autoForm}}
+
+
+
+
+
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+
+
+
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'recordInfo'}}
+                 
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'incident'}}
+                    
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'subjectInfo'}}
+                    
+                        {{> form1}}
+
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+
+
+
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'timeLog'}}
+                    
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'incidentOperations'}}
+                    
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'incidentOutcome'}}
+                    
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'medical'}}
+                    
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+            {{#autoForm 
+                collection="Records" 
+                doc=this
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isSchema this 'resources'}}
+                    
+                        {{> form1}}
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
 
         </div>
     </div>
 </template>
+
+
+
