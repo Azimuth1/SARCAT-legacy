@@ -11,6 +11,7 @@ html, button, input, textarea, select {
 body {
     .type-regular;
     color: @color-full;
+    color: #00444A;
     font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
 }
 // Default type layout
@@ -57,13 +58,11 @@ b {
 em {
     font-style: italic;
 }
-
 .em {
     font-style: italic;
 }
-
-.strong{
-  font-weight: bold;
+.strong {
+    font-weight: bold;
 }
 .text-default {
     color: @color-primary;
@@ -71,36 +70,41 @@ em {
 .white-bg {
     background: #fff
 }
-
 .white {
     color: #fff
 }
-
-.grey{
-  color:#BDBDBD;
+.grey {
+    color: #BDBDBD;
 }
-
-.text-primary{
-  color:#2CC5D2;
+.text-primary {
+    color: #2CC5D2;
 }
 .panel-primary {
     border-color: #2CC5D2;
 }
-
 .panel-primary > .panel-heading {
     background-color: #2CC5D2;
     color: #FFF;
     border-color: #2CC5D2;
 }
-
 .primary-bg {
     background-color: #2CC5D2;
     color: #FFF;
     border-color: #2CC5D2;
 }
-
-
-
+.default-bg {
+    background-color: #018996;
+    color: #FFF;
+    border-color: #315481
+}
+.panel {
+    border-color: #018996;
+}
+.panel > .panel-heading {
+    background-color: #018996;
+    color: #FFF;
+    border-color: #018996;
+}
 /* Margin
 ------------------------------------------------------- */
 
@@ -217,15 +221,12 @@ em {
     padding-left: 80px;
     padding-right: 80px;
 }
-
-
-
 .panel-heading span:after {
-    font-family:'Glyphicons Halflings';
-    content:"\e114";
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";
     float: right;
     color: grey;
 }
 .panel-heading.collapsed span:after {
-    content:"\e080";
+    content: "\e080";
 }

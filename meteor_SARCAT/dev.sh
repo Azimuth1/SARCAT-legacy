@@ -1,5 +1,5 @@
 #!/bin/bash
-meteor --settings settings.json
+meteor --port 4000 --settings settings.json
 
 
 # or bundle and prepare it as if you're running in production
