@@ -1,52 +1,18 @@
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
-currentRecord=null;
-// Track if this is the first time the list template is rendered
-//var firstRender = true;
-//var listRenderHold = LaunchScreen.hold();
-listFadeInHold = null;
+currentRecord = null;
+
+//listFadeInHold = null;
+//var currentRecord = null;
 Template.form.rendered = function() {
-    Session.set('currentRecord', this.currentData);
-    Session.set('formChanged', new Date());
-    currentRecord = this.currentData;
-    console.log(1)
-    /*
-            var map = L.map('map').setView([51.505, -0.09], 13);
+    //a=this
+    var record = this.data.record;
+    Session.set('currentRecord', record);
+    //currentRecord = record;
 
-            L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: 'Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, ' +
-                    '<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, ' +
-                    'Imagery © <a href='http://mapbox.com'>Mapbox</a>',
-                id: 'examples.map-i875mjb7'
-            }).addTo(map);
-
-    */
-    /*if (firstRender) {
-        // Released in app-body.js
-        listFadeInHold = LaunchScreen.hold();
-        // Handle for launch screen defined in app-body.js
-        listRenderHold.release();
-        firstRender = false;
-    }
-    this.find('.js-title-nav')
-        ._uihooks = {
-            insertElement: function(node, next) {
-                $(node)
-                    .hide()
-                    .insertBefore(next)
-                    .fadeIn();
-            },
-            removeElement: function(node) {
-                $(node)
-                    .fadeOut(function() {
-                        this.remove();
-                    });
-            }
-        };*/
 };
 var checkComplete = function(name) {
-console.log(this,name);
+    console.log(this, name);
     var currentRecord = Session.get('currentRecord');
     //console.log(name,currentRecord[name],Schemas[name]);
     var complete = Match.test(currentRecord[name], Schemas[name]);
@@ -56,12 +22,12 @@ console.log(this,name);
     return complete;
 };
 Template.form.helpers({
-    data: function(name) {
-        //console.log(this.currentData);
-        return this.currentData;
+    currentRecord: function() {
+        return Session.get('currentRecord');
     },
-    formChanged: function(name) {
-        return Session.get('formChanged');
+    renderForm: function(name) {
+        var render = ['recordInfo', 'incident'];
+        return render.indexOf(name) !== -1 ? true : false;
     },
     formComplete: function() {
         return Session.get('afComplete');
@@ -70,17 +36,17 @@ Template.form.helpers({
         return true; //Session.get('autoSaveMode') ? true : false;
     },
     isSchema: function(obj, obj2) {
+        console.log(obj, obj2)
         return obj === obj2;
     },
     schemaCompleteClass: function(name) {
         checkComplete()
-        //return 'g'
-        
-        //var currentRecord = Session.get('currentRecord');
-        console.log(this,name,currentRecord);
+            //return 'g'
+            //var currentRecord = Session.get('currentRecord');
+            //console.log(this, name, currentRecord);
         var complete = Match.test(currentRecord[name], Schemas[name]);
         //Session.set('afComplete_' + a, complete);
-        console.log(complete)
+        //console.log(complete)
         return complete ? 'panel-success' : 'panel-warning';
         //checkComplete(name);
     },
@@ -89,10 +55,6 @@ Template.form.helpers({
     },
     editing: function() {
         return Session.get(EDITING_KEY);
-    },
-    todosReady: function() {
-        return Router.current()
-            .todosHandle.ready();
     },
     records: function() {
         //console.log(this);
@@ -134,7 +96,7 @@ Template.form.helpers({
     }*/
 });
 var editList = function(list, template) {
-    console.log(list);
+    //console.log(list);
     Session.set(EDITING_KEY, true);
     // force the template to redraw based on the reactive change
     Tracker.flush();
@@ -314,5 +276,3 @@ AutoForm.hooks({
         },*/
     }
 });
-
-

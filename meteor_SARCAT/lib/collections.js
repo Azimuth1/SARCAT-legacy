@@ -827,7 +827,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     recordInfo: {
         type: Schemas.recordInfo,
-        //blackbox: true,
+        blackbox: true,
     },
     incident: {
         type: Schemas.incident,

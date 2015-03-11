@@ -13,17 +13,18 @@ Router.configure({
             Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
+            //Meteor.subscribe('Records'),
             //Meteor.subscribe('clientState')
         ];
     }
 });
-dataReadyHold = null;
+//dataReadyHold = null;
 if (Meteor.isClient) {
-      //AutoForm.setDefaultTemplateForType('afQuickField', 'addOptions');
+    //AutoForm.setDefaultTemplateForType('afQuickField', 'addOptions');
     //console.log(Session.get('defaultAdmin'));
     // Keep showing the launch screen on mobile devices until we have loaded
     // the app's data
-    dataReadyHold = LaunchScreen.hold();
+    //dataReadyHold = LaunchScreen.hold();
     // Show the loading screen on desktop
     Router.onBeforeAction('loading', {
         except: ['join', 'signin']
@@ -31,6 +32,7 @@ if (Meteor.isClient) {
     Router.onBeforeAction('dataNotFound', {
         except: ['join', 'signin']
     });
+    //Router.onBeforeAction('loading');
 }
 var IR_Filters = {
     initSetup: function() {
@@ -135,6 +137,7 @@ Router.map(function() {
             this.render();
         }
     });
+    this.route('appLoading');
     this.route('join');
     this.route('signin');
     this.route('user-home', {
@@ -146,6 +149,10 @@ Router.map(function() {
             this.next();
             //}
         },
+        /*waitOn: function() {
+            console.log('WAIT');
+            return Meteor.subscribe('privateLists');
+        },*/
         data: function() {
             return Meteor.user();
         },
@@ -155,7 +162,32 @@ Router.map(function() {
     });
     this.route('form', {
         path: '/form/:_id',
+
+        /*onBeforeAction: function() {
+            console.log('BEFORE')
+            this.next();
+            this.todosHandle = Meteor.subscribe('privateLists', this.params._id);
+            if (this.ready()) {
+                console.log('READY');
+                console.log(this.params._id)
+                    // Handle for launch screen defined in app-body.js
+                console.log(this.params._id)
+                dataReadyHold.release();
+                this.next();
+            }
+        },*/
+
+        /*waitOn: function() {
+            console.log('WAIT');
+            return Meteor.subscribe('privateLists');
+        },*/
         data: function() {
+            var obj = {};
+            obj.record = Records.findOne(this.params._id);
+            return obj;
+            /*if (!this.ready()) {
+                return;
+            }*/
             /*var obj = {};
             obj.posts = [{
                 title: 'Did you know that...',
@@ -170,25 +202,18 @@ Router.map(function() {
             //var obj = {};
             //obj.currentData=Records.findOne(this.params._id);
             //return obj;
-            return Records.findOne(this.params._id);
-        },
-        onBeforeAction: function() {
-            this.todosHandle = Meteor.subscribe('Records', this.params._id);
-            if (this.ready()) {
-                // Handle for launch screen defined in app-body.js
-                dataReadyHold.release();
-                this.next();
-            }
+            /*console.log('DATA');
+            console.log(this.params._id);
+            var record = Records.findOne(this.params._id);
+            console.log(record);
+            return record;*/
+
         },
         action: function() {
             this.render();
         }
     });
 });
-
-
-
-
 
 /*
 meteor add insecure
@@ -200,4 +225,3 @@ meteor remove autopublish
 
 
 */
-

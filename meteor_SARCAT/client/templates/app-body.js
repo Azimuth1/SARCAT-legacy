@@ -21,7 +21,7 @@ Meteor.startup(function() {
     // the app started
     setTimeout(function() {
         // Launch screen handle created in lib/router.js
-        dataReadyHold.release();
+        //dataReadyHold.release();
         // Show the connection error box
         Session.set(SHOW_CONNECTION_ISSUE_KEY, true);
     }, CONNECTION_ISSUE_TIMEOUT);

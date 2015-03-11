@@ -7,16 +7,22 @@
                 <div class="nav-group right"> <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a> </div>
             </form> -->{{else}}
                 <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
-                <h1 class="js-edit-list title-page">
 
 
 
-<div class="title-wrapper">{{recordInfo.name}}</div>
+
+<h1 class="js-edit-list title-page">
+<!--<div class="title-wrapper text-uppercase">{{record.recordInfo.name}}</div>-->
+<span class="default-bg label">{{record.recordInfo.name}}</span>
+<span class="default-bg label">Prepared By: <strong> <em>{{record.admin.user}}</em></strong></span>
+<span class="default-bg label">Created: <strong> <em>{{record.created}}</em></strong></span>
+
+
+<button type="button" class="btn btn-primary mar1 pull-right">Submit as Final</button>
+</h1>
 
 
 
-                <span class="count-list">Created: {{created}}</span>
-                </h1>
                 <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
                 <div class="nav-group right">
                     <div class="nav-item options-mobile">
@@ -36,6 +42,8 @@
               {{/if}}
             </a>
                         <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
+
+
                     </div>
                 </div>
             {{/if}}
@@ -44,44 +52,27 @@
         </nav>
         <div class="content-scrollable list-items">
 
-<div class="row">
-<div class="col-md-8">
-<button type="button" class="btn btn-primary mar1 pull-right">Submit as Final</button>
-</div>
-</div>   
+ 
 
             {{#autoForm 
                 collection="Records" 
-                doc=this
+                doc=currentRecord
                 autosave=true
                 id="recordAdminForm" 
                 type="update"
-                fields="admin"
+                omitFields='admin, userId, name,created'
                 }} 
 
 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'admin'}}
-                    
-
-
-{{> form1}}
-
-
-
-
-
-
-                    {{/if}}
+                    {{#if renderForm this.name}}
+                    {{> form1}}
+                    {{/if}}  
                 {{/each}}
             {{/autoForm}}
 
 
-
-
-
-
-
+<!--
             {{#autoForm 
                 collection="Records" 
                 doc=this
@@ -90,24 +81,7 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'recordInfo'}}
-                 
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this 'incident'}}
+                    {{#if isSchema this.name 'incident'}}
                     
                         {{> form1}}
                     {{/if}}
@@ -123,7 +97,7 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'subjectInfo'}}
+                    {{#if isSchema this.name 'subjectInfo'}}
                     
                         {{> form1}}
 
@@ -145,7 +119,7 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'timeLog'}}
+                    {{#if isSchema this.name 'timeLog'}}
                     
                         {{> form1}}
                     {{/if}}
@@ -164,7 +138,7 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'incidentOperations'}}
+                    {{#if isSchema this.name 'incidentOperations'}}
                     
                         {{> form1}}
                     {{/if}}
@@ -180,7 +154,7 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'incidentOutcome'}}
+                    {{#if isSchema this.name 'incidentOutcome'}}
                     
                         {{> form1}}
                     {{/if}}
@@ -196,7 +170,7 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'medical'}}
+                    {{#if isSchema this.name 'medical'}}
                     
                         {{> form1}}
                     {{/if}}
@@ -212,17 +186,17 @@
                 type="update"
                 }} 
                 {{#each afFieldNames}}
-                    {{#if isSchema this 'resources'}}
+                    {{#if isSchema this.name 'resources'}}
                     
                         {{> form1}}
                     {{/if}}
                 {{/each}}
             {{/autoForm}}
 
-
+-->
 
         </div>
-    </div>
+   </div>
 </template>
 
 

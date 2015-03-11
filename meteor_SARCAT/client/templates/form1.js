@@ -10,7 +10,7 @@ Template.form1.helpers({
         return Session.get('formChanged');
     },
     schemaCompleteClass2: function(name) {
-        return 'panel-success';
+        return '_panel-success';
         currentRecord = Session.get('currentRecord');
         console.log(this, name, currentRecord)
         var complete = Match.test(currentRecord[name], Schemas[name]);
