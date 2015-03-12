@@ -6,6 +6,9 @@
     }
 };*/
 
+Meteor.publish('people', function() {
+    return People.find();
+});
 
 Meteor.publish('publicLists', function() {
     return Records.find({

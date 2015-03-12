@@ -1,57 +1,37 @@
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
-currentRecord = null;
-
-//listFadeInHold = null;
-//var currentRecord = null;
 Template.form.rendered = function() {
-    //a=this
-    var record = this.data.record;
-    Session.set('currentRecord', record);
-    //currentRecord = record;
-
-};
-var checkComplete = function(name) {
-    console.log(this, name);
-    var currentRecord = Session.get('currentRecord');
-    //console.log(name,currentRecord[name],Schemas[name]);
-    var complete = Match.test(currentRecord[name], Schemas[name]);
-    console.log(complete)
-    var result = complete ? 'panel-success' : 'panel-warning';
-    Session.set('afComplete_' + name, result);
-    return complete;
+    console.log(this.data)
+    Session.set('record', this.data.record);
 };
 Template.form.helpers({
+    Schemas: function(){
+        return Schemas;
+    },
     currentRecord: function() {
         return Session.get('currentRecord');
     },
     renderForm: function(name) {
-        var render = ['recordInfo', 'incident'];
+        var render = ['recordInfo', '_incident'];
         return render.indexOf(name) !== -1 ? true : false;
     },
-    formComplete: function() {
-        return Session.get('afComplete');
+    formComplete: function(name) {
+        var record = Session.get('record');
+        console.log(record)
+        if (!record) {
+            return;
+        }
+        //console.log(record,name)
+        var complete = Match.test(record[name], Schemas[name]);
+        //console.log(name,complete)
+        return complete ? '' : 'afWarning';
     },
     autoSaveMode: function() {
         return true; //Session.get('autoSaveMode') ? true : false;
     },
     isSchema: function(obj, obj2) {
-        console.log(obj, obj2)
+        //console.log(obj, obj2)
         return obj === obj2;
-    },
-    schemaCompleteClass: function(name) {
-        checkComplete()
-            //return 'g'
-            //var currentRecord = Session.get('currentRecord');
-            //console.log(this, name, currentRecord);
-        var complete = Match.test(currentRecord[name], Schemas[name]);
-        //Session.set('afComplete_' + a, complete);
-        //console.log(complete)
-        return complete ? 'panel-success' : 'panel-warning';
-        //checkComplete(name);
-    },
-    schemaComplete: function(a) {
-        return Match.test(this[a], Schemas[a]);
     },
     editing: function() {
         return Session.get(EDITING_KEY);
@@ -154,19 +134,6 @@ var toggleListPrivacy = function(list) {
         });
     }
 };
-/*
-Template.tax_line_fields.events({
- 'change': function(){
-    Session.set('form_changed', this.Date());
-    obj = form2js t.find("form")
-    _.extend(@, obj)
-  }
-});
-Template.tax_line_fields.form_changed = function(){
-  return Session.get('form_changed');
-};
-
-*/
 Template.form.events({
     'keydown input[type=text]': function(event) {
         // ESC
@@ -213,7 +180,8 @@ Template.form.events({
         //toggleListPrivacy(this, template);
     },*/
     'click .js-delete-list': function(event, template) {
-        deleteList(this, template);
+        var record = Session.get('record');
+        deleteList(record);
     },
     /*'click .js-todo-add': function(event, template) {
         template.$('.js-todo-new input')
@@ -237,42 +205,73 @@ Template.form.events({
         */
     }
 });
+var hooksObject = {
+    before: {
+        // Replace `formType` with the form `type` attribute to which this hook applies
+        formType: function(doc) {
+            // Potentially alter the doc
+            doc.foo = 'bar';
+            // Then return it or pass it to this.result()
+            //return doc; (synchronous)
+            //return false; (synchronous, cancel)
+            //this.result(doc); (asynchronous)
+            //this.result(false); (asynchronous, cancel)
+        }
+    },
+    // The same as the callbacks you would normally provide when calling
+    // collection.insert, collection.update, or Meteor.call
+    after: {
+        // Replace `formType` with the form `type` attribute to which this hook applies
+        formType: function(error, result) {}
+    },
+    // Called when form does not have a `type` attribute
+    onSubmit: function(insertDoc, updateDoc, currentDoc) {
+        // You must call this.done()!
+        //this.done(); // submitted successfully, call onSuccess
+        //this.done(new Error('foo')); // failed to submit, call onError with the provided error
+        //this.done(null, "foo"); // submitted successfully, call onSuccess with `result` arg set to "foo"
+    },
+    // Called when any submit operation succeeds
+    onSuccess: function(formType, result) {},
+    // Called when any submit operation fails
+    onError: function(formType, error) {},
+    // Called every time the form is revalidated, which can be often if keyup
+    // validation is used.
+    formToDoc: function(doc, ss, formId) {},
+    // Called whenever `doc` attribute reactively changes, before values
+    // are set in the form fields.
+    docToForm: function(doc, ss) {},
+    // Called at the beginning and end of submission, respectively.
+    // This is the place to disable/enable buttons or the form,
+    // show/hide a "Please wait" message, etc. If these hooks are
+    // not defined, then by default the submit button is disabled
+    // during submission.
+    beginSubmit: function() {},
+    endSubmit: function() {}
+};
+/*AutoForm.hooks({
+    xrecordAdminForm: hooksObject
+});*/
 AutoForm.hooks({
     recordAdminForm: {
-        /*formToDoc: function(doc, ss, formId) {
-            console.log(doc)
-        },*/
-        /*before: {
-            update: function(modifier) {
-                //console.log(this.name,modifier)
-                //return modifier;// (synchronous)
-                //return false; (synchronous, cancel)
-                return this.result(modifier);// (asynchronous)
-                //this.result(false); (asynchronous, cancel)
-            }
-        },*/
-        onSubmit: function(doc) {
+        /*onSubmit: function(doc) {
             console.log('submit');
             //console.log(doc);
             Schemas.SARCAT.clean(doc);
             this.done();
             return false;
-        },
+        },*/
         onSuccess: function(operation, result, template) {
-            //console.log(operation, result, template);
-            //Session.set('formChanged', new Date());
-            //Session.get('form_changed');
-            //checkCompelte
-            //console.log(operation, result, template);
-            //Router.go('users.show',{'username':template.data.doc.username});
+            console.log(operation, result);
         },
         onError: function(operation, error, template) {
-            //var name = template.data.fields;
-            //return checkComplete(name);
+            console.log(error);
         },
-        /*docToForm: function(doc, ss) {
-            console.log(doc);
-            this.done();
-        },*/
+        beginSubmit: function() {
+            console.log('beginSubmit');
+        },
+        endSubmit: function() {
+            console.log('endSubmit');
+        }
     }
 });

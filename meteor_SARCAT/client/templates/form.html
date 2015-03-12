@@ -1,17 +1,8 @@
 <template name="form">
     <div class="page lists-show">
         <nav class="js-title-nav">
-            {{#if editing}}
-                <!--<form class="js-edit-form list-edit-form">
-                <input type="text" name="name" value="{{name}}">
-                <div class="nav-group right"> <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a> </div>
-            </form> -->{{else}}
-                <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
-
-
-
-
-<h1 class="js-edit-list title-page">
+            <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
+            <h1 class="js-edit-list title-page">
 <!--<div class="title-wrapper text-uppercase">{{record.recordInfo.name}}</div>-->
 <span class="default-bg label">{{record.recordInfo.name}}</span>
 <span class="default-bg label">Prepared By: <strong> <em>{{record.admin.user}}</em></strong></span>
@@ -20,58 +11,108 @@
 
 <button type="button" class="btn btn-primary mar1 pull-right">Submit as Final</button>
 </h1>
-
-
-
-                <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
-                <div class="nav-group right">
-                    <div class="nav-item options-mobile">
-                        <select class="list-edit">
-                            <option disabled selected>Select an action</option>
-                            {{#if userId}}
-                                <option value="public">Make Public</option> {{else}}
-                                <option value="private">Make Private</option>
-                            {{/if}}
-                            <option value="delete">Delete</option>
-                        </select> <span class="icon-cog"></span> </div>
-                    <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
+            <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
+            <div class="nav-group right">
+                <div class="nav-item options-mobile">
+                    <select class="list-edit">
+                        <option disabled selected>Select an action</option>
+                        {{#if userId}}
+                            <option value="public">Make Public</option> {{else}}
+                            <option value="private">Make Private</option>
+                        {{/if}}
+                        <option value="delete">Delete</option>
+                    </select> <span class="icon-cog"></span> </div>
+                <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
               {{#if userId}}
                 <span class="icon-lock" title="Make list public"></span>
               {{else}}
                 <span class="icon-unlock" title="Make list private"></span>
               {{/if}}
             </a>
-                        <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
-
-
-                    </div>
+                    <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
                 </div>
-            {{/if}}
+            </div>
             <form class="js-todo-new todo-new input-symbol">
                 <input type="text" placeholder="Type to add new tasks" class="hide"> </form>
         </nav>
         <div class="content-scrollable list-items">
+            
 
- 
+
+
 
             {{#autoForm 
                 collection="Records" 
-                doc=currentRecord
+                doc=this
+                autosave=strue
+                id="recordAdminForm" 
+                type="update"
+                }} 
+                {{#each afFieldNames}}
+                    {{#if isEqual this.name 'subjectInfo'}}
+                  
+                        {{> afSubjects}}
+                   
+                   
+                 
+
+                    {{/if}}
+                {{/each}}
+            {{/autoForm}}
+
+
+
+<!--
+{{#autoForm 
+id="xafUpdateDemo" 
+type='update' 
+collection="Records"
+doc=record
+type="update"
+autosave=true
+
+}}
+
+{{> afQuickFields name="subjectInfo"}}
+
+
+{{/autoForm}}
+-->
+
+<!--
+  {{> afQuickFields name="subjectInfo"}}
+{{> quickForm 
+                schema="Schemas.SARCAT"
+                collection="Records"
+                doc=record
+                id="recordAdminForm" 
+                type="update"     
+                fields="admin"     
+}}
+-->
+
+<!--
+            {{#autoForm 
+                collection="Records" 
+                doc=record
                 autosave=true
                 id="recordAdminForm" 
                 type="update"
                 omitFields='admin, userId, name,created'
+                validation="submit"
                 }} 
 
 
                 {{#each afFieldNames}}
                     {{#if renderForm this.name}}
+                    <div class="afContainer {{formComplete this.name}}">
                     {{> form1}}
+                    </div>
                     {{/if}}  
                 {{/each}}
             {{/autoForm}}
 
-
+-->
 <!--
             {{#autoForm 
                 collection="Records" 
@@ -195,9 +236,14 @@
 
 -->
 
+
+
+
+
+
+
+
+
         </div>
-   </div>
+    </div>
 </template>
-
-
-
