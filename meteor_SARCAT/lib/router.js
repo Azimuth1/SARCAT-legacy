@@ -1,3 +1,9 @@
+Handlebars.registerHelper('json', function(context) {
+    return JSON.stringify(context);
+});
+Handlebars.registerHelper('isEqual', function(a, b) {
+    return a === b;
+});
 Router.configure({
     // we use the  appBody template to define the layout for the entire app
     layoutTemplate: 'appBody',
@@ -13,6 +19,7 @@ Router.configure({
             Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
+            Meteor.subscribe('people'),
             //Meteor.subscribe('Records'),
             //Meteor.subscribe('clientState')
         ];
@@ -128,7 +135,6 @@ Router.map(function() {
         onBeforeAction: function() {
             //this.onBeforeAction(IR_Filters.initSetup;
             this.next();
-            //}
         },
         data: function() {
             return Config.findOne();
@@ -143,18 +149,17 @@ Router.map(function() {
     this.route('user-home', {
         path: '/user/:_id',
         onBeforeAction: function() {
-            //this.todosHandle = Meteor.subscribe('Records', this.params._id);
-            //if (this.ready()) {
-            //    dataReadyHold.release();
             this.next();
-            //}
         },
         /*waitOn: function() {
             console.log('WAIT');
             return Meteor.subscribe('privateLists');
         },*/
         data: function() {
-            return Meteor.user();
+            var obj = {};
+            obj.user = Meteor.user();
+            obj.people = People.findOne();
+            return obj;
         },
         action: function() {
             this.render();
@@ -162,21 +167,6 @@ Router.map(function() {
     });
     this.route('form', {
         path: '/form/:_id',
-
-        /*onBeforeAction: function() {
-            console.log('BEFORE')
-            this.next();
-            this.todosHandle = Meteor.subscribe('privateLists', this.params._id);
-            if (this.ready()) {
-                console.log('READY');
-                console.log(this.params._id)
-                    // Handle for launch screen defined in app-body.js
-                console.log(this.params._id)
-                dataReadyHold.release();
-                this.next();
-            }
-        },*/
-
         /*waitOn: function() {
             console.log('WAIT');
             return Meteor.subscribe('privateLists');
@@ -185,36 +175,12 @@ Router.map(function() {
             var obj = {};
             obj.record = Records.findOne(this.params._id);
             return obj;
-            /*if (!this.ready()) {
-                return;
-            }*/
-            /*var obj = {};
-            obj.posts = [{
-                title: 'Did you know that...',
-                text: 'If you yelled for 8 years, 7 months and 6 days, you would have produced enough sound energy to heat up one cup of coffee.'
-            }, {
-                title: 'Hello World',
-                text: 'Hi, i am new here!'
-            }];
-            obj.record=Records.findOne(this.params._id);
-            obj.test=['aaa','bbbb','ccc'];
-            return obj;*/
-            //var obj = {};
-            //obj.currentData=Records.findOne(this.params._id);
-            //return obj;
-            /*console.log('DATA');
-            console.log(this.params._id);
-            var record = Records.findOne(this.params._id);
-            console.log(record);
-            return record;*/
-
         },
         action: function() {
             this.render();
         }
     });
 });
-
 /*
 meteor add insecure
 meteor add autopublish

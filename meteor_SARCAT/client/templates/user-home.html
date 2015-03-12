@@ -7,11 +7,50 @@
         -->
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y">
-                <div class="panel-body">
-                    {{#autoForm collection="Meteor.users" doc=this id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role"}}
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    {{/autoForm}}
-                </div>
+
+
+
+
+            {{#if formComplete 'profile'}}
+            <p class="text-danger em text-center"> Fill out your user profile to begin! </p>
+            {{/if}}
+
+
+           
+
+
+
+            {{#autoForm 
+                collection="Meteor.users" 
+                doc=user
+                autosave=true
+                id="profileUpdateForm" 
+                type="update"
+                trimStrings="true"
+                }} 
+
+
+                {{#each afFieldNames}}
+                    {{#if renderForm this.name}}
+
+
+     <div class="afContainer {{formComplete this.name}}">
+
+                    {{> form1}}
+
+        </div>
+                    {{/if}}  
+                {{/each}}
+            {{/autoForm}}
+
+
+
+                <!--
+                    {{#autoForm collection="Meteor.users" doc=this 
+                    autosave=true id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role" autosave=true}}
+                      
+                    {{/autoForm}}-->
+                
 
                 <!--
                 {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}

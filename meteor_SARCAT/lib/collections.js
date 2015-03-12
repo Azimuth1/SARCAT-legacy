@@ -21,32 +21,42 @@ Records.defaultNum = function() {
     return nextLetter;
 };
 Schemas = {};
-Schemas.UserProfile = new SimpleSchema({
+Schemas.profile = new SimpleSchema({
     firstName: {
         type: String,
-        //defaultValue: '',
-        regEx: /^[a-zA-Z-]{2,25}$/,
+        //optional: true,
+        //,
+        //regEx: /^[a-zA-Z-]{2,25}$/,
     },
     lastName: {
         type: String,
-        //defaultValue: ''
+        //optional: true,
+        custom: function() {
+            //console.log(this.value, this);
+        },
+        autoValue: function() {
+                console.log('autovalue');
+                if (this.isInsert) {
+                    console.log('insert');
+                }
+            }
+            //
     },
     phoneNum: {
         type: String,
-        //defaultValue: ''
+        //optional: true,
+        //
     },
     Agency: {
         type: String,
-        regEx: /^[a-z0-9A-z .]{3,30}$/,
-        //defaultValue: ''
+        //optional: true,
+        //regEx: /^[a-z0-9A-z .]{3,30}$/,
+        //
     }
 });
 Schemas.User = new SimpleSchema({
     emails: {
-        type: [Object],
-        // this must be optional if you also use other login services like facebook,
-        // but if you use only accounts-password, then it can be required
-        //optional: true
+        type: [Object]
     },
     'emails.$.address': {
         type: String,
@@ -60,22 +70,14 @@ Schemas.User = new SimpleSchema({
         type: Date
     },
     profile: {
-        type: Schemas.UserProfile,
+        type: Schemas.profile,
         defaultValue: {},
         blackbox: true,
     },
-    /*role: {
-        type: String,
-        //
-        optional: false,
-        blackbox: true,
-        allowedValues: ['user', 'admin', 'default'],
-        defaultValue: 'user'
-    },*/
     roles: {
         type: String,
         blackbox: true,
-        optional:true,
+        optional: true,
         allowedValues: ['user', 'admin']
     },
     services: {
@@ -87,7 +89,7 @@ Meteor.users.attachSchema(Schemas.User);
 Schemas.admin = new SimpleSchema({
     user: {
         type: String,
-        //optional:true,
+        optional: true,
         label: 'Prepared By',
         autoValue: function() {
             if (this.isInsert) {
@@ -99,7 +101,7 @@ Schemas.admin = new SimpleSchema({
     },
     email: {
         type: String,
-        //optional:true,
+        optional: true,
         regEx: SimpleSchema.RegEx.Email,
         autoValue: function() {
             if (this.isInsert) {
@@ -110,27 +112,18 @@ Schemas.admin = new SimpleSchema({
     phonenum: {
         type: String,
         label: 'Phone #',
-        //optional:true,
+        optional: true,
         autoValue: function() {
-            if (this.isInsert) {
-                return Meteor.user().profile.phoneNum || '';
-            }
-        },
-        //defaultValue: '',
-        /*custom: function() {
-                return 'fff'
-            }*/
-        //
-        /*autoValue: function() {
             if (this.isInsert) {
                 return Meteor.user().profile.phoneNum;
             }
-        }*/
+        }
     }
 });
 Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
+        //optional:true,
         label: 'Record Name',
         autoValue: function() {
             if (this.isInsert) {
@@ -215,16 +208,20 @@ Schemas.incident = new SimpleSchema({
         type: String,
         allowedValues: ['Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
         label: 'Incident Type',
-        defaultValue: ''
+        optional: true,
+        //defaultValue:''
+        //
     },
     incidentEnvironment: {
         type: String,
+        optional: true,
         allowedValues: ['Land', 'Air', 'Water'],
         label: 'Incident Environment',
-        defaultValue: ''
+        //
     },
     country: {
         type: String,
+        optional: true,
         label: 'Response Country',
         autoValue: function() {
             return 'Default Country';
@@ -232,6 +229,7 @@ Schemas.incident = new SimpleSchema({
     },
     stateregion: {
         type: String,
+        optional: true,
         label: 'Response State/Region',
         autoValue: function() {
             return 'Default State/Region';
@@ -239,6 +237,7 @@ Schemas.incident = new SimpleSchema({
     },
     subjectcategory: {
         type: String,
+        optional: true,
         allowedValues: ['Abduction', 'Aircraft Incident', 'Non-Powered Boat', 'Person in Current Water', 'Person in Flat Water', 'Person in Flood Water', 'Power Boat', 'ATV', 'Motorcycle', 'Mountain Bike', 'Vehicle (4WD)', 'Vehicle (Road)', 'Autism', 'Dementia', 'Despondent', 'Intellectual Disability', 'Mental Illness', 'Substance Intoxication', 'Ages 1-3 (Toddler)', 'Ages 4-6 (PreSchool)', 'Ages 7-9 (SchoolAge)', 'Ages 10-12 (Pre-Teenager)', 'Ages 13-15 (Adolescent)', 'Abandoned Vehicle', 'Angler', 'Car Camper', 'Caver', 'Day Climber', 'Extreme Race', 'Gatherer', 'Hiker', 'Horseback Rider', 'Hunter', 'Mountaineer', 'Runner', 'Worker', 'Alpine Skier', 'Nordic Skier', 'Snowboarder', 'Snowmobiler', 'Snowshoer'],
         label: 'Subject Category',
         autoValue: function() {
@@ -249,6 +248,7 @@ Schemas.incident = new SimpleSchema({
     },
     contactmethod: {
         type: String,
+        optional: true,
         allowedValues: ['Reported Missing', 'Vehicle Found', 'Registration Card', 'ELT/PLB/EPIRP', 'Satelitte Alerting Technology', 'Subject Cell Phone', 'Radio', 'Distress Signal'],
         label: 'Contact Method',
         autoValue: function() {
@@ -259,6 +259,7 @@ Schemas.incident = new SimpleSchema({
     },
     ipptype: {
         type: String,
+        optional: true,
         allowedValues: ['Point Last Seen', 'Last Known Point'],
         label: 'IPP Type',
         autoValue: function() {
@@ -269,6 +270,7 @@ Schemas.incident = new SimpleSchema({
     },
     ippclassification: {
         type: String,
+        optional: true,
         allowedValues: ['Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Unknown', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
         autoValue: function() {
@@ -282,6 +284,7 @@ Schemas.incident = new SimpleSchema({
     },
     'ippCoordinates.x': {
         type: String,
+        optional: true,
         label: '(N/S) Lat',
         autoValue: function() {
             return '0';
@@ -289,6 +292,7 @@ Schemas.incident = new SimpleSchema({
     },
     'ippCoordinates.y': {
         type: String,
+        optional: true,
         label: '(E/W) Lng',
         autoValue: function() {
             return '0';
@@ -296,143 +300,137 @@ Schemas.incident = new SimpleSchema({
     },
     ecoregiondomain: {
         type: String,
+        optional: true,
         allowedValues: ['Temperate', 'Dry', 'Polar', 'Tropical', 'Water'],
         label: 'Ecoregion Domain',
-        defaultValue: ''
     },
     ecoregionDivision: {
         type: String,
+        optional: true,
         allowedValues: ['M110 Icecap Regime Mountains', '120 Tundra Division', 'M120 Tundra Regime Mountains', '130 Subarctic Division', 'M130 Subarctic Regime Mountains', '210 Warm Continental Division', 'M210 Warm Continental Regime Mountains', '220 Hot Continental Division', 'M220 Hot Continental Regime Mountains', '230 Subtropical Division', 'M230 Subtropical Regime Mountains', '240 Marine Division', 'M240 Marine Regime Mountains', '250 Prairie Division', 'M250 Prairie Regime Mountains', '260 Mediterranean Division', 'M260 Mediterranean Regime Mountains', '310 Tropical/Subtropical Steppe Division', 'M310 Tropical/Subtropical Steppe Regime Mountains', '320 Tropical/Subtropical Dessert Division', 'M320 Tropical/Subtropical Regime Mountains', '330 Temperate Steppe Division'],
         label: 'Ecoregion Division',
-        defaultValue: ''
     },
     populationDensity: {
         type: String,
+        optional: true,
         allowedValues: ['Wilderness', 'Rural', 'Suburban', 'Urban', 'Water'],
         label: 'Population Density',
-        defaultValue: ''
     },
     terrain: {
         type: String,
+        optional: true,
         allowedValues: ['Mountain', 'Hilly', 'Flat', 'Water'],
         label: 'Terrrain',
-        defaultValue: ''
     },
     landCover: {
         type: String,
+        optional: true,
         allowedValues: ['Bare', 'Light', 'Moderate', 'Heavy', 'Water'],
         label: 'Land Cover',
-        defaultValue: ''
     },
     landOwner: {
         type: String,
+        optional: true,
         allowedValues: ['Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
         label: 'Land Owner',
-        defaultValue: ''
     },
     weather: {
         type: String,
+        optional: true,
         allowedValues: ['Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
         label: 'Weather',
-        defaultValue: ''
     },
     maxTemp: {
         type: String,
+        optional: true,
         label: 'Max Temp',
-        defaultValue: ''
     },
     Temminp: {
         type: String,
+        optional: true,
         label: 'Min Temp',
-        defaultValue: ''
     },
     wind: {
         type: String,
+        optional: true,
         allowedValues: ['Light', 'Medium', 'Heavy'],
         label: 'Wind',
-        defaultValue: ''
     },
     rain: {
         type: String,
+        optional: true,
         allowedValues: ['Light', 'Medium', 'Heavy'],
         label: 'Rain',
-        defaultValue: ''
     },
     snow: {
         type: String,
+        optional: true,
         allowedValues: ['Light', 'Medium', 'Heavy'],
         label: 'Snow',
-        defaultValue: ''
     },
     light: {
         type: String,
+        optional: true,
         allowedValues: ['Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
         label: 'Light',
-        defaultValue: ''
     }
 });
 Schemas.subjectInfo = new SimpleSchema({
     /*'number': {
         type: Number,
         label: 'Number of Subjects',
-        defaultValue: ''
+        
     },*/
-    'age': {
-        type: String,
-        label: 'Age',
-        defaultValue: ''
+    'newSubject': {
+        type: Array,
+        minCount: 1
     },
-    'sex': {
-        type: String,
+    'newSubject.$.age': {
+         type: String,optional: true,
+        label: 'Age',
+    },
+    'newSubject.$.sex': {
+         type: String,optional: true,
         allowedValues: ['Male', 'Femail'],
         label: 'Sex',
-        defaultValue: ''
     },
-    'local': {
-        type: String,
+    'newSubject.$.local': {
+         type: String,optional: true,
         allowedValues: ['Yes', 'No', 'Guide'],
         label: 'Local?',
-        defaultValue: ''
     },
-    'weight': {
-        type: String,
+    'newSubject.$.weight': {
+         type: String,optional: true,
         label: 'Weight',
-        defaultValue: ''
     },
-    'height': {
-        type: String,
+    'newSubject.$.height': {
+         type: String,optional: true,
         label: 'Height',
-        defaultValue: ''
     },
-    'physical fitness': {
-        type: String,
+    'newSubject.$.physical fitness': {
+         type: String,optional: true,
         allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Physical Fitness',
-        defaultValue: ''
     },
-    'experience': {
-        type: String,
+    'newSubject.$.experience': {
+         type: String,optional: true,
         allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Experience',
-        defaultValue: ''
     },
-    'equipment': {
-        type: String,
+    'newSubject.$.equipment': {
+         type: String,optional: true,
         allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Equipment',
-        defaultValue: ''
     },
-    'clothing': {
-        type: String,
+    'newSubject.$.clothing': {
+         type: String,optional: true,
         allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Clothing',
-        defaultValue: ''
     },
-    'survival training': {
-        type: String,
+    'newSubject.$.survival training': {
+         type: String,optional: true,
         allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Survival training',
-        defaultValue: ''
     }
 });
 Schemas.timeLog = new SimpleSchema({
@@ -803,6 +801,48 @@ Schemas.resources = new SimpleSchema({
         label: 'Comments'
     }
 });
+Schemas.test = new SimpleSchema({
+    user: {
+        type: String,
+        optional: true,
+        min: 2,
+        label: 'Prepared By',
+        unique: true,
+        index: 222
+    },
+    /*email: {
+        type: String,
+        //optional:true,
+        regEx: SimpleSchema.RegEx.Email,
+        autoValue: function() {
+            if (this.isInsert) {
+                return Meteor.user().emails[0].address;
+            }
+        }
+    },
+    phonenum: {
+        type: String,
+        label: 'Phone #',
+        //optional:false,
+        regEx: SimpleSchema.RegEx.Email,
+    },*/
+    /*
+        firstName: {
+            type: String,
+            optional: true
+            //index: 100,
+            //unique: true
+        },
+        lastName: {
+            type: String,
+            optional: true
+        },*/
+    age: {
+        type: String,
+        optional: true,
+        min: 2
+    }
+});
 Schemas.SARCAT = new SimpleSchema({
     userId: {
         type: String,
@@ -820,48 +860,50 @@ Schemas.SARCAT = new SimpleSchema({
                 .toDateString();
         }
     },
+    test: {
+        type: Schemas.test,
+        //blackbox: true,
+        optional: true
+            //defaultValue: {}
+    },
     admin: {
         type: Schemas.admin,
-        //blackbox: true,
-        //defaultValue: {}
+        optional: true
+            //blackbox: true,
+            //defaultValue: {}
     },
     recordInfo: {
         type: Schemas.recordInfo,
-        blackbox: true,
+        optional: true
     },
     incident: {
         type: Schemas.incident,
-        blackbox: true,
+        optional: true
     },
     subjectInfo: {
         type: Schemas.subjectInfo,
-        blackbox: true,
+        optional: true
     },
-    timeLog: {
+    /*timeLog: {
         type: Schemas.timeLog,
-        defaultValue: {},
-        blackbox: true,
+        optional: true
     },
     incidentOperations: {
         type: Schemas.incidentOperations,
-        defaultValue: {},
-        blackbox: true,
+        optional: true
     },
     incidentOutcome: {
         type: Schemas.incidentOutcome,
-        defaultValue: {},
-        blackbox: true,
+        optional: true
     },
     medical: {
         type: Schemas.medical,
-        defaultValue: {},
-        blackbox: true,
+        optional: true
     },
     resources: {
         type: Schemas.resources,
-        defaultValue: {},
-        blackbox: true,
-    },
+        optional: true
+    },*/
 });
 Records.attachSchema(Schemas.SARCAT);
 /*
@@ -871,35 +913,22 @@ AdminConfig = {
         Records: {}
     }
 };*/
-
-
-
-
-
-
-
-
-
 Schemas.Person = new SimpleSchema({
-  firstName: {
-    type: String,
-    index: 1,
-    unique: true
-  },
-  lastName: {
-    type: String,
-    optional: true
-  },
-  age: {
-    type: Number,
-    optional: true
-  }
+    firstName: {
+        type: String,
+        index: 1,
+        unique: true
+    },
+    lastName: {
+        type: String,
+        optional: true
+    },
+    age: {
+        type: Number,
+        optional: true
+    }
 });
-
-
-
 Collections = {};
-
-
+Collections.Records = Records;
 People = Collections.People = new Mongo.Collection("People");
 People.attachSchema(Schemas.Person);
