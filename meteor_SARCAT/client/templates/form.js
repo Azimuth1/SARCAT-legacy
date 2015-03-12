@@ -2,29 +2,43 @@ var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
 Template.form.rendered = function() {
     console.log(this.data)
-    Session.set('record', this.data.record);
+    Session.set('currentRecord', this.data.record);
 };
 Template.form.helpers({
-    Schemas: function(){
+    getObj: function(obj, name) {
+        return obj[name];
+    },
+    getData: function(obj, name) {
+        return this.data.record;
+    },
+    Schemas: function() {
         return Schemas;
+    },
+    Records: function() {
+        return Records;
     },
     currentRecord: function() {
         return Session.get('currentRecord');
     },
     renderForm: function(name) {
-        var render = ['recordInfo', '_incident'];
+        return 'recordInfo';
+        var render = ['recordInfo', 'incident'];
         return render.indexOf(name) !== -1 ? true : false;
     },
     formComplete: function(name) {
-        var record = Session.get('record');
-        console.log(record)
+        console.log(name)
+        var record = Session.get('currentRecord');
+        //console.log(record)
         if (!record) {
             return;
         }
         //console.log(record,name)
         var complete = Match.test(record[name], Schemas[name]);
-        //console.log(name,complete)
+        // console.log(name, complete)
         return complete ? '' : 'afWarning';
+    },
+    formId: function(name) {
+        return 'af_' + this.name;
     },
     autoSaveMode: function() {
         return true; //Session.get('autoSaveMode') ? true : false;
@@ -36,15 +50,19 @@ Template.form.helpers({
     editing: function() {
         return Session.get(EDITING_KEY);
     },
-    records: function() {
-        //console.log(this);
+    arrRecord: function(val) {
         result = [];
-        for (var key in this) result.push({
-            name: key,
-            value: this[key]
-        });
-        //console.log(result);
-        return result;
+        var use = ['recordInfo','incident','subjectInfo'];
+        var record = this.record;
+        for (var key in record) {
+            if (use.indexOf(key) !== -1) {
+                result.push({
+                    name: key,
+                    value: record[key]
+                });
+            }
+        }
+        return val ? record[val] : result;
     },
     /*todos: function(listId) {
         return Todos.find({
@@ -135,7 +153,7 @@ var toggleListPrivacy = function(list) {
     }
 };
 Template.form.events({
-    'keydown input[type=text]': function(event) {
+    /*'keydown input[type=text]': function(event) {
         // ESC
         //console.log(this,event)
         if (27 === event.which) {
@@ -143,20 +161,20 @@ Template.form.events({
             $(event.target)
                 .blur();
         }
-    },
+    },*/
     'blur input[type=text]': function(event, template) {
         //console.log('!')
         // if we are still editing (we haven't just clicked the cancel button)
         if (Session.get(EDITING_KEY)) saveList(this, template);
     },
     'submit .js-edit-form': function(event, template) {
-        event.preventDefault();
+        //event.preventDefault();
         saveList(this, template);
     },
     // handle mousedown otherwise the blur handler above will swallow the click
     // on iOS, we still require the click event so handle both
     'mousedown .js-cancel, click .js-cancel': function(event) {
-        event.preventDefault();
+       // event.preventDefault();
         Session.set(EDITING_KEY, false);
     },
     'change .list-edit': function(event, template) {
@@ -180,7 +198,7 @@ Template.form.events({
         //toggleListPrivacy(this, template);
     },*/
     'click .js-delete-list': function(event, template) {
-        var record = Session.get('record');
+        var record = Session.get('currentRecord');
         deleteList(record);
     },
     /*'click .js-todo-add': function(event, template) {
@@ -190,7 +208,7 @@ Template.form.events({
     'click .person-row': function() {
         Session.set('selectedPersonId', this._id);
     },*/
-    'change .afInput': function(event, template) {
+    'change ._afInput': function(event, template) {
         //var name = event.target.name.split('.')[0];
         //return checkComplete(name);
         /*
@@ -252,15 +270,35 @@ var hooksObject = {
 /*AutoForm.hooks({
     xrecordAdminForm: hooksObject
 });*/
+
+hooks2 = {
+    onSubmit: function(doc) {
+        console.log('!!!!!!')
+        console.log(doc);
+        Schemas.SARCAT.clean(doc);
+        console.log(doc);
+        this.done();
+        return false;
+    },
+    // Schemas.SARCAT.clean(doc);
+    onSuccess: function(formType, result) {
+        console.log(formType, result);
+    },
+    onError: function(formType, error) {
+        console.log(error);
+    },
+    beginSubmit: function(a) {
+        console.log()
+        console.log('beginSubmit');
+    },
+    endSubmit: function() {
+        console.log('endSubmit');
+    }
+};
+/*
 AutoForm.hooks({
     recordAdminForm: {
-        /*onSubmit: function(doc) {
-            console.log('submit');
-            //console.log(doc);
-            Schemas.SARCAT.clean(doc);
-            this.done();
-            return false;
-        },*/
+        // Schemas.SARCAT.clean(doc);
         onSuccess: function(operation, result, template) {
             console.log(operation, result);
         },
@@ -274,4 +312,6 @@ AutoForm.hooks({
             console.log('endSubmit');
         }
     }
-});
+});*/
+
+AutoForm.addHooks('af_recordInfo', hooks2);

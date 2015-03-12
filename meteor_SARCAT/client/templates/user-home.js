@@ -15,6 +15,8 @@ Template.userHome.helpers({
     },
 });
 Template.userHome.events({});
+
+/*
 AutoForm.hooks({
     profileUpdateForm: {
         onSubmit: function(doc) {
@@ -24,13 +26,14 @@ AutoForm.hooks({
             this.done();
             return false;
         },
-        /*onSuccess: function(operation, result, template) {
+        onSuccess: function(operation, result, template) {
             console.log(operation, result, template)
             console.log('updated');
             //Router.go('users.show',{'username':template.data.doc.username});
         },
         onError: function(operation, error, template) {
             console.log(operation, error)
-        },*/
+        },
     }
 });
+*/

@@ -18,7 +18,7 @@
 
            
 
-
+<!--
 
             {{#autoForm 
                 collection="Meteor.users" 
@@ -43,8 +43,28 @@
                 {{/each}}
             {{/autoForm}}
 
+-->
 
-
+<div class="afContainer {{formComplete 'profile'}}">
+    <div class="panel">
+        <div class="panel-heading collapsed" role="tab" id="heading_Profile" data-toggle="collapse" data-parent="#accordion" href="#collapse_Profile" aria-expanded="false" aria-controls="collapse_Profile">
+            <h3 class="text-uppercase">Profile</h3> </div>
+        <div id="collapse_Profile" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_Profile">
+            <div class="panel-body">
+            {{> quickForm
+                collection="Meteor.users" 
+                doc=user
+                id="profileUpdateForm" 
+                type="update"
+                trimStrings="true"
+                validation='keyup'
+                fields='profile'      
+                }}  
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
                 <!--
                     {{#autoForm collection="Meteor.users" doc=this 
                     autosave=true id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role" autosave=true}}

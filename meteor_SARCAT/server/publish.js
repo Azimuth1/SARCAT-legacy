@@ -11,11 +11,7 @@ Meteor.publish('people', function() {
 });
 
 Meteor.publish('publicLists', function() {
-    return Records.find({
-        userId: {
-            $exists: false
-        }
-    });
+    return Records.find();
 });
 Meteor.publish('privateLists', function() {
     if (this.userId) {
