@@ -24,34 +24,15 @@ Schemas = {};
 Schemas.profile = new SimpleSchema({
     firstName: {
         type: String,
-        //optional: true,
-        //,
-        //regEx: /^[a-zA-Z-]{2,25}$/,
     },
     lastName: {
-        type: String,
-        //optional: true,
-        custom: function() {
-            //console.log(this.value, this);
-        },
-        autoValue: function() {
-                console.log('autovalue');
-                if (this.isInsert) {
-                    console.log('insert');
-                }
-            }
-            //
+        type: String
     },
     phoneNum: {
         type: String,
-        //optional: true,
-        //
     },
     Agency: {
         type: String,
-        //optional: true,
-        //regEx: /^[a-z0-9A-z .]{3,30}$/,
-        //
     }
 });
 Schemas.User = new SimpleSchema({
@@ -78,7 +59,7 @@ Schemas.User = new SimpleSchema({
         type: String,
         blackbox: true,
         optional: true,
-        allowedValues: ['user', 'admin']
+        allowedValues: ['Unknown', 'user', 'admin']
     },
     services: {
         type: Object,
@@ -133,7 +114,7 @@ Schemas.recordInfo = new SimpleSchema({
     },
     status: {
         type: String,
-        allowedValues: ['Active', 'Closed', 'Open'],
+        allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
         label: 'Status',
         autoValue: function() {
             if (this.isInsert) {
@@ -206,237 +187,288 @@ Schemas.incident = new SimpleSchema({
     },
     incidenttype: {
         type: String,
-        allowedValues: ['Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
+        allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
         label: 'Incident Type',
-        optional: true,
-        //defaultValue:''
-        //
+        defaultValue: 'Unknown'
     },
     incidentEnvironment: {
         type: String,
-        optional: true,
-        allowedValues: ['Land', 'Air', 'Water'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Choose', 'Land', 'Air', 'Water'],
         label: 'Incident Environment',
-        //
+        defaultValue: 'Unknown'
+
     },
     country: {
         type: String,
-        optional: true,
         label: 'Response Country',
         autoValue: function() {
-            return 'Default Country';
+            if (this.isInsert) {
+                return 'USA';
+            }
         }
+
     },
     stateregion: {
         type: String,
-        optional: true,
+        //optional: true,
         label: 'Response State/Region',
         autoValue: function() {
-            return 'Default State/Region';
+            if (this.isInsert) {
+                return '';
+            }
         }
     },
     subjectcategory: {
         type: String,
-        optional: true,
-        allowedValues: ['Abduction', 'Aircraft Incident', 'Non-Powered Boat', 'Person in Current Water', 'Person in Flat Water', 'Person in Flood Water', 'Power Boat', 'ATV', 'Motorcycle', 'Mountain Bike', 'Vehicle (4WD)', 'Vehicle (Road)', 'Autism', 'Dementia', 'Despondent', 'Intellectual Disability', 'Mental Illness', 'Substance Intoxication', 'Ages 1-3 (Toddler)', 'Ages 4-6 (PreSchool)', 'Ages 7-9 (SchoolAge)', 'Ages 10-12 (Pre-Teenager)', 'Ages 13-15 (Adolescent)', 'Abandoned Vehicle', 'Angler', 'Car Camper', 'Caver', 'Day Climber', 'Extreme Race', 'Gatherer', 'Hiker', 'Horseback Rider', 'Hunter', 'Mountaineer', 'Runner', 'Worker', 'Alpine Skier', 'Nordic Skier', 'Snowboarder', 'Snowmobiler', 'Snowshoer'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Abduction', 'Aircraft Incident', 'Non-Powered Boat', 'Person in Current Water', 'Person in Flat Water', 'Person in Flood Water', 'Power Boat', 'ATV', 'Motorcycle', 'Mountain Bike', 'Vehicle (4WD)', 'Vehicle (Road)', 'Autism', 'Dementia', 'Despondent', 'Intellectual Disability', 'Mental Illness', 'Substance Intoxication', 'Ages 1-3 (Toddler)', 'Ages 4-6 (PreSchool)', 'Ages 7-9 (SchoolAge)', 'Ages 10-12 (Pre-Teenager)', 'Ages 13-15 (Adolescent)', 'Abandoned Vehicle', 'Angler', 'Car Camper', 'Caver', 'Day Climber', 'Extreme Race', 'Gatherer', 'Hiker', 'Horseback Rider', 'Hunter', 'Mountaineer', 'Runner', 'Worker', 'Alpine Skier', 'Nordic Skier', 'Snowboarder', 'Snowmobiler', 'Snowshoer'],
         label: 'Subject Category',
-        autoValue: function() {
-            if (this.isInsert) {
-                return 'Hiker';
-            }
-        },
+        defaultValue: 'Unknown',
+
     },
     contactmethod: {
         type: String,
-        optional: true,
-        allowedValues: ['Reported Missing', 'Vehicle Found', 'Registration Card', 'ELT/PLB/EPIRP', 'Satelitte Alerting Technology', 'Subject Cell Phone', 'Radio', 'Distress Signal'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Reported Missing', 'Vehicle Found', 'Registration Card', 'ELT/PLB/EPIRP', 'Satelitte Alerting Technology', 'Subject Cell Phone', 'Radio', 'Distress Signal'],
         label: 'Contact Method',
-        autoValue: function() {
-            if (this.isInsert) {
-                return 'Reported Missing';
-            }
-        },
+        defaultValue: 'Unknown',
+
     },
     ipptype: {
         type: String,
-        optional: true,
-        allowedValues: ['Point Last Seen', 'Last Known Point'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Point Last Seen', 'Last Known Point'],
         label: 'IPP Type',
-        autoValue: function() {
-            if (this.isInsert) {
-                return 'Point Last Seen';
-            }
-        },
+        defaultValue: 'Unknown',
+
     },
     ippclassification: {
         type: String,
-        optional: true,
-        allowedValues: ['Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Unknown', 'Vehicle', 'Water', 'Woods', 'Other'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
-        autoValue: function() {
-            if (this.isInsert) {
-                return 'Airport';
-            }
-        },
+        defaultValue: 'Unknown'
+
     },
     ippCoordinates: {
         type: Object
     },
     'ippCoordinates.x': {
         type: String,
-        optional: true,
+        //optional: true,
         label: '(N/S) Lat',
+
         autoValue: function() {
-            return '0';
+            if (this.isInsert) {
+                return '0.0';
+            }
         }
+
     },
     'ippCoordinates.y': {
         type: String,
-        optional: true,
+        //optional: true,
         label: '(E/W) Lng',
         autoValue: function() {
-            return '0';
+            if (this.isInsert) {
+                return '0.0';
+            }
         }
     },
     ecoregiondomain: {
         type: String,
-        optional: true,
-        allowedValues: ['Temperate', 'Dry', 'Polar', 'Tropical', 'Water'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Temperate', 'Dry', 'Polar', 'Tropical', 'Water'],
+        defaultValue: 'Unknown',
         label: 'Ecoregion Domain',
     },
     ecoregionDivision: {
         type: String,
-        optional: true,
-        allowedValues: ['M110 Icecap Regime Mountains', '120 Tundra Division', 'M120 Tundra Regime Mountains', '130 Subarctic Division', 'M130 Subarctic Regime Mountains', '210 Warm Continental Division', 'M210 Warm Continental Regime Mountains', '220 Hot Continental Division', 'M220 Hot Continental Regime Mountains', '230 Subtropical Division', 'M230 Subtropical Regime Mountains', '240 Marine Division', 'M240 Marine Regime Mountains', '250 Prairie Division', 'M250 Prairie Regime Mountains', '260 Mediterranean Division', 'M260 Mediterranean Regime Mountains', '310 Tropical/Subtropical Steppe Division', 'M310 Tropical/Subtropical Steppe Regime Mountains', '320 Tropical/Subtropical Dessert Division', 'M320 Tropical/Subtropical Regime Mountains', '330 Temperate Steppe Division'],
+        //optional: true,
+        allowedValues: ['Unknown', 'M110 Icecap Regime Mountains', '120 Tundra Division', 'M120 Tundra Regime Mountains', '130 Subarctic Division', 'M130 Subarctic Regime Mountains', '210 Warm Continental Division', 'M210 Warm Continental Regime Mountains', '220 Hot Continental Division', 'M220 Hot Continental Regime Mountains', '230 Subtropical Division', 'M230 Subtropical Regime Mountains', '240 Marine Division', 'M240 Marine Regime Mountains', '250 Prairie Division', 'M250 Prairie Regime Mountains', '260 Mediterranean Division', 'M260 Mediterranean Regime Mountains', '310 Tropical/Subtropical Steppe Division', 'M310 Tropical/Subtropical Steppe Regime Mountains', '320 Tropical/Subtropical Dessert Division', 'M320 Tropical/Subtropical Regime Mountains', '330 Temperate Steppe Division'],
+        defaultValue: 'Unknown',
         label: 'Ecoregion Division',
     },
     populationDensity: {
         type: String,
-        optional: true,
-        allowedValues: ['Wilderness', 'Rural', 'Suburban', 'Urban', 'Water'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Wilderness', 'Rural', 'Suburban', 'Urban', 'Water'],
+        defaultValue: 'Unknown',
         label: 'Population Density',
     },
     terrain: {
         type: String,
-        optional: true,
-        allowedValues: ['Mountain', 'Hilly', 'Flat', 'Water'],
+        // optional: true,
+        allowedValues: ['Unknown', 'Mountain', 'Hilly', 'Flat', 'Water'],
+        defaultValue: 'Unknown',
         label: 'Terrrain',
     },
     landCover: {
         type: String,
-        optional: true,
-        allowedValues: ['Bare', 'Light', 'Moderate', 'Heavy', 'Water'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Bare', 'Light', 'Moderate', 'Heavy', 'Water'],
+        defaultValue: 'Unknown',
         label: 'Land Cover',
     },
     landOwner: {
         type: String,
-        optional: true,
-        allowedValues: ['Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
+        // optional: true,
+        allowedValues: ['Unknown', 'Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
+        defaultValue: 'Unknown',
         label: 'Land Owner',
     },
     weather: {
         type: String,
-        optional: true,
-        allowedValues: ['Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
+        // optional: true,
+        allowedValues: ['Unknown', 'Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
+        defaultValue: 'Unknown',
         label: 'Weather',
     },
     maxTemp: {
         type: String,
-        optional: true,
+        // optional: true,
         label: 'Max Temp',
+        autoValue: function() {
+            if (this.isInsert) {
+                return '';
+            }
+        }
     },
-    Temminp: {
+    minTemp: {
         type: String,
-        optional: true,
+        // optional: true,
         label: 'Min Temp',
+        autoValue: function() {
+            if (this.isInsert) {
+                return '';
+            }
+        }
     },
     wind: {
         type: String,
-        optional: true,
-        allowedValues: ['Light', 'Medium', 'Heavy'],
+        // optional: true,
+        allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
+        defaultValue: 'Unknown',
         label: 'Wind',
     },
     rain: {
         type: String,
-        optional: true,
-        allowedValues: ['Light', 'Medium', 'Heavy'],
+        // optional: true,
+        allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
+        defaultValue: 'Unknown',
         label: 'Rain',
     },
     snow: {
         type: String,
-        optional: true,
-        allowedValues: ['Light', 'Medium', 'Heavy'],
+        //optional: true,
+        allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
+        defaultValue: 'Unknown',
         label: 'Snow',
     },
     light: {
         type: String,
-        optional: true,
-        allowedValues: ['Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
+        // optional: true,
+        allowedValues: ['Unknown', 'Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
+        defaultValue: 'Unknown',
         label: 'Light',
     }
 });
-Schemas.subjectInfo = new SimpleSchema({
-    /*'number': {
-        type: Number,
+
+
+
+
+
+Schemas.allSubjects = new SimpleSchema({
+    'allSubjects': {
+        type: [Object],
         label: 'Number of Subjects',
-        
-    },*/
-    'newSubject': {
-        type: Array,
-        minCount: 1
+        defaultValue: []
+
     },
-    'newSubject.$.age': {
-         type: String,optional: true,
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+Schemas.subjectInfo = new SimpleSchema({
+    'age': {
+        type: Number,
+        defaultValue: 9,
         label: 'Age',
     },
-    'newSubject.$.sex': {
-         type: String,optional: true,
-        allowedValues: ['Male', 'Femail'],
+    'sex': {
+        type: String,
+
+        allowedValues: ['Unknown', 'Male', 'Femail'],
+        defaultValue: 'Unknown',
         label: 'Sex',
     },
-    'newSubject.$.local': {
-         type: String,optional: true,
-        allowedValues: ['Yes', 'No', 'Guide'],
+    'local': {
+        type: String,
+        defaultValue: 'Unknown',
+        allowedValues: ['Unknown', 'Yes', 'No', 'Guide'],
         label: 'Local?',
     },
-    'newSubject.$.weight': {
-         type: String,optional: true,
+    'weight': {
+        type: String,
+        defaultValue: '',
         label: 'Weight',
     },
-    'newSubject.$.height': {
-         type: String,optional: true,
+    'height': {
+        type: String,
+        defaultValue: '',
         label: 'Height',
     },
-    'newSubject.$.physical fitness': {
-         type: String,optional: true,
-        allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
+    'physical fitness': {
+        type: String,
+        defaultValue: 'Unknown',
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Physical Fitness',
     },
-    'newSubject.$.experience': {
-         type: String,optional: true,
-        allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
+    'experience': {
+        type: String,
+        defaultValue: 'Unknown',
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Experience',
     },
-    'newSubject.$.equipment': {
-         type: String,optional: true,
-        allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
+    'equipment': {
+        type: String,
+        defaultValue: 'Unknown',
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Equipment',
     },
-    'newSubject.$.clothing': {
-         type: String,optional: true,
-        allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
+    'clothing': {
+        type: String,
+        defaultValue: 'Unknown',
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Clothing',
     },
-    'newSubject.$.survival training': {
-         type: String,optional: true,
-        allowedValues: ['Poor', 'Fair', 'Good', 'Excellent'],
+    'survival training': {
+        type: String,
+        defaultValue: 'Unknown',
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Survival training',
     }
 });
+
+
+
+
+
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
-        //optional: true,
+        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -446,7 +478,7 @@ Schemas.timeLog = new SimpleSchema({
     },
     'sar notified date-time': {
         type: String,
-        optional: true,
+        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -456,7 +488,7 @@ Schemas.timeLog = new SimpleSchema({
     },
     'subject located date-time': {
         type: String,
-        optional: true,
+        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -466,7 +498,7 @@ Schemas.timeLog = new SimpleSchema({
     },
     'incident closed date-time': {
         type: String,
-        optional: true,
+        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -476,7 +508,7 @@ Schemas.timeLog = new SimpleSchema({
     },
     'total hours': {
         type: String,
-        optional: true,
+        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'time'
@@ -497,307 +529,307 @@ Schemas.timeLog = new SimpleSchema({
 Schemas.incidentOperations = new SimpleSchema({
     'destinationCoord_N-S': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Destination Coord. (N/S)'
     },
     'destinationCoord_E-W': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Destination Coord. (E/W)'
     },
     'initialDirectionofTravel': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Initial Direction of Travel'
     },
     'DOTHowdetermined': {
         type: String,
-        optional: true,
-        allowedValues: ['Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
         label: 'DOT How determined'
     },
     'revisedLKP-PLS_N-S': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Revised LKP/PLS (N/S)'
     },
     'revisedLKP-PLS_E-W': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Revised LKP/PLS (E/W)'
     },
     'revisedHowDetermined': {
         type: String,
-        optional: true,
-        allowedValues: ['Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
         label: 'Revised How Determined'
     },
     'revisedDOT': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Revised DOT'
     },
     'decisionPointCoord_N-S': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Decision Point Coord. (N/S)'
     },
     'decisionPointCoord_E-W': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Decision Point Coord. (E/W)'
     },
     'typeofDecisionPoint': {
         type: String,
-        optional: true,
-        allowedValues: ['Other', 'Saddle', 'Shortcut', 'Trail', 'Animal', 'Trail Crossed', 'Trail Junction', 'Trail Lost', 'Trail Social', 'Trail Turnoff'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Other', 'Saddle', 'Shortcut', 'Trail', 'Animal', 'Trail Crossed', 'Trail Junction', 'Trail Lost', 'Trail Social', 'Trail Turnoff'],
         label: 'Type of Decision Point'
     },
     'decisionPointFactor': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Decision Point Factor'
     }
 });
 Schemas.incidentOutcome = new SimpleSchema({
     'incidentOutcome': {
         type: String,
-        optional: true,
-        allowedValues: ['Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
         label: 'Incident Outcome'
     },
     'scenario': {
         type: String,
-        optional: true,
-        allowedValues: ['Avalanche', 'Criminal', 'Despondent', 'Evading', 'Investigative', 'Lost', 'Medical', 'Drowning', 'Overdue', 'Stranded', 'Trauma'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Avalanche', 'Criminal', 'Despondent', 'Evading', 'Investigative', 'Lost', 'Medical', 'Drowning', 'Overdue', 'Stranded', 'Trauma'],
         label: 'Scenario'
     },
     'suspensionReasons': {
         type: String,
-        optional: true,
-        allowedValues: ['Lack of clues', 'Lack of resources', 'Weather', 'Hazards', 'Lack of Survivability', 'Investigative information'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Lack of clues', 'Lack of resources', 'Weather', 'Hazards', 'Lack of Survivability', 'Investigative information'],
         label: 'Suspension Reasons'
     },
     '#Subjects': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Subjects'
     },
     '#Well': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Well'
     },
     '#Injured': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Injured'
     },
     '#DOA': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# DOA'
     },
     '#Saved': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Saved'
     },
     'findCoord_N-S': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Find Coord (N/S)'
     },
     'findCoord_E-W': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Find Coord (E/W)'
     },
     'distanceIPP': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Distance IPP'
     },
     'findBearing': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Find Bearing'
     },
     'findFeature': {
         type: String,
-        optional: true,
-        allowedValues: ['Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/woods', 'ice/snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/woods', 'ice/snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
         label: 'Find Feature'
     },
     'foundSecondary': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Found Secondary'
     },
     'detectability': {
         type: String,
-        optional: true,
-        allowedValues: ['Excellent', 'Good', 'Fair', 'Poor'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Excellent', 'Good', 'Fair', 'Poor'],
         label: 'Detectability'
     },
     'mobility&Responsiveness': {
         type: String,
-        optional: true,
-        allowedValues: ['Mobile and responsive', 'Mobile and unresponsive', 'Immobile and responsive', 'Immobile and unresponsive'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Mobile and responsive', 'Mobile and unresponsive', 'Immobile and responsive', 'Immobile and unresponsive'],
         label: 'Mobility & Responsiveness'
     },
     'lostStrategy': {
         type: String,
-        optional: true,
-        allowedValues: ['Backtracking', 'Direction sampling', 'Direction traveling', 'Downhill', 'Evasive', 'wisdom', 'Followed travel aid', 'Landmark', 'Nothing', 'Paniced', 'Route sampling', 'Stayed put', 'View enhancing', 'Seek cell signal', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Backtracking', 'Direction sampling', 'Direction traveling', 'Downhill', 'Evasive', 'wisdom', 'Followed travel aid', 'Landmark', 'Nothing', 'Paniced', 'Route sampling', 'Stayed put', 'View enhancing', 'Seek cell signal', 'Other'],
         label: 'Lost Strategy'
     },
     'mobility_hours': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Mobility (hours)'
     },
     'trackOffset': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Track Offset'
     },
     'elevationChange': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Elevation Change'
     }
 });
 Schemas.medical = new SimpleSchema({
     'status': {
         type: String,
-        optional: true,
-        allowedValues: ['Alive and well', 'Injuired', 'DOA'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Alive and well', 'Injuired', 'DOA'],
         label: 'Status'
     },
     'mechanism': {
         type: String,
-        optional: true,
-        allowedValues: ['Animal attack/bite/sting', 'Human attack', 'Fall - ground level', 'Fall - height', 'Gunshot', 'Avalanche', 'Tree fall', 'Rock fall', 'Water', 'Environment', 'Medical condition', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Animal attack/bite/sting', 'Human attack', 'Fall - ground level', 'Fall - height', 'Gunshot', 'Avalanche', 'Tree fall', 'Rock fall', 'Water', 'Environment', 'Medical condition', 'Other'],
         label: 'Mechanism'
     },
     'injuryType': {
         type: String,
-        optional: true,
-        allowedValues: ['Abrasion', 'Bruise', 'Burn', 'Cramp', 'Crush', 'Fracture', 'Flail Chest', 'Frostbite', 'Infection', 'Laceration', 'Pain', 'Soft Tissue', 'Sprain', 'Multi-Trauma', 'Drowning'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Abrasion', 'Bruise', 'Burn', 'Cramp', 'Crush', 'Fracture', 'Flail Chest', 'Frostbite', 'Infection', 'Laceration', 'Pain', 'Soft Tissue', 'Sprain', 'Multi-Trauma', 'Drowning'],
         label: 'Injury Type'
     },
     'illness': {
         type: String,
-        optional: true,
-        allowedValues: ['Addision', 'Allergic reaction', 'Altitude disorder', 'Appendicitis', 'Asthma', 'Dehydration', 'Exhaustion', 'Hypertherimic', 'Hypothermic', 'Illness', 'Intoxicated', 'Seizures', 'Shock', 'Shortness of Breath', 'Stroke', 'Unconscious', 'UTI', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Addision', 'Allergic reaction', 'Altitude disorder', 'Appendicitis', 'Asthma', 'Dehydration', 'Exhaustion', 'Hypertherimic', 'Hypothermic', 'Illness', 'Intoxicated', 'Seizures', 'Shock', 'Shortness of Breath', 'Stroke', 'Unconscious', 'UTI', 'Other'],
         label: 'Illness'
     },
     'treatmentby': {
         type: String,
-        optional: true,
-        allowedValues: ['None', 'Self', 'Public', 'First-Aid', 'First-Responder', 'EMT', 'WEMT', 'ALS', 'RN', 'MD', 'N/A'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'None', 'Self', 'Public', 'First-Aid', 'First-Responder', 'EMT', 'WEMT', 'ALS', 'RN', 'MD', 'N/A'],
         label: 'Treatment by'
     },
     'rescue-EvacuationMethods': {
         type: String,
-        optional: true,
-        allowedValues: ['Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
         label: 'Rescue/Evacuation Methods'
     },
     'injuredSearcher': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Injured Searcher'
     },
     'injuredSearcherDetails': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Injured Searcher Details'
     },
     'signalling': {
         type: String,
-        optional: true,
-        allowedValues: ['None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
         label: 'Signalling'
     }
 });
 Schemas.resources = new SimpleSchema({
     'resourcesUsed': {
         type: String,
-        optional: true,
-        allowedValues: ['GSAR', 'Dogs', 'EMS', 'Fire', 'Tracker', 'Law', 'Divers', 'Boats', 'Cave', 'Parks', 'USAR', 'Helicopter', 'Fixed Wing', 'Swiftwater', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'GSAR', 'Dogs', 'EMS', 'Fire', 'Tracker', 'Law', 'Divers', 'Boats', 'Cave', 'Parks', 'USAR', 'Helicopter', 'Fixed Wing', 'Swiftwater', 'Other'],
         label: 'Resources Used'
     },
     'findResource': {
         type: String,
-        optional: true,
-        allowedValues: ['Hasty', 'Sweep', 'Grid', 'Dog-Airscent', 'Dog-Tracking', 'Dog-Trailing', 'Dog-Disaster', 'Tracker', 'Cave', 'Helicopter', 'Fixed Wing', 'Family/Friend', 'Public', 'Investigation', 'Horseback rider', 'ATV', 'Boat', 'Diver', 'Containment', 'Patrol', 'Bike', 'CERT', 'USAR', 'Other'],
+        defaultValue: '',
+        allowedValues: ['Unknown', 'Hasty', 'Sweep', 'Grid', 'Dog-Airscent', 'Dog-Tracking', 'Dog-Trailing', 'Dog-Disaster', 'Tracker', 'Cave', 'Helicopter', 'Fixed Wing', 'Family/Friend', 'Public', 'Investigation', 'Horseback rider', 'ATV', 'Boat', 'Diver', 'Containment', 'Patrol', 'Bike', 'CERT', 'USAR', 'Other'],
         label: 'Find Resource'
     },
     '#Tasks': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Tasks'
     },
     '#Dogs': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Dogs'
     },
     '#AirTasks': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Air Tasks'
     },
     '#Aircraft': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Aircraft'
     },
     '#AirHours': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Air Hours'
     },
     'emergentVolunters': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Emergent Volunters'
     },
     'totalPersonnel': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Total Personnel'
     },
     'totalManHours': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Total Man Hours'
     },
     'totalDogHours': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Total Dog Hours'
     },
     '#Vehicles': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: '# Vehicles'
     },
     'distanceTraveled': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Distance Traveled'
     },
     'totalCost': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Total Cost'
     },
     'comments': {
         type: String,
-        optional: true,
+        defaultValue: '',
         label: 'Comments'
     }
 });
@@ -874,15 +906,17 @@ Schemas.SARCAT = new SimpleSchema({
     },
     recordInfo: {
         type: Schemas.recordInfo,
-        optional: true
+        //optional: true
     },
     incident: {
         type: Schemas.incident,
-        optional: true
     },
     subjectInfo: {
         type: Schemas.subjectInfo,
-        optional: true
+        //optional: true
+    },
+    allSubjects:{
+        type: Schemas.allSubjects
     },
     /*timeLog: {
         type: Schemas.timeLog,

@@ -1,6 +1,25 @@
+<template name="form0">
+
+    <div class="panel">
+        <div class="panel-heading collapsed" role="tab" id="heading_{{this.name}}" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{this.name}}" aria-expanded="false" aria-controls="collapse_{{this.name}}">
+            <h3 class="text-uppercase">{{this.name}}</h3> </div>
+        <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
+            <div class="panel-body">
+{{json this}}
+            </div>
+        </div>
+    </div>
+</template>
+
+
+
+
+
+
+
 <template name="form1">
-{{json this.name}}
-<br>
+<br><br>{{json this}}
+<br><br>
 {{#each afFieldNames}} 
 {{json this}}<br>
 {{/each}}
@@ -19,12 +38,14 @@
                     <hr> {{/if}}
 }
 }
--->{{> afQuickFields class="afInput" name=this.name _options='allowed' noselect=true style="color: #018996" }}
-                <!--
+-->
+{{json this}}
+{{> afQuickFields class="afInput" name=this.name}}
+               
                 {{#each afFieldNames name=this.name}} 
 
-                {{> afQuickField class="afInput" name=this.name options="allowed" noselect=true}} 
-                {{/each}}-->
+                {{> afQuickField class="afInput" name=this.name xoptions=afOptionsFromSchema xnoselect=true}} 
+                {{/each}}
             </div>
         </div>
     </div>

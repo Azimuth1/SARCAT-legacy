@@ -39,30 +39,107 @@
             
 
 
+    {{#each arrRecord}}
+<div class="afContainer {{formComplete this.name}}">
+    <div class="panel">
+        <div class="panel-heading collapsed" role="tab" id="heading_{{this.name}}" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{this.name}}" aria-expanded="false" aria-controls="collapse_{{this.name}}">
+            <h3 class="text-uppercase">{{this.name}}</h3> </div>
+        <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
+            <div class="panel-body">
 
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=strue
-                id="recordAdminForm" 
+                {{> quickForm
+                collection='Records'
+                doc=../record
+                id=formId
                 type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isEqual this.name 'subjectInfo'}}
-                  
-                        {{> afSubjects}}
-                   
-                   
-                 
-
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
+                fields=this.name 
+                validation='keyup'
+                removeEmptyStrings=true 
+                options="allowed"
+                noselect=true
+                }}  
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+{{/each}}
 
 
 <!--
+{{> afSubjects}}
+{{#autoForm 
+                collection='Records'
+                doc=record
+                id=formId
+                type="update"
+                fields='"subjectInfo"'
+                validation='keyup'
+                removeEmptyStrings=true 
+                options="allowed"
+                noselect=true
+
+}}
+
+{{> afQuickFields name="subjectInfo"}}
+
+
+{{/autoForm}}
+-->
+
+   <!--
+                collection="Records"
+                doc=currentRecord
+                id=formId
+                type="update"
+                fields=this.name 
+                validation='keyup'
+                removeEmptyStrings=true   
+
+
+
+            {{#autoForm 
+                collection="Records"
+                doc=record
+                autosave=true
+                id="recordAdminForm" 
+                type="update"
+                fields=renderForm
+            }} 
+               
+
+             
+
+                            {{json this}}<br>
+                {{> quickForm
+                collection="Records"
+                doc=record
+                autosave=ztrue
+                id="recordAdminForm" 
+                type="update"
+                fields=this.name
+                xvalidation=keyup
+                }}  
+
+
+                {{#each afFieldNames}}
+                    {{#if renderForm this.name}}
+                    <div class="afContainer {{formComplete this.name}}">
+                    {{> form1}}
+                    </div>
+                    {{/if}}  
+                {{/each}}
+                   
+                      {{> afQuickFields name=this.name}}  
+             
+                     -->
+                   
+              
+          
+
+
+
+<!--{{> afSubjects}}
 {{#autoForm 
 id="xafUpdateDemo" 
 type='update' 

@@ -1,5 +1,5 @@
 Template.form1.rendered = function() {
-    //console.log(this.data)
+    console.log(this.data)
     //console.log(2,this.parent)
     //currentRecord=Session.get('currentRecord');
 };

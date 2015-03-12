@@ -16,7 +16,7 @@ Router.configure({
     waitOn: function() {
         return [
             Meteor.subscribe('publicLists'),
-            Meteor.subscribe('privateLists'),
+            //Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
             Meteor.subscribe('people'),
@@ -158,7 +158,7 @@ Router.map(function() {
         data: function() {
             var obj = {};
             obj.user = Meteor.user();
-            obj.people = People.findOne();
+            //obj.people = People.findOne();
             return obj;
         },
         action: function() {
@@ -172,6 +172,7 @@ Router.map(function() {
             return Meteor.subscribe('privateLists');
         },*/
         data: function() {
+            //  console.log(this.params._id)
             var obj = {};
             obj.record = Records.findOne(this.params._id);
             return obj;
