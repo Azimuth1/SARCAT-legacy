@@ -6,6 +6,7 @@ var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 var CONNECTION_ISSUE_TIMEOUT = 5000;
 Meteor.startup(function() {
+    Session.set('userView','Dashboard');
     // set up a swipe left / right handler
     $(document.body)
         .touchwipe({
@@ -27,6 +28,7 @@ Meteor.startup(function() {
     }, CONNECTION_ISSUE_TIMEOUT);
 });
 Template.appBody.rendered = function() {
+    //Session.set('view','')
     this.find('#content-container')
         ._uihooks = {
             insertElement: function(node, next) {
@@ -48,10 +50,19 @@ Template.appBody.rendered = function() {
         };
 };
 Template.appBody.helpers({
-    // We use #each on an array of one item so that the "list" template is
-    // removed and a new copy is added when changing lists, which is
-    // important for animation purposes. #each looks at the _id property of it's
-    // items to know when to insert a new item and when to update an old one.
+    formComplete: function() {
+        var name = 'profile';
+        var obj = Meteor.user()[name];
+        var formLen = _.filter(obj,function(d){
+            var val = d;
+            if (val === 'Unknown' || val === '' || !val) {
+                val = false;
+            }
+            return val;
+        }).length;
+        var schemaLen = Schemas.profile._schemaKeys.length;
+        return (formLen === schemaLen);
+    },
     thisArray: function() {
         return [this];
     },
@@ -63,9 +74,10 @@ Template.appBody.helpers({
     },
     emailLocalPart: function() {
         var user = Meteor.user();
-
         var firstName = user.profile.firstName;
-        if(firstName){return firstName;}
+        if (firstName) {
+            return firstName;
+        }
         var email = user.emails[0].address;
         return email.substring(0, email.indexOf('@'));
     },
@@ -95,6 +107,20 @@ Template.appBody.helpers({
     }
 });
 Template.appBody.events({
+    'click .userView': function(event,template) {
+        //console.log(event,template,event.target.text)
+        Session.set('userView',event.target.text);
+        
+        //event.preventDefault();
+    },
+
+  
+
+    'click .btns-userHome a': function(event) {
+        $('.btns-userHome a').removeClass('primary-bg');
+        $(event.currentTarget).addClass('primary-bg');
+    },
+
     'click .js-menu': function() {
         Session.set(MENU_KEY, !Session.get(MENU_KEY));
     },

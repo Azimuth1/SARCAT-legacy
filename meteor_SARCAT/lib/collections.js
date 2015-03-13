@@ -2,7 +2,7 @@ Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
 Records.defaultName = function(name) {
     var nextLetter = 'A',
-        nextName = 'New Record ' + nextLetter;
+        nextName = 'Incident ' + nextLetter;
     while (Records.findOne({
             'recordInfo.name': nextName
         })) {
@@ -24,16 +24,40 @@ Schemas = {};
 Schemas.profile = new SimpleSchema({
     firstName: {
         type: String,
+        optional:true,
+        regEx: /^[a-zA-Z-]{2,25}$/,
+        /*autoValue: function() {
+            if (this.isInsert) {
+                return '';
+            }
+        }*/
     },
     lastName: {
-        type: String
+        type: String,
+        optional:true,
+        regEx: /^[a-zA-Z-]{2,25}$/,
+        /*autoValue: function() {
+            if (this.isInsert) {
+                return '';
+            }
+        }*/
     },
     phoneNum: {
         type: String,
+        optional:true,
     },
     Agency: {
         type: String,
-    }
+        optional:true,
+    },
+    country: {
+        type: String,
+        optional:true,
+    },
+    'state-region': {
+        type: String,
+        optional:true,
+    },
 });
 Schemas.User = new SimpleSchema({
     emails: {
@@ -53,7 +77,7 @@ Schemas.User = new SimpleSchema({
     profile: {
         type: Schemas.profile,
         defaultValue: {},
-        blackbox: true,
+        //blackbox: true,
     },
     roles: {
         type: String,
@@ -143,20 +167,20 @@ Schemas.recordInfo = new SimpleSchema({
         }
     },
     incidentnum: {
-        type: Number,
+        type: String,
         label: 'Incident #',
         autoValue: function() {
             if (this.isInsert) {
-                return Records.defaultNum('incidentnum');
+                return Records.defaultNum('incidentnum').toString();
             }
         }
     },
     missionnum: {
-        type: Number,
+        type: String,
         label: 'Mission #',
         autoValue: function() {
             if (this.isInsert) {
-                return Records.defaultNum('missionnum');
+                return '';
             }
         }
     },
@@ -197,17 +221,15 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Choose', 'Land', 'Air', 'Water'],
         label: 'Incident Environment',
         defaultValue: 'Unknown'
-
     },
     country: {
         type: String,
         label: 'Response Country',
         autoValue: function() {
             if (this.isInsert) {
-                return 'USA';
+                return Meteor.user().profile.country;
             }
         }
-
     },
     stateregion: {
         type: String,
@@ -215,7 +237,7 @@ Schemas.incident = new SimpleSchema({
         label: 'Response State/Region',
         autoValue: function() {
             if (this.isInsert) {
-                return '';
+                return Meteor.user().profile['state-region'];
             }
         }
     },
@@ -225,7 +247,6 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Abduction', 'Aircraft Incident', 'Non-Powered Boat', 'Person in Current Water', 'Person in Flat Water', 'Person in Flood Water', 'Power Boat', 'ATV', 'Motorcycle', 'Mountain Bike', 'Vehicle (4WD)', 'Vehicle (Road)', 'Autism', 'Dementia', 'Despondent', 'Intellectual Disability', 'Mental Illness', 'Substance Intoxication', 'Ages 1-3 (Toddler)', 'Ages 4-6 (PreSchool)', 'Ages 7-9 (SchoolAge)', 'Ages 10-12 (Pre-Teenager)', 'Ages 13-15 (Adolescent)', 'Abandoned Vehicle', 'Angler', 'Car Camper', 'Caver', 'Day Climber', 'Extreme Race', 'Gatherer', 'Hiker', 'Horseback Rider', 'Hunter', 'Mountaineer', 'Runner', 'Worker', 'Alpine Skier', 'Nordic Skier', 'Snowboarder', 'Snowmobiler', 'Snowshoer'],
         label: 'Subject Category',
         defaultValue: 'Unknown',
-
     },
     contactmethod: {
         type: String,
@@ -233,7 +254,6 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Reported Missing', 'Vehicle Found', 'Registration Card', 'ELT/PLB/EPIRP', 'Satelitte Alerting Technology', 'Subject Cell Phone', 'Radio', 'Distress Signal'],
         label: 'Contact Method',
         defaultValue: 'Unknown',
-
     },
     ipptype: {
         type: String,
@@ -241,7 +261,6 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Point Last Seen', 'Last Known Point'],
         label: 'IPP Type',
         defaultValue: 'Unknown',
-
     },
     ippclassification: {
         type: String,
@@ -249,7 +268,6 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
         defaultValue: 'Unknown'
-
     },
     ippCoordinates: {
         type: Object
@@ -258,13 +276,11 @@ Schemas.incident = new SimpleSchema({
         type: String,
         //optional: true,
         label: '(N/S) Lat',
-
         autoValue: function() {
             if (this.isInsert) {
                 return '0.0';
             }
         }
-
     },
     'ippCoordinates.y': {
         type: String,
@@ -374,32 +390,13 @@ Schemas.incident = new SimpleSchema({
         label: 'Light',
     }
 });
-
-
-
-
-
 Schemas.allSubjects = new SimpleSchema({
     'allSubjects': {
         type: [Object],
         label: 'Number of Subjects',
         defaultValue: []
-
     },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 Schemas.subjectInfo = new SimpleSchema({
     'age': {
         type: Number,
@@ -408,7 +405,6 @@ Schemas.subjectInfo = new SimpleSchema({
     },
     'sex': {
         type: String,
-
         allowedValues: ['Unknown', 'Male', 'Femail'],
         defaultValue: 'Unknown',
         label: 'Sex',
@@ -460,11 +456,6 @@ Schemas.subjectInfo = new SimpleSchema({
         label: 'Survival training',
     }
 });
-
-
-
-
-
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
@@ -507,23 +498,14 @@ Schemas.timeLog = new SimpleSchema({
         'label': 'Incident Closed Date/Time'
     },
     'total hours': {
-        type: String,
-        defaultValue: '',
-        autoform: {
-            afFieldInput: {
-                type: 'time'
-            }
-        },
-        'label': 'Total hours'
+        type: Number,
+        defaultValue: 0,
+        'label': 'Total Missing Hours'
     },
     'search hours': {
         type: Number,
-        autoform: {
-            afFieldInput: {
-                type: 'time'
-            }
-        },
-        'label': 'Search hours'
+        defaultValue: 0,
+        'label': 'Total Search Hours'
     }
 });
 Schemas.incidentOperations = new SimpleSchema({
@@ -544,7 +526,7 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'DOTHowdetermined': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
         label: 'DOT How determined'
     },
@@ -560,7 +542,7 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'revisedHowDetermined': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
         label: 'Revised How Determined'
     },
@@ -581,7 +563,7 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'typeofDecisionPoint': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Other', 'Saddle', 'Shortcut', 'Trail', 'Animal', 'Trail Crossed', 'Trail Junction', 'Trail Lost', 'Trail Social', 'Trail Turnoff'],
         label: 'Type of Decision Point'
     },
@@ -594,40 +576,40 @@ Schemas.incidentOperations = new SimpleSchema({
 Schemas.incidentOutcome = new SimpleSchema({
     'incidentOutcome': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
         label: 'Incident Outcome'
     },
     'scenario': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Avalanche', 'Criminal', 'Despondent', 'Evading', 'Investigative', 'Lost', 'Medical', 'Drowning', 'Overdue', 'Stranded', 'Trauma'],
         label: 'Scenario'
     },
     'suspensionReasons': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Lack of clues', 'Lack of resources', 'Weather', 'Hazards', 'Lack of Survivability', 'Investigative information'],
         label: 'Suspension Reasons'
     },
     '#Subjects': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Subjects'
     },
     '#Well': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Well'
     },
     '#Injured': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Injured'
     },
     '#DOA': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# DOA'
     },
     '#Saved': {
@@ -657,7 +639,7 @@ Schemas.incidentOutcome = new SimpleSchema({
     },
     'findFeature': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/woods', 'ice/snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
         label: 'Find Feature'
     },
@@ -668,19 +650,19 @@ Schemas.incidentOutcome = new SimpleSchema({
     },
     'detectability': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Excellent', 'Good', 'Fair', 'Poor'],
         label: 'Detectability'
     },
     'mobility&Responsiveness': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Mobile and responsive', 'Mobile and unresponsive', 'Immobile and responsive', 'Immobile and unresponsive'],
         label: 'Mobility & Responsiveness'
     },
     'lostStrategy': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Backtracking', 'Direction sampling', 'Direction traveling', 'Downhill', 'Evasive', 'wisdom', 'Followed travel aid', 'Landmark', 'Nothing', 'Paniced', 'Route sampling', 'Stayed put', 'View enhancing', 'Seek cell signal', 'Other'],
         label: 'Lost Strategy'
     },
@@ -703,37 +685,37 @@ Schemas.incidentOutcome = new SimpleSchema({
 Schemas.medical = new SimpleSchema({
     'status': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Alive and well', 'Injuired', 'DOA'],
         label: 'Status'
     },
     'mechanism': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Animal attack/bite/sting', 'Human attack', 'Fall - ground level', 'Fall - height', 'Gunshot', 'Avalanche', 'Tree fall', 'Rock fall', 'Water', 'Environment', 'Medical condition', 'Other'],
         label: 'Mechanism'
     },
     'injuryType': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Abrasion', 'Bruise', 'Burn', 'Cramp', 'Crush', 'Fracture', 'Flail Chest', 'Frostbite', 'Infection', 'Laceration', 'Pain', 'Soft Tissue', 'Sprain', 'Multi-Trauma', 'Drowning'],
         label: 'Injury Type'
     },
     'illness': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Addision', 'Allergic reaction', 'Altitude disorder', 'Appendicitis', 'Asthma', 'Dehydration', 'Exhaustion', 'Hypertherimic', 'Hypothermic', 'Illness', 'Intoxicated', 'Seizures', 'Shock', 'Shortness of Breath', 'Stroke', 'Unconscious', 'UTI', 'Other'],
         label: 'Illness'
     },
     'treatmentby': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'None', 'Self', 'Public', 'First-Aid', 'First-Responder', 'EMT', 'WEMT', 'ALS', 'RN', 'MD', 'N/A'],
         label: 'Treatment by'
     },
     'rescue-EvacuationMethods': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
         label: 'Rescue/Evacuation Methods'
     },
@@ -749,7 +731,7 @@ Schemas.medical = new SimpleSchema({
     },
     'signalling': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
         label: 'Signalling'
     }
@@ -757,64 +739,64 @@ Schemas.medical = new SimpleSchema({
 Schemas.resources = new SimpleSchema({
     'resourcesUsed': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'GSAR', 'Dogs', 'EMS', 'Fire', 'Tracker', 'Law', 'Divers', 'Boats', 'Cave', 'Parks', 'USAR', 'Helicopter', 'Fixed Wing', 'Swiftwater', 'Other'],
         label: 'Resources Used'
     },
     'findResource': {
         type: String,
-        defaultValue: '',
+        defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Hasty', 'Sweep', 'Grid', 'Dog-Airscent', 'Dog-Tracking', 'Dog-Trailing', 'Dog-Disaster', 'Tracker', 'Cave', 'Helicopter', 'Fixed Wing', 'Family/Friend', 'Public', 'Investigation', 'Horseback rider', 'ATV', 'Boat', 'Diver', 'Containment', 'Patrol', 'Bike', 'CERT', 'USAR', 'Other'],
         label: 'Find Resource'
     },
     '#Tasks': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Tasks'
     },
     '#Dogs': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Dogs'
     },
     '#AirTasks': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Air Tasks'
     },
     '#Aircraft': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Aircraft'
     },
     '#AirHours': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Air Hours'
     },
     'emergentVolunters': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: 'Emergent Volunters'
     },
     'totalPersonnel': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: 'Total Personnel'
     },
     'totalManHours': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: 'Total Man Hours'
     },
     'totalDogHours': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: 'Total Dog Hours'
     },
     '#Vehicles': {
-        type: String,
-        defaultValue: '',
+        type: Number,
+        defaultValue: 0,
         label: '# Vehicles'
     },
     'distanceTraveled': {
@@ -833,48 +815,7 @@ Schemas.resources = new SimpleSchema({
         label: 'Comments'
     }
 });
-Schemas.test = new SimpleSchema({
-    user: {
-        type: String,
-        optional: true,
-        min: 2,
-        label: 'Prepared By',
-        unique: true,
-        index: 222
-    },
-    /*email: {
-        type: String,
-        //optional:true,
-        regEx: SimpleSchema.RegEx.Email,
-        autoValue: function() {
-            if (this.isInsert) {
-                return Meteor.user().emails[0].address;
-            }
-        }
-    },
-    phonenum: {
-        type: String,
-        label: 'Phone #',
-        //optional:false,
-        regEx: SimpleSchema.RegEx.Email,
-    },*/
-    /*
-        firstName: {
-            type: String,
-            optional: true
-            //index: 100,
-            //unique: true
-        },
-        lastName: {
-            type: String,
-            optional: true
-        },*/
-    age: {
-        type: String,
-        optional: true,
-        min: 2
-    }
-});
+
 Schemas.SARCAT = new SimpleSchema({
     userId: {
         type: String,
@@ -905,39 +846,39 @@ Schemas.SARCAT = new SimpleSchema({
             //defaultValue: {}
     },
     recordInfo: {
-        type: Schemas.recordInfo,
+        type: Schemas.recordInfo
         //optional: true
     },
     incident: {
-        type: Schemas.incident,
+        type: Schemas.incident
     },
     subjectInfo: {
         type: Schemas.subjectInfo,
         //optional: true
     },
-    allSubjects:{
+    allSubjects: {
         type: Schemas.allSubjects
     },
-    /*timeLog: {
+    timeLog: {
         type: Schemas.timeLog,
-        optional: true
+        //optional: true
     },
     incidentOperations: {
         type: Schemas.incidentOperations,
-        optional: true
+   
     },
     incidentOutcome: {
         type: Schemas.incidentOutcome,
-        optional: true
+       
     },
     medical: {
         type: Schemas.medical,
-        optional: true
+   
     },
     resources: {
         type: Schemas.resources,
-        optional: true
-    },*/
+       
+    },
 });
 Records.attachSchema(Schemas.SARCAT);
 /*

@@ -1,85 +1,42 @@
 <template name="userHome">
     <div class="page lists-show">
-        <!--
-        <nav class="js-title-nav nav-bg">
-            <h1 class="js-edit-list title-page">SARCAT</h1>
-        </nav>
-        -->
+        
+
+
         <div class="content-scrollable">
+{{userView}}
+{{#if userView 'Dashboard'}}
+<h1>Dashboard</h1>
+<p>Record stats</p>
+{{recordStats}}
+{{/if}}
+{{#if userView 'Profile'}}
+
+
             <div class="row col-md-10 col-md-offset-1 mar2y">
-
-
-
-
-            {{#if formComplete 'profile'}}
-            <p class="text-danger em text-center"> Fill out your user profile to begin! </p>
-            {{/if}}
-
-
-           
-
-<!--
-
-            {{#autoForm 
-                collection="Meteor.users" 
-                doc=user
-                autosave=true
-                id="profileUpdateForm" 
-                type="update"
-                trimStrings="true"
-                }} 
-
-
-                {{#each afFieldNames}}
-                    {{#if renderForm this.name}}
-
-
-     <div class="afContainer {{formComplete this.name}}">
-
-                    {{> form1}}
-
-        </div>
-                    {{/if}}  
-                {{/each}}
-            {{/autoForm}}
-
--->
-
-<div class="afContainer {{formComplete 'profile'}}">
-    <div class="panel">
-        <div class="panel-heading collapsed" role="tab" id="heading_Profile" data-toggle="collapse" data-parent="#accordion" href="#collapse_Profile" aria-expanded="false" aria-controls="collapse_Profile">
-            <h3 class="text-uppercase">Profile</h3> </div>
-        <div id="collapse_Profile" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_Profile">
-            <div class="panel-body">
-            {{> quickForm
-                collection="Meteor.users" 
-                doc=user
-                id="profileUpdateForm" 
-                type="update"
-                trimStrings="true"
-                validation='keyup'
-                fields='profile'      
-                }}  
+                {{#if formComplete 'profile'}}
+                    <p class="text-danger em text-center"> Fill out your user profile to begin! </p>
+                {{/if}}
+                <div class="afContainer">
+                    <div class="panel afPanel {{formComplete 'profile'}}">
+                        <div class="panel-heading collapsed" role="tab" id="heading_Profile" data-toggle="collapse" data-parent="#accordion" href="#collapse_Profile" aria-expanded="false" aria-controls="collapse_Profile">
+                            <h3 class="text-uppercase">Profile</h3> </div>
+                        <div id="collapse_Profile" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_Profile">
+                            <div class="panel-body afBody"> {{> quickForm collection="Meteor.users" doc=user id="profileUpdateForm" class="hideHeader" type="update" trimStrings="true" validation='keyup' fields='profile' }} </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <br>
-</div>
-                <!--
-                    {{#autoForm collection="Meteor.users" doc=this 
-                    autosave=true id="profileUpdateForm" type="update" }} {{> afObjectField name='profile' omitFields="profile.role" autosave=true}}
-                      
-                    {{/autoForm}}-->
-                
 
-                <!--
-                {{#autoForm type=formType collection="Records" doc=this schema="Schemas.SARCAT" id="recordAdminForm" type="update" template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
-                    {{#each afFieldNames}}
-                        <div class="panel-body"> {{> afQuickField name=this options="auto" }} </div>
-                    {{/each}}
-                {{/autoForm}}
-                -->
-            </div>
+
+{{/if}}
+
+
         </div>
+    
+
+
+
+
     </div>
 </template>
