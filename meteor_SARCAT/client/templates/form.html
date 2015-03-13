@@ -1,326 +1,46 @@
 <template name="form">
-    <div class="page lists-show">
-        <nav class="js-title-nav">
-            <div class="nav-group"> <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a> </div>
-            <h1 class="js-edit-list title-page">
-<!--<div class="title-wrapper text-uppercase">{{record.recordInfo.name}}</div>-->
-<span class="default-bg label">{{record.recordInfo.name}}</span>
-<span class="default-bg label">Prepared By: <strong> <em>{{record.admin.user}}</em></strong></span>
-<span class="default-bg label">Created: <strong> <em>{{record.created}}</em></strong></span>
-
-
-<button type="button" class="btn btn-primary mar1 pull-right">Submit as Final</button>
-</h1>
-            <!--<h1 class="js-edit-list title-page">{{username}}</h1>-->
+    <div class="page _lists-show">
+        <nav class="formNav">
+            <h4 class="text-default nav-title"><strong>{{record.recordInfo.name}}</strong></h4> <span class="default-bg label">Prepared By: <strong> <em>{{record.admin.user}}</em></strong></span> <span class="default-bg label">Created: <strong> <em>{{record.created}}</em></strong></span>
+            <div class="x">
+                <div class="flex-container _btn-group" role="group" aria-label="...">
+                    {{#each arrRecord}}
+                        <button type="button" data="{{this.name}}" class="formNav flex-item btn default-bg {{formComplete this.name}} mar0 _pad1">{{this.name}}</button>
+                    {{/each}}
+                </div>
+            </div>
             <div class="nav-group right">
-                <div class="nav-item options-mobile">
-                    <select class="list-edit">
-                        <option disabled selected>Select an action</option>
-                        {{#if userId}}
-                            <option value="public">Make Public</option> {{else}}
-                            <option value="private">Make Private</option>
-                        {{/if}}
-                        <option value="delete">Delete</option>
-                    </select> <span class="icon-cog"></span> </div>
                 <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
-              {{#if userId}}
+            {{toggleTest}}
+              {{#if toggleTest}}
                 <span class="icon-lock" title="Make list public"></span>
               {{else}}
-                <span class="icon-unlock" title="Make list private"></span>
+                <span class="icon-unlock" title="Make list private">
+                    
+                </span>
               {{/if}}
             </a>
                     <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
                 </div>
             </div>
-            <form class="js-todo-new todo-new input-symbol">
-                <input type="text" placeholder="Type to add new tasks" class="hide"> </form>
         </nav>
         <div class="content-scrollable list-items">
-            
+            <div class="pad2">
+         
+                {{#each arrRecord}}
+                    <div class="afContainer">
+                        <div class="panel afPanel {{formComplete this.name}} mar0">
+                            <div class="panel-heading collapsed" role="tab" id="heading_{{this.name}}" data-toggle="collapse" href="#collapse_{{this.name}}" aria-expanded="false" aria-controls="collapse_{{this.name}}">
+                                <h4 class="text-uppercase">{{this.name}}</h4> </div>
+                            <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
+                                <div class="panel-body afBody"> 
 
-
-    {{#each arrRecord}}
-<div class="afContainer {{formComplete this.name}}">
-    <div class="panel">
-        <div class="panel-heading collapsed" role="tab" id="heading_{{this.name}}" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{this.name}}" aria-expanded="false" aria-controls="collapse_{{this.name}}">
-            <h3 class="text-uppercase">{{this.name}}</h3> </div>
-        <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
-            <div class="panel-body">
-
-                {{> quickForm
-                collection='Records'
-                doc=../record
-                id=formId
-                type="update"
-                fields=this.name 
-                validation='keyup'
-                removeEmptyStrings=true 
-                options="allowed"
-                noselect=true
-                }}  
+                                {{> quickForm collection='Records' doc=../record id=formId class="hideHeader" type="update" fields=this.name validation='keyup' removeEmptyStrings=true options="allowed" noselect=true }} </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
             </div>
-        </div>
-    </div>
-    <br>
-</div>
-{{/each}}
-
-
-<!--
-{{> afSubjects}}
-{{#autoForm 
-                collection='Records'
-                doc=record
-                id=formId
-                type="update"
-                fields='"subjectInfo"'
-                validation='keyup'
-                removeEmptyStrings=true 
-                options="allowed"
-                noselect=true
-
-}}
-
-{{> afQuickFields name="subjectInfo"}}
-
-
-{{/autoForm}}
--->
-
-   <!--
-                collection="Records"
-                doc=currentRecord
-                id=formId
-                type="update"
-                fields=this.name 
-                validation='keyup'
-                removeEmptyStrings=true   
-
-
-
-            {{#autoForm 
-                collection="Records"
-                doc=record
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                fields=renderForm
-            }} 
-               
-
-             
-
-                            {{json this}}<br>
-                {{> quickForm
-                collection="Records"
-                doc=record
-                autosave=ztrue
-                id="recordAdminForm" 
-                type="update"
-                fields=this.name
-                xvalidation=keyup
-                }}  
-
-
-                {{#each afFieldNames}}
-                    {{#if renderForm this.name}}
-                    <div class="afContainer {{formComplete this.name}}">
-                    {{> form1}}
-                    </div>
-                    {{/if}}  
-                {{/each}}
-                   
-                      {{> afQuickFields name=this.name}}  
-             
-                     -->
-                   
-              
-          
-
-
-
-<!--{{> afSubjects}}
-{{#autoForm 
-id="xafUpdateDemo" 
-type='update' 
-collection="Records"
-doc=record
-type="update"
-autosave=true
-
-}}
-
-{{> afQuickFields name="subjectInfo"}}
-
-
-{{/autoForm}}
--->
-
-<!--
-  {{> afQuickFields name="subjectInfo"}}
-{{> quickForm 
-                schema="Schemas.SARCAT"
-                collection="Records"
-                doc=record
-                id="recordAdminForm" 
-                type="update"     
-                fields="admin"     
-}}
--->
-
-<!--
-            {{#autoForm 
-                collection="Records" 
-                doc=record
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                omitFields='admin, userId, name,created'
-                validation="submit"
-                }} 
-
-
-                {{#each afFieldNames}}
-                    {{#if renderForm this.name}}
-                    <div class="afContainer {{formComplete this.name}}">
-                    {{> form1}}
-                    </div>
-                    {{/if}}  
-                {{/each}}
-            {{/autoForm}}
-
--->
-<!--
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'incident'}}
-                    
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'subjectInfo'}}
-                    
-                        {{> form1}}
-
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-
-
-
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'timeLog'}}
-                    
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'incidentOperations'}}
-                    
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'incidentOutcome'}}
-                    
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'medical'}}
-                    
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
-
-            {{#autoForm 
-                collection="Records" 
-                doc=this
-                autosave=true
-                id="recordAdminForm" 
-                type="update"
-                }} 
-                {{#each afFieldNames}}
-                    {{#if isSchema this.name 'resources'}}
-                    
-                        {{> form1}}
-                    {{/if}}
-                {{/each}}
-            {{/autoForm}}
-
--->
-
-
-
-
-
-
-
-
-
         </div>
     </div>
 </template>

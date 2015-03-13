@@ -5,13 +5,15 @@
         Records: {}
     }
 };*/
-
 Meteor.publish('people', function() {
     return People.find();
 });
-
 Meteor.publish('publicLists', function() {
-    return Records.find();
+    if (this.userId) {
+        return Records.find();
+    } else{
+        this.ready();
+    }
 });
 Meteor.publish('privateLists', function() {
     if (this.userId) {
@@ -51,9 +53,6 @@ Meteor.publish('adminDefault', function() {
         }
     });
 });
-
-
-
 /*
 Meteor.publish('adminDefault', function() {
     return Meteor.users.find({

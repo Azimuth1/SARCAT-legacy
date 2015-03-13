@@ -1,7 +1,10 @@
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
+Session.set('toggleTest', true);
 Template.form.rendered = function() {
-    console.log(this.data)
+    $('.collapse').collapse({
+        toggle: false
+    });
     Session.set('currentRecord', this.data.record);
 };
 Template.form.helpers({
@@ -26,16 +29,25 @@ Template.form.helpers({
         return render.indexOf(name) !== -1 ? true : false;
     },
     formComplete: function(name) {
-        console.log(name)
-        var record = Session.get('currentRecord');
-        //console.log(record)
+        //console.log(this)
+        //var complete = Match.test(record[name], Schemas[name]);
+        var record = this.value;//Session.get('currentRecord');
         if (!record) {
             return;
         }
-        //console.log(record,name)
-        var complete = Match.test(record[name], Schemas[name]);
-        // console.log(name, complete)
-        return complete ? '' : 'afWarning';
+      
+        var formLen = _.filter(record, function(d) {
+            var val = d;
+            if (val === 'Unknown' || val === '' || !val) {
+                val = false;
+            }
+            return val;
+        }).length;
+        var schemaLen = Schemas[name]._schemaKeys.length;
+        var complete = (formLen === schemaLen);
+        //console.log(formLen===schemaLen)
+        //console.log(name,formLen,schemaLen,complete);
+        return complete ? '' : 'warning-bg';
     },
     formId: function(name) {
         return 'af_' + this.name;
@@ -52,16 +64,21 @@ Template.form.helpers({
     },
     arrRecord: function(val) {
         result = [];
-        var use = ['recordInfo','incident','subjectInfo'];
+        var use = ['recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
         var record = this.record;
-        for (var key in record) {
-            if (use.indexOf(key) !== -1) {
+        _.each(use,function(d){
+
+
+            if (record[d]) {
                 result.push({
-                    name: key,
-                    value: record[key]
+                    name: d,
+                    value: record[d]
                 });
             }
-        }
+
+
+        });
+
         return val ? record[val] : result;
     },
     /*todos: function(listId) {
@@ -72,11 +89,9 @@ Template.form.helpers({
                 createdAt: -1
             }
         });
-    },*/
-    autoSaveMode: function() {
-        return Session.get('autoSaveMode') ? true : false;
     },
-    /*selectedPersonDoc: function() {
+
+    selectedPersonDoc: function() {
         return People.findOne(Session.get('selectedPersonId'));
     },
     isSelectedPerson: function() {
@@ -130,14 +145,16 @@ var deleteList = function(list) {
                 Records.remove(todo._id);
             });
         //Records.remove(list._id);
-        Meteor.call('removeRecord', list._id);
-        Router.go('home');
+        Meteor.call('removeRecord', list._id, function() {
+            Router.go('form', Records.findOne());
+        });
         return true;
     } else {
         return false;
     }
 };
 var toggleListPrivacy = function(list) {
+    return toggleListPrivacy = !toggleListPrivacy;
     if (list.userId) {
         Records.update(list._id, {
             $unset: {
@@ -174,7 +191,7 @@ Template.form.events({
     // handle mousedown otherwise the blur handler above will swallow the click
     // on iOS, we still require the click event so handle both
     'mousedown .js-cancel, click .js-cancel': function(event) {
-       // event.preventDefault();
+        // event.preventDefault();
         Session.set(EDITING_KEY, false);
     },
     'change .list-edit': function(event, template) {
@@ -192,11 +209,16 @@ Template.form.events({
     },
     /*'click .js-edit-list': function(event, template) {
         editList(this, template);
-    },
-    'click .js-toggle-list-privacy': function(event, template) {
-        Meteor.call('toggleListPrivacy', 'this', 'template');
-        //toggleListPrivacy(this, template);
     },*/
+    'click .js-toggle-list-privacy': function(event, template) {
+        var toggleTest = Session.get('toggleTest');
+        var result = !toggleTest;
+        Session.set('toggleTest', result);
+        return result ? 'a' : 'b';
+        //console.log(Session.get('toggleTest'));
+        //Meteor.call('toggleListPrivacy', 'this', 'template');
+        //toggleListPrivacy(this, template);
+    },
     'click .js-delete-list': function(event, template) {
         var record = Session.get('currentRecord');
         deleteList(record);
@@ -208,6 +230,10 @@ Template.form.events({
     'click .person-row': function() {
         Session.set('selectedPersonId', this._id);
     },*/
+    'click .formNav': function(event, template) {
+        $('.collapse').collapse('hide');
+        $('#collapse_' + this.name).collapse('toggle');
+    },
     'change ._afInput': function(event, template) {
         //var name = event.target.name.split('.')[0];
         //return checkComplete(name);
@@ -247,7 +273,7 @@ var hooksObject = {
         // You must call this.done()!
         //this.done(); // submitted successfully, call onSuccess
         //this.done(new Error('foo')); // failed to submit, call onError with the provided error
-        //this.done(null, "foo"); // submitted successfully, call onSuccess with `result` arg set to "foo"
+        //this.done(null, 'foo'); // submitted successfully, call onSuccess with `result` arg set to 'foo'
     },
     // Called when any submit operation succeeds
     onSuccess: function(formType, result) {},
@@ -261,7 +287,7 @@ var hooksObject = {
     docToForm: function(doc, ss) {},
     // Called at the beginning and end of submission, respectively.
     // This is the place to disable/enable buttons or the form,
-    // show/hide a "Please wait" message, etc. If these hooks are
+    // show/hide a 'Please wait' message, etc. If these hooks are
     // not defined, then by default the submit button is disabled
     // during submission.
     beginSubmit: function() {},
@@ -270,7 +296,6 @@ var hooksObject = {
 /*AutoForm.hooks({
     xrecordAdminForm: hooksObject
 });*/
-
 hooks2 = {
     onSubmit: function(doc) {
         console.log('!!!!!!')
@@ -313,5 +338,4 @@ AutoForm.hooks({
         }
     }
 });*/
-
 AutoForm.addHooks('af_recordInfo', hooks2);
