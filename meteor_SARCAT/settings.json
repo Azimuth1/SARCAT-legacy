@@ -1,6 +1,7 @@
 {
     "development": {
         "public": {
+            "initSetup": true,
             "package": {
                 "name": "jquery-datatables",
                 "description": "Sort, page, and filter millions of records. Reactively.",

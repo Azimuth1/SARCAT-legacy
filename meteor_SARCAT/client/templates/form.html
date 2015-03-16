@@ -1,9 +1,12 @@
 <template name="form">
     <div class="page _lists-show">
         <nav class="formNav">
-            <h4 class="text-default nav-title"><strong>{{record.recordInfo.name}}</strong></h4> <span class="default-bg label">Prepared By: <strong> <em>{{record.admin.user}}</em></strong></span> <span class="default-bg label">Created: <strong> <em>{{record.created}}</em></strong></span>
+            <h4 class="text-default nav-title"><strong>{{record.recordInfo.name}}</strong> <small><span class="default-bg_label">Prepared By: <strong> <em>{{record.admin.user}} </em></strong></span> | <span class="default-bg_label">Created: <strong> <em>{{record.created}}</em></strong></span></small>
+            </h4>
+
+
             <div class="x">
-                <div class="flex-container _btn-group" role="group" aria-label="...">
+                <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
                     {{#each arrRecord}}
                         <button type="button" data="{{this.name}}" class="formNav flex-item btn default-bg {{formComplete this.name}} mar0 _pad1">{{this.name}}</button>
                     {{/each}}
@@ -26,8 +29,20 @@
         </nav>
         <div class="content-scrollable list-items">
             <div class="pad2">
-         
+
+<!--
+                           {{> quickForm collection='Records' doc=record id='recInfo' class="hideHeader" type="update" fields="recordInfo" validation='keyup' removeEmptyStrings=true options="allowed" noselect=true template="none"}}    -->        
+{{> formMap}}
+
+
+<div id="target_table_id"></div>
+
+
+
+
+
                 {{#each arrRecord}}
+
                     <div class="afContainer">
                         <div class="panel afPanel {{formComplete this.name}} mar0">
                             <div class="panel-heading collapsed" role="tab" id="heading_{{this.name}}" data-toggle="collapse" href="#collapse_{{this.name}}" aria-expanded="false" aria-controls="collapse_{{this.name}}">
@@ -35,11 +50,18 @@
                             <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
                                 <div class="panel-body afBody"> 
 
-                                {{> quickForm collection='Records' doc=../record id=formId class="hideHeader" type="update" fields=this.name validation='keyup' removeEmptyStrings=true options="allowed" noselect=true }} </div>
+                           {{> quickForm collection='Records' doc=../record id=formId class="hideHeader" type="update" fields=this.name validation='keyup' removeEmptyStrings=true options="allowed" noselect=true template="bootstrap3-inline"}} 
+
+
+
+                           </div>
                             </div>
                         </div>
                     </div>
                 {{/each}}
+
+
+
             </div>
         </div>
     </div>

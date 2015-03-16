@@ -18,11 +18,18 @@ Template.formTimeLog.helpers({
 });
 Template.formMap.rendered = function() {
     var map = L.map('map').setView([51.505, -0.09], 13);
-    console.log(map)
+    m=map;
+
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
         maxZoom: 18,
         id: 'examples.map-i875mjb7'
     }).addTo(map);
+
+
+  L.marker([m.getCenter().lat,m.getCenter().lng],{draggable:true}).addTo(map);
+    //L.circleMarker([m.getCenter().lat,m.getCenter().lng],{draggable:true}).addTo(map);
+
+
    map.scrollWheelZoom.disable();
 };
 
@@ -33,3 +40,5 @@ Template.afSubjects.rendered = function() {
     //console.log(2,this.parent)
     //currentRecord=Session.get('currentRecord');
 };
+
+

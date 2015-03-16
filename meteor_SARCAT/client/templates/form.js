@@ -1,13 +1,96 @@
 var EDITING_KEY = 'editingList';
 Session.setDefault(EDITING_KEY, false);
 Session.set('toggleTest', true);
+Session.set('weather', false);
+// Track if this is the first time the list template is rendered
+var firstRender = true;
+//var listRenderHold = LaunchScreen.hold();
+listFadeInHold = null;
+
+
+var weather=false;
+
+/*
+if(!weather){
+$.ajax({
+    url: 'https://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/70,20',
+    jsonp: 'callback',
+    dataType: 'jsonp',
+    success: function(data) {
+        console.log('!!!!');
+        Session.set('weather', data);
+        weather=true;
+    }
+});
+}
+*/
+
+
 Template.form.rendered = function() {
+
+
+
+
+    console.log('firstRender: ' + firstRender);
+    //if (firstRender) {
+
+    // Released in app-body.js
+    //listFadeInHold = LaunchScreen.hold();
+
+    // Handle for launch screen defined in app-body.js
+    //listRenderHold.release();
+
+    firstRender = false;
+    // }
+
     $('.collapse').collapse({
         toggle: false
     });
     Session.set('currentRecord', this.data.record);
+
+
+
+
+
+
+var data = {"time":1426269221,"summary":"Windy and Mostly Cloudy","icon":"wind","precipIntensity":0,"precipProbability":0,"temperature":44.09,"apparentTemperature":33.76,"dewPoint":1.66,"humidity":0.17,"windSpeed":31.77,"windBearing":218,"cloudCover":0.6,"pressure":1021.8,"ozone":345.58};
+ data= _.map(data,function(d,e){return {key:e,val:d};});
+
+console.log(data);
+
+  var tbl_body = '';
+    var odd_even = false;
+    $.each(data, function() {
+        var tbl_row = '';
+        $.each(this, function(k , v) {
+            tbl_row += '<td>'+v+'</td>';
+        })
+        tbl_body += '<tr class=\''+( odd_even ? 'odd' : 'even')+'\'>'+tbl_row+'</tr>';
+        odd_even = !odd_even;               
+    });
+
+    $('#target_table_id').html(tbl_body);
+
+
+
+
+
+
+
+
+
 };
 Template.form.helpers({
+
+
+
+
+
+    todosReady: function() {
+        //var ready = Router.current().todosHandle.ready();
+        //console.log('todosReady',Router.current().todosHandle.ready());
+        return true; //Router.current().todosHandle.ready();
+    },
     getObj: function(obj, name) {
         return obj[name];
     },
@@ -23,19 +106,15 @@ Template.form.helpers({
     currentRecord: function() {
         return Session.get('currentRecord');
     },
-    renderForm: function(name) {
-        return 'recordInfo';
-        var render = ['recordInfo', 'incident'];
-        return render.indexOf(name) !== -1 ? true : false;
-    },
+
     formComplete: function(name) {
         //console.log(this)
         //var complete = Match.test(record[name], Schemas[name]);
-        var record = this.value;//Session.get('currentRecord');
+        var record = this.value; //Session.get('currentRecord');
         if (!record) {
             return;
         }
-      
+
         var formLen = _.filter(record, function(d) {
             var val = d;
             if (val === 'Unknown' || val === '' || !val) {
@@ -63,11 +142,13 @@ Template.form.helpers({
         return Session.get(EDITING_KEY);
     },
     arrRecord: function(val) {
+        if (!this.record) {
+            return;
+        }
         result = [];
         var use = ['recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
         var record = this.record;
-        _.each(use,function(d){
-
+        _.each(use, function(d) {
 
             if (record[d]) {
                 result.push({
@@ -75,7 +156,6 @@ Template.form.helpers({
                     value: record[d]
                 });
             }
-
 
         });
 
@@ -138,12 +218,12 @@ var deleteList = function(list) {
     var message = 'Are you sure you want to delete the list ' + list.name + '?';
     if (confirm(message)) {
         // we must remove each item individually from the client
-        Records.find({
+        /*Records.find({
                 listId: list._id
             })
             .forEach(function(todo) {
                 Records.remove(todo._id);
-            });
+            });*/
         //Records.remove(list._id);
         Meteor.call('removeRecord', list._id, function() {
             Router.go('form', Records.findOne());

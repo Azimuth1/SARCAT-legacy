@@ -1,11 +1,26 @@
-Template.userHome.rendered = function() {};
+
+
+var completeProfile = function() {
+    var obj = Meteor.user().profile;
+    var formLen = Object.keys(obj).length;
+    var schemaLen = Schemas.profile._schemaKeys.length;
+    return formLen === schemaLen;
+};
+Template.userHome.rendered = function() {
+if(!completeProfile()){
+    Session.set('userView','Profile');
+}
+};
 Template.userHome.helpers({
+
     userView: function(name) {
-        return Session.get('userView') === name;
+        console.log(name)
+        var view = Session.get('userView') === name;
+        return view ? '' : 'hide';
     },
-    recordStats: function(){
+    recordStats: function() {
         var records = Records.find().fetch();
-        console.log(records)
+        // console.log(records)
         return JSON.stringify(records);
     },
     renderForm: function(name) {
@@ -13,11 +28,7 @@ Template.userHome.helpers({
         return render.indexOf(name) !== -1 ? true : false;
     },
     formComplete: function(name) {
-        var obj = Meteor.user()[name];
-        var formLen = Object.keys(obj).length;
-        var schemaLen = Schemas.profile._schemaKeys.length;
-        var complete = formLen === schemaLen;
-        //var complete = Match.test(obj, Schemas[name]);
+        var complete = completeProfile();
         return complete ? '' : 'warning-bg';
     },
     selectedPersonDoc: function() {
