@@ -2,39 +2,28 @@
     <div id="container" class="{{menuOpen}} {{cordova}}">
         <section id="menu">
             {{#if currentUser}}
-                <div class="btns-group-vertical btns-userHome">
+            <div class="btns-group-vertical btns-userHome">
 
+                <div class="btn-pad btn-secondary primary-bg strong js-userProfile userView" dataA='profile'>{{emailLocalPart}}</div>
 
+                {{#if isAdmin}}<a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard userView btn-secondary" dataA='admin'>Admin Tools</a>{{/if}}
 
-                    <div class="btn-pad btn-secondary primary-bg strong">{{emailLocalPart}}</div>
+                <a class="btn-pad js-dashboard userView btn-secondary" dataA='stats'>Team Stats</a>
 
-                    <a class="btn-pad js-dashboard userView btn-secondary" dataA='dashboard'>Dashboard</a>
+                <a class="btn-pad js-sharedRecords btn-secondary">Incident Records</a>
 
-                    <a class="btn-pad js-userProfile userView btn-secondary" dataA='profile'>Profile</a> 
+                <a class="btn-pad js-logout btn-secondary ">Logout</a>
 
-                    <a class="btn-pad js-logout btn-secondary ">Logout</a>
+            </div>
 
-                    </div>
+            {{#if formComplete}}
+            <div class="btns-group-vertical">
 
+                <a class="btn-pad js-newRecord btn-secondary">+ New Record</a>
 
-
-                {{#if formComplete}}
-                    <div class="btns-group-vertical"> 
-
-
-                    <a class="btn-pad js-myRecords btn-secondary">My Records</a> 
-
-                    <a class="btn-pad js-sharedRecords btn-secondary">Shared Records</a> 
-
-                    <a class="btn-pad js-newRecord btn-secondary">+ New Record</a> 
-
-                    </div>
-                {{/if}} 
-
-
-
-                {{else}}
-                <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Join</a> </div>
+            </div>
+            {{/if}} {{else}}
+            <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Join</a> </div>
             {{/if}}
             <div class="list-todos">
                 {{#each lists}} <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}}" title="{{recordInfo.name}}">
@@ -49,20 +38,20 @@
             </div>
         </section>
         {{#unless connected}}
-            <div class="notifications">
-                <div class="notification"> <span class="icon-sync"></span>
-                    <div class="meta">
-                        <div class="title-notification">Trying to connect</div>
-                        <div class="description">There seems to be a connection issue</div>
-                    </div>
+        <div class="notifications">
+            <div class="notification"> <span class="icon-sync"></span>
+                <div class="meta">
+                    <div class="title-notification">Trying to connect</div>
+                    <div class="description">There seems to be a connection issue</div>
                 </div>
             </div>
+        </div>
         {{/unless}}
         <div class="content-overlay"></div>
         <div id="content-container">
-            <div class="mar1x">
+            <!--<div class="mar1x">
                 <h1 class="text-left white em">SARCAT <small class="em grey">Missing Persons Database</small></h1>
-            </div>
+            </div>-->
             {{#each thisArray}} {{> yield}} {{/each}}
         </div>
     </div>

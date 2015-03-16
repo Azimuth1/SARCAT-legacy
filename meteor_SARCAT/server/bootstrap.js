@@ -1,41 +1,76 @@
 //process.env.GG='tt';
 //console.log(process.env);
 //settings = JSON.parse(process.env.METEOR_SETTINGS);
-//console.log(Meteor.settings.production);
+//console.log(Meteor.settings);
 //process.env.METEOR_SETTINGS.initSetup=false;
 //console.log(process.env.METEOR_;SETTINGS.initSetup);
 //var config
 Meteor.startup(function() {
 
-/*
-AdminConfig = {
-    //adminEmails: ['a@a'],
-    roles: ['admin'],
-    collections: {
-        Records: {}
-    }
-};*/
-
+    /*
+    AdminConfig = {
+        //adminEmails: ['a@a'],
+        roles: ['admin'],
+        collections: {
+            Records: {}
+        }
+    };*/
 
     //Config.insert(Meteor.settings.production.public)
     if (!Config.find().count()) {
-        Config.insert(Meteor.settings.production.public);
+        //Config.insert(Meteor.settings.production.public);
+        var customSettings = {
+            "initSetup": true
+        };
+        Config.insert(customSettings);
     }
     if (!Meteor.users.find()
         .count()) {
         var admin = Accounts.createUser({
             email: 'a@a', //dmin@sarcat',
             password: 'a', //dmin',
-            //role: 'default',
-            //roles: ['admin']
         });
 
-    Roles.addUsersToRoles(admin, ['admin'], Roles.GLOBAL_GROUP);
+        Roles.addUsersToRoles(admin, ['admin']);
 
+        /*Accounts.onCreateUser(function(options, user) {
+            console.log(user._id)
+            Roles.addUsersToRoles(user._id, ['viewer']);
+        });*/
 
     }
+
 });
 Meteor.methods({
+    createAdmin: function(email, password, id) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+        console.log('!!!!!!!!');
+        var newAdmin = Accounts.createUser({
+            email: email,
+            password: password,
+
+        });
+        console.log('aaaaaaaa');
+        Roles.addUsersToRoles(newAdmin, ['admin']);
+        console.log(0000000000);
+        Config.update(id, {
+            $set: {
+                initSetup: false
+            }
+        });
+        console.log(111111);
+
+        this.logout(function() {
+            console.log('222222222')
+            this.loginWithPassword(email, password)
+        });
+
+    },
+    addRole: function(id, role) {
+        Roles.addUsersToRoles(id, [role]);
+    },
     updateConfig: function(id, list) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
@@ -109,16 +144,13 @@ Meteor.methods({
     }
 });
 
-
-
-  Records.allow({
-    'update': function (userId,doc) {
-      /* user and doc checks ,
-      return true to allow insert */
-      return true; 
+Records.allow({
+    'update': function(userId, doc) {
+        /* user and doc checks ,
+        return true to allow insert */
+        return true;
     }
-  });
-
+});
 
 /*
 Meteor.users.deny({

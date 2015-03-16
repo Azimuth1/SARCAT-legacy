@@ -15,6 +15,16 @@ Meteor.publish('publicLists', function() {
         this.ready();
     }
 });
+
+Meteor.publish('item', function(id) {
+    if (this.userId) {
+        return Records.find(id);
+    } else{
+        this.ready();
+    }
+});
+
+
 Meteor.publish('privateLists', function() {
     if (this.userId) {
         return Records.find({

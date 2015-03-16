@@ -44,55 +44,68 @@ Template.adminSetup.events({
             });
         } else {
 
+            event.preventDefault();
+            /*var username = template.$('[name=username]')
+                .val();*/
+            var email = template.$('[name=email]')
+                .val();
+            var password = template.$('[name=password]')
+                .val();
+            var confirm = template.$('[name=confirm]')
+                .val();
+            var errors = {};
+            if (!email) {
+                errors.email = 'Email required';
+            }
+            if (!password) {
+                errors.password = 'Password required';
+            }
+            if (confirm !== password) {
+                errors.confirm = 'Please confirm your password';
+            }
+            Session.set(ERRORS_KEY, errors);
+            if (_.keys(errors)
+                .length) {
+                return;
+            }
 
-
-        event.preventDefault();
-        /*var username = template.$('[name=username]')
-            .val();*/
-        var email = template.$('[name=email]')
-            .val();
-        var password = template.$('[name=password]')
-            .val();
-        var confirm = template.$('[name=confirm]')
-            .val();
-        var errors = {};
-        if (!email) {
-            errors.email = 'Email required';
-        }
-        if (!password) {
-            errors.password = 'Password required';
-        }
-        if (confirm !== password) {
-            errors.confirm = 'Please confirm your password';
-        }
-        Session.set(ERRORS_KEY, errors);
-        if (_.keys(errors)
-            .length) {
-            return;
-        }
-
-
-            
-            Accounts.createUser({
-                email: email,
-                password: password,
-                role: 'admin'
-                /*profile: {
-                    role: 'admin'
-                }*/
-            }, function(error) {
-                if (error) {
-                    return Session.set(ERRORS_KEY, {
-                        'none': error.reason
-                    });
-                }
-                Meteor.call('updateConfig', self._id, {
-                    initSetup: false
-                }, function() {
-                    console.log('!');
+            Meteor.call('createAdmin', email, password, self._id, function() {
+                Meteor.logout();
+                Meteor.loginWithPassword(email, password,function(){
                     Router.go('user-home', Meteor.user());
                 });
+                
             });
+
+            /*Accounts.createUser({
+                email: email,
+                password: password
+
+            },function(error, a){
+                console.log(error, a)
+            });
+
+            return*/
+            /*
+                        Accounts.createUser({
+                            email: email,
+                            password: password,
+
+                        }, function(error, a) {
+                            console.log(error, a)
+                            if (error) {
+                                return Session.set(ERRORS_KEY, {
+                                    'none': error.reason
+                                });
+                            }
+                            Meteor.call('changeRole', Meteor.userId(), 'admin');
+                            Meteor.call('updateConfig', self._id, {
+                                initSetup: false
+                            }, function() {
+                                Router.go('user-home', Meteor.user());
+                            });
+                        });*/
+
         }
     }
 });

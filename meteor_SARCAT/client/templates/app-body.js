@@ -4,7 +4,7 @@ var USER_MENU_KEY = 'userMenuOpen';
 Session.setDefault(USER_MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
-var CONNECTION_ISSUE_TIMEOUT = 5000;
+var CONNECTION_ISSUE_TIMEOUT = 500;
 Meteor.startup(function() {
     Session.set('userView','Dashboard');
     // set up a swipe left / right handler
@@ -20,36 +20,35 @@ Meteor.startup(function() {
         });
     // Only show the connection error box if it has been 5 seconds since
     // the app started
-    setTimeout(function() {
+    /*setTimeout(function() {
+        //console.log('timeout')
         // Launch screen handle created in lib/router.js
         //dataReadyHold.release();
         // Show the connection error box
         Session.set(SHOW_CONNECTION_ISSUE_KEY, true);
-    }, CONNECTION_ISSUE_TIMEOUT);
+    }, CONNECTION_ISSUE_TIMEOUT);*/
 });
-Template.appBody.rendered = function() {
-    //Session.set('view','')
-    this.find('#content-container')
-        ._uihooks = {
-            insertElement: function(node, next) {
-                $(node)
-                    .hide()
-                    .insertBefore(next)
-                    .fadeIn(function() {
-                        //console.log(Meteor.user())
-                        //listFadeInHold.release();
-                    });
-            },
-            removeElement: function(node) {
-                $(node)
-                    .fadeOut(function() {
-                        $(this)
-                            .remove();
-                    });
-            }
-        };
-};
+/*Template.appBody.rendered = function() {
+  this.find('#content-container')._uihooks = {
+    insertElement: function(node, next) {
+      $(node)
+        .hide()
+        .insertBefore(next)
+        .fadeIn(function () {
+          listFadeInHold.release();
+        });
+    },
+    removeElement: function(node) {
+      $(node).fadeOut(function() {
+        $(this).remove();
+      });
+    }
+  };
+};*/
 Template.appBody.helpers({
+    isAdmin: function(){
+        return Roles.userIsInRole(Meteor.userId(), ['admin']);
+    },
     formComplete: function() {
         var name = 'profile';
         var obj = Meteor.user()[name];
@@ -107,12 +106,13 @@ Template.appBody.helpers({
     }
 });
 Template.appBody.events({
-    'click .userView': function(event,template) {
+    /*'click .userView': function(event,template) {
         //console.log(event,template,event.target.text)
         Session.set('userView',event.target.text);
+        //Router.go('home');
         
         //event.preventDefault();
-    },
+    },*/
 
   
 
@@ -135,7 +135,8 @@ Template.appBody.events({
         Meteor.logout();
         Router.go('signin');
     },
-    'click .js-userProfile': function() {
+    'click .userView': function(event) {
+        Session.set('userView',event.target.text);
         Router.go('user-home', Meteor.user());
     },
     'click .js-newRecord': function() {

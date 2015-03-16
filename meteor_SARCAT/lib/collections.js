@@ -7,7 +7,7 @@ Records.defaultName = function(name) {
             'recordInfo.name': nextName
         })) {
         nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
-        nextName = 'New Record ' + nextLetter;
+        nextName = 'Incident ' + nextLetter;
     }
     return nextName;
 };
@@ -24,7 +24,7 @@ Schemas = {};
 Schemas.profile = new SimpleSchema({
     firstName: {
         type: String,
-        optional:true,
+        optional: true,
         regEx: /^[a-zA-Z-]{2,25}$/,
         /*autoValue: function() {
             if (this.isInsert) {
@@ -34,7 +34,7 @@ Schemas.profile = new SimpleSchema({
     },
     lastName: {
         type: String,
-        optional:true,
+        optional: true,
         regEx: /^[a-zA-Z-]{2,25}$/,
         /*autoValue: function() {
             if (this.isInsert) {
@@ -44,19 +44,19 @@ Schemas.profile = new SimpleSchema({
     },
     phoneNum: {
         type: String,
-        optional:true,
+        optional: true,
     },
     Agency: {
         type: String,
-        optional:true,
+        optional: true,
     },
     country: {
         type: String,
-        optional:true,
+        optional: true,
     },
     'state-region': {
         type: String,
-        optional:true,
+        optional: true,
     },
 });
 Schemas.User = new SimpleSchema({
@@ -80,10 +80,11 @@ Schemas.User = new SimpleSchema({
         //blackbox: true,
     },
     roles: {
-        type: String,
-        blackbox: true,
+        type: [String],
+        allowedValues: ['viewer', 'editor', 'admin'],
+        defaultValue: ['viewer'],
         optional: true,
-        allowedValues: ['Unknown', 'user', 'admin']
+
     },
     services: {
         type: Object,
@@ -91,6 +92,7 @@ Schemas.User = new SimpleSchema({
     },
 });
 Meteor.users.attachSchema(Schemas.User);
+
 Schemas.admin = new SimpleSchema({
     user: {
         type: String,
@@ -125,6 +127,7 @@ Schemas.admin = new SimpleSchema({
         }
     }
 });
+
 Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
@@ -139,7 +142,7 @@ Schemas.recordInfo = new SimpleSchema({
     status: {
         type: String,
         allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
-        label: 'Status',
+        label: 'Incident Status',
         autoValue: function() {
             if (this.isInsert) {
                 return 'Open';
@@ -184,6 +187,13 @@ Schemas.recordInfo = new SimpleSchema({
             }
         }
     },
+    incidenttype: {
+        type: String,
+        optional: true,
+        allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
+        label: 'Incident Type',
+        //defaultValue: 'Unknown'
+    },
 });
 Schemas.incident = new SimpleSchema({
     'incidentdate': {
@@ -208,12 +218,6 @@ Schemas.incident = new SimpleSchema({
                 return '15:22';
             }
         }
-    },
-    incidenttype: {
-        type: String,
-        allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
-        label: 'Incident Type',
-        defaultValue: 'Unknown'
     },
     incidentEnvironment: {
         type: String,
@@ -268,29 +272,6 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
         defaultValue: 'Unknown'
-    },
-    ippCoordinates: {
-        type: Object
-    },
-    'ippCoordinates.x': {
-        type: String,
-        //optional: true,
-        label: '(N/S) Lat',
-        autoValue: function() {
-            if (this.isInsert) {
-                return '0.0';
-            }
-        }
-    },
-    'ippCoordinates.y': {
-        type: String,
-        //optional: true,
-        label: '(E/W) Lng',
-        autoValue: function() {
-            if (this.isInsert) {
-                return '0.0';
-            }
-        }
     },
     ecoregiondomain: {
         type: String,
@@ -509,14 +490,72 @@ Schemas.timeLog = new SimpleSchema({
     }
 });
 Schemas.incidentOperations = new SimpleSchema({
-    'destinationCoord_N-S': {
-        type: String,
-        defaultValue: '',
-        label: 'Destination Coord. (N/S)'
+    ippCoordinates: {
+        type: Object,
+        label: 'IPP Coordinates'
     },
-    'destinationCoord_E-W': {
+    'ippCoordinates.x': {
         type: String,
-        defaultValue: '',
+        //optional: true,
+        label: 'IPP Coord. (N/S)',
+        autoValue: function() {
+            if (this.isInsert) {
+                return '0.0';
+            }
+        }
+    },
+    'ippCoordinates.y': {
+        type: String,
+        //optional: true,
+        label: 'IPP Coord. (E/W)',
+        autoValue: function() {
+            if (this.isInsert) {
+                return '0.0';
+            }
+        }
+    },
+    decisionPointCoord: {
+        type: Object,
+        label: 'decisionPointCoord'
+    },
+    'decisionPointCoord.x': {
+        type: String,
+        autoValue: function() {
+            if (this.isInsert) {
+                return '0.0';
+            }
+        },
+        label: 'Decision Point Coord. (N/S)'
+    },
+    'decisionPointCoord.y': {
+        type: String,
+        autoValue: function() {
+            if (this.isInsert) {
+                return '0.0';
+            }
+        },
+        label: 'Decision Point Coord. (E/W)'
+    },
+    destinationCoord: {
+        type: Object,
+        label: 'IPP. Coordinates',
+    },
+    'destinationCoord.destinationCoord_N-S': {
+        type: String,
+        autoValue: function() {
+            if (this.isInsert) {
+                return '0.0';
+            }
+        },
+        label: 'Destination Coord. (N/S)',
+    },
+    'destinationCoord.destinationCoord_E-W': {
+        type: String,
+        autoValue: function() {
+            if (this.isInsert) {
+                return '0.0';
+            }
+        },
         label: 'Destination Coord. (E/W)'
     },
     'initialDirectionofTravel': {
@@ -550,16 +589,6 @@ Schemas.incidentOperations = new SimpleSchema({
         type: String,
         defaultValue: '',
         label: 'Revised DOT'
-    },
-    'decisionPointCoord_N-S': {
-        type: String,
-        defaultValue: '',
-        label: 'Decision Point Coord. (N/S)'
-    },
-    'decisionPointCoord_E-W': {
-        type: String,
-        defaultValue: '',
-        label: 'Decision Point Coord. (E/W)'
     },
     'typeofDecisionPoint': {
         type: String,
@@ -687,7 +716,7 @@ Schemas.medical = new SimpleSchema({
         type: String,
         defaultValue: 'Unknown',
         allowedValues: ['Unknown', 'Alive and well', 'Injuired', 'DOA'],
-        label: 'Status'
+        label: 'Subject Status'
     },
     'mechanism': {
         type: String,
@@ -846,10 +875,11 @@ Schemas.SARCAT = new SimpleSchema({
             //defaultValue: {}
     },
     recordInfo: {
-        type: Schemas.recordInfo
-        //optional: true
+        type: Schemas.recordInfo,
+        optional: true
+            //optional: true
     },
-    incident: {
+    /*incident: {
         type: Schemas.incident
     },
     subjectInfo: {
@@ -878,7 +908,7 @@ Schemas.SARCAT = new SimpleSchema({
     resources: {
         type: Schemas.resources,
        
-    },
+    },*/
 });
 Records.attachSchema(Schemas.SARCAT);
 /*

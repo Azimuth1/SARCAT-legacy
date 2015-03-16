@@ -15,18 +15,19 @@ Router.configure({
     // the data it's expecting is present
     waitOn: function() {
         return [
-            Meteor.subscribe('publicLists'),
+            //Meteor.subscribe('publicLists'),
             //Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
-            Meteor.subscribe('people'),
+            //Meteor.subscribe('people'),
             //Meteor.subscribe('Records'),
             //Meteor.subscribe('clientState')
         ];
     }
 });
-//dataReadyHold = null;
+dataReadyHold = null;
 if (Meteor.isClient) {
+    L.Icon.Default.imagePath = '/img';
     //AutoForm.setDefaultTemplateForType('afQuickField', 'addOptions');
     //console.log(Session.get('defaultAdmin'));
     // Keep showing the launch screen on mobile devices until we have loaded
@@ -49,13 +50,6 @@ var IR_Filters = {
             Router.go('adminSetup', Config.findOne());
         }
         this.next();
-        //if (Meteor.users.find().count()) {
-        //this.render('adminSetup');
-        //Router.go('adminSetup');
-        //}
-        /*else {
-                        _this.render('signin');
-                    }*/
     },
     // All standard subscriptions you need before anything works
     // the .wait() makes sure that it continues only if the subscription
@@ -66,25 +60,22 @@ var IR_Filters = {
     },
     // show login if a guest wants to access private areas
     // Use: {only: [privateAreas] }
-    isLoggedIn: function(pause) {
+    isLoggedIn: function() {
         if (!(Meteor.loggingIn() || Meteor.user())) {
-            Notify.setError(__('Please login.')); // some custom packages
-            this.render('login');
-            pause();
+            this.render();
         }
+    },
+    notLoggedIn: function() {
+        if (!Meteor.user()) {
+            Router.go('signin');
+
+        }
+        this.next();
     },
     // make sure to scroll to the top of the page on a new route
     // Use: global
     scrollUp: function() {
         $('body,html').scrollTop(0);
-    },
-    // if this route depends on data, show the NProgess loading indicator
-    // http://ricostacruz.com/nprogress/
-    // Use: global
-    startNProgress: function() {
-        if (_.isFunction(this.data)) {
-            NProgress.start();
-        }
     },
     // only show route if you are an admin
     // using https://github.com/alanning/meteor-roles
@@ -94,11 +85,18 @@ var IR_Filters = {
             this.render();
             pause();
         }
-    },
+    }
 };
+
 Router.map(function() {
+
     //this.onBeforeAction(IR_BeforeHooks.noAdmin);
+
+    //this.onBeforeAction(IR_Filters.notLoggedIn);
     this.onBeforeAction(IR_Filters.initSetup);
+    //Router.onBeforeAction("appLoading");
+    this.onBeforeAction('loading');
+    //this.onBeforeAction(IR_Filters.isLoggedIn);
     this.route('home', {
         path: '/',
         /*onBeforeAction: function() {
@@ -129,6 +127,7 @@ Router.map(function() {
             }
         }
     });
+
     this.route('adminSetup', {
         path: '/adminSetup/:_id',
         layoutTemplate: null,
@@ -148,37 +147,43 @@ Router.map(function() {
     this.route('signin');
     this.route('user-home', {
         path: '/user/:_id',
-        onBeforeAction: function() {
-            this.next();
+        waitOn: function() {
+           // console.log('waiton');
+            return Meteor.subscribe('publicLists');
         },
-        /*waitOn: function() {
-            console.log('WAIT');
-            return Meteor.subscribe('privateLists');
-        },*/
         data: function() {
             var obj = {};
             obj.user = Meteor.user();
+            obj.test = Records.find();
+           // console.log('data');
             //obj.people = People.findOne();
             return obj;
         },
         action: function() {
-            this.render();
+           // console.log('action');
+            if (this.ready()) {
+                this.render();
+            }
         }
     });
     this.route('form', {
         path: '/form/:_id',
-        /*waitOn: function() {
-            console.log('WAIT');
-            return Meteor.subscribe('privateLists');
-        },*/
+        waitOn: function() {
+            return this.subscribe('item', this.params._id);
+        },
         data: function() {
-            //  console.log(this.params._id)
+           // console.log('data');
             var obj = {};
             obj.record = Records.findOne(this.params._id);
+            console.log(obj.record);
+
             return obj;
         },
         action: function() {
-            this.render();
+            //console.log('action');
+            if (this.ready()) {
+                this.render();
+            }
         }
     });
 });
