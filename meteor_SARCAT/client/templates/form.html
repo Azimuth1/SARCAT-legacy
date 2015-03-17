@@ -50,7 +50,9 @@
                             <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
                                 <div class="panel-body afBody"> 
 
-                           {{> quickForm collection='Records' doc=../record id=formId class="hideHeader" type="update" fields=this.name validation='keyup' removeEmptyStrings=true options="allowed" noselect=true template="bootstrap3-inline"}} 
+                           {{> quickForm 
+                          
+                           collection='Records' doc=../record id=formId class="hideHeader" type=formType fields=this.name validation='keyup' removeEmptyStrings=true options="allowed" noselect=true template="bootstrap3-inline"}} 
 
 
 

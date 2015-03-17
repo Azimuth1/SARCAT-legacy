@@ -11,20 +11,17 @@ Meteor.publish('people', function() {
 Meteor.publish('publicLists', function() {
     if (this.userId) {
         return Records.find();
-    } else{
+    } else {
         this.ready();
     }
 });
-
 Meteor.publish('item', function(id) {
     if (this.userId) {
         return Records.find(id);
-    } else{
+    } else {
         this.ready();
     }
 });
-
-
 Meteor.publish('privateLists', function() {
     if (this.userId) {
         return Records.find({
@@ -37,9 +34,15 @@ Meteor.publish('privateLists', function() {
         //this.ready();
     }
 });
+
+
+
+
 Meteor.publish('userData', function() {
     //return Meteor.users.find();
-    if (this.userId) {
+    if (Roles.userIsInRole(this.userId, ['admin'])) {
+        return Meteor.users.find();
+    } else if (this.userId) {
         return Meteor.users.find({
             _id: this.userId
         }, {

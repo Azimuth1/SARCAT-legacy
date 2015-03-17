@@ -4,11 +4,13 @@
             {{#if currentUser}}
             <div class="btns-group-vertical btns-userHome">
 
-                <div class="btn-pad btn-secondary primary-bg strong js-userProfile userView" dataA='profile'>{{emailLocalPart}}</div>
+                <a class="btn-pad btn-secondary primary-bg strong js-userProfile userView" data='userProfile'>{{emailLocalPart}}</a>
+
+                <a class="btn-pad js-dashboard userView btn-secondary" data='userStats'>Team Stats</a>
 
                 {{#if isAdmin}}<a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard userView btn-secondary" dataA='admin'>Admin Tools</a>{{/if}}
 
-                <a class="btn-pad js-dashboard userView btn-secondary" dataA='stats'>Team Stats</a>
+                
 
                 <a class="btn-pad js-sharedRecords btn-secondary">Incident Records</a>
 

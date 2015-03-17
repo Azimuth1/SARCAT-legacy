@@ -85,7 +85,10 @@ Template.form.helpers({
 
 
 
-
+    formType: function() {
+        var highRole = Roles.userIsInRole(Meteor.user(), ['admin','editor']);
+        return highRole ? 'update' : 'disabled';
+         },
     todosReady: function() {
         //var ready = Router.current().todosHandle.ready();
         //console.log('todosReady',Router.current().todosHandle.ready());

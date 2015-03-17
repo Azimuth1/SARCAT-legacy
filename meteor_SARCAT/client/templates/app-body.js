@@ -6,7 +6,7 @@ var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 var CONNECTION_ISSUE_TIMEOUT = 500;
 Meteor.startup(function() {
-    Session.set('userView','Dashboard');
+    //Session.set('userView','Dashboard');
     // set up a swipe left / right handler
     $(document.body)
         .touchwipe({
@@ -136,8 +136,9 @@ Template.appBody.events({
         Router.go('signin');
     },
     'click .userView': function(event) {
-        Session.set('userView',event.target.text);
-        Router.go('user-home', Meteor.user());
+        var target = $(event.target).attr('data');
+        Session.set('userView',target);
+        //Router.go('user-home', Meteor.user());
     },
     'click .js-newRecord': function() {
         var list = {
@@ -146,7 +147,7 @@ Template.appBody.events({
         };
         list._id = Meteor.call('addRecord', list, function(error, d) {
             if (error) {
-                console.log(error)
+                console.log(error);
             }
             list._id = d;
             Router.go('form', list);

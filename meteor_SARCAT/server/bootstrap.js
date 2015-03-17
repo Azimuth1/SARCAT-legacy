@@ -42,6 +42,9 @@ Meteor.startup(function() {
 
 });
 Meteor.methods({
+    allUsers: function(id, role) {
+        
+    },
     createAdmin: function(email, password, id) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
