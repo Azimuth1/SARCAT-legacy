@@ -1,22 +1,21 @@
-
-
 var completeProfile = function() {
     var obj = Meteor.user().profile;
     var formLen = Object.keys(obj).length;
     var schemaLen = Schemas.profile._schemaKeys.length;
     return formLen === schemaLen;
 };
-Template.userHome.rendered = function() {
-if(!completeProfile()){
-    Session.set('userView','Profile');
-}
-};
-Template.userHome.helpers({
 
+
+
+Template.userHome.rendered = function() {
+    Session.set('userView', 'userProfile');
+};
+
+
+Template.userHome.helpers({
     userView: function(name) {
-        console.log(name)
-        var view = Session.get('userView') === name;
-        return view ? '' : 'hide';
+        console.log(name);
+        return Session.get('userView') === name;
     },
     recordStats: function() {
         var records = Records.find().fetch();
@@ -27,34 +26,48 @@ Template.userHome.helpers({
         var render = ['profile'];
         return render.indexOf(name) !== -1 ? true : false;
     },
-    formComplete: function(name) {
+    /*formComplete: function(name) {
         var complete = completeProfile();
         return complete ? '' : 'warning-bg';
-    },
+    },*/
     selectedPersonDoc: function() {
-        console.log(this)
+        console.log(this);
         return this.data.person;
     },
 });
-Template.userHome.events({});
-/*
-AutoForm.hooks({
-    profileUpdateForm: {
-        onSubmit: function(doc) {
-            alert('!!!');
-            console.log(doc);
-            Schemas.User.clean(doc);
-            this.done();
-            return false;
-        },
-        onSuccess: function(operation, result, template) {
-            console.log(operation, result, template)
-            console.log('updated');
-            //Router.go('users.show',{'username':template.data.doc.username});
-        },
-        onError: function(operation, error, template) {
-            console.log(operation, error)
-        },
+
+
+
+
+
+
+
+Template.userProfile.helpers({
+    profileIncomplete: function() {
+        var complete = completeProfile();
+        console.log(complete);
+        Session.set('profileComplete', complete);
+        return !complete;
     }
 });
-*/
+
+
+
+
+
+
+
+Template.admin.rendered = function() {
+    console.log(this.data);
+};
+
+
+
+Template.admin.helpers({
+    profileIncomplete: function() {
+        var complete = completeProfile();
+        console.log(complete);
+        Session.set('profileComplete', complete);
+        return !complete;
+    }
+});

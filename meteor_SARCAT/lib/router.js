@@ -68,7 +68,6 @@ var IR_Filters = {
     notLoggedIn: function() {
         if (!Meteor.user()) {
             Router.go('signin');
-
         }
         this.next();
     },
@@ -87,11 +86,8 @@ var IR_Filters = {
         }
     }
 };
-
 Router.map(function() {
-
     //this.onBeforeAction(IR_BeforeHooks.noAdmin);
-
     //this.onBeforeAction(IR_Filters.notLoggedIn);
     this.onBeforeAction(IR_Filters.initSetup);
     //Router.onBeforeAction("appLoading");
@@ -127,7 +123,6 @@ Router.map(function() {
             }
         }
     });
-
     this.route('adminSetup', {
         path: '/adminSetup/:_id',
         layoutTemplate: null,
@@ -145,22 +140,59 @@ Router.map(function() {
     this.route('appLoading');
     this.route('join');
     this.route('signin');
-    this.route('user-home', {
+    /*this.route('userStats', {
         path: '/user/:_id',
         waitOn: function() {
-           // console.log('waiton');
+            // console.log('waiton');
             return Meteor.subscribe('publicLists');
         },
         data: function() {
             var obj = {};
             obj.user = Meteor.user();
             obj.test = Records.find();
-           // console.log('data');
+            // console.log('data');
             //obj.people = People.findOne();
             return obj;
         },
         action: function() {
-           // console.log('action');
+            // console.log('action');
+            if (this.ready()) {
+                this.render();
+            }
+        }
+    });*/
+    this.route('admin', {
+        path: '/admin/',
+        data: function() {
+            var obj = {};
+            obj.users = Meteor.users.find();
+            
+            return obj;
+        },
+        action: function() {
+            if (this.ready()) {
+                this.render();
+            }
+        }
+    });
+
+
+    this.route('userProfile');
+    this.route('userStats');
+
+
+    this.route('user-home', {
+        path: '/user/:_id',
+        waitOn: function() {
+            return Meteor.subscribe('publicLists');
+        },
+        data: function() {
+            var obj = {};
+            obj.user = Meteor.user();
+            obj.test = Records.find();
+            return obj;
+        },
+        action: function() {
             if (this.ready()) {
                 this.render();
             }
@@ -172,11 +204,10 @@ Router.map(function() {
             return this.subscribe('item', this.params._id);
         },
         data: function() {
-           // console.log('data');
+            // console.log('data');
             var obj = {};
             obj.record = Records.findOne(this.params._id);
             console.log(obj.record);
-
             return obj;
         },
         action: function() {
