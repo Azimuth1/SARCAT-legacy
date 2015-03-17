@@ -70,3 +70,43 @@ read only users
 cool user home page
 spider line map
 colorcode find locationd by fatality/survive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*Create a SARCAT Account (vs join)
+*View Create Edit your SAR teams Records
+
+*Challenge setup for password recorvery
+
+default role is viewer
+
+
+
+first admin user creates an organization profile.
+Location/Agency info/Phone #
+
+
+pill boxes show x/total filled in
+
+*Created By vs Prepared By
+
+Track IP
+
+
+Changing form status affects all forms - database is always platinum
+
+
+Dashboard => Admin Tools
+My SAR Team Stats...
