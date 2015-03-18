@@ -1,20 +1,28 @@
-var completeProfile = function() {
+/*var completeProfile = function() {
     var obj = Meteor.user().profile;
     var formLen = Object.keys(obj).length;
     var schemaLen = Schemas.profile._schemaKeys.length;
     return formLen === schemaLen;
-};
-
-
+};*/
 
 Template.userHome.rendered = function() {
-    Session.set('userView', 'userProfile');
-};
+    var admin = Roles.userIsInRole(Meteor.userId(), ['admin']);
+    var userView;
 
+    /*if (!completeProfile()) {
+        userView = 'userProfile';
+    } else {*/
+    userView = admin ? 'admin' : 'userStats';
+    //}
+
+    Session.set('userView', userView);
+    $('.userView[data=' + userView + ']').click();
+
+};
 
 Template.userHome.helpers({
     userView: function(name) {
-        console.log(name);
+        //console.log(name);
         return Session.get('userView') === name;
     },
     recordStats: function() {
@@ -31,43 +39,17 @@ Template.userHome.helpers({
         return complete ? '' : 'warning-bg';
     },*/
     selectedPersonDoc: function() {
-        console.log(this);
+        //console.log(this);
         return this.data.person;
     },
 });
-
-
-
-
-
-
-
+/*
 Template.userProfile.helpers({
     profileIncomplete: function() {
         var complete = completeProfile();
-        console.log(complete);
+        //console.log(complete);
         Session.set('profileComplete', complete);
         return !complete;
     }
 });
-
-
-
-
-
-
-
-Template.admin.rendered = function() {
-    console.log(this.data);
-};
-
-
-
-Template.admin.helpers({
-    profileIncomplete: function() {
-        var complete = completeProfile();
-        console.log(complete);
-        Session.set('profileComplete', complete);
-        return !complete;
-    }
-});
+*/

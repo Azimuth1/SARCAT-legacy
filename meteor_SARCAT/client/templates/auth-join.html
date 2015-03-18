@@ -1,18 +1,24 @@
 <template name="join">
     <div class="page auth">
-   
+
         <div class="content-scrollable">
             <div class="wrapper-auth">
-                <h1 class="title-auth">Join.</h1>
-                <p class="subtitle-auth">Create and edit SARCAT records</p>
+                <h1 class="title-auth">Register</h1>
+                <p class="subtitle-auth">View/Create/Edit your SAR teams Records</p>
                 <form>
                     {{#if errorMessages}}
-                        <div class="list-errors">
-                            {{#each errorMessages}}
-                                <div class="list-item">{{this}}</div>
-                            {{/each}}
-                        </div>
+                    <div class="list-errors">
+                        {{#each errorMessages}}
+                        <div class="list-item">{{this}}</div>
+                        {{/each}}
+                    </div>
                     {{/if}}
+
+                    <div class="input-symbol  {{errorClass 'full name'}}">
+                        <input type="username" name="username" placeholder="First/Last Name" />
+                        <span class="_icon-email" title="First/Last Name"></span>
+                    </div>
+
                     <div class="input-symbol  {{errorClass 'email'}}">
                         <input type="email" name="email" placeholder="Email" />
                         <span class="icon-email" title="Email"></span>

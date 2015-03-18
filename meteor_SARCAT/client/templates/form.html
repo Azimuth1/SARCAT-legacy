@@ -1,14 +1,40 @@
+<template name="tests">
+
+{{json this}}
+      {{> quickForm 
+                           collection='Records' 
+                           doc=this
+                           id='af_recordInfo' 
+                           type="update" 
+                          
+                           }}  
+
+  {{#autoForm
+                           collection='Records' 
+                           doc=this
+                           id='af_recordInfo' 
+                           type="update" 
+ }}
+
+  {{#each afFieldNames}}
+    {{> afQuickField name=this options="allowed"}}
+  {{/each}}
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+  {{/autoForm}}
+</template>
 <template name="form">
     <div class="page _lists-show">
+    <!--
         <nav class="formNav">
             <h4 class="text-default nav-title"><strong>{{record.recordInfo.name}}</strong> <small><span class="default-bg_label">Prepared By: <strong> <em>{{record.admin.user}} </em></strong></span> | <span class="default-bg_label">Created: <strong> <em>{{record.created}}</em></strong></span></small>
             </h4>
 
-
             <div class="x">
                 <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
                     {{#each arrRecord}}
-                        <button type="button" data="{{this.name}}" class="formNav flex-item btn default-bg {{formComplete this.name}} mar0 _pad1">{{this.name}}</button>
+                    <button type="button" data="{{this.name}}" class="formNav flex-item btn default-bg {{formComplete this.name}} mar0 _pad1">{{this.name}}</button>
                     {{/each}}
                 </div>
             </div>
@@ -26,21 +52,83 @@
                     <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
                 </div>
             </div>
-        </nav>
+        </nav>-->
+
+
+
         <div class="content-scrollable list-items">
             <div class="pad2">
+<!--
+  {{#autoForm
+                           collection='Records' 
+                           doc=record 
+                           id='af_recordInfo'
+                           _class="hideHeader" 
+                           type='update'
+                           _validation='keyup' _removeEmptyStrings=true options="allowed" 
+                           noselect=true 
+                           template="bootstrap3-inline"
+                           autosave=true
+ }}
+  {{#each afFieldNames}}
+    {{> afObjectField name=this.name options="auto" template="bootstrap3-inline"}}
+  {{/each}}
+
+
+ {{> afObjectField name="admin" template="bootstrap3-inline"}}
+{{> afQuickField name="recordInfo" template="bootstrap3-inline"}}
+{{> afQuickField name="incident" template="bootstrap3-inline"}}
+
+
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+  {{/autoForm}}
+-->
+ {{#each arrRecord}}
+                           {{> quickForm 
+                          
+                           collection='Records' 
+                           doc=../record 
+                           id='af_recordInfo'
+                           _class="hideHeader" 
+                           type='update'
+                           _validation='keyup' _removeEmptyStrings=true options="allowed" 
+                           noselect=true 
+                           template="bootstrap3-inline"
+                           autosave=true
+                           fields=this.name
+                           }} 
+ {{/each}}
 
 <!--
-                           {{> quickForm collection='Records' doc=record id='recInfo' class="hideHeader" type="update" fields="recordInfo" validation='keyup' removeEmptyStrings=true options="allowed" noselect=true template="none"}}    -->        
-{{> formMap}}
+{{#autoForm id="demo" schema='Schemas.SARCAT'}}
+  {{#each afFieldNames}}
+    aaa
+  {{/each}}
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+{{/autoForm}}
+
+{{#each arrRecord}}
+                           {{> quickForm 
+                          
+                           collection='Records' 
+                           doc=../record id=formId 
+                           class="hideHeader" 
+                           type=formType 
+                           fields=this.name 
+                           _validation='keyup' _removeEmptyStrings=true options="allowed" 
+                           noselect=true 
+                           template="bootstrap3-inline"
+
+                           }} 
+{{/each}}
+-->
 
 
-<div id="target_table_id"></div>
-
-
-
-
-
+<!--
                 {{#each arrRecord}}
 
                     <div class="afContainer">
@@ -61,8 +149,7 @@
                         </div>
                     </div>
                 {{/each}}
-
-
+-->
 
             </div>
         </div>

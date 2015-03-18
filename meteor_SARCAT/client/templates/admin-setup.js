@@ -45,8 +45,7 @@ Template.adminSetup.events({
         } else {
 
             event.preventDefault();
-            /*var username = template.$('[name=username]')
-                .val();*/
+            var username = template.$('[name=username]').val();
             var email = template.$('[name=email]')
                 .val();
             var password = template.$('[name=password]')
@@ -54,6 +53,9 @@ Template.adminSetup.events({
             var confirm = template.$('[name=confirm]')
                 .val();
             var errors = {};
+                    if (!username) {
+            errors.username = 'Full Name required';
+        }
             if (!email) {
                 errors.email = 'Email required';
             }
@@ -69,8 +71,8 @@ Template.adminSetup.events({
                 return;
             }
 
-            Meteor.call('createAdmin', email, password, self._id, function() {
-                Meteor.logout();
+            Meteor.call('createAdmin', username, email, password, self._id, function() {
+                //Meteor.logout();
                 Meteor.loginWithPassword(email, password,function(){
                     Router.go('user-home', Meteor.user());
                 });

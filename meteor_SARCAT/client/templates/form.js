@@ -1,14 +1,13 @@
-var EDITING_KEY = 'editingList';
-Session.setDefault(EDITING_KEY, false);
-Session.set('toggleTest', true);
-Session.set('weather', false);
+//var EDITING_KEY = 'editingList';
+//Session.setDefault(EDITING_KEY, false);
+//Session.set('toggleTest', true);
+//Session.set('weather', false);
 // Track if this is the first time the list template is rendered
 var firstRender = true;
 //var listRenderHold = LaunchScreen.hold();
 listFadeInHold = null;
 
-
-var weather=false;
+var weather = false;
 
 /*
 if(!weather){
@@ -25,70 +24,58 @@ $.ajax({
 }
 */
 
-
 Template.form.rendered = function() {
-
-
-
-
-    console.log('firstRender: ' + firstRender);
-    //if (firstRender) {
-
-    // Released in app-body.js
-    //listFadeInHold = LaunchScreen.hold();
-
-    // Handle for launch screen defined in app-body.js
-    //listRenderHold.release();
-
-    firstRender = false;
-    // }
-
+console.log(this.data.record);
     $('.collapse').collapse({
         toggle: false
     });
     Session.set('currentRecord', this.data.record);
+/*
+    var data = {
+        "time": 1426269221,
+        "summary": "Windy and Mostly Cloudy",
+        "icon": "wind",
+        "precipIntensity": 0,
+        "precipProbability": 0,
+        "temperature": 44.09,
+        "apparentTemperature": 33.76,
+        "dewPoint": 1.66,
+        "humidity": 0.17,
+        "windSpeed": 31.77,
+        "windBearing": 218,
+        "cloudCover": 0.6,
+        "pressure": 1021.8,
+        "ozone": 345.58
+    };
+    data = _.map(data, function(d, e) {
+        return {
+            key: e,
+            val: d
+        };
+    });
 
+    console.log(data);
 
-
-
-
-
-var data = {"time":1426269221,"summary":"Windy and Mostly Cloudy","icon":"wind","precipIntensity":0,"precipProbability":0,"temperature":44.09,"apparentTemperature":33.76,"dewPoint":1.66,"humidity":0.17,"windSpeed":31.77,"windBearing":218,"cloudCover":0.6,"pressure":1021.8,"ozone":345.58};
- data= _.map(data,function(d,e){return {key:e,val:d};});
-
-console.log(data);
-
-  var tbl_body = '';
+    var tbl_body = '';
     var odd_even = false;
     $.each(data, function() {
         var tbl_row = '';
-        $.each(this, function(k , v) {
-            tbl_row += '<td>'+v+'</td>';
+        $.each(this, function(k, v) {
+            tbl_row += '<td>' + v + '</td>';
         })
-        tbl_body += '<tr class=\''+( odd_even ? 'odd' : 'even')+'\'>'+tbl_row+'</tr>';
-        odd_even = !odd_even;               
+        tbl_body += '<tr class=\'' + (odd_even ? 'odd' : 'even') + '\'>' + tbl_row + '</tr>';
+        odd_even = !odd_even;
     });
 
-    $('#target_table_id').html(tbl_body);
-
-
-
-
-
-
-
-
+    $('#target_table_id').html(tbl_body);*/
 
 };
 Template.form.helpers({
 
-
-
-
     formType: function() {
-        var highRole = Roles.userIsInRole(Meteor.user(), ['admin','editor']);
+        var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
-         },
+    },
     todosReady: function() {
         //var ready = Router.current().todosHandle.ready();
         //console.log('todosReady',Router.current().todosHandle.ready());
@@ -141,9 +128,9 @@ Template.form.helpers({
         //console.log(obj, obj2)
         return obj === obj2;
     },
-    editing: function() {
+    /*editing: function() {
         return Session.get(EDITING_KEY);
-    },
+    },*/
     arrRecord: function(val) {
         if (!this.record) {
             return;
@@ -193,7 +180,7 @@ Template.form.helpers({
 });
 var editList = function(list, template) {
     //console.log(list);
-    Session.set(EDITING_KEY, true);
+    //Session.set(EDITING_KEY, true);
     // force the template to redraw based on the reactive change
     Tracker.flush();
     template.$('.js-edit-form input[type=text]').focus();
@@ -203,12 +190,8 @@ var editList = function(list, template) {
     });
 };
 var saveList = function(list, template) {
-    Session.set(EDITING_KEY, false);
-    /*Records.update(list._id, {
-        $set: {
-            name: template.$('[name=name]').val()
-        }
-    });*/
+    //Session.set(EDITING_KEY, false);
+
     var name = template.$('[name=name]').val();
     Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
@@ -220,14 +203,7 @@ var deleteList = function(list) {
     }
     var message = 'Are you sure you want to delete the list ' + list.name + '?';
     if (confirm(message)) {
-        // we must remove each item individually from the client
-        /*Records.find({
-                listId: list._id
-            })
-            .forEach(function(todo) {
-                Records.remove(todo._id);
-            });*/
-        //Records.remove(list._id);
+
         Meteor.call('removeRecord', list._id, function() {
             Router.go('form', Records.findOne());
         });
@@ -253,29 +229,19 @@ var toggleListPrivacy = function(list) {
     }
 };
 Template.form.events({
-    /*'keydown input[type=text]': function(event) {
-        // ESC
-        //console.log(this,event)
-        if (27 === event.which) {
-            event.preventDefault();
-            $(event.target)
-                .blur();
-        }
-    },*/
+
     'blur input[type=text]': function(event, template) {
-        //console.log('!')
-        // if we are still editing (we haven't just clicked the cancel button)
-        if (Session.get(EDITING_KEY)) saveList(this, template);
+       // if (Session.get(EDITING_KEY)) saveList(this, template);
     },
-    'submit .js-edit-form': function(event, template) {
+    /*'submit .js-edit-form': function(event, template) {
         //event.preventDefault();
         saveList(this, template);
-    },
+    },*/
     // handle mousedown otherwise the blur handler above will swallow the click
     // on iOS, we still require the click event so handle both
     'mousedown .js-cancel, click .js-cancel': function(event) {
         // event.preventDefault();
-        Session.set(EDITING_KEY, false);
+       // Session.set(EDITING_KEY, false);
     },
     'change .list-edit': function(event, template) {
         if ($(event.target)
@@ -290,9 +256,7 @@ Template.form.events({
         }
         event.target.selectedIndex = 0;
     },
-    /*'click .js-edit-list': function(event, template) {
-        editList(this, template);
-    },*/
+
     'click .js-toggle-list-privacy': function(event, template) {
         var toggleTest = Session.get('toggleTest');
         var result = !toggleTest;
@@ -306,30 +270,13 @@ Template.form.events({
         var record = Session.get('currentRecord');
         deleteList(record);
     },
-    /*'click .js-todo-add': function(event, template) {
-        template.$('.js-todo-new input')
-            .focus();
-    },
-    'click .person-row': function() {
-        Session.set('selectedPersonId', this._id);
-    },*/
+
     'click .formNav': function(event, template) {
         $('.collapse').collapse('hide');
         $('#collapse_' + this.name).collapse('toggle');
     },
     'change ._afInput': function(event, template) {
-        //var name = event.target.name.split('.')[0];
-        //return checkComplete(name);
-        /*
-        console.log(name)
 
-
-                var currentRecord = Session.get('currentRecord');
-                var complete = true;//Match.test(currentRecord[name], Schemas[name]);
-                var result = complete ? 'panel-success' : 'panel-warning';
-                Session.set('afComplete_' + name, result);
-                return result;
-        */
     }
 });
 var hooksObject = {
@@ -396,7 +343,7 @@ hooks2 = {
         console.log(error);
     },
     beginSubmit: function(a) {
-        console.log()
+       // console.log()
         console.log('beginSubmit');
     },
     endSubmit: function() {
