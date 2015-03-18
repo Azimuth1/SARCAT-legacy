@@ -5,17 +5,15 @@ Handlebars.registerHelper('isEqual', function(a, b) {
     return a === b;
 });
 Router.configure({
-    // we use the  appBody template to define the layout for the entire app
     layoutTemplate: 'appBody',
-    // the appNotFound template is used for unknown routes and missing lists
     notFoundTemplate: 'appNotFound',
-    // show the appLoading template whilst the subscriptions below load their data
     loadingTemplate: 'appLoading',
-    // wait on the following subscriptions before rendering the page to ensure
-    // the data it's expecting is present
+
+
+
     waitOn: function() {
         return [
-            //Meteor.subscribe('publicLists'),
+            Meteor.subscribe('publicLists'),
             //Meteor.subscribe('privateLists'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
@@ -87,33 +85,14 @@ var IR_Filters = {
     }
 };
 Router.map(function() {
-    //this.onBeforeAction(IR_BeforeHooks.noAdmin);
-    //this.onBeforeAction(IR_Filters.notLoggedIn);
+
     this.onBeforeAction(IR_Filters.initSetup);
-    //Router.onBeforeAction("appLoading");
+
     this.onBeforeAction('loading');
-    //this.onBeforeAction(IR_Filters.isLoggedIn);
+
     this.route('home', {
         path: '/',
-        /*onBeforeAction: function() {
-            //var _this = this;
-            routeDefaults.noAdmin(this);
-            //Router.go('join');
-            //Router.go('signin');
-            /*var defaultAdmin = Meteor.users.find().count();
-            if (Meteor.users.find().count()) {
-                _this.render('adminSetup');
-            } else {
-                _this.render('signin');
-            }*/
-        //this.render('join');
-        /* if (Meteor.user()) {
-                 Router.go('form', Records.findOne());
-             } else {
-                 Router.go('signin');
-                // this.render('adminSetup')
-             }
-        },*/
+
         action: function() {
             //Router.go('signin');
             if (Meteor.user()) {
@@ -124,10 +103,10 @@ Router.map(function() {
         }
     });
     this.route('adminSetup', {
-        path: '/adminSetup/:_id',
+        path: '/adminSetup / : _id ',
         layoutTemplate: null,
         onBeforeAction: function() {
-            //this.onBeforeAction(IR_Filters.initSetup;
+
             this.next();
         },
         data: function() {
@@ -140,46 +119,23 @@ Router.map(function() {
     this.route('appLoading');
     this.route('join');
     this.route('signin');
-    /*this.route('userStats', {
-        path: '/user/:_id',
-        waitOn: function() {
-            // console.log('waiton');
-            return Meteor.subscribe('publicLists');
-        },
-        data: function() {
-            var obj = {};
-            obj.user = Meteor.user();
-            obj.test = Records.find();
-            // console.log('data');
-            //obj.people = People.findOne();
-            return obj;
-        },
-        action: function() {
-            // console.log('action');
-            if (this.ready()) {
-                this.render();
-            }
-        }
-    });*/
+
     this.route('admin', {
         path: '/admin/',
         data: function() {
             var obj = {};
             obj.users = Meteor.users.find();
-            
+            obj.config = Config.findOne();
+
             return obj;
         },
         action: function() {
+            console.log('!!!')
             if (this.ready()) {
                 this.render();
             }
         }
     });
-
-
-    this.route('userProfile');
-    this.route('userStats');
-
 
     this.route('user-home', {
         path: '/user/:_id',
@@ -189,10 +145,25 @@ Router.map(function() {
         data: function() {
             var obj = {};
             obj.user = Meteor.user();
-            obj.test = Records.find();
+            obj.config = Config.findOne();
             return obj;
         },
         action: function() {
+            if (this.ready()) {
+                this.render();
+            }
+        }
+    });
+    this.route('tests', {
+        path: '/test',
+        waitOn: function() {
+            return this.subscribe('item', "P3JSFt6Wi6rbxQSmJ");
+        },
+        data: function() {
+            return Records.findOne("P3JSFt6Wi6rbxQSmJ");
+        },
+        action: function() {
+            //console.log('action');
             if (this.ready()) {
                 this.render();
             }

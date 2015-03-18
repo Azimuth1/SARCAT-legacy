@@ -35,9 +35,6 @@ Meteor.publish('privateLists', function() {
     }
 });
 
-
-
-
 Meteor.publish('userData', function() {
     //return Meteor.users.find();
     if (Roles.userIsInRole(this.userId, ['admin'])) {

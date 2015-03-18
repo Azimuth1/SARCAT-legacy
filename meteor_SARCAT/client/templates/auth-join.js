@@ -14,13 +14,13 @@ Template.join.helpers({
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
     initConfig: function() {
-    //    return Session.get('initConfig');
-         Meteor.call('getCount', function(error, result) {
-             console.log(error, result);
-             Session.set('initConfig', result);
-             return result;
-             
-         });
+        //    return Session.get('initConfig');
+        Meteor.call('getCount', function(error, result) {
+            console.log(error, result);
+            Session.set('initConfig', result);
+            return result;
+
+        });
         /*return Config.findOne({
             initSetup: {
                 $exists: true
@@ -31,8 +31,8 @@ Template.join.helpers({
 Template.join.events({
     'submit': function(event, template) {
         event.preventDefault();
-        /*var username = template.$('[name=username]')
-            .val();*/
+        var username = template.$('[name=username]').val();
+
         var email = template.$('[name=email]')
             .val();
         var password = template.$('[name=password]')
@@ -40,6 +40,10 @@ Template.join.events({
         var confirm = template.$('[name=confirm]')
             .val();
         var errors = {};
+        if (!username) {
+            errors.username = 'Full Name required';
+        }
+
         if (!email) {
             errors.email = 'Email required';
         }
@@ -57,6 +61,7 @@ Template.join.events({
         Accounts.createUser({
             email: email,
             password: password,
+            username:username
             //profile:{role:'dd'}
         }, function(error) {
             if (error) {

@@ -20,7 +20,7 @@ Meteor.startup(function() {
     if (!Config.find().count()) {
         //Config.insert(Meteor.settings.production.public);
         var customSettings = {
-            "initSetup": true
+            'initSetup': true
         };
         Config.insert(customSettings);
     }
@@ -29,6 +29,7 @@ Meteor.startup(function() {
         var admin = Accounts.createUser({
             email: 'a@a', //dmin@sarcat',
             password: 'a', //dmin',
+            username: 'default'
         });
 
         Roles.addUsersToRoles(admin, ['admin']);
@@ -42,33 +43,33 @@ Meteor.startup(function() {
 
 });
 Meteor.methods({
-    allUsers: function(id, role) {
-        
+
+    removeUser: function(userId) {
+        if (Roles.userIsInRole(userId, ['admin'])) {
+            Meteor.users.remove(userId);
+        }
     },
-    createAdmin: function(email, password, id) {
+    createAdmin: function(username, email, password, id) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        console.log('!!!!!!!!');
+
         var newAdmin = Accounts.createUser({
             email: email,
             password: password,
+            username: username
 
         });
-        console.log('aaaaaaaa');
+
         Roles.addUsersToRoles(newAdmin, ['admin']);
-        console.log(0000000000);
+
         Config.update(id, {
             $set: {
                 initSetup: false
             }
         });
-        console.log(111111);
 
-        this.logout(function() {
-            console.log('222222222')
-            this.loginWithPassword(email, password)
-        });
+        Meteor.users.remove(Meteor.userId());
 
     },
     addRole: function(id, role) {
@@ -148,40 +149,21 @@ Meteor.methods({
 });
 
 Records.allow({
-    'update': function(userId, doc) {
-        /* user and doc checks ,
-        return true to allow insert */
+    update: function() {
         return true;
     }
 });
 
-/*
-Meteor.users.deny({
-  update: function() {
-    return true;
-  }
+Config.allow({
+    'update': function() {
+        return true;
+    }
 });
-*/
-/* if (Records.find().count() === 0) {
-     
-             var data = [{
-                 'name': 'Default Template',
-                 'status': 'Open',
-                 items: ['Data on the Wire', 'One Language', 'Database Everywhere', 'Latency Compensation', 'Full Stack Reactivity', 'Embrace the Ecosystem', 'Simplicity Equals Productivity']
-             }, {
-                 'name': 'John & Jane Doe',
-                 'status': 'Closed',
-                 items: ['Lisp', 'C', 'C++', 'Python', 'Ruby', 'JavaScript', 'Scala', 'Erlang', '6502 Assembly']
-             }, {
-                 'name': 'Kyle Kalwarski',
-                 'status': 'Closed',
-                 'items': ['Ada Lovelace', 'Grace Hopper', 'Marie Curie', 'Carl Friedrich Gauss', 'Nikola Tesla', 'Claude Shannon']
-             }];*/
-/*var timestamp = (new Date())
-            .getTime();
-        _.each(data, function(record) {
-            record.incompleteCount = record.items.length;
-            Records.insert(record);
-            timestamp += 1;
-        });
-    }*/
+/*
+Meteor.users.allow({
+    'remove': function(userId, doc) {
+        if (Roles.userIsInRole(userId, ['admin'])) {
+            return true;
+        }
+    }
+});*/

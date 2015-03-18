@@ -1,0 +1,41 @@
+<template name="admin">
+    <div class="page lists-show">
+        <div class="content-scrollable">
+            <div class="row col-md-10 col-md-offset-1 mar2y">
+                <h1>Admin Dashboard</h1>
+
+
+
+                <div class="afContainer">
+                    <div class="panel afPanel">
+                        <div class="panel-heading collapsed" role="tab" id="heading_Profile" data-toggle="collapse" data-parent="#accordion" href="#collapse_Profile" aria-expanded="false" aria-controls="collapse_Profile">
+                            <h3 class="text-uppercase">Agency Profile</h3> </div>
+                        <div id="collapse_Profile" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_Profile">
+                            <div class="panel-body afBody">
+                            {{> quickForm 
+                            collection='Config'
+                            doc=config 
+                            id="af_recordInfo" 
+                            class="hideHeader" 
+                            type="update" 
+                            trimStrings="true" 
+                            validation='keyup' 
+                            fields="agencyProfile"
+                            }} 
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <p>Record stats</p> {{#each users}} {{json this}}{{/each}}</div>
+        </div>
+    </div>
+</template>

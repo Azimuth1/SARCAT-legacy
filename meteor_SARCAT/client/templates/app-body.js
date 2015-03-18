@@ -28,8 +28,11 @@ Meteor.startup(function() {
         Session.set(SHOW_CONNECTION_ISSUE_KEY, true);
     }, CONNECTION_ISSUE_TIMEOUT);*/
 });
-/*Template.appBody.rendered = function() {
-  this.find('#content-container')._uihooks = {
+Template.appBody.rendered = function() {
+
+    //$('.userView[data=userStats]').click();
+    //console.log($('.userView[data=userStats]')[0])
+  /*this.find('#content-container')._uihooks = {
     insertElement: function(node, next) {
       $(node)
         .hide()
@@ -43,13 +46,13 @@ Meteor.startup(function() {
         $(this).remove();
       });
     }
-  };
-};*/
+  };*/
+};
 Template.appBody.helpers({
     isAdmin: function(){
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    formComplete: function() {
+    /*formComplete: function() {
         var name = 'profile';
         var obj = Meteor.user()[name];
         var formLen = _.filter(obj,function(d){
@@ -61,7 +64,7 @@ Template.appBody.helpers({
         }).length;
         var schemaLen = Schemas.profile._schemaKeys.length;
         return (formLen === schemaLen);
-    },
+    },*/
     thisArray: function() {
         return [this];
     },
@@ -71,7 +74,7 @@ Template.appBody.helpers({
     cordova: function() {
         return Meteor.isCordova && 'cordova';
     },
-    emailLocalPart: function() {
+   /* emailLocalPart: function() {
         var user = Meteor.user();
         var firstName = user.profile.firstName;
         if (firstName) {
@@ -79,7 +82,7 @@ Template.appBody.helpers({
         }
         var email = user.emails[0].address;
         return email.substring(0, email.indexOf('@'));
-    },
+    },*/
     /*userMenuOpen: function() {
         return Session.get(USER_MENU_KEY);
     },*/
@@ -120,7 +123,11 @@ Template.appBody.events({
         $('.btns-userHome a').removeClass('primary-bg');
         $(event.currentTarget).addClass('primary-bg');
     },
-
+    'click .userView': function(event) {
+        var target = $(event.target).attr('data');
+        Session.set('userView',target);
+        Router.go('user-home', Meteor.user());
+    },
     'click .js-menu': function() {
         Session.set(MENU_KEY, !Session.get(MENU_KEY));
     },
@@ -134,11 +141,6 @@ Template.appBody.events({
     'click .js-logout': function() {
         Meteor.logout();
         Router.go('signin');
-    },
-    'click .userView': function(event) {
-        var target = $(event.target).attr('data');
-        Session.set('userView',target);
-        //Router.go('user-home', Meteor.user());
     },
     'click .js-newRecord': function() {
         var list = {

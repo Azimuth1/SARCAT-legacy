@@ -10,11 +10,11 @@ body {
 #container {
     .position(absolute, 0, 0, 0, 0);
     @media screen and (min-width: 60em) {
-        left: @column;
+        _left: @column;
         right: @column;
     }
     @media screen and (min-width: 80em) {
-        left: 2*@column;
+        _left: 2*@column;
         right: 2*@column;
     }
     // Hide anything offscreen
@@ -33,6 +33,7 @@ background: #D8E6EA;
 
     @media screen and (min-width: 40em) {
         left: @menu-width;
+        _right: 0
     }
     .content-scrollable {
         //.position(absolute, 3em, 0, 0, 0);

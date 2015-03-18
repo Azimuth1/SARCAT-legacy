@@ -20,6 +20,15 @@
                                         {{/each}}
                                     </div>
                                 {{/if}}
+
+
+                                                    <div class="input-symbol  {{errorClass 'full name'}}">
+                        <input type="username" name="username" placeholder="First/Last Name" />
+                        <span class="_icon-email" title="First/Last Name"></span>
+                    </div>
+
+
+
                                 <div class="input-symbol {{errorClass 'email'}}">
                                     <input type="email" name="email" placeholder="Email" /> <span class="icon-email" title="Email"></span> </div>
                                 <div class="input-symbol  {{errorClass 'password'}}">
@@ -37,8 +46,18 @@
                                         {{/each}}
                                     </div>
                                 {{/if}}
+
+
+
+
+
+
+
                                 <div class="input-symbol {{errorClass 'email'}}">
                                     <input type="email" name="email" placeholder="Email" /> <span class="icon-email" title="Email"></span> </div>
+
+
+
                                 <div class="input-symbol {{errorClass 'password'}}">
                                     <input type="password" name="password" placeholder="Password" /> <span class="icon-lock" title="Password"></span> </div>
                                 <button type="submit" class="btn-primary admin1 btn-pad">Sign in</button>
