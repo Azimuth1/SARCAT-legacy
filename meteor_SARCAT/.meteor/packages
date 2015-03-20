@@ -12,8 +12,8 @@ aldeed:autoform
 aldeed:collection2
 twbs:bootstrap
 accounts-base
-fortawesome:fontawesome
 alanning:roles
 underscore
 mrt:leaflet
 http
+fortawesome:fontawesome

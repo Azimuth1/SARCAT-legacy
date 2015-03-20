@@ -2,40 +2,126 @@
     <div class="page lists-show">
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y">
-                <h1>Admin Dashboard</h1>
-
-
-
-                <div class="afContainer">
-                    <div class="panel afPanel">
-                        <div class="panel-heading collapsed" role="tab" id="heading_Profile" data-toggle="collapse" data-parent="#accordion" href="#collapse_Profile" aria-expanded="false" aria-controls="collapse_Profile">
-                            <h3 class="text-uppercase">Agency Profile</h3> </div>
-                        <div id="collapse_Profile" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_Profile">
-                            <div class="panel-body afBody">
-                            {{> quickForm 
-                            collection='Config'
-                            doc=config 
-                            id="af_recordInfo" 
-                            class="hideHeader" 
-                            type="update" 
-                            trimStrings="true" 
-                            validation='keyup' 
-                            fields="agencyProfile"
-                            }} 
+                <h1>Admin Dashboard</h1> {{> quickForm collection='Config' doc=config id='formId' class="recordForm form-inline hideSubmit" type='update' validation='keyup' _removeEmptyStrings=true noselect="true" autosave=true fields="agencyProfile" }}
+                
 
 
 
 
 
-                            </div>
-                        </div>
-                    </div>
+
+
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agency profile</h3> </div>
+    <div class="panel-body">
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">Platinum Edition </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">Gold Edition </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Silver Edition </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Basic Edition </label>
+    </div>
+</div>
+
+<!--
+{{> quickForm
+schema='Schemas.SARCAT'
+id='formId'
+_class="recordForm form-inline hideSubmit"
+type='insert'
+validation='keyup' 
+_removeEmptyStrings=true 
+noselect="true"   
+_autosave=true
+ _type="boolean-radios" 
+ _trueLabel="Yes" 
+ _falseLabel="No"
+_label-style="color: #2CC5D2"
+}}-->
+
+
+
+{{#autoForm
+schema='Schemas.SARCAT'
+id='formId'
+class="recordForm form-inline hideSubmit"
+type='insert'
+validation='keyup' 
+_removeEmptyStrings=true 
+noselect="true"   
+_autosave=true
+boolean=true
+_label-style="color: #2CC5D2"
+}}
+
+
+
+
+
+{{#each test2}}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{this}}</h3> </div>
+    <div class="panel-body">
+{{> afQuickField name=this type="boolean-radios" trueLabel="Yes" falseLabel="No"}}
+<!--{{> afQuickField name=this options="allowed" noselect=true type="disabled"}}-->
+
+
+<hr>
+{{#each test3 this}}
+
+{{> afQuickField name=this type="boolean-radios" trueLabel="Yes" falseLabel="No"}}
+{{/each}}
+
+
+    </div>
+</div>
+{{/each}}
+
+
+
+
+
+
+
+
+{{/autoForm}}
+
+
+                <div class="afTablePane">
+                    <table class="table table-hover table-bordered table-condensed">
+                        <thead class='default-bg'>
+                            <tr>
+                                <td class='afTable'>User</td>
+                                <td class='afTable'>Roles</td>
+                                <td class='afTable'>Email</td>
+                                <td class='afTable'>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody class='white-bg'>
+                            {{#each users}}
+                                <tr>
+                                    <td>{{this.username}}</td>
+                                    <td>
+                                        <!--{{json this.roles}}-->
+                                        {{#autoForm id=this._id type="update" collection='Meteor.users' doc=this autosave=true class="form-inline" }} {{> afFormGroup name="roles" noselect=true options="allowed" label=false}} {{/autoForm}}
+                                    </td>
+                                    <td>{{userEmail}}</td>
+                                    <td>
+                                        <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser">Remove</button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
                 </div>
-
-
-
-
-                <p>Record stats</p> {{#each users}} {{json this}}{{/each}}</div>
+            </div>
         </div>
     </div>
 </template>

@@ -1,0 +1,20 @@
+<template name="records"> RECORDS
+    <div class="recordForm">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Records</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {{#each records}}
+                        <a href="{{pathFor 'form'}}" class="list-group-item"> 
+
+             <span class="badge primary-bg">Status: {{recordInfo.status}}</span> 
+             <span class="badge primary-bg">Created By: {{admin.user}}</span> 
+
+             {{recordInfo.name}} </a>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
