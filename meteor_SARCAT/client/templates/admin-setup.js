@@ -47,7 +47,7 @@ Template.adminSetup.events({
             var firstname = template.$('[name=firstname]').val();
             var lastname = template.$('[name=lastname]').val();
             var email = template.$('[name=email]')
-                .val();
+                .val().toLowerCase();;
             var password = template.$('[name=password]')
                 .val();
             var confirm = template.$('[name=confirm]')
@@ -75,39 +75,12 @@ Template.adminSetup.events({
             }
             var username = [firstname, lastname].join(' ');
             Meteor.call('createAdmin', username, email, password, self._id, function() {
-                //Meteor.logout();
+
                 Meteor.loginWithPassword(email, password, function() {
                     Router.go('user-home', Meteor.user());
                 });
             });
-            /*Accounts.createUser({
-                email: email,
-                password: password
 
-            },function(error, a){
-                console.log(error, a)
-            });
-
-            return*/
-            /*
-                        Accounts.createUser({
-                            email: email,
-                            password: password,
-
-                        }, function(error, a) {
-                            console.log(error, a)
-                            if (error) {
-                                return Session.set(ERRORS_KEY, {
-                                    'none': error.reason
-                                });
-                            }
-                            Meteor.call('changeRole', Meteor.userId(), 'admin');
-                            Meteor.call('updateConfig', self._id, {
-                                initSetup: false
-                            }, function() {
-                                Router.go('user-home', Meteor.user());
-                            });
-                        });*/
         }
     }
 });

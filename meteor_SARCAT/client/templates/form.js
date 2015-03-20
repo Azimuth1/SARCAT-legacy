@@ -1,10 +1,4 @@
-//var EDITING_KEY = 'editingList';
-//Session.setDefault(EDITING_KEY, false);
-
-//Session.set('weather', false);
-// Track if this is the first time the list template is rendered
 var firstRender = true;
-//var listRenderHold = LaunchScreen.hold();
 listFadeInHold = null;
 var weather = false;
 Template.registerHelper("Schemas", Schemas);
@@ -24,9 +18,10 @@ $.ajax({
 */
 Template.form.rendered = function() {
     //console.log(this.data.record);
-    $('.collapse').collapse({
-        toggle: false
-    });
+    $('.collapse')
+        .collapse({
+            toggle: false
+        });
     Session.set('currentRecord', this.data.record);
     /*
         var data = {
@@ -73,9 +68,7 @@ Template.form.helpers({
         return highRole ? 'update' : 'disabled';
     },
     todosReady: function() {
-        //var ready = Router.current().todosHandle.ready();
-        //console.log('todosReady',Router.current().todosHandle.ready());
-        return true; //Router.current().todosHandle.ready();
+        return true;
     },
     getObj: function(obj, name) {
         return obj[name];
@@ -93,40 +86,32 @@ Template.form.helpers({
         return Session.get('currentRecord');
     },
     formComplete: function(name) {
-        //console.log(this);
-        var name=this.field;
-        //var complete = Match.test(record[name], Schemas[name]);
-        var record = this.doc; //Session.get('currentRecord');
+        var name = this.field;
+        var record = this.doc;
         if (!record) {
             return;
         }
         var formLen = _.filter(record, function(d) {
-            var val = d;
-            if (val === '' || !val) {
-                val = false;
-            }
-            return val;
-        }).length;
+                var val = d;
+                if (val === '' || !val) {
+                    val = false;
+                }
+                return val;
+            })
+            .length;
         var schemaLen = Schemas[name]._schemaKeys.length;
         var complete = (formLen === schemaLen);
-        return formLen+'/'+schemaLen;
-        //console.log(formLen,schemaLen)
-        //console.log(name,formLen,schemaLen,complete);
-        //return complete ? '' : 'warning-bg';
+        return formLen + '/' + schemaLen;
     },
     formId: function(name) {
         return 'af_' + this.field;
     },
     autoSaveMode: function() {
-        return true; //Session.get('autoSaveMode') ? true : false;
+        return true;
     },
     isSchema: function(obj, obj2) {
-        //console.log(obj, obj2)
         return obj === obj2;
     },
-    /*editing: function() {
-        return Session.get(EDITING_KEY);
-    },*/
     arrRecord: function(val) {
         if (!this.record) {
             return;
@@ -149,69 +134,47 @@ Template.form.helpers({
             return;
         }
         var record = this.record;
-        return _.chain(record).map(function(d, key) {
-            if (_.isObject(d)) {
-                return _.map(d, function(d2, key2) {
-                    return {
-                        name: key+'.'+key2,
-                        //name: 'Schemas.'+key2,
-                        val: d2
-                    };
-                });
-            }
-            
-        }).flatten().compact().value();
+        return _.chain(record)
+            .map(function(d, key) {
+                if (_.isObject(d)) {
+                    return _.map(d, function(d2, key2) {
+                        return {
+                            name: key + '.' + key2,
+                            //name: 'Schemas.'+key2,
+                            val: d2
+                        };
+                    });
+                }
+            })
+            .flatten()
+            .compact()
+            .value();
     },
-    schemas: function(){
-        console.log(this)
+    schemas: function() {
         var record = this.record;
-        var schemas= ['incidentOperations','recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
-    return schemas.map(function(d){return {field:d,doc:record[d]};});
-    },
-    test:function(){
-        return 'recordInfo';
-    }
-    /*todos: function(listId) {
-        return Todos.find({
-            listId: listId
-        }, {
-            sort: {
-                createdAt: -1
-            }
+        var schemas = ['incidentOperations', 'recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
+        return schemas.map(function(d) {
+            return {
+                field: d,
+                doc: record[d]
+            };
         });
     },
-
-    selectedPersonDoc: function() {
-        return People.findOne(Session.get('selectedPersonId'));
-    },
-    isSelectedPerson: function() {
-        return Session.equals('selectedPersonId', this._id);
-    },
-    formType: function() {
-        if (Session.get('selectedPersonId')) {
-            return 'update';
-        } else {
-            return 'disabled';
-        }
-    },
-    disableButtons: function() {
-        return !Session.get('selectedPersonId');
-    }*/
 });
 var editList = function(list, template) {
-    //console.log(list);
-    //Session.set(EDITING_KEY, true);
-    // force the template to redraw based on the reactive change
     Tracker.flush();
-    template.$('.js-edit-form input[type=text]').focus();
-    var name = template.$('[name=name]').val();
+    template.$('.js-edit-form input[type=text]')
+        .focus();
+    var name = template.$('[name=name]')
+        .val();
     Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
     });
 };
 var saveList = function(list, template) {
     //Session.set(EDITING_KEY, false);
-    var name = template.$('[name=name]').val();
+    var name = template.$('[name=name]')
+        .val();
     Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
     });
@@ -247,19 +210,6 @@ var toggleListPrivacy = function(list) {
     }
 };
 Template.form.events({
-    'blur input[type=text]': function(event, template) {
-        // if (Session.get(EDITING_KEY)) saveList(this, template);
-    },
-    /*'submit .js-edit-form': function(event, template) {
-        //event.preventDefault();
-        saveList(this, template);
-    },*/
-    // handle mousedown otherwise the blur handler above will swallow the click
-    // on iOS, we still require the click event so handle both
-    'mousedown .js-cancel, click .js-cancel': function(event) {
-        // event.preventDefault();
-        // Session.set(EDITING_KEY, false);
-    },
     'change .list-edit': function(event, template) {
         if ($(event.target)
             .val() === 'edit') {
@@ -269,7 +219,6 @@ Template.form.events({
             deleteList(this, template);
         } else {
             Meteor.call('toggleListPrivacy', 'this', 'template');
-            //toggleListPrivacy(this, template);
         }
         event.target.selectedIndex = 0;
     },
@@ -278,33 +227,22 @@ Template.form.events({
         var result = !toggleTest;
         Session.set('toggleTest', result);
         return result ? 'a' : 'b';
-        //console.log(Session.get('toggleTest'));
-        //Meteor.call('toggleListPrivacy', 'this', 'template');
-        //toggleListPrivacy(this, template);
     },
     'click .js-delete-list': function(event, template) {
         var record = Session.get('currentRecord');
         deleteList(record);
     },
     'click .formNav': function(event, template) {
-        $('.collapse').collapse('hide');
-        $('#collapse_' + this.name).collapse('toggle');
+        $('.collapse')
+            .collapse('hide');
+        $('#collapse_' + this.name)
+            .collapse('toggle');
     },
-    'change ._afInput': function(event, template) {
-    },
-
-
+    'change ._afInput': function(event, template) {},
     'change [name="resources.resourcesUsed"]': function(event, template) {
         console.log('!')
     },
-//$('[name="resources.resourcesUsed"]')
-
-
-
-
-
 });
-
 hooks2 = {
     onSubmit: function(doc) {
         console.log(doc);
@@ -318,7 +256,7 @@ hooks2 = {
         console.log(formType, result);
     },
     onError: function(formType, error) {
-        console.log(formType,error);
+        console.log(formType, error);
     },
     beginSubmit: function(a) {
         // console.log()

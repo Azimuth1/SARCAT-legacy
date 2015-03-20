@@ -1,24 +1,18 @@
+var drawn;
 Template.userStats.rendered = function() {
-    console.log(this.data);
-
-    function merge_options(obj1, obj2) {
-        var obj3 = {};
-        for (var attrname in obj1) {
-            obj3[attrname] = obj1[attrname];
-        }
-        for (var attrname in obj2) {
-            obj3[attrname] = obj2[attrname];
-        }
-        return obj3;
+    var data = Records.find()
+        .fetch();
+    console.log(data);
+    if (drawn) {
+        return;
     }
-    var data = Records.find().fetch();
     var keyCount = Schemas.SARCAT._schemaKeys.map(function(d) {
         //return d
         var result = d.split('.');
         return result[result.length - 1]
     });
     keyCount = _.object(_.map(keyCount, function(x) {
-        console.log(x);
+        // console.log(x);
         return [x, []]
     }));
     _.each(data, function(d) {
@@ -37,31 +31,26 @@ Template.userStats.rendered = function() {
             }
         });
     });
-    count = _.chain(keyCount).map(function(d, e) {
-        var count = _.countBy(d);
-        var keys = _.keys(count);
-        if (_.keys(count).length && keys[0]) {
-
-
-            var string =  _.map(count, function(val, key) {
-                return key + ': ' + val;
-            }).join(' || ');
-
-
-
-            return {
-                field: e,
-                count: string
-            };
-
-
-
-
-
-
-        }
-    }).compact().value();
-    data = count;
+    count = _.chain(keyCount)
+        .map(function(d, e) {
+            var count = _.countBy(d);
+            var keys = _.keys(count);
+            if (_.keys(count)
+                .length && keys[0]) {
+                var string = _.map(count, function(val, key) {
+                        return key + ': ' + val;
+                    })
+                    .join(' || ');
+                return {
+                    field: e,
+                    count: string
+                };
+            }
+        })
+        .compact()
+        .value();
+    var data = count;
+    console.log(data)
     var tbl_body = '';
     data.forEach(function(d) {
         var odd_even = false;
@@ -74,7 +63,9 @@ Template.userStats.rendered = function() {
             odd_even = !odd_even;
         });
     })
-    $('#target_table_id').html(tbl_body);
+    $('#target_table_id')
+        .html(tbl_body);
+    drawn = true;
 };
 Template.userStats.helpers({
     records: function() {

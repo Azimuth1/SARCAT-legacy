@@ -1,13 +1,3 @@
-/*AdminConfig = {
-    //adminEmails: ['a@a'],
-    roles: ['admin'],
-    collections: {
-        Records: {}
-    }
-};*/
-Meteor.publish('people', function() {
-    return People.find();
-});
 Meteor.publish('publicLists', function() {
     if (this.userId) {
         return Records.find();
@@ -34,9 +24,7 @@ Meteor.publish('privateLists', function() {
         //this.ready();
     }
 });
-
 Meteor.publish('userData', function() {
-    //return Meteor.users.find();
     if (Roles.userIsInRole(this.userId, ['admin'])) {
         return Meteor.users.find();
     } else if (this.userId) {
@@ -51,6 +39,9 @@ Meteor.publish('userData', function() {
         this.ready();
     }
 });
+Meteor.publish('roles', function() {
+    return Meteor.roles.find()
+})
 Meteor.publish('config', function() {
     return Config.find();
 });
@@ -63,53 +54,3 @@ Meteor.publish('adminDefault', function() {
         }
     });
 });
-/*
-Meteor.publish('adminDefault', function() {
-    return Meteor.users.find({
-        'profile.role': 'default'
-    });
-});
-*/
-/*
-Meteor.publish("counts-by-room", function() {
-    var self = this;
-    var count = 0;
-    var initializing = true;
-    var handle = Meteor.users.find({
-        emails: {
-            $elemMatch: {
-                address: 'admin@sarcat'
-            }
-        }
-    }).observeChanges({
-        added: function(id) {
-            count++;
-            if (!initializing)
-                self.changed("counts", roomId, {
-                    count: count
-                });
-        },
-        removed: function(id) {
-                count--;
-                self.changed("counts", roomId, {
-                    count: count
-                });
-            }
-            // don't care about moved or changed
-    });
-    // Observe only returns after the initial added callbacks have
-    // run.  Now return an initial value and mark the subscription
-    // as ready.
-    initializing = false;
-    self.added("counts", roomId, {
-        count: count
-    });
-    self.ready();
-    // Stop observing the cursor when client unsubs.
-    // Stopping a subscription automatically takes
-    // care of sending the client any removed messages.
-    self.onStop(function() {
-        handle.stop();
-    });
-});
-*/

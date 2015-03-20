@@ -27,14 +27,24 @@ Template.join.helpers({
         });*/
     }
 });
+var isValidPassword = function(password) {
+    if (password.length < 6) {
+        console.log('Your password should be 6 characters or longer.');
+        return false;
+    }
+    return true;
+};
 Template.join.events({
     'submit': function(event, template) {
         event.preventDefault();
         //var username = template.$('[name=username]').val();
-        var firstname = template.$('[name=firstname]').val();
-        var lastname = template.$('[name=lastname]').val();
-        var email = template.$('[name=email]')
+        var firstname = template.$('[name=firstname]')
             .val();
+        var lastname = template.$('[name=lastname]')
+            .val();
+        var email = template.$('[name=email]')
+            .val()
+            .toLowerCase();
         var password = template.$('[name=password]')
             .val();
         var confirm = template.$('[name=confirm]')
@@ -51,6 +61,9 @@ Template.join.events({
         }
         if (!password) {
             errors.password = 'Password required';
+        }
+        if (!isValidPassword(password)) {
+            errors.password = 'Password Must be at elast 6 characters';
         }
         if (confirm !== password) {
             errors.confirm = 'Please confirm your password';
