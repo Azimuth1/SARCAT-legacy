@@ -21,21 +21,7 @@ Records.defaultNum = function() {
     return nextLetter;
 };
 Schemas = {};
-/*
-Schemas.profile = new SimpleSchema({
-    firstName: {
-        type: String,
-        optional: true,
-        regEx: /^[a-zA-Z-]{2,25}$/,
-    },
-    lastName: {
-        type: String,
-        optional: true,
-        regEx: /^[a-zA-Z-]{2,25}$/,
-
-    }
-});
-*/
+Schemas = {};
 Schemas.User = new SimpleSchema({
     emails: {
         type: [Object]
@@ -54,48 +40,19 @@ Schemas.User = new SimpleSchema({
     createdAt: {
         type: Date
     },
-    /*profile: {
-        type: Schemas.profile,
-        defaultValue: {},
-        //blackbox: true,
-    },*/
     roles: {
         type: Array,
         allowedValues: ['viewer', 'editor', 'admin'],
         defaultValue: ['viewer'],
         optional: true,
-        /*autoValue: function(doc) {
-            console.log(doc.$set, this);
-            a = this
-            b = doc
-            var data = doc.$set;
-            for (key in data) {
-                if (data.hasOwnProperty(key)) {
-                    var value = data[key];
-                    console.log(value)
-                    return [value];
-                    //do something with value;
-                }
-            }
-             //return ['admin'];
-            if (this.isInsert) {
-                return ['admin'];
-            } else if (this.isUpdate) {
-                console.log('viewer')
-                return ['viewer'];
-            }
+        /*autoValue: function(a,b){
+            console.log(this,a,b);
         }*/
     },
     'roles.$': {
         type: String,
         optional: true
     },
-    /*roles: {
-        type: [String],
-        allowedValues: ['viewer', 'editor', 'admin'],
-        defaultValue: ['viewer'],
-        optional: true,
-    },*/
     services: {
         type: Object,
         blackbox: true
@@ -109,7 +66,8 @@ Schemas.admin = new SimpleSchema({
         label: 'Prepared By',
         autoValue: function() {
             if (this.isInsert) {
-                return Meteor.user().username;
+                return Meteor.user()
+                    .username;
             }
         }
     },
@@ -119,7 +77,8 @@ Schemas.admin = new SimpleSchema({
         regEx: SimpleSchema.RegEx.Email,
         autoValue: function() {
             if (this.isInsert) {
-                return Meteor.user().emails[0].address;
+                return Meteor.user()
+                    .emails[0].address;
             }
         }
     },
@@ -129,7 +88,9 @@ Schemas.admin = new SimpleSchema({
         optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                return Config.findOne().agencyProfile.phoneNum;
+                //var config = Config.findOne();
+                return Config.findOne()
+                    .agencyProfile.phoneNum;
             }
         }
     }
@@ -158,10 +119,14 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Lead Agency',
         max: 200,
+        optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                return Config.findOne().agencyProfile.agency;
-                //return Meteor.user().profile.Agency;
+                var agencyProfile = Config.findOne()
+                    .agencyProfile;
+                if (agencyProfile.agency) {
+                    return agencyProfile.agency;
+                }
             }
         }
     },
@@ -169,10 +134,14 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Organization/Agency',
         max: 200,
+        optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                return Config.findOne().agencyProfile.agency;
-                //return Meteor.user().profile.Agency;
+                var agencyProfile = Config.findOne()
+                    .agencyProfile;
+                if (agencyProfile.agency) {
+                    return agencyProfile.agency;
+                }
             }
         }
     },
@@ -181,7 +150,8 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Incident #',
         autoValue: function() {
             if (this.isInsert) {
-                return Records.defaultNum('incidentnum').toString();
+                return Records.defaultNum('incidentnum')
+                    .toString();
             }
         }
     },
@@ -189,11 +159,6 @@ Schemas.recordInfo = new SimpleSchema({
         type: Number,
         optional: true,
         label: 'Mission #',
-        /*autoValue: function() {
-            if (this.isInsert) {
-                return '';
-            }
-        }*/
     },
     incidenttype: {
         type: String,
@@ -240,7 +205,8 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                return Config.findOne().agencyProfile.country;
+                return Config.findOne()
+                    .agencyProfile.country;
             }
         }
     },
@@ -250,7 +216,8 @@ Schemas.incident = new SimpleSchema({
         label: 'Response State/Region',
         autoValue: function() {
             if (this.isInsert) {
-                return Config.findOne().agencyProfile['state-region'];
+                return Config.findOne()
+                    .agencyProfile['state-region'];
             }
         }
     },
@@ -917,13 +884,10 @@ Schemas.SARCAT = new SimpleSchema({
     }
 });
 Records.attachSchema(Schemas.SARCAT);
-
-
 Schemas.agencyProfile = new SimpleSchema({
     agency: {
         type: String,
         optional: true,
-        //defaultValue: 'yes'
     },
     phoneNum: {
         type: String,
@@ -945,9 +909,9 @@ Schemas.config = new SimpleSchema({
     },
     agencyProfile: {
         type: Schemas.agencyProfile,
-        //defaultValue: {},
-        blackbox: true,
-        optional: true,
+        defaultValue: {},
+        //blackbox: true,
+        //optional: true,
         //blackbox: true,
         //defaultValue: {}
     },
