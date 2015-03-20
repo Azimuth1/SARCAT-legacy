@@ -43,9 +43,9 @@ Template.adminSetup.events({
                     .val('');
             });
         } else {
-
             event.preventDefault();
-            var username = template.$('[name=username]').val();
+            var firstname = template.$('[name=firstname]').val();
+            var lastname = template.$('[name=lastname]').val();
             var email = template.$('[name=email]')
                 .val();
             var password = template.$('[name=password]')
@@ -53,9 +53,12 @@ Template.adminSetup.events({
             var confirm = template.$('[name=confirm]')
                 .val();
             var errors = {};
-                    if (!username) {
-            errors.username = 'Full Name required';
-        }
+            if (!firstname) {
+                errors.firstname = 'First Name required';
+            }
+            if (!lastname) {
+                errors.lastname = 'Last Name required';
+            }
             if (!email) {
                 errors.email = 'Email required';
             }
@@ -70,15 +73,13 @@ Template.adminSetup.events({
                 .length) {
                 return;
             }
-
+            var username = [firstname, lastname].join(' ');
             Meteor.call('createAdmin', username, email, password, self._id, function() {
                 //Meteor.logout();
-                Meteor.loginWithPassword(email, password,function(){
+                Meteor.loginWithPassword(email, password, function() {
                     Router.go('user-home', Meteor.user());
                 });
-                
             });
-
             /*Accounts.createUser({
                 email: email,
                 password: password
@@ -107,7 +108,6 @@ Template.adminSetup.events({
                                 Router.go('user-home', Meteor.user());
                             });
                         });*/
-
         }
     }
 });

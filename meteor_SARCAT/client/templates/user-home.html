@@ -1,17 +1,19 @@
 <template name="userHome">
 
 
-{{#if userView 'userProfile'}}
-{{> userProfile}}
-{{else}}
+
 {{#if userView 'userStats'}}
 {{> userStats}}
 {{else}}
 {{#if userView 'admin'}}
 {{> admin}}
+{{else}}
+{{#if userView 'records'}}
+{{> records}}
 {{/if}}
 {{/if}}
 {{/if}}
+
     <!--<div class="page lists-show">
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y {{userView 'Dashboard'}}">
@@ -59,12 +61,4 @@
     </div>
 </template>
 -->
-<template name="userStats">
-    <div class="page lists-show">
-        <div class="content-scrollable">
-            <div class="row col-md-10 col-md-offset-1 mar2y">
-                <h1>Team Stats</h1>
-                 {{recordStats}} </div>
-        </div>
-    </div>
-</template>
+

@@ -19,7 +19,6 @@ Template.join.helpers({
             console.log(error, result);
             Session.set('initConfig', result);
             return result;
-
         });
         /*return Config.findOne({
             initSetup: {
@@ -31,8 +30,9 @@ Template.join.helpers({
 Template.join.events({
     'submit': function(event, template) {
         event.preventDefault();
-        var username = template.$('[name=username]').val();
-
+        //var username = template.$('[name=username]').val();
+        var firstname = template.$('[name=firstname]').val();
+        var lastname = template.$('[name=lastname]').val();
         var email = template.$('[name=email]')
             .val();
         var password = template.$('[name=password]')
@@ -40,10 +40,12 @@ Template.join.events({
         var confirm = template.$('[name=confirm]')
             .val();
         var errors = {};
-        if (!username) {
-            errors.username = 'Full Name required';
+        if (!firstname) {
+            errors.firstname = 'First Name required';
         }
-
+        if (!lastname) {
+            errors.lastname = 'Last Name required';
+        }
         if (!email) {
             errors.email = 'Email required';
         }
@@ -61,8 +63,8 @@ Template.join.events({
         Accounts.createUser({
             email: email,
             password: password,
-            username:username
-            //profile:{role:'dd'}
+            username: [firstname, lastname].join(' ')
+                //profile:{role:'dd'}
         }, function(error) {
             if (error) {
                 return Session.set(ERRORS_KEY, {
@@ -70,7 +72,6 @@ Template.join.events({
                 });
             }
             Router.go('user-home', Meteor.user());
-
         });
     }
 });

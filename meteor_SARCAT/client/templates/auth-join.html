@@ -14,11 +14,16 @@
                     </div>
                     {{/if}}
 
-                    <div class="input-symbol  {{errorClass 'full name'}}">
-                        <input type="username" name="username" placeholder="First/Last Name" />
-                        <span class="_icon-email" title="First/Last Name"></span>
+                    <div class="input-symbol  {{errorClass 'firstname'}}">
+                        <input type="username" name="firstname" placeholder="First Name" />
+                        <span class="customfa fa-user" title="First Name"></span>
                     </div>
 
+                    <div class="input-symbol  {{errorClass 'lastname'}}">
+                        <input type="username" name="lastname" placeholder="Last Name" />
+                        <span class="customfa fa-user" title="FLast Name"></span>
+                    </div>
+<div class="mar0"></div>
                     <div class="input-symbol  {{errorClass 'email'}}">
                         <input type="email" name="email" placeholder="Email" />
                         <span class="icon-email" title="Email"></span>
@@ -31,7 +36,13 @@
                         <input type="password" name="confirm" placeholder="Confirm Password" />
                         <span class="icon-lock" title="Confirm Password"></span>
                     </div>
-                    <button type="submit" class="btn-primary btn-pad">Join Now</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                    <span class="icon-user-add" aria-hidden="true"></span>Join Now</button>
+
+
+
+
+
                 </form>
             </div>
             <a href="{{pathFor 'signin'}}" class="link-auth-alt">Have an account? Sign in</a>

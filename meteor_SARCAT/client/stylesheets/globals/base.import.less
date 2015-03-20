@@ -83,7 +83,7 @@ em {
 .text-default{
     color:#018996;
 }
-/*
+
 .panel-primary {
     border-color: #2CC5D2;
 }
@@ -92,13 +92,45 @@ em {
     color: #FFF;
     border-color: #2CC5D2;
 }
-*/
 
-.afPanel.panel {
+.panel-default {
+    border-color: #018996;
+}
+.panel-default > .panel-heading {
+    background-color: #018996;
+    color: #FFF;
+    border-color: #018996;
+}
+
+
+
+
+
+
+
+
+/*
+.afTablePane {
+    display: inline-block;
+    overflow-y: scroll;
+    max-height:200px;
+}*/
+
+.afTablePane table td{
+    border: 1px solid #018996 !important;
+    cursor:pointer;
+    margin:5px;
+        text-align: center;
+    margin: auto;
+}
+
+
+.recordForm .panel {
     border-color: #018996;
     cursor:pointer;
+    margin:5px;
 }
-.afPanel.panel > .panel-heading {
+.recordForm .panel > .panel-heading {
     background-color: #018996;
     color: #FFF;
     border-color: #018996;
@@ -114,9 +146,19 @@ em {
     border-color: #FF7B6F;
     background: #FF7B6F;
 }
+
+
+
+
 .hideHeader .panel .panel-heading {
     display: none;
 }
+
+.hideSubmit button {
+    display: none;
+}
+
+
 .primary-bg {
     background-color: #2CC5D2;
     color: #FFF;
@@ -127,9 +169,18 @@ em {
     color: #FFF;
     background-color: #018996;
 }
+
+
+input[type="text"] {color:#018996}
+input[type="text"]:focus {color:black}
+
+
 /* Margin
 ------------------------------------------------------- */
 
+.mar00{
+    margin:0;
+}
 .mar0 {
     margin: 5px;
 }

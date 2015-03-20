@@ -6,7 +6,6 @@
 //console.log(process.env.METEOR_;SETTINGS.initSetup);
 //var config
 Meteor.startup(function() {
-
     /*
     AdminConfig = {
         //adminEmails: ['a@a'],
@@ -15,7 +14,6 @@ Meteor.startup(function() {
             Records: {}
         }
     };*/
-
     //Config.insert(Meteor.settings.production.public)
     if (!Config.find().count()) {
         //Config.insert(Meteor.settings.production.public);
@@ -31,21 +29,16 @@ Meteor.startup(function() {
             password: 'a', //dmin',
             username: 'default'
         });
-
         Roles.addUsersToRoles(admin, ['admin']);
-
         /*Accounts.onCreateUser(function(options, user) {
             console.log(user._id)
             Roles.addUsersToRoles(user._id, ['viewer']);
         });*/
-
     }
-
 });
 Meteor.methods({
-
     removeUser: function(userId) {
-        if (Roles.userIsInRole(userId, ['admin'])) {
+        if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
             Meteor.users.remove(userId);
         }
     },
@@ -53,24 +46,18 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-
         var newAdmin = Accounts.createUser({
             email: email,
             password: password,
             username: username
-
         });
-
         Roles.addUsersToRoles(newAdmin, ['admin']);
-
         Config.update(id, {
             $set: {
                 initSetup: false
             }
         });
-
         Meteor.users.remove(Meteor.userId());
-
     },
     addRole: function(id, role) {
         Roles.addUsersToRoles(id, [role]);
@@ -145,25 +132,40 @@ Meteor.methods({
             }
         }).count();
         return defaultAdmin ? true : false;
+    },
+    deleteUser: function(targetUserId, group) {
+        var loggedInUser = Meteor.user();
+        if (!loggedInUser ||
+            !Roles.userIsInRole(loggedInUser, ['manage-users', 'support-staff'], group)) {
+            throw new Meteor.Error(403, 'Access denied');
+        }
+        // remove permissions for target group
+        Roles.setUserRoles(targetUserId, [], group);
+        // do other actions required when a user is removed...
     }
 });
-
 Records.allow({
     update: function() {
         return true;
     }
 });
 
+
+
 Config.allow({
     'update': function() {
         return true;
     }
 });
-/*
 Meteor.users.allow({
     'remove': function(userId, doc) {
         if (Roles.userIsInRole(userId, ['admin'])) {
             return true;
         }
+    },
+    'update': function(userId, doc) {
+        if (Roles.userIsInRole(userId, ['admin'])) {
+            return true;
+        }
     }
-});*/
+});
