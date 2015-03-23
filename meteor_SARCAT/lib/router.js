@@ -4,15 +4,6 @@ Handlebars.registerHelper('json', function(context) {
 Handlebars.registerHelper('isEqual', function(a, b) {
     return a === b;
 });
-var IR_Filters = {
-    initSetup: function() {
-        if (Config.findOne({
-                initSetup: true
-            })) {
-            Router.go('adminSetup');
-        }
-    },
-};
 Router.configure({
     layoutTemplate: 'appBody',
     notFoundTemplate: 'appNotFound',
@@ -23,7 +14,7 @@ Router.configure({
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
             Meteor.subscribe('roles'),
-        ]
+        ];
     },
     onBeforeAction: function() {
         Session.set('config', Config.findOne());
@@ -32,7 +23,7 @@ Router.configure({
             })) {
             Router.go('adminSetup');
         }
-        this.next()
+        this.next();
     },
     action: function() {
         if (this.ready()) {
@@ -43,6 +34,17 @@ Router.configure({
     }
 });
 if (Meteor.isClient) {
+    Tracker.autorun(function() {
+        var count = Session.get('userView');
+        console.log('autorun1:' + count);
+    });
+    Tracker.autorun(function() {
+        var count = Session.get('adminUser');
+        console.log('autorun2:' + count);
+    });
+
+
+    Roles.userIsInRole(Meteor.userId(), ['admin']);
     L.Icon.Default.imagePath = '/img';
 }
 Router.route('home', {
