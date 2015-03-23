@@ -99,7 +99,7 @@ Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        autoValue: function() {
+        defaultValue: function() {
             if (this.isInsert) {
                 return Records.defaultName();
             }
@@ -120,7 +120,10 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Lead Agency',
         max: 200,
         optional: true,
-        autoValue: function() {
+        defaultValue:function(){
+            return 'ff'
+        },
+        /*autoValue: function() {
             if (this.isInsert) {
                 var agencyProfile = Config.findOne()
                     .agencyProfile;
@@ -128,7 +131,7 @@ Schemas.recordInfo = new SimpleSchema({
                     return agencyProfile.agency;
                 }
             }
-        }
+        }*/
     },
     organizationagency: {
         type: String,

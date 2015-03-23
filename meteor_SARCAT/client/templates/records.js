@@ -87,6 +87,12 @@ Template.records.helpers({
 
 
 Template.records.events({
+
+
+    'click #createRecordModal button': function() {
+        $('#createRecordModal').modal('hide')
+    },
+
     'click .xjs-newRecord': function() {
         var list = {
             userId: Meteor.userId()
