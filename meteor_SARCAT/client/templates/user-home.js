@@ -7,7 +7,15 @@ var agencyProfileIncomplete = function() {
     var apKeys = Object.keys(agencyProfile);
     return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
 }
-Template.userHome.rendered = function() {};
+Template.userHome.rendered = function() {
+/*
+    console.log('userhome');
+    var admin = Roles.userIsInRole(Meteor.userId(), ['admin']);
+    Session.set('adminUser', admin);
+    var userView = admin ? 'admin' : 'records';
+    Session.set('userView', userView);
+*/
+};
 Template.userHome.helpers({
     userView: function(name) {
         //console.log(name);

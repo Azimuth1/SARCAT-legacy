@@ -187,11 +187,11 @@ Schemas.incident = new SimpleSchema({
                 type: 'time'
             }
         },
-        autoValue: function() {
-            if (this.isInsert) {
-                return '15:22';
-            }
-        }
+        /* autoValue: function() {
+             if (this.isInsert) {
+                 return '15:22';
+             }
+         }*/
     },
     incidentEnvironment: {
         type: String,
@@ -244,7 +244,6 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
-        defaultValue: 'Unknown'
     },
     ecoregiondomain: {
         type: String,
@@ -343,7 +342,6 @@ Schemas.allSubjects = new SimpleSchema({
 Schemas.subjectInfo = new SimpleSchema({
     'age': {
         type: Number,
-        defaultValue: 9,
         label: 'Age',
         optional: true
     },
@@ -361,13 +359,11 @@ Schemas.subjectInfo = new SimpleSchema({
     },
     'weight': {
         type: String,
-        defaultValue: '',
         label: 'Weight',
         optional: true
     },
     'height': {
         type: String,
-        defaultValue: '',
         label: 'Height',
         optional: true
     },
@@ -405,7 +401,6 @@ Schemas.subjectInfo = new SimpleSchema({
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
-        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -416,7 +411,6 @@ Schemas.timeLog = new SimpleSchema({
     },
     'sar notified date-time': {
         type: String,
-        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -427,7 +421,6 @@ Schemas.timeLog = new SimpleSchema({
     },
     'subject located date-time': {
         type: String,
-        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -438,7 +431,6 @@ Schemas.timeLog = new SimpleSchema({
     },
     'incident closed date-time': {
         type: String,
-        defaultValue: '',
         autoform: {
             afFieldInput: {
                 type: 'datetime-local'
@@ -449,13 +441,11 @@ Schemas.timeLog = new SimpleSchema({
     },
     'total hours': {
         type: Number,
-        defaultValue: 0,
         'label': 'Total Missing Hours',
         optional: true
     },
     'search hours': {
         type: Number,
-        defaultValue: 0,
         'label': 'Total Search Hours',
         optional: true
     }
@@ -508,7 +498,6 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'initialDirectionofTravel': {
         type: String,
-        defaultValue: '',
         label: 'Initial Direction of Travel',
         optional: true
     },
@@ -520,13 +509,11 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'revisedLKP-PLS_N-S': {
         type: String,
-        defaultValue: '',
         label: 'Revised LKP/PLS (N/S)',
         optional: true
     },
     'revisedLKP-PLS_E-W': {
         type: String,
-        defaultValue: '',
         label: 'Revised LKP/PLS (E/W)',
         optional: true
     },
@@ -538,7 +525,6 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'revisedDOT': {
         type: String,
-        defaultValue: '',
         label: 'Revised DOT',
         optional: true
     },
@@ -550,7 +536,6 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'decisionPointFactor': {
         type: String,
-        defaultValue: '',
         label: 'Decision Point Factor',
         optional: true
     }
@@ -576,49 +561,41 @@ Schemas.incidentOutcome = new SimpleSchema({
     },
     '#Well': {
         type: Number,
-        defaultValue: 0,
         label: '# Well',
         optional: true
     },
     '#Injured': {
         type: Number,
-        defaultValue: 0,
         label: '# Injured',
         optional: true
     },
     '#DOA': {
         type: Number,
-        defaultValue: 0,
         label: '# DOA',
         optional: true
     },
     '#Saved': {
         type: String,
-        defaultValue: '',
         label: '# Saved',
         optional: true
     },
     'findCoord_N-S': {
         type: String,
-        defaultValue: '',
         label: 'Find Coord (N/S)',
         optional: true
     },
     'findCoord_E-W': {
         type: String,
-        defaultValue: '',
         label: 'Find Coord (E/W)',
         optional: true
     },
     'distanceIPP': {
         type: String,
-        defaultValue: '',
         label: 'Distance IPP',
         optional: true
     },
     'findBearing': {
         type: String,
-        defaultValue: '',
         label: 'Find Bearing',
         optional: true
     },
@@ -630,7 +607,6 @@ Schemas.incidentOutcome = new SimpleSchema({
     },
     'foundSecondary': {
         type: String,
-        defaultValue: '',
         label: 'Found Secondary',
         optional: true
     },
@@ -653,21 +629,18 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     },
     'mobility_hours': {
-        type: String,
-        defaultValue: '',
+        type: Number,
         label: 'Mobility (hours)',
         optional: true
     },
     'trackOffset': {
         type: String,
-        defaultValue: '',
         label: 'Track Offset',
         optional: true
     },
     'elevationChange': {
         type: String,
-        defaultValue: '',
-        label: 'Elevation Change',
+        label: 'Elevation Change (ft.)',
         optional: true
     }
 });
@@ -710,13 +683,11 @@ Schemas.medical = new SimpleSchema({
     },
     'injuredSearcher': {
         type: String,
-        defaultValue: '',
         label: 'Injured Searcher',
         optional: true
     },
     'injuredSearcherDetails': {
         type: String,
-        defaultValue: '',
         label: 'Injured Searcher Details',
         optional: true
     },

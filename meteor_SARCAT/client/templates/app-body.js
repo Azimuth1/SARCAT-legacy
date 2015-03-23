@@ -11,6 +11,7 @@ var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
+Session.setDefault('userView', 'records');
 var agencyProfileIncomplete = function() {
     var config = Session.get('config');
     if (!config) {
@@ -19,7 +20,7 @@ var agencyProfileIncomplete = function() {
     var agencyProfile = config.agencyProfile;
     var apKeys = Object.keys(agencyProfile);
     return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
-}
+};
 Meteor.startup(function() {
     $(document.body)
         .touchwipe({
@@ -34,19 +35,27 @@ Meteor.startup(function() {
 });
 Template.appBody.created = function() {};
 Template.appBody.rendered = function() {
-    Session.set('userView', 'records');
+
+   
 };
 Template.appBody.helpers({
     isUserView: function(view) {
-        console.log()
+        view = view || this._id;
         var active = Session.get('userView') === view;
         return active ? 'primary-bg' : '';
     },
     isAdmin: function() {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    AgencyProfile: function() {
-        return !agencyProfileIncomplete();
+    noProfile: function(){
+        var profile =  agencyProfileIncomplete();
+        return profile;
+    },
+    createNewBtn: function() {
+        var profile =  !agencyProfileIncomplete();
+        var role = Roles.userIsInRole(Meteor.userId(), ['admin','editor']);
+        return profile && role;
+
     },
     thisArray: function() {
         return [this];
@@ -112,7 +121,7 @@ Template.appBody.events({
         Meteor.logout();
         Router.go('signin');
     },
-    'click .js-newRecord': function() {
+/*    'click .js-newRecord': function() {
         var list = {
             userId: Meteor.userId()
         };
@@ -123,5 +132,5 @@ Template.appBody.events({
             list._id = d;
             Router.go('form', list);
         });
-    }
+    }*/
 });

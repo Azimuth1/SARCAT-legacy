@@ -36,8 +36,6 @@ Meteor.methods({
             password: password,
             username: username
         });
-        //Roles.removeUsersfromRoles(newAdmin, 'viewer');
-        //Roles.addUsersToRoles(newAdmin, ['admin']);
         Meteor.users.update(newAdmin, {
             $set: {
                 roles: ['admin']
@@ -153,6 +151,9 @@ Meteor.methods({
 });
 Records.allow({
     update: function() {
+        return true;
+    },
+    insert: function() {
         return true;
     }
 });

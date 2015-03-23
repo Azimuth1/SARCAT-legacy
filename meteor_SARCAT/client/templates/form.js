@@ -17,7 +17,8 @@ $.ajax({
 }
 */
 Template.form.rendered = function() {
-    //console.log(this.data.record);
+    console.log(this.data.record)
+    Session.set('userView', this.data.record._id);
     $('.collapse')
         .collapse({
             toggle: false

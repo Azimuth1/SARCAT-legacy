@@ -1,116 +1,36 @@
-<!--<template name="appBody">
-    <div id="container" class="{{menuOpen}} {{cordova}}">
-        {{> sideMenu}} 
-
-
-
-
-        {{#unless connected}}
-        <div class="notifications">
-            <div class="notification"> <span class="icon-sync"></span>
-                <div class="meta">
-                    <div class="title-notification">Trying to connect</div>
-                    <div class="description">There seems to be a connection issue</div>
-                </div>
-            </div>
-        </div>
-        {{/unless}}
-
-
-
-        <div id="content-container">
-            {{#each thisArray}} {{> yield}} {{/each}}
-        </div>
-
-
-    </div>
-</template>
-
-
-
-<template name="sideMenu">
-    <section id="menu">
-        {{#if currentUser}}
-        <div class="btns-group-vertical">
-            <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a>
-        </div>
-        <div class="btns-group-vertical btns-userHome">
-            <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'userStats'}}" data='userStats'>Team Stats</a> {{#if isAdmin}}
-            <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a>{{/if}}
-            <a class="btn-pad js-sharedRecords userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a>
-            <a class="btn-pad js-logout btn-secondary">Logout</a>
-        </div>
-        {{#if agencyProfile}}
-        <div class="btns-group-vertical">
-            <a class="btn-pad js-newRecord btn-secondary">+ New Record</a>
-        </div>
-        {{else}}
-        <div class="btns-group-vertical">
-            <a class="btn-pad btn-warning btn-secondary">Complete agency profile to begin adding records</a>
-        </div>
-        {{/if}} {{else}}
-        <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
-        {{/if}}
-        <div class="list-todos">
-            {{#each lists}}
-            <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}}" title="{{recordInfo.name}}">
-                <span class="count-list">{{recordInfo.status}}</span> {{recordInfo.name}}
-            </a> {{/each}}
-        </div>
-    </section>
-</template>
-
-
-
--->
 <template name="appBody">
     <div id="container" class="{{menuOpen}} {{cordova}}">
         <section id="menu">
             {{#if currentUser}}
-            <div class="btns-group-vertical">
-                <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a>
-            </div>
-            <div class="btns-group-vertical btns-userHome">
-                <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'userStats'}}" data='userStats'>Team Stats</a> {{#if isAdmin}}
-                <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a>{{/if}}
-                <a class="btn-pad js-sharedRecords userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a>
-                <a class="btn-pad js-logout btn-secondary">Logout</a>
-            </div>
-
-
-
-            {{#if AgencyProfile}}
+                <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> </div>
+                <div class="btns-group-vertical btns-userHome">
+                    <!--<a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'userStats'}}" data='userStats'>Team Stats</a> -->
+                    {{#if isAdmin}} <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> {{/if}} <a class="btn-pad js-sharedRecords userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> <a class="btn-pad js-logout btn-secondary">Logout</a> </div>
+                <!--{{#if createNewBtn}}
             <div class="btns-group-vertical">
                 <a class="btn-pad js-newRecord btn-secondary">+ New Record</a>
             </div>
-            {{else}}
-            <div class="btns-group-vertical">
-                <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a>
-            </div>
-            {{/if}} 
-
-
-
-
-            {{else}}
-            <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
+            {{/if}}-->
+                {{#if noProfile}}
+                    <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a> </div>
+                {{/if}} {{else}}
+                <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
             {{/if}}
             <div class="list-todos">
                 {{#each lists}}
-                <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}}" title="{{recordInfo.name}}">
-                    <span class="count-list">{{recordInfo.status}}</span> {{recordInfo.name}}
-                </a> {{/each}}
+                    <a href="{{pathFor 'form'}}" class="list-todo {{activeListClass}} {{isUserView}}" title="{{recordInfo.name}}"> <span class="count-list">{{recordInfo.status}}</span> {{recordInfo.name}} </a>
+                {{/each}}
             </div>
         </section>
         {{#unless connected}}
-        <div class="notifications">
-            <div class="notification"> <span class="icon-sync"></span>
-                <div class="meta">
-                    <div class="title-notification">Trying to connect</div>
-                    <div class="description">There seems to be a connection issue</div>
+            <div class="notifications">
+                <div class="notification"> <span class="icon-sync"></span>
+                    <div class="meta">
+                        <div class="title-notification">Trying to connect</div>
+                        <div class="description">There seems to be a connection issue</div>
+                    </div>
                 </div>
             </div>
-        </div>
         {{/unless}}
         <div class="content-overlay"></div>
         <div id="content-container">
