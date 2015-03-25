@@ -1,10 +1,6 @@
 var drawn
-
 Template.records.rendered = function() {
     console.log(this.data);
-
-
-
     var data = Records.find()
         .fetch();
     console.log(data);
@@ -71,28 +67,19 @@ Template.records.rendered = function() {
     $('#target_table_id')
         .html(tbl_body);
     drawn = true;
-
-
-
-
 };
-
-
-
 Template.records.helpers({
     lists: function() {
         return Records.find();
-    }
-});
-
-
-Template.records.events({
-
-
-    'click #createRecordModal button': function() {
-        $('#createRecordModal').modal('hide')
     },
-
+    isNotViewer: function() {
+        return Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
+    },
+});
+Template.records.events({
+    'click #createRecordModal button': function() {
+       // $('#createRecordModal').modal('hide')
+    },
     'click .xjs-newRecord': function() {
         var list = {
             userId: Meteor.userId()
@@ -101,9 +88,9 @@ Template.records.events({
             if (error) {
                 console.log(error);
             }
-            Session.set('newRecord','')
-            //list._id = d;
-            //Router.go('form', list);
+            Session.set('newRecord', '')
+                //list._id = d;
+                //Router.go('form', list);
         });
     }
 });
