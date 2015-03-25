@@ -99,9 +99,17 @@ Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        defaultValue: function() {
+        defaultValue: function(d, e) {
+            return Records.defaultName();
+        },
+        autoValue: function(d, e) {
             if (this.isInsert) {
-                return Records.defaultName();
+                var value = this.value;
+                if (value) {
+                    return value;
+                } else {
+                    return Records.defaultName();
+                }
             }
         }
     },
@@ -111,7 +119,12 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Incident Status',
         autoValue: function() {
             if (this.isInsert) {
-                return 'Open';
+                var value = this.value;
+                if (value) {
+                    return value;
+                } else {
+                    return 'Open';
+                }
             }
         },
     },
@@ -120,18 +133,17 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Lead Agency',
         max: 200,
         optional: true,
-        defaultValue:function(){
-            return 'ff'
-        },
-        /*autoValue: function() {
+        autoValue: function() {
             if (this.isInsert) {
-                var agencyProfile = Config.findOne()
-                    .agencyProfile;
-                if (agencyProfile.agency) {
-                    return agencyProfile.agency;
+                var value = this.value;
+                if (value) {
+                    return value;
+                } else {
+                    return Config.findOne()
+                        .agencyProfile.agency;
                 }
             }
-        }*/
+        },
     },
     organizationagency: {
         type: String,
@@ -140,10 +152,12 @@ Schemas.recordInfo = new SimpleSchema({
         optional: true,
         autoValue: function() {
             if (this.isInsert) {
-                var agencyProfile = Config.findOne()
-                    .agencyProfile;
-                if (agencyProfile.agency) {
-                    return agencyProfile.agency;
+                var value = this.value;
+                if (value) {
+                    return value;
+                } else {
+                    return Config.findOne()
+                        .agencyProfile.agency;
                 }
             }
         }
@@ -153,8 +167,12 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Incident #',
         autoValue: function() {
             if (this.isInsert) {
-                return Records.defaultNum('incidentnum')
-                    .toString();
+                var value = this.value;
+                if (value) {
+                    return value;
+                } else {
+                    return Records.defaultNum('incidentnum');
+                }
             }
         }
     },

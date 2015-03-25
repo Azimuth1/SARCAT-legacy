@@ -1,6 +1,7 @@
 Meteor.publish('publicLists', function() {
     if (this.userId) {
-        return Records.find();
+        return Records.find({});
+        //return Records.find({},{fields: {recordInfo: 1}});
     } else {
         this.ready();
     }

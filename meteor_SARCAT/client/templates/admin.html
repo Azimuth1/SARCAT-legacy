@@ -1,4 +1,5 @@
 <template name="admin">
+{{#if isInRole 'admin'}}
     <div class="page lists-show">
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y">
@@ -110,4 +111,5 @@ _label-style="color: #2CC5D2"
             </div>
         </div>
     </div>
+    {{/if}}
 </template>

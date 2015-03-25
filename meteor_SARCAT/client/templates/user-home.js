@@ -7,14 +7,19 @@ var agencyProfileIncomplete = function() {
     var apKeys = Object.keys(agencyProfile);
     return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
 }
-Template.userHome.rendered = function() {
-/*
-    console.log('userhome');
+Template.userHome.created = function() {
+    //console.log(Records.find().fetch())
+    //console.log(this.data.records.fetch())
     var admin = Roles.userIsInRole(Meteor.userId(), ['admin']);
-    Session.set('adminUser', admin);
-    var userView = admin ? 'admin' : 'records';
-    Session.set('userView', userView);
-*/
+    if (!admin) {
+        Session.set('userView', 'records');
+    }
+    if (admin) {
+        Session.set('userView', 'admin');
+    }
+};
+Template.userHome.rendered = function() {
+    console.log('rendered');
 };
 Template.userHome.helpers({
     userView: function(name) {
@@ -23,6 +28,10 @@ Template.userHome.helpers({
     },
     isAdmin: function() {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
+    },
+    noProfile: function() {
+        var profile = agencyProfileIncomplete();
+        return profile;
     },
     recordStats: function() {
         var records = Records.find()
