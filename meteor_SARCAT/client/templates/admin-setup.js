@@ -43,6 +43,7 @@ Template.adminSetup.events({
                     .val('');
             });
         } else {
+            var _id = Meteor.userId();
             event.preventDefault();
             var firstname = template.$('[name=firstname]').val();
             var lastname = template.$('[name=lastname]').val();
@@ -74,10 +75,10 @@ Template.adminSetup.events({
                 return;
             }
             var username = [firstname, lastname].join(' ');
-            console.log(self)
             Meteor.call('createAdmin', username, email, password, function() {
 
                 Meteor.loginWithPassword(email, password, function() {
+                    Meteor.call('removeUser', _id);
                     Router.go('user-home', Meteor.user());
                 });
             });

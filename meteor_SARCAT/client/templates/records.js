@@ -1,5 +1,7 @@
-var drawn
+var drawn;
+var map;
 Template.records.rendered = function() {
+
     console.log(this.data);
     var data = Records.find()
         .fetch();
@@ -75,12 +77,22 @@ Template.records.helpers({
     isNotViewer: function() {
         return Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
     },
+    newRecord: function() {
+        return Records.findOne(Session.get('newRecord'));
+    },
+
 });
 Template.records.events({
     'click #createRecordModal button': function() {
-       // $('#createRecordModal').modal('hide')
+        // $('#createRecordModal').modal('hide')
     },
-    'click .xjs-newRecord': function() {
+    'click .js-deleteRecord': function() {
+        var record = Records.findOne(Session.get('newRecord'));
+        Meteor.call('removeRecord', record, function(error, d) {
+            console.log(error, d)
+        })
+    },
+    'click .js-newRecord': function() {
         var list = {
             userId: Meteor.userId()
         };
@@ -88,9 +100,15 @@ Template.records.events({
             if (error) {
                 console.log(error);
             }
-            Session.set('newRecord', '')
-                //list._id = d;
-                //Router.go('form', list);
+            Session.set('newRecord', d)
         });
+        if (!map) {
+            setTimeout(function() {
+                var config = Session.get('config');
+                var coords = config.agencyProfile.coordinates;
+                map = setMap('recordMap', config.agencyProfile.coordinates, 'Drag me to the IPP');
+            }, 500);
+        }
+
     }
 });

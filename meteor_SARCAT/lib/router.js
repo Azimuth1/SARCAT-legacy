@@ -85,6 +85,7 @@ Router.route('form', {
     data: function() {
         var obj = {};
         obj.record = Records.findOne(this.params._id);
+        console.log(obj.record);
         return obj;
     },
     action: function() {

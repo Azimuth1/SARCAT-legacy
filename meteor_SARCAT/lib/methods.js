@@ -28,7 +28,7 @@ Meteor.methods({
                     initSetup: false
                 }
             });
-        Meteor.users.remove(Meteor.userId());
+       // Meteor.users.remove(Meteor.userId());
     },
     addRole: function (id, role) {
         Roles.addUsersToRoles(id, [role]);

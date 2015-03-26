@@ -1,4 +1,4 @@
-function getLocation(cb) {
+function _getLocation(cb) {
         var result;
 
         function requestLocation() {

@@ -4,39 +4,67 @@ getLocation = function(cb) {
     function requestLocation() {
         var options = {
             enableHighAccuracy: false,
-            timeout: 5000,
+            timeout: 7000,
             maximumAge: 0
         };
 
         function success(pos) {
-            console.log('success');
+
             var lng = pos.coords.longitude;
             var lat = pos.coords.latitude;
             if (!result) {
-                result = [lat, lng];
+                result = {lat:y,lng:x};
                 cb(result);
             }
         }
 
         function error(err) {
-            console.log('err');
+
             if (!result) {
-                cb([0, 0]);
+                cb(null, err);
             }
         }
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
     if ('geolocation' in navigator) {
+
         requestLocation();
     } else {
         cb();
     }
-    setTimeout(function () {
-        if (!result) {
-            result = [0, 0];
-            console.log('timeout')
-            cb(result);
-        }
-    }, 5000);
+
 }
 
+setMap = function(context, coords) {
+    console.log(coords)
+    coords = [coords.y,coords.x];
+    var map = L.map(context)
+        .setView(coords, 13);
+    m = map;
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            id: 'examples.map-i875mjb7'
+        })
+        .addTo(map);
+    var ippMarker = L.marker([m.getCenter()
+        .lat, m.getCenter()
+        .lng
+    ], {
+        draggable: true
+    });
+    ippMarker.addTo(map);
+    ippMarker.on('drag', function(event) {
+        var marker = event.target;
+        var position = marker.getLatLng();
+        $('[name="agencyProfile.coordinates.x"]')
+            .val(position.lng);
+        $('[name="agencyProfile.coordinates.y"]')
+            .val(position.lat);
+
+    });
+    ippMarker.bindPopup('<b>Drag me to set your default Home Base</b>', {
+            noHide: true
+        })
+        .openPopup();
+    return map;
+}

@@ -11,15 +11,15 @@ Template.userHome.created = function() {
     //console.log(Records.find().fetch())
     //console.log(this.data.records.fetch())
     var admin = Roles.userIsInRole(Meteor.userId(), ['admin']);
-    if (!admin) {
+    //if (!admin) {
         Session.set('userView', 'records');
-    }
+  /*  }
     if (admin) {
         Session.set('userView', 'admin');
-    }
+    }*/
 };
 Template.userHome.rendered = function() {
-    console.log('rendered');
+    //console.log('rendered');
 };
 Template.userHome.helpers({
     userView: function(name) {

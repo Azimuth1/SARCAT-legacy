@@ -118,7 +118,7 @@ Template.form.helpers({
             return;
         }
         result = [];
-        var use = ['recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
+        var use = ['recordInfo'];//, 'incident', 'subjectInfo', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
         var record = this.record;
         _.each(use, function(d) {
             if (record[d]) {
@@ -153,7 +153,7 @@ Template.form.helpers({
     },
     schemas: function() {
         var record = this.record;
-        var schemas = ['incidentOperations', 'recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
+        var schemas = ['recordInfo'];//['incidentOperations', 'recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
         return schemas.map(function(d) {
             return {
                 field: d,

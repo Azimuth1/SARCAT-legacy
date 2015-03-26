@@ -1,14 +1,22 @@
 <template name="admin">
-{{#if isInRole 'admin'}}
+    {{#if isInRole 'admin'}}
     <div class="page lists-show">
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y">
-                <h1>Admin Dashboard</h1> {{> quickForm collection='Config' doc=configs id='formId' class="recordForm form-inline hideSubmit" type='update' validation='keyup' _removeEmptyStrings=true noselect="true" autosave=true fields="agencyProfile" omitFields="agencyProfile.Coordinates"}}
+                <h1>Admin Dashboard</h1> {{> quickForm collection='Config' doc=configs id='formId' _class="recordForm form-inline _hideSubmit" type='update' _validation='keyup' _removeEmptyStrings=true _noselect="true" _autosave=true fields="agencyProfile" omitFields="agencyProfile.coordinates" buttonContent= "Save"}}
+                
 
 
-
-              <!--  {{> formMap}}-->
-
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab">
+                        <h3 class="panel-title">Set SAR Home Base</h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        <div id='adminMap' style="width:100%;height:400px"></div>
+                        {{> quickForm collection='Config' doc=configs id='formId' class="rescordForm sform-inline hideHeader _hideSubmit" type='update' _validation='keyup' fields="agencyProfile.coordinates" buttonContent= "Save"}}
+                    </div>
+                </div>
+             
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Data Form Type</h3> </div>
@@ -23,7 +31,7 @@
                             <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Basic Edition </label>
                     </div>
                 </div>
-                <!--
+     <!--         
 {{> quickForm
 schema='Schemas.SARCAT'
 id='formId'
@@ -37,12 +45,20 @@ _autosave=true
  _trueLabel="Yes" 
  _falseLabel="No"
 _label-style="color: #2CC5D2"
-}}-->
-                <!--
+}}
+  -->   
+
+
+
+
+
+
+
+  <!--        
 {{#autoForm
 schema='Schemas.SARCAT'
 id='formId'
-class="recordForm form-inline hideSubmit"
+class="_recordForm form-inline_ hideSubmit"
 type='insert'
 validation='keyup' 
 _removeEmptyStrings=true 
@@ -50,6 +66,9 @@ noselect="true"
 _autosave=true
 boolean=true
 _label-style="color: #2CC5D2"
+_template="bootstrap3-horizontal" 
+_label-class="col-sm-3" 
+_input-col-class="col-sm-9"
 }}
 
 
