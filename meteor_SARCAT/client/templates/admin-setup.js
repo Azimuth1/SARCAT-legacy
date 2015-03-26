@@ -74,7 +74,8 @@ Template.adminSetup.events({
                 return;
             }
             var username = [firstname, lastname].join(' ');
-            Meteor.call('createAdmin', username, email, password, self._id, function() {
+            console.log(self)
+            Meteor.call('createAdmin', username, email, password, function() {
 
                 Meteor.loginWithPassword(email, password, function() {
                     Router.go('user-home', Meteor.user());

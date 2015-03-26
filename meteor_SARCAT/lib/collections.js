@@ -879,10 +879,12 @@ Records.attachSchema(Schemas.SARCAT);
 Schemas.agencyProfile = new SimpleSchema({
     agency: {
         type: String,
+        label:'Agency/Organization',
         optional: true,
     },
     phoneNum: {
         type: String,
+        label:'Phone Number',
         optional: true,
     },
     country: {
@@ -892,6 +894,21 @@ Schemas.agencyProfile = new SimpleSchema({
     'state-region': {
         type: String,
         optional: true,
+    },
+    Coordinates: {
+        type: Object,
+        label: 'IPP Coordinates',
+        optional: true
+    },
+    'Coordinates.y': {
+        type: String,
+        label: '(N/S)',
+        optional: true
+    },
+    'Coordinates.x': {
+        type: String,
+        label: '(E/W)',
+        optional: true
     },
 });
 Schemas.config = new SimpleSchema({
