@@ -18,7 +18,7 @@ var agencyProfileIncomplete = function() {
     }
     var agencyProfile = config.agencyProfile;
     var apKeys = Object.keys(agencyProfile);
-    return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
+    return apKeys.length < Schemas.agencyProfile._firstLevelSchemaKeys.length;
 };
 Meteor.startup(function() {
     $(document.body)

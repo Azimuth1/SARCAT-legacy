@@ -18,7 +18,7 @@ Records.defaultNum = function() {
         })) {
         nextLetter = nextLetter + 1;
     }
-    return nextLetter;
+    return nextLetter.toString();
 };
 Schemas = {};
 Schemas = {};
@@ -59,6 +59,7 @@ Schemas.User = new SimpleSchema({
     },
 });
 Meteor.users.attachSchema(Schemas.User);
+
 Schemas.admin = new SimpleSchema({
     user: {
         type: String,
@@ -86,6 +87,9 @@ Schemas.admin = new SimpleSchema({
         type: String,
         label: 'Phone #',
         optional: true,
+        autoform: {
+            omit: true
+        },
         autoValue: function() {
             if (this.isInsert) {
                 //var config = Config.findOne();
@@ -95,19 +99,22 @@ Schemas.admin = new SimpleSchema({
         }
     }
 });
+
 Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        defaultValue: function(d, e) {
-            return Records.defaultName();
-        },
         autoValue: function(d, e) {
+            console.log('go');
             if (this.isInsert) {
+                console.log('insert');
                 var value = this.value;
+                console.log(value)
                 if (value) {
+                    console.log('value');
                     return value;
                 } else {
+                    console.log('else');
                     return Records.defaultName();
                 }
             }
@@ -117,7 +124,8 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
         label: 'Incident Status',
-        autoValue: function() {
+        defaultValue: 'Open',
+        /*autoValue: function() {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -126,13 +134,13 @@ Schemas.recordInfo = new SimpleSchema({
                     return 'Open';
                 }
             }
-        },
+        },*/
     },
     leadagency: {
         type: String,
         label: 'Lead Agency',
         max: 200,
-        optional: true,
+
         autoValue: function() {
             if (this.isInsert) {
                 var value = this.value;
@@ -149,7 +157,7 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Organization/Agency',
         max: 200,
-        optional: true,
+
         autoValue: function() {
             if (this.isInsert) {
                 var value = this.value;
@@ -183,7 +191,7 @@ Schemas.recordInfo = new SimpleSchema({
     },
     incidenttype: {
         type: String,
-        optional: true,
+        defaultValue: 'Search',
         allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
         label: 'Incident Type',
     },
@@ -479,12 +487,12 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'ippCoordinates.y': {
         type: String,
-        label: '(N/S)',
+        label: 'Latitude',
         optional: true
     },
     'ippCoordinates.x': {
         type: String,
-        label: '(E/W)',
+        label: 'Longitude',
         optional: true
     },
     decisionPointCoord: {
@@ -494,12 +502,12 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'decisionPointCoord.y': {
         type: String,
-        label: '(N/S)',
+        label: 'Latitude',
         optional: true
     },
     'decisionPointCoord.x': {
         type: String,
-        label: '(E/W)',
+        label: 'Longitude',
         optional: true
     },
     destinationCoord: {
@@ -509,12 +517,12 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'destinationCoord.y': {
         type: String,
-        label: '(N/S)',
+        label: 'Latitude',
         optional: true
     },
     'destinationCoord.x': {
         type: String,
-        label: '(E/W)',
+        label: 'Longitude',
         optional: true
     },
     'initialDirectionofTravel': {
@@ -528,16 +536,22 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'DOT How determined',
         optional: true
     },
-    'revisedLKP-PLS_N-S': {
-        type: String,
-        label: 'Revised LKP/PLS (N/S)',
+
+    'revisedLKP-PLS': {
+        type: Object,
         optional: true
     },
-    'revisedLKP-PLS_E-W': {
+    'revisedLKP-PLS.y': {
         type: String,
-        label: 'Revised LKP/PLS (E/W)',
+        label: 'Latitude',
         optional: true
     },
+    'revisedLKP-PLS.x': {
+        type: String,
+        label: 'Longitude',
+        optional: true
+    },
+
     'revisedHowDetermined': {
         type: String,
         allowedValues: ['Unknown', 'Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
@@ -600,16 +614,23 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: '# Saved',
         optional: true
     },
-    'findCoord_N-S': {
-        type: String,
-        label: 'Find Coord (N/S)',
+
+    'findCoord': {
+        type: Object,
+        label: 'Find Coordinates',
         optional: true
     },
-    'findCoord_E-W': {
+    'findCoord_N-S.y': {
         type: String,
-        label: 'Find Coord (E/W)',
+        label: 'Latitude',
         optional: true
     },
+    'findCoord_N-S.x': {
+        type: String,
+        label: 'Longitude',
+        optional: true
+    },
+
     'distanceIPP': {
         type: String,
         label: 'Distance IPP',
@@ -819,19 +840,33 @@ Schemas.SARCAT = new SimpleSchema({
             omit: true
         }
     },
-    created: {
-        type: String,
+    updated: {
+        type: Date,
         autoValue: function() {
-            return new Date()
-                .toDateString();
+            if (this.isUpdate) {
+                return new Date();
+            }
+        },
+        denyInsert: true,
+        optional: true
+    },
+    created: {
+        type: Date,
+        autoValue: function() {
+            if (this.isInsert) {
+                return new Date;
+            } else if (this.isUpsert) {
+                return {
+                    $setOnInsert: new Date
+                };
+            } else {
+                this.unset();
+            }
         }
     },
     admin: {
         type: Schemas.admin,
         optional: true,
-        autoform: {
-            omit: true
-        }
         //blackbox: true,
         //defaultValue: {}
     },
@@ -840,7 +875,7 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true
             //optional: true
     },
-    incident: {
+    /*incident: {
         type: Schemas.incident,
         optional: true
     },
@@ -873,44 +908,114 @@ Schemas.SARCAT = new SimpleSchema({
     resources: {
         type: Schemas.resources,
         optional: true
-    }
+    }*/
 });
 Records.attachSchema(Schemas.SARCAT);
 Schemas.agencyProfile = new SimpleSchema({
     agency: {
         type: String,
-        label:'Agency/Organization',
-        optional: true,
+        label: 'Agency/Organization',
+        //optional: true,
+        /*autoValue: function() {
+            if (this.isInsert) {
+                return Meteor.user().username;
+            }
+        }*/
+
     },
     phoneNum: {
         type: String,
-        label:'Phone Number',
-        optional: true,
+        label: 'Phone Number',
+        //optional: true,
+
     },
     country: {
         type: String,
-        optional: true,
+        // optional: true,
+
     },
     'state-region': {
         type: String,
-        optional: true,
+        // optional: true,
+
     },
-    Coordinates: {
+    coordinates: {
         type: Object,
-        label: 'IPP Coordinates',
+        label: 'Location',
         optional: true
     },
-    'Coordinates.y': {
+    'coordinates.y': {
         type: String,
-        label: '(N/S)',
+        label: 'Latitude',
         optional: true
+
     },
-    'Coordinates.x': {
+    'coordinates.x': {
         type: String,
-        label: '(E/W)',
+        label: 'Longitude',
         optional: true
+
     },
 });
+
+Schemas.formEditions = new SimpleSchema({
+
+    firstName: {
+        type: String,
+        optional: true
+    },
+    lastName: {
+        type: String,
+        optional: true
+    },
+    age: {
+        type: Number,
+        optional: true
+    },
+    contacts: {
+        type: Array,
+        optional: true
+    },
+    'contacts.$': {
+        type: Object
+    },
+    'contacts.$.name': {
+        type: String
+    },
+    'contacts.$.phone': {
+        type: String
+    }
+
+    /*
+
+
+        platinum: {
+            type: Array,
+            defaultValue: ["incident", "subjectInfo", "allSubjects", "timeLog", "incidentOperations", "incidentOutcome", "medical", "resources"]
+        },
+        'platinum.$': {
+            type: String,
+        }*/
+});
+
+/*
+["incident", "subjectInfo", "allSubjects", "timeLog", "incidentOperations", "incidentOutcome", "medical", "resources"]
+
+    platinum: {
+        type: Array,
+        defaultValue: ["incident", "subjectInfo", "allSubjects", "timeLog", "incidentOperations", "incidentOutcome", "medical", "resources"]
+        optional: true,
+    },
+    'roles.$': {
+        type: String,
+        optional: true
+    },
+
+
+
+
+*/
+
 Schemas.config = new SimpleSchema({
     initSetup: {
         type: Boolean,
@@ -919,10 +1024,14 @@ Schemas.config = new SimpleSchema({
     agencyProfile: {
         type: Schemas.agencyProfile,
         defaultValue: {},
-        //blackbox: true,
-        //optional: true,
-        //blackbox: true,
-        //defaultValue: {}
+        optional: true,
+        blackbox: true
+    },
+    formEditions: {
+        type: Schemas.formEditions,
+        defaultValue: {},
+        optional: true,
+        blackbox: true
     },
 });
 Config.attachSchema(Schemas.config);

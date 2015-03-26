@@ -10,8 +10,7 @@ Meteor.startup(function () {
         //Config.insert(Meteor.settings.production.public);
 
         var customSettings = {
-            'initSetup': true,
-            Coordinates:[0,0]
+            'initSetup': true
         };
         Config.insert(customSettings);
         var admin = Accounts.createUser({
