@@ -3,7 +3,12 @@
     <div class="page lists-show">
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y">
-                <h1>Admin Dashboard</h1> {{> quickForm collection='Config' doc=configs id='formId' class="recordForm form-inline hideSubmit" type='update' validation='keyup' _removeEmptyStrings=true noselect="true" autosave=true fields="agencyProfile" }}
+                <h1>Admin Dashboard</h1> {{> quickForm collection='Config' doc=configs id='formId' class="recordForm form-inline hideSubmit" type='update' validation='keyup' _removeEmptyStrings=true noselect="true" autosave=true fields="agencyProfile" omitFields="agencyProfile.Coordinates"}}
+
+
+
+              <!--  {{> formMap}}-->
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Data Form Type</h3> </div>
