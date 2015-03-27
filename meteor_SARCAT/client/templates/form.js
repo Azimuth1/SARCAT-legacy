@@ -153,7 +153,8 @@ Template.form.helpers({
     },
     schemas: function() {
         var record = this.record;
-        var schemas = ['recordInfo'];//['incidentOperations', 'recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
+        //'incidentOperations'
+        var schemas = ['recordInfo', 'recordInfo', 'incident', 'subjectInfo', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
         return schemas.map(function(d) {
             return {
                 field: d,

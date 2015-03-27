@@ -13,7 +13,10 @@ getLocation = function(cb) {
             var lng = pos.coords.longitude;
             var lat = pos.coords.latitude;
             if (!result) {
-                result = {lat:y,lng:x};
+                result = {
+                    lat: lat,
+                    lng: lng
+                };
                 cb(result);
             }
         }
@@ -35,17 +38,21 @@ getLocation = function(cb) {
 
 }
 
-setMap = function(context, coords) {
+setMap = function(context, coords, popup) {
     console.log(coords)
-    coords = [coords.y,coords.x];
+    coords = [coords.lat, coords.lng];
+    console.log(coords)
+
     var map = L.map(context)
         .setView(coords, 13);
     m = map;
+
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             id: 'examples.map-i875mjb7'
         })
         .addTo(map);
+
     var ippMarker = L.marker([m.getCenter()
         .lat, m.getCenter()
         .lng
@@ -56,13 +63,13 @@ setMap = function(context, coords) {
     ippMarker.on('drag', function(event) {
         var marker = event.target;
         var position = marker.getLatLng();
-        $('[name="agencyProfile.coordinates.x"]')
+        $('[name="agencyProfile.coordinates.lng"]')
             .val(position.lng);
-        $('[name="agencyProfile.coordinates.y"]')
+        $('[name="agencyProfile.coordinates.lat"]')
             .val(position.lat);
 
     });
-    ippMarker.bindPopup('<b>Drag me to set your default Home Base</b>', {
+    ippMarker.bindPopup('<b>' + popup + '</b>', {
             noHide: true
         })
         .openPopup();

@@ -1,49 +1,21 @@
-
 <template name="form">
     <div class="page _lists-show">
-  
         <nav class="formNav">
             <h4 class="text-default nav-title"><strong>{{record.recordInfo.name}}</strong> <small><span class="default-bg_label">Prepared By: <strong> <em>{{record.admin.user}} </em></strong></span> | <span class="default-bg_label">Created: <strong> <em>{{record.created}}</em></strong></span></small>
             </h4>
-
             <div class="x">
                 <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
-
-
-
-
                     {{#each schemas}}
-                    <button type="button" data="{{this}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}}  <small>{{formComplete}} </small></button>
+                    <button type="button" data="{{this}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{formComplete}} </small></button>
                     {{/each}}
-
-
-
                 </div>
             </div>
-            <div class="nav-group right">
-                <div class="options-web"> <a class="js-toggle-list-privacy nav-item">
-            {{toggleTest}}
-              {{#if toggleTest}}
-                <span class="icon-lock" title="Make list public"></span>
-              {{else}}
-                <span class="icon-unlock" title="Make list private">
-                    
-                </span>
-              {{/if}}
-            </a>
-                    <a class="js-delete-list nav-item"> <span class="icon-trash" title="Delete list"></span> </a>
-                </div>
-            </div>
+
         </nav>
-
-
-
         <div class="content-scrollable list-items">
             <div class="pad2">
-
-{{> formMap}}
-
-<!--
+               <!-- {{> formMap}}-->
+                <!--
 {{#each schemas}}
 {{#autoForm
 collection='Records' 
@@ -67,23 +39,24 @@ _label-style="color: #2CC5D2"
 -->
 
 
-{{#each schemas}}
 {{> quickForm 
 collection='Records' 
-doc=../record
-id=formId
-class="recordForm form-inline hideSubmit"
-type=formType
-validation='keyup' 
-_removeEmptyStrings=true 
-noselect="true"   
-autosave=true
-fields=this.field
-_label-style="color: #2CC5D2"
-}}
-{{/each}}
+doc=record 
+id='formdId'
+class="_recordForm form-inline _hideSubmit" 
+type="update"
+noselect=true 
+_autosave=true 
+omitFields="admin,updated,created, incidentOperations"
+resetOnSuccess=false
+buttonContent= "Save"}}
 
-<!--
+
+
+   <!--
+
+                {{#each schemas}} {{> quickForm collection='Records' doc=../record id=formId class="_recordForm form-inline _hideSubmit" type=formType validation='keyup' _removeEmptyStrings=true noselect=true _autosave=true fields=this.field label-style="color: #2CC5D2" buttonContent= "Save"}} {{/each}}
+             
   {{#autoForm
                            collection='Records' 
                            doc=record
@@ -99,13 +72,10 @@ _label-style="color: #2CC5D2"
                         
  }}
 -->
-
-
- <!--
+                <!--
  {{> afQuickFields template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
  -->
-
-<!--
+                <!--
 {{#each arrRecords}}
 <div class='primary-bg_'>
 {{this.name}}
@@ -119,7 +89,7 @@ _options="allowed"
 </div>
 {{/each}}
 -->
-<!--
+                <!--
 {{> afQuickField name="admin.name"}}
 
 {{#each afFieldNames name=this.name}} 
@@ -130,25 +100,14 @@ _options="allowed"
 {{> afQuickField name="recordInfo" template="bootstrap3-inline"}}
 {{> afQuickField name="incident" template="bootstrap3-inline"}}
 -->
-<!--
+                <!--
 {{#each arrRecords}}
 {{json this}}<br>
 {{> afQuickField name=this.name}}
 {{/each}}
 -->
-
-  <!--{{/autoForm}}-->
-
-
-
-
-
-
-
-
-
-
-<!--
+                <!--{{/autoForm}}-->
+                <!--
  {{#each arrRecord}}
 
 
@@ -172,7 +131,7 @@ _options="allowed"
                            }}
  {{/each}}
 -->
-<!--
+                <!--
 {{#autoForm id="demo" schema='Schemas.SARCAT'}}
   {{#each afFieldNames}}
     aaa
@@ -197,9 +156,7 @@ _options="allowed"
                            }} 
 {{/each}}
 -->
-
-
-<!--
+                <!--
                 {{#each arrRecord}}
 
                     <div class="afContainer">
@@ -221,8 +178,7 @@ _options="allowed"
                     </div>
                 {{/each}}
 -->
-
-<!--
+                <!--
 {{#each schemas}}
 {{formId}}
 <br>
@@ -247,8 +203,7 @@ _options="allowed"
 {{/autoForm}}
 {{/each}}
 -->
-
-<!--
+                <!--
 {{#each schemas}}
 {{#autoForm
                            collection='Records' 
@@ -271,7 +226,6 @@ _options="allowed"
 {{/autoForm}}
 {{/each}}
 -->
-
             </div>
         </div>
     </div>

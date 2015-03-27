@@ -485,12 +485,12 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'IPP Coordinates',
         optional: true
     },
-    'ippCoordinates.y': {
+    'ippCoordinates.lat': {
         type: String,
         label: 'Latitude',
         optional: true
     },
-    'ippCoordinates.x': {
+    'ippCoordinates.lng': {
         type: String,
         label: 'Longitude',
         optional: true
@@ -500,12 +500,12 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'decisionPointCoord',
         optional: true
     },
-    'decisionPointCoord.y': {
+    'decisionPointCoord.lat': {
         type: String,
         label: 'Latitude',
         optional: true
     },
-    'decisionPointCoord.x': {
+    'decisionPointCoord.lng': {
         type: String,
         label: 'Longitude',
         optional: true
@@ -515,12 +515,12 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Destination Coordinates',
         optional: true
     },
-    'destinationCoord.y': {
+    'destinationCoord.lat': {
         type: String,
         label: 'Latitude',
         optional: true
     },
-    'destinationCoord.x': {
+    'destinationCoord.lng': {
         type: String,
         label: 'Longitude',
         optional: true
@@ -541,12 +541,12 @@ Schemas.incidentOperations = new SimpleSchema({
         type: Object,
         optional: true
     },
-    'revisedLKP-PLS.y': {
+    'revisedLKP-PLS.lat': {
         type: String,
         label: 'Latitude',
         optional: true
     },
-    'revisedLKP-PLS.x': {
+    'revisedLKP-PLS.lng': {
         type: String,
         label: 'Longitude',
         optional: true
@@ -620,12 +620,12 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Find Coordinates',
         optional: true
     },
-    'findCoord_N-S.y': {
+    'findCoord.lat': {
         type: String,
         label: 'Latitude',
         optional: true
     },
-    'findCoord_N-S.x': {
+    'findCoord.lng': {
         type: String,
         label: 'Longitude',
         optional: true
@@ -875,7 +875,7 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true
             //optional: true
     },
-    /*incident: {
+    incident: {
         type: Schemas.incident,
         optional: true
     },
@@ -893,6 +893,7 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true
             //optional: true
     },
+
     incidentOperations: {
         type: Schemas.incidentOperations,
         optional: true
@@ -908,7 +909,7 @@ Schemas.SARCAT = new SimpleSchema({
     resources: {
         type: Schemas.resources,
         optional: true
-    }*/
+    }
 });
 Records.attachSchema(Schemas.SARCAT);
 Schemas.agencyProfile = new SimpleSchema({
@@ -944,13 +945,13 @@ Schemas.agencyProfile = new SimpleSchema({
         label: 'Location',
         optional: true
     },
-    'coordinates.y': {
+    'coordinates.lat': {
         type: String,
         label: 'Latitude',
         optional: true
 
     },
-    'coordinates.x': {
+    'coordinates.lng': {
         type: String,
         label: 'Longitude',
         optional: true
@@ -958,63 +959,289 @@ Schemas.agencyProfile = new SimpleSchema({
     },
 });
 
-Schemas.formEditions = new SimpleSchema({
-
-    firstName: {
-        type: String,
-        optional: true
-    },
-    lastName: {
-        type: String,
-        optional: true
-    },
-    age: {
-        type: Number,
-        optional: true
-    },
-    contacts: {
-        type: Array,
-        optional: true
-    },
-    'contacts.$': {
-        type: Object
-    },
-    'contacts.$.name': {
-        type: String
-    },
-    'contacts.$.phone': {
-        type: String
-    }
-
-    /*
-
-
-        platinum: {
-            type: Array,
-            defaultValue: ["incident", "subjectInfo", "allSubjects", "timeLog", "incidentOperations", "incidentOutcome", "medical", "resources"]
+var bronze = Schemas.incident._firstLevelSchemaKeys.map(function(d) {
+    return {
+        label: d,
+        defaultValue: true,
+        allowedValues: [true, false],
+        autoform: {
+            type: "select-radio-inline",
         },
-        'platinum.$': {
-            type: String,
-        }*/
+        type: Boolean,
+        //allowedValues: ["true", "bar"]
+    };
 });
 
+bronze = _.object(_.map(bronze, function(x) {
+    return [x.label, x]
+}))
+
+var allValues = ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
+
+allValues = allValues.map(function(d) {
+    return {
+        label: d,
+        value: d,
+        /*defaultValue: true,
+        allowedValues: [true, false],
+        autoform: {
+            type: "select-radio-inline",
+        },
+        type: Boolean,*/
+        //allowedValues: ["true", "bar"]
+    };
+});
+
+//var allValues = ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
+
+var keys1 = Schemas.SARCAT._firstLevelSchemaKeys;
+
+allValues = _.chain(keys1)
+    .map(function(d) {
+        var schema = Schemas[d];
+        if (!schema) {
+            return;
+        }
+        return {
+            label: d,
+            value: schema._firstLevelSchemaKeys
+        };
+    })
+    .compact()
+    .map(function(d) {
+        return {
+            label: d.label,
+            //type: [String],
+            type: Boolean,
+            optional: true,
+            defaultValue: true,
+
+            autoform: {
+                type: "select-checkbox-inline",
+                options: function() {
+                    return d.value.map(function(e) {
+
+                        return {
+                            label: e,
+                            value: e
+                        };
+                    })
+
+                }
+            }
+        };
+    })
+    .value()
+
 /*
-["incident", "subjectInfo", "allSubjects", "timeLog", "incidentOperations", "incidentOutcome", "medical", "resources"]
+allValues2 = _.object(_.map(allValues, function(x) {
 
-    platinum: {
-        type: Array,
-        defaultValue: ["incident", "subjectInfo", "allSubjects", "timeLog", "incidentOperations", "incidentOutcome", "medical", "resources"]
-        optional: true,
-    },
-    'roles.$': {
+    var vals = _.object(_.map(x.value, function(y) {
+        return [y.label, y]
+    }));
+    vals.type = Object;
+    vals.optional = true;
+    return [x.label, vals];
+}));*/
+
+/*var vals = _.object(_.map(allValues, function(x) {
+    return [x.label, xx.value]
+}));*/
+//console.log(allValues2)
+
+//timeLog
+
+Schemas.formEditions = new SimpleSchema({
+    type: {
         type: String,
-        optional: true
+        label: 'Choose SARCAT Edition',
+        defaultValue: 'Platinum Edition',
+        autoform: {
+            type: "select-radio-inline",
+            options: function() {
+                return [{
+                    "label": "Platinum Edition",
+                    "value": "Platinum Edition"
+                }, {
+                    "label": "Gold Edition",
+                    "value": "Gold Edition"
+                }, {
+                    "label": "Silver Edition",
+                    "value": "Silver Edition"
+                }, {
+                    "label": "Basic Edition",
+                    "value": "Basic Edition"
+                }];
+            }
+        }
     },
 
+    recordInfo: {
+        type: Array,
+        allowedValues: Schemas.recordInfo._firstLevelSchemaKeys,
+        defaultValue: Schemas.recordInfo._firstLevelSchemaKeys,
+        label: 'Record Info',
+    },
 
+    'recordInfo.$': {
+        type: String
+    },
 
+    incident: {
+        type: Array,
+        allowedValues: Schemas.incident._firstLevelSchemaKeys,
+        defaultValue: Schemas.incident._firstLevelSchemaKeys,
+        label: 'incident',
+    },
 
-*/
+    'incident.$': {
+        type: String
+    },
+
+    subjectInfo: {
+        type: Array,
+        allowedValues: Schemas.subjectInfo._firstLevelSchemaKeys,
+        defaultValue: Schemas.subjectInfo._firstLevelSchemaKeys,
+        label: 'subjectInfo',
+    },
+
+    'subjectInfo.$': {
+        type: String
+    },
+
+    allSubjects: {
+        type: Array,
+        allowedValues: Schemas.allSubjects._firstLevelSchemaKeys,
+        defaultValue: Schemas.allSubjects._firstLevelSchemaKeys,
+        label: 'allSubjects',
+    },
+
+    'allSubjects.$': {
+        type: String
+    },
+
+    timeLog: {
+        type: Array,
+        allowedValues: Schemas.timeLog._firstLevelSchemaKeys,
+        defaultValue: Schemas.timeLog._firstLevelSchemaKeys,
+        label: 'timeLog',
+    },
+
+    'timeLog.$': {
+        type: String
+    },
+
+    incidentOperations: {
+        type: Array,
+        allowedValues: Schemas.incidentOperations._firstLevelSchemaKeys,
+        defaultValue: Schemas.incidentOperations._firstLevelSchemaKeys,
+        label: 'incidentOperations',
+    },
+
+    'incidentOperations.$': {
+        type: String
+    },
+
+    incidentOutcome: {
+        type: Array,
+        allowedValues: Schemas.incidentOutcome._firstLevelSchemaKeys,
+        defaultValue: Schemas.incidentOutcome._firstLevelSchemaKeys,
+        label: 'incidentOutcome',
+    },
+
+    'incidentOutcome.$': {
+        type: String
+    },
+
+    medical: {
+        type: Array,
+        allowedValues: Schemas.medical._firstLevelSchemaKeys,
+        defaultValue: Schemas.medical._firstLevelSchemaKeys,
+        label: 'medical',
+    },
+
+    'medical.$': {
+        type: String
+    },
+
+    resources: {
+        type: Array,
+        allowedValues: Schemas.resources._firstLevelSchemaKeys,
+        defaultValue: Schemas.resources._firstLevelSchemaKeys,
+        label: 'resources',
+    },
+
+    'resources.$': {
+        type: String
+    },
+
+    /*typeTest1: {
+        type: Array,
+        optional: true,
+        autoValue: function() {
+            return {
+                label: "2013",
+                value: "2013"
+            }, {
+                label: "2014",
+                value: "2014"
+            }, {
+                label: "2015",
+                value: "2015"
+            };
+        },
+
+        autoform: {
+            type: "select-checkbox",
+            options: function() {
+                return [{
+                    label: "2013",
+                    value: "2013"
+                }, {
+                    label: "2014",
+                    value: "2014"
+                }, {
+                    label: "2015",
+                    value: "2015"
+                }];
+            }
+        }
+    },
+    'typeTest1.$': {
+        type: Object,
+        optional: true
+    },*/
+
+    /*admin: allValues[0],
+    recordInfo: allValues[1],
+    incident: allValues[2],
+    subjectInfo: allValues[3],
+    allSubjects: allValues[4],
+    timeLog: allValues[5],
+    incidentOperations: allValues[6],
+    incidentOutcome: allValues[7],
+    medical: allValues[8],
+    resources: allValues[9],*/
+
+    /*platinum: {
+
+        type: Array,
+        allowedValues: Schemas.SARCAT._schemaKeys,
+        //label: 'Fields',
+        defaultValue: Schemas.SARCAT._schemaKeys,
+        autoform: {
+            type: "select-checkbox"
+        },
+        autoValue: function() {
+            return ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
+        },
+    },
+    'platinum.$': {
+        type: String,
+        // optional: true
+    },*/
+
+})
 
 Schemas.config = new SimpleSchema({
     initSetup: {
@@ -1029,9 +1256,9 @@ Schemas.config = new SimpleSchema({
     },
     formEditions: {
         type: Schemas.formEditions,
-        defaultValue: {},
-        optional: true,
-        blackbox: true
+        //defaultValue: {},
+        //optional: true,
+        //blackbox: true
     },
 });
 Config.attachSchema(Schemas.config);
