@@ -3,86 +3,24 @@
     <div class="page lists-show">
         <div class="content-scrollable">
             <div class="row col-md-10 col-md-offset-1 mar2y">
-                <h1>Admin Dashboard</h1> {{> quickForm collection='Config' doc=configs id='formId' _class="recordForm form-inline _hideSubmit" type='update' _validation='keyup' _removeEmptyStrings=true _noselect="true" _autosave=true fields="agencyProfile" omitFields="agencyProfile.coordinates" buttonContent= "Save"}}
+                <h1>Administrator Tools</h1> {{> quickForm collection='Config' doc=configs id='formId' _class="recordForm form-inline _hideSubmit" type='update' _validation='keyup' _removeEmptyStrings=true _noselect="true" _autosave=true fields="agencyProfile" omitFields="agencyProfile.coordinates" buttonContent= "Save"}}
                 
+
+
+
+
 
 
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab">
-                        <h3 class="panel-title">Set SAR Home Base</h3>
+                        <h3 class="panel-title">Set SAR Response Area</h3>
                     </div>
                     <div class="panel-body afBody">
                         <div id='adminMap' style="width:100%;height:400px"></div>
-                        {{> quickForm collection='Config' doc=configs id='formId' class="rescordForm sform-inline hideHeader _hideSubmit" type='update' _validation='keyup' fields="agencyProfile.coordinates" buttonContent= "Save"}}
+                        {{> quickForm collection='Config' doc=configs id='formId' class="rescordForm sform-inline hideHeader xhideSubmit" type='update' _validation='keyup' _autoSave=true fields="agencyProfile.coordinates" buttonContent= "Save"}}
                     </div>
                 </div>
              
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Data Form Type</h3> </div>
-                    <div class="panel-body">
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">Platinum Edition </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">Gold Edition </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Silver Edition </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Basic Edition </label>
-                    </div>
-                </div>
-     <!--         
-{{> quickForm
-schema='Schemas.SARCAT'
-id='formId'
-_class="recordForm form-inline hideSubmit"
-type='insert'
-validation='keyup' 
-_removeEmptyStrings=true 
-noselect="true"   
-_autosave=true
- _type="boolean-radios" 
- _trueLabel="Yes" 
- _falseLabel="No"
-_label-style="color: #2CC5D2"
-}}
-  -->   
-
-
-
-
-
-
-
-  <!--        
-{{#autoForm
-schema='Schemas.SARCAT'
-id='formId'
-class="_recordForm form-inline_ hideSubmit"
-type='insert'
-validation='keyup' 
-_removeEmptyStrings=true 
-noselect="true"   
-_autosave=true
-boolean=true
-_label-style="color: #2CC5D2"
-_template="bootstrap3-horizontal" 
-_label-class="col-sm-3" 
-_input-col-class="col-sm-9"
-}}
-
-
-{{#each test2}}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{this}}</h3> </div>
-                    <div class="panel-body">
-                        {{> afQuickField name=this type="boolean-radios" trueLabel="Yes" falseLabel="No"}}
-                        <hr> {{#each test3 this}} {{> afQuickField name=this type="boolean-radios" trueLabel="Yes" falseLabel="No"}} {{/each}}
-                    </div>
-                </div>
-                {{/each}} {{/autoForm}}
--->
                 <div class="afTablePane">
                     <table class="table table-hover table-bordered table-condensed">
                         <thead class='default-bg'>
@@ -132,6 +70,192 @@ _input-col-class="col-sm-9"
                         </tbody>
                     </table>
                 </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Data Form Type</h3> </div>
+                    <div class="panel-body">
+                       <!-- <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">Platinum Edition </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">Gold Edition </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Silver Edition </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">Basic Edition </label>
+-->
+<!--
+{{> quickForm
+collection='Config'
+schema='Schemas.formEditions'
+doc=configs
+id='formId'
+class="recordForm form-inline hideHeader hideSubmit"
+type='update'
+_removeEmptyStrings=true 
+autosave=true
+fields="type"
+}}
+-->
+
+
+
+
+<!--
+{{> 
+quickForm 
+collection='Config'
+doc=configs
+id='formId3'
+class="recordForm _form-inline hideSubmit"
+type='update'
+noselect="true"   
+autosave=true
+fields="formEditions"
+}}
+-->
+<!--
+
+{{#autoForm
+collection='Config'
+doc=configs
+id='dataEditsion'
+class="_recordForm _form-inline _hideSubmit"
+type='update'
+noselect="true"   
+autosave=true
+_validation='keyup'
+
+}}
+{{> afQuickFields}}
+
+  {{#each afFieldNames}}
+  {{json this}}
+  {{/each}}
+
+
+<div>
+    <button type="submit">Submit</button>
+  </div>
+-->
+
+
+
+{{#autoForm 
+collection='Config'
+doc=configs
+id='dataEditsion'
+class="_recordForm _form-inline _hideSubmit"
+type='update'
+noselect=true   
+autosave=true
+_validation='keyup'
+
+
+}}
+  {{> afQuickField name="formEditions.type"}}
+
+  {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}}
+
+  {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}}
+
+    {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}}
+
+      {{> afQuickField name="formEditions.subjectInfo" options="allowed" noselect=true}}
+
+        {{> afQuickField name="formEditions.allSubjects" options="allowed" noselect=true}}
+
+          {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}}
+
+            {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}}
+
+              {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}}
+
+                {{> afQuickField name="formEditions.medical" options="allowed" noselect=true}}
+  {{> afQuickField name="formEditions.resources" options="allowed" noselect=true}}
+
+{{/autoForm}}
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+     <!--         
+{{> quickForm
+schema='Schemas.SARCAT'
+id='formId'
+_class="recordForm form-inline hideSubmit"
+type='insert'
+validation='keyup' 
+_removeEmptyStrings=true 
+noselect="true"   
+_autosave=true
+ _type="boolean-radios" 
+ _trueLabel="Yes" 
+ _falseLabel="No"
+_label-style="color: #2CC5D2"
+}}
+  -->   
+
+<!--
+{{#autoForm
+schema='Schemas.incident'
+id='formId22'
+class="_recordForm form-inline _hideSubmit"
+type='insert'
+_validation='keyup' 
+_removeEmptyStrings=true 
+noselect="true"   
+_autosave=true
+ _type="boolean-radios" 
+ _trueLabel="Yes" 
+ _falseLabel="No"
+_label-style="color: #2CC5D2"
+}}
+  {{#each afFieldNames}}
+
+    {{> afQuickField name=this.name type="boolean-radios" trueLabel="Yes" falseLabel="No"}}
+  {{/each}}
+
+
+{{/autoForm}}
+-->
+  <!--        
+{{#autoForm
+schema='Schemas.SARCAT'
+id='formId'
+class="_recordForm form-inline_ hideSubmit"
+type='insert'
+validation='keyup' 
+_removeEmptyStrings=true 
+noselect="true"   
+_autosave=true
+boolean=true
+_label-style="color: #2CC5D2"
+_template="bootstrap3-horizontal" 
+_label-class="col-sm-3" 
+_input-col-class="col-sm-9"
+}}
+
+
+{{#each test2}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{this}}</h3> </div>
+                    <div class="panel-body">
+                        {{> afQuickField name=this type="boolean-radios" trueLabel="Yes" falseLabel="No"}}
+                        <hr> {{#each test3 this}} {{> afQuickField name=this type="boolean-radios" trueLabel="Yes" falseLabel="No"}} {{/each}}
+                    </div>
+                </div>
+                {{/each}} {{/autoForm}}
+-->
+
             </div>
         </div>
     </div>

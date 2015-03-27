@@ -2,15 +2,17 @@ var agencyProfile;
 var agencyCoordinates;
 var map;
 var mapDrawn;
+var config = Session.get('config');
 Template.admin.created = function() {
-    agencyProfile = Session.get('config')
-        .agencyProfile;
+    agencyProfile = Session.get('config').agencyProfile;
+
+
     agencyCoordinates = agencyProfile.coordinates;
 
     if (!agencyCoordinates) {
         getLocation(function(coords, err) {
 
-            console.log('user coords: ' + coords);
+            console.log('user coords: ' + JSON.stringify(coords));
             if (err) {
                 console.log('error retrieving Coordinates. Setting default [0,0]');
                 coords = {lat:0,lng:0};
@@ -43,6 +45,9 @@ Template.admin.rendered = function() {
     });
 };
 Template.admin.helpers({
+    agencyCoordinates: function() {
+        return agencyCoordinates;
+    },
     profileIncomplete: function() {
         var complete = completeProfile();
         Session.set('profileComplete', complete);
@@ -108,12 +113,19 @@ Template.admin.helpers({
 });
 Template.admin.events({
     'click .removeUser': function(event, template) {
+
+        if(Meteor.userId()===this._id){alert('You cannot remove your own account!');return;}
         Meteor.call('removeUser', this._id, function(err) {
             console.log(err);
         });
     },
     'change .adminUserRoles': function(event) {
         var user = this._id;
+        
+                if (Meteor.userId() === this._id) {
+                    alert('You cannot remove your own account!');
+                    return;
+                }
         var val = $('input[name="role_' + user + '"]:checked')
             .val();
         console.log(user, val)
