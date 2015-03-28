@@ -565,7 +565,6 @@ Schemas.incidentOperations = new SimpleSchema({
         optional: true
     },
 
-
     decisionPointCoord: {
         type: Object,
         label: 'decisionPointCoord',
@@ -581,7 +580,6 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
-
 
     destinationCoord: {
         type: Object,
@@ -599,13 +597,11 @@ Schemas.incidentOperations = new SimpleSchema({
         optional: true
     },
 
-
     'initialDirectionofTravel': {
         type: String,
         label: 'Initial Direction of Travel',
         optional: true
     },
-
 
     'DOTHowdetermined': {
         type: String,
@@ -654,8 +650,6 @@ Schemas.incidentOperations = new SimpleSchema({
 });
 Schemas.incidentOutcome = new SimpleSchema({
 
-
-
     'findCoord': {
         type: Object,
         label: 'Find Coordinates',
@@ -671,7 +665,6 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
-
 
     'incidentOutcome': {
         type: String,
@@ -976,7 +969,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     incidentOutcome: {
         type: Schemas.incidentOutcome,
-        label:'Incident Outcome',
+        label: 'Incident Outcome',
         optional: true
     },
     medical: {
@@ -1247,72 +1240,6 @@ Schemas.formEditions = new SimpleSchema({
         type: String
     },
 
-    /*typeTest1: {
-        type: Array,
-        optional: true,
-        autoValue: function() {
-            return {
-                label: "2013",
-                value: "2013"
-            }, {
-                label: "2014",
-                value: "2014"
-            }, {
-                label: "2015",
-                value: "2015"
-            };
-        },
-
-        autoform: {
-            type: "select-checkbox",
-            options: function() {
-                return [{
-                    label: "2013",
-                    value: "2013"
-                }, {
-                    label: "2014",
-                    value: "2014"
-                }, {
-                    label: "2015",
-                    value: "2015"
-                }];
-            }
-        }
-    },
-    'typeTest1.$': {
-        type: Object,
-        optional: true
-    },*/
-
-    /*admin: allValues[0],
-    recordInfo: allValues[1],
-    incident: allValues[2],
-    subjectInfo: allValues[3],
-    allSubjects: allValues[4],
-    timeLog: allValues[5],
-    incidentOperations: allValues[6],
-    incidentOutcome: allValues[7],
-    medical: allValues[8],
-    resources: allValues[9],*/
-
-    /*platinum: {
-
-        type: Array,
-        allowedValues: Schemas.SARCAT._schemaKeys,
-        //label: 'Fields',
-        defaultValue: Schemas.SARCAT._schemaKeys,
-        autoform: {
-            type: "select-checkbox"
-        },
-        autoValue: function() {
-            return ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
-        },
-    },
-    'platinum.$': {
-        type: String,
-        // optional: true
-    },*/
-
 })
 
 Schemas.config = new SimpleSchema({
@@ -1328,9 +1255,7 @@ Schemas.config = new SimpleSchema({
     },
     formEditions: {
         type: Schemas.formEditions,
-        //defaultValue: {},
-        //optional: true,
-        //blackbox: true
+
     },
 });
 Config.attachSchema(Schemas.config);
