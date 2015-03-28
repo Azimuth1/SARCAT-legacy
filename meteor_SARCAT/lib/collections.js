@@ -1,6 +1,6 @@
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
-Records.defaultName = function() {
+Records.defaultName = function () {
     var nextLetter = 'A',
         nextName = 'Incident ' + nextLetter;
     while (Records.findOne({
@@ -11,7 +11,7 @@ Records.defaultName = function() {
     }
     return nextName;
 };
-Records.defaultNum = function() {
+Records.defaultNum = function () {
     var nextLetter = 1;
     while (Records.findOne({
             'recordInfo.incidentnum': nextLetter
@@ -65,7 +65,7 @@ Schemas.admin = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Prepared By',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.user()
                     .username;
@@ -76,7 +76,7 @@ Schemas.admin = new SimpleSchema({
         type: String,
         optional: true,
         regEx: SimpleSchema.RegEx.Email,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.user()
                     .emails[0].address;
@@ -90,7 +90,7 @@ Schemas.admin = new SimpleSchema({
         autoform: {
             omit: true
         },
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 //var config = Config.findOne();
                 return Config.findOne()
@@ -104,7 +104,7 @@ Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        autoValue: function(d, e) {
+        autoValue: function (d, e) {
             console.log('go');
             if (this.isInsert) {
                 console.log('insert');
@@ -141,7 +141,7 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Lead Agency',
         max: 200,
 
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -158,7 +158,7 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Organization/Agency',
         max: 200,
 
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -173,7 +173,7 @@ Schemas.recordInfo = new SimpleSchema({
     incidentnum: {
         type: String,
         label: 'Incident #',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -201,7 +201,7 @@ Schemas.incident = new SimpleSchema({
         type: Date,
         optional: true,
         label: 'Incident Date',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return new Date();
             }
@@ -232,7 +232,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         label: 'Response Country',
         optional: true,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Config.findOne()
                     .agencyProfile.country;
@@ -243,7 +243,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Response State/Region',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Config.findOne()
                     .agencyProfile['state-region'];
@@ -320,7 +320,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Max Temp',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return '';
             }
@@ -330,7 +330,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Min Temp',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return '';
             }
@@ -361,6 +361,75 @@ Schemas.incident = new SimpleSchema({
         label: 'Light',
     }
 });
+
+Schemas.subjects = new SimpleSchema({
+    subjects: {
+        type: Array,
+        optional: true
+    },
+    'subjects.$': {
+        type: Object
+    },
+
+    'subjects.$.age': {
+        type: Number,
+        label: 'Age',
+        optional: true
+    },
+    'subjects.$.sex': {
+        type: String,
+        allowedValues: ['Unknown', 'Male', 'Femail'],
+        label: 'Sex',
+        optional: true
+    },
+    'subjects.$.local': {
+        type: String,
+        allowedValues: ['Unknown', 'Yes', 'No', 'Guide'],
+        label: 'Local?',
+        optional: true
+    },
+    'subjects.$.weight': {
+        type: String,
+        label: 'Weight',
+        optional: true
+    },
+    'subjects.$.height': {
+        type: String,
+        label: 'Height',
+        optional: true
+    },
+    'subjects.$.physical fitness': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Physical Fitness',
+        optional: true
+    },
+    'subjects.$.experience': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Experience',
+        optional: true
+    },
+    'subjects.$.equipment': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Equipment',
+        optional: true
+    },
+    'subjects.$.clothing': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Clothing',
+        optional: true
+    },
+    'subjects.$.survival training': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Survival training',
+        optional: true
+    }
+});
+/*
 Schemas.allSubjects = new SimpleSchema({
     'allSubjects': {
         type: [Object],
@@ -426,7 +495,7 @@ Schemas.subjectInfo = new SimpleSchema({
         label: 'Survival training',
         optional: true
     }
-});
+});*/
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
@@ -495,6 +564,8 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
+
+
     decisionPointCoord: {
         type: Object,
         label: 'decisionPointCoord',
@@ -510,6 +581,8 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
+
+
     destinationCoord: {
         type: Object,
         label: 'Destination Coordinates',
@@ -525,11 +598,15 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
+
+
     'initialDirectionofTravel': {
         type: String,
         label: 'Initial Direction of Travel',
         optional: true
     },
+
+
     'DOTHowdetermined': {
         type: String,
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
@@ -576,6 +653,26 @@ Schemas.incidentOperations = new SimpleSchema({
     }
 });
 Schemas.incidentOutcome = new SimpleSchema({
+
+
+
+    'findCoord': {
+        type: Object,
+        label: 'Find Coordinates',
+        optional: true
+    },
+    'findCoord.lat': {
+        type: String,
+        label: 'Latitude',
+        optional: true
+    },
+    'findCoord.lng': {
+        type: String,
+        label: 'Longitude',
+        optional: true
+    },
+
+
     'incidentOutcome': {
         type: String,
         allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
@@ -612,22 +709,6 @@ Schemas.incidentOutcome = new SimpleSchema({
     '#Saved': {
         type: String,
         label: '# Saved',
-        optional: true
-    },
-
-    'findCoord': {
-        type: Object,
-        label: 'Find Coordinates',
-        optional: true
-    },
-    'findCoord.lat': {
-        type: String,
-        label: 'Latitude',
-        optional: true
-    },
-    'findCoord.lng': {
-        type: String,
-        label: 'Longitude',
         optional: true
     },
 
@@ -831,7 +912,7 @@ Schemas.SARCAT = new SimpleSchema({
     userId: {
         type: String,
         optional: false,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.userId();
             }
@@ -842,7 +923,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     updated: {
         type: Date,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isUpdate) {
                 return new Date();
             }
@@ -852,7 +933,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     created: {
         type: Date,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return new Date;
             } else if (this.isUpsert) {
@@ -879,13 +960,8 @@ Schemas.SARCAT = new SimpleSchema({
         type: Schemas.incident,
         optional: true
     },
-    subjectInfo: {
-        type: Schemas.subjectInfo,
-        optional: true
-            //optional: true
-    },
-    allSubjects: {
-        type: Schemas.allSubjects,
+    subjects: {
+        type: Schemas.subjects,
         optional: true
     },
     timeLog: {
@@ -900,6 +976,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     incidentOutcome: {
         type: Schemas.incidentOutcome,
+        label:'Incident Outcome',
         optional: true
     },
     medical: {
@@ -940,26 +1017,39 @@ Schemas.agencyProfile = new SimpleSchema({
         // optional: true,
 
     },
+
     coordinates: {
         type: Object,
         label: 'Location',
-        optional: true
+        defaultValue: {
+            lat: 40,
+            lng: -96,
+            zoom: 4
+        },
+
+    },
+    'coordinates.zoom': {
+        type: Number,
+        defaultValue: 4,
+        decimal: false,
     },
     'coordinates.lat': {
-        type: String,
+        type: Number,
         label: 'Latitude',
-        optional: true
+        decimal: true,
+        //optional: true
 
     },
     'coordinates.lng': {
-        type: String,
+        type: Number,
         label: 'Longitude',
-        optional: true
+        decimal: true,
+        //optional: true
 
     },
 });
-
-var bronze = Schemas.incident._firstLevelSchemaKeys.map(function(d) {
+/*
+var bronze = Schemas.incident._firstLevelSchemaKeys.map(function (d) {
     return {
         label: d,
         defaultValue: true,
@@ -972,23 +1062,16 @@ var bronze = Schemas.incident._firstLevelSchemaKeys.map(function(d) {
     };
 });
 
-bronze = _.object(_.map(bronze, function(x) {
+bronze = _.object(_.map(bronze, function (x) {
     return [x.label, x]
 }))
 
 var allValues = ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
 
-allValues = allValues.map(function(d) {
+allValues = allValues.map(function (d) {
     return {
         label: d,
         value: d,
-        /*defaultValue: true,
-        allowedValues: [true, false],
-        autoform: {
-            type: "select-radio-inline",
-        },
-        type: Boolean,*/
-        //allowedValues: ["true", "bar"]
     };
 });
 
@@ -997,7 +1080,7 @@ allValues = allValues.map(function(d) {
 var keys1 = Schemas.SARCAT._firstLevelSchemaKeys;
 
 allValues = _.chain(keys1)
-    .map(function(d) {
+    .map(function (d) {
         var schema = Schemas[d];
         if (!schema) {
             return;
@@ -1008,7 +1091,7 @@ allValues = _.chain(keys1)
         };
     })
     .compact()
-    .map(function(d) {
+    .map(function (d) {
         return {
             label: d.label,
             //type: [String],
@@ -1018,8 +1101,8 @@ allValues = _.chain(keys1)
 
             autoform: {
                 type: "select-checkbox-inline",
-                options: function() {
-                    return d.value.map(function(e) {
+                options: function () {
+                    return d.value.map(function (e) {
 
                         return {
                             label: e,
@@ -1032,7 +1115,7 @@ allValues = _.chain(keys1)
         };
     })
     .value()
-
+*/
 /*
 allValues2 = _.object(_.map(allValues, function(x) {
 
@@ -1058,7 +1141,7 @@ Schemas.formEditions = new SimpleSchema({
         defaultValue: 'Platinum Edition',
         autoform: {
             type: "select-radio-inline",
-            options: function() {
+            options: function () {
                 return [{
                     "label": "Platinum Edition",
                     "value": "Platinum Edition"
@@ -1098,25 +1181,14 @@ Schemas.formEditions = new SimpleSchema({
         type: String
     },
 
-    subjectInfo: {
+    subjects: {
         type: Array,
-        allowedValues: Schemas.subjectInfo._firstLevelSchemaKeys,
-        defaultValue: Schemas.subjectInfo._firstLevelSchemaKeys,
-        label: 'subjectInfo',
+        allowedValues: Schemas.subjects._firstLevelSchemaKeys,
+        defaultValue: Schemas.subjects._firstLevelSchemaKeys,
+        label: 'subjects',
     },
 
-    'subjectInfo.$': {
-        type: String
-    },
-
-    allSubjects: {
-        type: Array,
-        allowedValues: Schemas.allSubjects._firstLevelSchemaKeys,
-        defaultValue: Schemas.allSubjects._firstLevelSchemaKeys,
-        label: 'allSubjects',
-    },
-
-    'allSubjects.$': {
+    'subjects.$': {
         type: String
     },
 
