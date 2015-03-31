@@ -7,11 +7,22 @@
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div id='recordMap' style="width:100%;height:400px"></div>
-                    {{#if newRecord}} {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo,coords"}} 
+                    {{#if newRecord}} 
 
-                    {{> afQuickField name='coords.ippCoordinates'}} 
 
-                    {{> afQuickField name='recordInfo'}} {{/autoForm}} {{/if}}
+    {{> quickForm collection="Records" doc=newRecord class="hideBody hideSubmit hideHeader" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates"}} 
+
+                    {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo,coords"}} 
+
+                   
+
+                    {{> afQuickField name='recordInfo'}} 
+
+
+                    {{/autoForm}} 
+
+
+                    {{/if}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn _btn-default js-deleteRecord" data-dismiss="modal">Close</button>

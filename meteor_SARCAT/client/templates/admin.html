@@ -10,7 +10,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs navbar-nav" role="tablist">
                     <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Profile</a> </li>
-                    <li role="presentation"><a href="#map" aria-controls="profile" role="tab" data-toggle="tab" class="white adminMap">Response Area</a> </li>
+                    <li role="presentation"><a href="#adminMapTab" aria-controls="profile" role="tab" data-toggle="tab" class="white adminMap">Response Area</a> </li>
                     <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
                     <li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>
                 </ul>
@@ -21,29 +21,46 @@
     </nav>
     <!-- Tab panes -->
     <div class="tab-content admin">
+
+
+
+
+
+
+
         <div role="tabpanel" class="tab-pane active pad0" id="profile">
-            <div class="row col-md-10 col-md-offset-1 mar2y">
-              
-
-
-
-                {{> quickForm collection='Config' doc=configs id='agencyProfile' class="hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.coordinates" buttonContent= "Save"}}
-
-
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane pad0 scroll" id="map">
             <div class="panel panel-default">
-                <div class="panel-heading" role="tab">
-                    <h3 class="panel-title">Set Map to Default SAR Response Area</h3>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Agency Profile
+                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
                 </div>
                 <div class="panel-body afBody">
-                    {{> quickForm collection='Config' doc=configs id='formId' class="hideBody hideHeader btnBlock" type='update' fields="agencyProfile.coordinates" buttonContent= "Save Response Area"}}
+                     {{> quickForm collection='Config' doc=configs id='agencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save"}}
+                   
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div role="tabpanel" class="tab-pane pad0 scroll" id="adminMapTab">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Set Map on Default SAR Response Area
+                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+                </div>
+                <div class="panel-body afBody">
+                    {{> quickForm collection='Config' doc=configs id='formId45' class="hideBody hideHeader btnBlock hideSubmit" autosave=true  type='update' fields="agencyProfile.bounds" buttonContent= "Save Response Area"}}
                     <div id='adminMap' style="width:100%;height:350px"></div>
                    
                 </div>
             </div>
         </div>
+
+
         <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
             <div class="afTablePane">
                 <table class="table table-hover table-bordered table-condensed">

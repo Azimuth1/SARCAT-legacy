@@ -1,6 +1,6 @@
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
-Records.defaultName = function () {
+Records.defaultName = function() {
     var nextLetter = 'A',
         nextName = 'Incident ' + nextLetter;
     while (Records.findOne({
@@ -11,7 +11,7 @@ Records.defaultName = function () {
     }
     return nextName;
 };
-Records.defaultNum = function () {
+Records.defaultNum = function() {
     var nextLetter = 1;
     while (Records.findOne({
             'recordInfo.incidentnum': nextLetter
@@ -65,7 +65,7 @@ Schemas.admin = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Prepared By',
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return Meteor.user()
                     .username;
@@ -76,7 +76,7 @@ Schemas.admin = new SimpleSchema({
         type: String,
         optional: true,
         regEx: SimpleSchema.RegEx.Email,
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return Meteor.user()
                     .emails[0].address;
@@ -90,7 +90,7 @@ Schemas.admin = new SimpleSchema({
         autoform: {
             omit: true
         },
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 //var config = Config.findOne();
                 return Config.findOne()
@@ -104,7 +104,7 @@ Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        autoValue: function (d, e) {
+        autoValue: function(d, e) {
             if (this.isInsert) {
                 var value = this.value;
                 console.log(value)
@@ -137,7 +137,7 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Lead Agency',
         max: 200,
 
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -154,7 +154,7 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Organization/Agency',
         max: 200,
 
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -169,7 +169,7 @@ Schemas.recordInfo = new SimpleSchema({
     incidentnum: {
         type: String,
         label: 'Incident #',
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -197,7 +197,7 @@ Schemas.incident = new SimpleSchema({
         type: Date,
         optional: true,
         label: 'Incident Date',
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return new Date();
             }
@@ -228,7 +228,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         label: 'Response Country',
         optional: true,
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return Config.findOne()
                     .agencyProfile.country;
@@ -239,7 +239,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Response State/Region',
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return Config.findOne()
                     .agencyProfile['state-region'];
@@ -306,56 +306,56 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
         label: 'Land Owner',
     },
-   /* weather: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
-        label: 'Weather',
-    },
-    maxTemp: {
-        type: String,
-        optional: true,
-        label: 'Max Temp',
-        autoValue: function () {
-            if (this.isInsert) {
-                return '';
-            }
-        }
-    },
-    minTemp: {
-        type: String,
-        optional: true,
-        label: 'Min Temp',
-        autoValue: function () {
-            if (this.isInsert) {
-                return '';
-            }
-        }
-    },
-    wind: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
-        label: 'Wind',
-    },
-    rain: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
-        label: 'Rain',
-    },
-    snow: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
-        label: 'Snow',
-    },
-    light: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
-        label: 'Light',
-    }*/
+    /* weather: {
+         type: String,
+         optional: true,
+         allowedValues: ['Unknown', 'Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
+         label: 'Weather',
+     },
+     maxTemp: {
+         type: String,
+         optional: true,
+         label: 'Max Temp',
+         autoValue: function () {
+             if (this.isInsert) {
+                 return '';
+             }
+         }
+     },
+     minTemp: {
+         type: String,
+         optional: true,
+         label: 'Min Temp',
+         autoValue: function () {
+             if (this.isInsert) {
+                 return '';
+             }
+         }
+     },
+     wind: {
+         type: String,
+         optional: true,
+         allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
+         label: 'Wind',
+     },
+     rain: {
+         type: String,
+         optional: true,
+         allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
+         label: 'Rain',
+     },
+     snow: {
+         type: String,
+         optional: true,
+         allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
+         label: 'Snow',
+     },
+     light: {
+         type: String,
+         optional: true,
+         allowedValues: ['Unknown', 'Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
+         label: 'Light',
+     }*/
 });
 
 Schemas.weather = new SimpleSchema({
@@ -652,12 +652,14 @@ Schemas.coords = new SimpleSchema({
         optional: true
     },
     'decisionPointCoord.lat': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Latitude',
         optional: true
     },
     'decisionPointCoord.lng': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Longitude',
         optional: true
     },
@@ -668,12 +670,14 @@ Schemas.coords = new SimpleSchema({
         optional: true
     },
     'destinationCoord.lat': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Latitude',
         optional: true
     },
     'destinationCoord.lng': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Longitude',
         optional: true
     },
@@ -684,12 +688,14 @@ Schemas.coords = new SimpleSchema({
         optional: true
     },
     'findCoord.lat': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Latitude',
         optional: true
     },
     'findCoord.lng': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Longitude',
         optional: true
     },
@@ -699,12 +705,14 @@ Schemas.coords = new SimpleSchema({
         optional: true
     },
     'revisedLKP-PLS.lat': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Latitude',
         optional: true
     },
     'revisedLKP-PLS.lng': {
-        type: String,
+        type: Number,
+        decimal: true,
         label: 'Longitude',
         optional: true
     },
@@ -990,7 +998,7 @@ Schemas.SARCAT = new SimpleSchema({
     userId: {
         type: String,
         optional: false,
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return Meteor.userId();
             }
@@ -1001,7 +1009,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     updated: {
         type: Date,
-        autoValue: function () {
+        autoValue: function() {
             if (this.isUpdate) {
                 return new Date();
             }
@@ -1011,7 +1019,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     created: {
         type: Date,
-        autoValue: function () {
+        autoValue: function() {
             if (this.isInsert) {
                 return new Date;
             } else if (this.isUpsert) {
@@ -1104,36 +1112,43 @@ Schemas.agencyProfile = new SimpleSchema({
         // optional: true,
 
     },
+    bounds: {
+        type: String,
+        optional: true,
+        defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665"
 
-    coordinates: {
-        type: Object,
-        label: 'Location',
-        defaultValue: {
-            lat: 40,
-            lng: -96,
-            zoom: 4
+    },
+    /*
+        coordinates: {
+            type: Object,
+            label: 'Location',
+            defaultValue: {
+                lat: 40,
+                lng: -96,
+                zoom: 4
+            },
+
         },
 
-    },
-    'coordinates.zoom': {
-        type: Number,
-        defaultValue: 4,
-        decimal: false,
-    },
-    'coordinates.lat': {
-        type: Number,
-        label: 'Latitude',
-        decimal: true,
-        //optional: true
+        'coordinates.zoom': {
+            type: Number,
+            defaultValue: 4,
+            decimal: true,
+        },
+        'coordinates.lat': {
+            type: Number,
+            label: 'Latitude',
+            decimal: true,
+            //optional: true
 
-    },
-    'coordinates.lng': {
-        type: Number,
-        label: 'Longitude',
-        decimal: true,
-        //optional: true
+        },
+        'coordinates.lng': {
+            type: Number,
+            label: 'Longitude',
+            decimal: true,
+            //optional: true
 
-    },
+        },*/
 });
 /*
 var bronze = Schemas.incident._firstLevelSchemaKeys.map(function (d) {
@@ -1228,7 +1243,7 @@ Schemas.formEditions = new SimpleSchema({
         defaultValue: 'Platinum Edition',
         autoform: {
             type: "select-radio-inline",
-            options: function () {
+            options: function() {
                 return [{
                     "label": "Platinum Edition",
                     "value": "Platinum Edition"

@@ -6,7 +6,7 @@
             <div class="x">
                 <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
                     {{#each schemas}}
-                    <button type="button" data="{{this}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{formComplete}} </small></button>
+                        <button type="button" data="{{this}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{formComplete}} </small></button>
                     {{/each}}
                 </div>
             </div>
@@ -18,10 +18,72 @@
                         <h3 class="panel-title">Incident Map</h3>
                     </div>
                     <div class="panel-body afBody">
-                        <div id='formMap' style="width:100%;height:400px">
-                            <div class="mapTop"></div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="btn-group-vertical mapPoints" data-toggle="buttons">
+                                    <a class="btn btn-default btn-lg" data="ippCoordinates">
+                                    IPP
+                                        <span class="fa-stack">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw"></i>
+                                        </span>
+
+
+                                        <input type="checkbox" autocomplete="off"> &nbsp; 
+                                     
+                                       
+                                    </a>
+                                    <a class="btn btn-default" data="destinationCoord">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
+                                        <span class="fa-stack">
+                                            <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                            <i class="fa fa-fw fa-stack-1x redicon"><b>D</b></i>
+                                          </span>
+                                    </a>
+                                    <a class="btn btn-default">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
+                                        <span class="fa-stack">
+                                          <i class="fa fa-bullseye fa-2x fa-fw"></i>
+                                        </span>
+                                    </a>
+                                    <a class="btn btn-default">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Direction of Travel
+                                        <span class="fa-stack">
+                                          <i class="fa fa-arrow-circle-o-up fa-2x fa-fw"></i>
+                                        </span>
+                                    </a>
+                                    <a class="btn btn-default">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
+                                        <span class="fa-stack">
+                                          <i class="fa fa-exclamation-circle fa-2x fa-fw"></i>
+                                        </span>
+                                    </a>
+                                    <a class="btn btn-default">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Find Location
+                                        <span class="fa-stack">
+                                          <i class="fa fa-male fa-2x fa-fw"></i>
+                                        </span>
+                                    </a>
+                                    <a class="btn btn-default">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
+                                        <span class="fa-stack">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-danger"></i>
+                                        </span>
+                                    </a>
+                                    <a class="btn btn-default">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
+                                        <span class="fa-stack">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div id='formMap' style="width:100%;height:400px">
+                                    <div class="mapTop"></div>
+                                </div>
+                            </div>
                         </div>
-                        {{> quickForm collection='Records' doc=record id='formId333' class="_hideBody hide _hideHeader _btnBlock" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" }}
+                        {{> quickForm collection='Records' doc=record id='formId333' class="_hideBody _hide _hideHeader _btnBlock" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" }}
                     </div>
                 </div>
                 <!-- {{> formMap}}-->
@@ -55,20 +117,14 @@ collection='Records'
 doc=record
 scope="subjects"}}
 -->
-                {{
-                #autoForm 
-                collection='Records' 
-                doc=current
-                class="_recordForm form-inline _hideSubmit" 
-                id='formdId' 
-                _autosave=true 
-                type=formType 
-                omitFields="admin,updated,created, coords" 
-                buttonContent= "Save" }}
+                <!--GOOD
+                {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' _autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }}
+
+                {{> afQuickFields}} {{/autoForm}}
 
 
-
-<!--
+-->
+                <!--
  {{
  #autoForm 
  collection="Records" 
@@ -81,13 +137,6 @@ scope="subjects"}}
  fields="recordInfo,coords"
  }} 
 -->
-                    {{> afQuickFields}} 
-
-                    {{/autoForm}} 
-
-
-
-
                 <!--
 
                 {{#each schemas}} {{> quickForm collection='Records' doc=../record id=formId class="_recordForm form-inline _hideSubmit" type=formType validation='keyup' _removeEmptyStrings=true noselect=true _autosave=true fields=this.field label-style="color: #2CC5D2" buttonContent= "Save"}} {{/each}}

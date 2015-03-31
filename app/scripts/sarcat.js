@@ -25,7 +25,7 @@ var sarcat = function(options) {
 			.remove();
 		return sarcat.loginPage(context, sar);
 	};
-	sar.loginPage();
-	//sar.formPage();
+	//sar.loginPage();
+	sar.formPage();
 	return sar;
 };

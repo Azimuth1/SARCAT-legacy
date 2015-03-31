@@ -3,52 +3,90 @@ listFadeInHold = null;
 var weather = false;
 var config;
 var record;
+var map;
 Template.registerHelper("Schemas", Schemas);
 
-Template.form.created = function () {
+var getCoords = function() {
+
+    var mapPoints = [{
+        "val": "ippCoordinates",
+        "name": "coords.ippCoordinates",
+        "text": "IPP Location",
+    }, {
+        "val": "decisionPointCoord",
+        "name": "coords.decisionPointCoord",
+        "text": "Decision Point"
+    }, {
+        "val": "destinationCoord",
+        "name": "coords.destinationCoord",
+        "text": "Subject Destination"
+    }];
+    mapPoints = _.object(_.map(mapPoints, function(x) {
+        return [x.val, x];
+    }));
+
+    var record = Session.get('currentRecord');
+    if (!record.coords) {
+        return mapPoints;
+    }
+    var coords = record.coords;
+
+    return _.map(coords, function(d, e) {
+        var obj =mapPoints[e];
+        obj.coords = d;
+        return obj;
+    });
+
+};
+
+Template.form.created = function() {
     config = Session.get('config');
     record = this.data.record;
     Session.set('currentRecord', record);
 };
-Template.form.rendered = function () {
+Template.form.rendered = function() {
     var coords = record.coords;
-    var weatherCoords;
+    var agencyProfile = config.agencyProfile;
+    var center = coords.ippCoordinates;
+    map = formSetMap('formMap', center);
 
+    a = map
+
+    var coords = getCoords();
+
+    coords.forEach(function(d) {
+        if (d.coords) {
+            $('[data="' + d.val + '"]')
+                .addClass('active');
+            map.addPoint(d);
+        }
+
+    });
+
+    /*
+    var weatherCoords;
 
     if (coords && coords.ippCoordinates) {
         weatherCoords = coords.ippCoordinates;
-    } else{
+    } else {
         weatherCoords = config.agencyProfile.coordinates;
     }
 
     if (!record.weather) {
 
-        getWeather(weatherCoords, null, function (data) {
+        getWeather(weatherCoords, null, function(data) {
             Session.set('weather', data);
             var data = data.currently;
-            _.each(data, function (d, name) {
-                $('[name="weather.' + name + '"]').val(d);
+            _.each(data, function(d, name) {
+                $('[name="weather.' + name + '"]')
+                    .val(d);
             })
         });
     }
 
     var agencyProfile = config.agencyProfile;
-
-    var mapPoints = [{
-        "name": "coords.ippCoordinates",
-        "text": "IPP Location",
-        "coords": weatherCoords
-    }, {
-        "name": "coords.decisionPointCoord",
-        "text": "Decision Point"
-    }, {
-        "name": "coords.destinationCoord",
-        "text": "Subject Destination"
-    }];
-    var center = weatherCoords;
-    var zoom = agencyProfile.coordinates.zoom;
-    center.zoom = zoom;
-    formSetMap('formMap', center, mapPoints);
+*/
+    //var center = weatherCoords;
 
     Session.set('userView', this.data.record._id);
     $('.collapse')
@@ -96,38 +134,38 @@ Template.form.rendered = function () {
         $('#target_table_id').html(tbl_body);*/
 };
 Template.form.helpers({
-    formType: function () {
+    formType: function() {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
     },
-    todosReady: function () {
+    todosReady: function() {
         return true;
     },
-    getObj: function (obj, name) {
+    getObj: function(obj, name) {
         return obj[name];
     },
-    getData: function (obj, name) {
+    getData: function(obj, name) {
         return this.data.record;
     },
-    current: function () {
+    current: function() {
         return Records.findOne(this.record._id)
     },
-    Schemas: function () {
+    Schemas: function() {
         return Schemas;
     },
-    Records: function () {
+    Records: function() {
         return Records;
     },
-    currentRecord: function () {
+    currentRecord: function() {
         return Session.get('currentRecord');
     },
-    formComplete: function (name) {
+    formComplete: function(name) {
         var name = this.field;
         var record = this.doc;
         if (!record) {
             return;
         }
-        var formLen = _.filter(record, function (d) {
+        var formLen = _.filter(record, function(d) {
                 var val = d;
                 if (val === '' || !val) {
                     val = false;
@@ -139,23 +177,23 @@ Template.form.helpers({
         var complete = (formLen === schemaLen);
         return formLen + '/' + schemaLen;
     },
-    formId: function (name) {
+    formId: function(name) {
         return 'af_' + this.field;
     },
-    autoSaveMode: function () {
+    autoSaveMode: function() {
         return true;
     },
-    isSchema: function (obj, obj2) {
+    isSchema: function(obj, obj2) {
         return obj === obj2;
     },
-    arrRecord: function (val) {
+    arrRecord: function(val) {
         if (!this.record) {
             return;
         }
         result = [];
         var use = ['recordInfo', 'coords', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
         var record = this.record;
-        _.each(use, function (d) {
+        _.each(use, function(d) {
             if (record[d]) {
                 result.push({
                     name: d,
@@ -165,15 +203,15 @@ Template.form.helpers({
         });
         return val ? record[val] : result;
     },
-    arrRecords: function () {
+    arrRecords: function() {
         if (!this.record) {
             return;
         }
         var record = this.record;
         return _.chain(record)
-            .map(function (d, key) {
+            .map(function(d, key) {
                 if (_.isObject(d)) {
-                    return _.map(d, function (d2, key2) {
+                    return _.map(d, function(d2, key2) {
                         return {
                             name: key + '.' + key2,
                             //name: 'Schemas.'+key2,
@@ -186,11 +224,11 @@ Template.form.helpers({
             .compact()
             .value();
     },
-    schemas: function () {
+    schemas: function() {
         var record = this.record;
         //'incidentOperations'
         var schemas = ['recordInfo', 'recordInfo', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
-        return schemas.map(function (d) {
+        return schemas.map(function(d) {
             return {
                 field: d,
                 doc: record[d]
@@ -198,31 +236,31 @@ Template.form.helpers({
         });
     },
 });
-var editList = function (list, template) {
+var editList = function(list, template) {
     Tracker.flush();
     template.$('.js-edit-form input[type=text]')
         .focus();
     var name = template.$('[name=name]')
         .val();
-    Meteor.call('updateRecords', list._id, name, function (err) {
+    Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
     });
 };
-var saveList = function (list, template) {
+var saveList = function(list, template) {
     //Session.set(EDITING_KEY, false);
     var name = template.$('[name=name]')
         .val();
-    Meteor.call('updateRecords', list._id, name, function (err) {
+    Meteor.call('updateRecords', list._id, name, function(err) {
         console.log(err);
     });
 };
-var deleteList = function (list) {
+var deleteList = function(list) {
     if (list.userId !== Meteor.userId()) {
         return alert('Sorry, You can only delete lists you created!');
     }
     var message = 'Are you sure you want to delete the list ' + list.name + '?';
     if (confirm(message)) {
-        Meteor.call('removeRecord', list._id, function () {
+        Meteor.call('removeRecord', list._id, function() {
             Router.go('form', Records.findOne());
         });
         return true;
@@ -230,7 +268,7 @@ var deleteList = function (list) {
         return false;
     }
 };
-var toggleListPrivacy = function (list) {
+var toggleListPrivacy = function(list) {
     return toggleListPrivacy = !toggleListPrivacy;
     if (list.userId) {
         Records.update(list._id, {
@@ -247,7 +285,7 @@ var toggleListPrivacy = function (list) {
     }
 };
 Template.form.events({
-    'change .list-edit': function (event, template) {
+    'change .list-edit': function(event, template) {
         if ($(event.target)
             .val() === 'edit') {
             editList(this, template);
@@ -259,29 +297,78 @@ Template.form.events({
         }
         event.target.selectedIndex = 0;
     },
-    'click .js-toggle-list-privacy': function (event, template) {
+    'click .js-toggle-list-privacy': function(event, template) {
         var toggleTest = Session.get('toggleTest');
         var result = !toggleTest;
         Session.set('toggleTest', result);
         return result ? 'a' : 'b';
     },
-    'click .js-delete-list': function (event, template) {
+    'click .js-delete-list': function(event, template) {
         var record = Session.get('currentRecord');
         deleteList(record);
     },
-    'click .formNav': function (event, template) {
+    'click .formNav': function(event, template) {
         $('.collapse')
             .collapse('hide');
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'change ._afInput': function (event, template) {},
-    'change [name="resources.resourcesUsed"]': function (event, template) {
+    'change ._afInput': function(event, template) {},
+    'change [name="resources.resourcesUsed"]': function(event, template) {
         console.log('!')
+    },
+    'click .mapPoints a': function(event, template) {
+        var context = template.$(event.target);
+        var pointType = context.attr('data');
+        var active = context.hasClass('active')
+
+        var coords = getCoords();
+        console.log(coords)
+        var item = _.findWhere(coords, {
+            val: pointType
+        });
+        console.log(item)
+        map.addPoint(item);
+
+        /* coords.forEach(function(d) {
+                 if (d.coords) {
+                     $('[data="' + d.val + '"]')
+                         .addClass('active');
+                 }
+
+                 map.addPoint(d);*/
+
+        /*
+                 var d = mapPoints.filter(function(d) {
+                     return d.name === 'coords.' + pointType;
+                 })[0];
+
+                 var marker = L.marker(map.getCenter(), {
+                     draggable: true,
+                     className: 'z2'
+                 });
+
+                 marker.bindLabel(d.text, {
+                         noHide: true
+                     })
+                     .addTo(map);
+
+                 marker.on('dragend', function(event) {
+                     var marker = event.target;
+                     var position = marker.getLatLng();
+                     $('[name="coords.' + pointType + '.lng"]')
+                         .val(position.lng)
+                         .trigger("change");;
+                     $('[name="coords.' + pointType + '.lat"]')
+                         .val(position.lat)
+                         .trigger("change");;
+
+                 });*/
+
     },
 });
 hooks2 = {
-    onSubmit: function (doc) {
+    onSubmit: function(doc) {
         console.log(doc);
         Schemas.SARCAT.clean(doc);
         console.log(doc);
@@ -289,17 +376,17 @@ hooks2 = {
         return false;
     },
     // Schemas.SARCAT.clean(doc);
-    onSuccess: function (formType, result) {
+    onSuccess: function(formType, result) {
         console.log(formType, result);
     },
-    onError: function (formType, error) {
+    onError: function(formType, error) {
         console.log(formType, error);
     },
-    beginSubmit: function (a) {
+    beginSubmit: function(a) {
         // console.log()
         console.log('beginSubmit');
     },
-    endSubmit: function () {
+    endSubmit: function() {
         console.log('endSubmit');
     }
 };
