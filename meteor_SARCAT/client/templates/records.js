@@ -1,6 +1,6 @@
 var mapDrawn;
 var drawn;
-Template.records.rendered = function () {
+Template.records.rendered = function() {
     /*
         console.log(this.data);
         var data = Records.find()
@@ -71,46 +71,65 @@ Template.records.rendered = function () {
         drawn = true;*/
 };
 Template.records.helpers({
-    lists: function () {
+    lists: function() {
         return Records.find();
     },
-    isNotViewer: function () {
+    isNotViewer: function() {
         return Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
     },
-    newRecord: function () {
+    newRecord: function() {
         return Records.findOne(Session.get('newRecord'));
     },
 
 });
 Template.records.events({
-    'click #createRecordModal button': function () {
+    'click #createRecordModal button': function() {
         // $('#createRecordModal').modal('hide')
     },
-    'click .js-deleteRecord': function () {
+    'click .js-deleteRecord': function() {
         var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function (error, d) {
+        Meteor.call('removeRecord', record, function(error, d) {
             console.log(error, d)
         })
     },
 
-    'click .modal-backdrop': function () {
+    'click .modal-backdrop': function() {
         var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function (error, d) {
+        Meteor.call('removeRecord', record, function(error, d) {
             console.log(error, d)
         })
     },
 
-    'click .js-newRecord': function () {
-
+    'click .js-newRecord': function(event, template) {
+        var config = Session.get('config');
         var list = {
             userId: Meteor.userId()
         };
-        list._id = Meteor.call('addRecord', list, function (error, d) {
+        list._id = Meteor.call('addRecord', list, function(error, d) {
             if (error) {
                 console.log(error);
             }
-            Session.set('newRecord', d)
+            Session.set('newRecord', d);
         });
+
+        template.$('#createRecordModal')
+            .on('shown.bs.modal', function(e) {
+                if (mapDrawn) {
+                    return;
+                }
+
+                var agencyProfile = config.agencyProfile;
+                var bounds = agencyProfile.bounds;
+                var newBounds = boundsString2Array(bounds);
+console.log(newBounds)
+                var mapPoints = {
+                    "name": "coords.ippCoordinates",
+                    "text": "IPP Location"
+                };
+
+                newProjectSetMap('recordMap', newBounds, mapPoints);
+            });
+
         /*if (!map) {
             setTimeout(function () {
                 var config = Session.get('config');
@@ -127,23 +146,29 @@ Template.records.events({
 
 
 */
+        /*
+                if (mapDrawn) {
+                    return;
+                }
+                var config = Session.get('config');
 
-        if (mapDrawn) {
-            return;
-        }
-        var config = Session.get('config');
+                var mapPoints = {
+                    "name": "coords.ippCoordinates",
+                    "text": "IPP Location"
+                };
 
-        var mapPoints = {
-            "name": "coords.ippCoordinates",
-            "text": "IPP Location"
-        };
+                setTimeout(function (d) {
+                    var config = Session.get('config');
 
-        setTimeout(function (d) {
-            var config = Session.get('config');
-            newProjectSetMap('recordMap', config.agencyProfile.coordinates, mapPoints);
-        }, 500);
-        mapDrawn = true;
-        return;
+                            var agencyProfile = config.agencyProfile;
+                        var bounds = agencyProfile.bounds;
+                        var newBounds = boundsString2Array(bounds);
+
+
+                    newProjectSetMap('recordMap', newBounds, mapPoints);
+                }, 500);
+                mapDrawn = true;
+                return;*/
 
         // }
 
