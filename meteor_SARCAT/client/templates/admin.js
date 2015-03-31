@@ -6,6 +6,10 @@ var config;
 Template.admin.created = function () {
     config = Session.get('config');
 
+
+
+ 
+
     /*agencyCoordinates = agencyProfile.coordinates;
 
     if (!agencyCoordinates) {

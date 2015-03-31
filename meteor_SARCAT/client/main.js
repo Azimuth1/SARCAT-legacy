@@ -38,10 +38,23 @@ getLocation = function (cb) {
 
 }
 
+getWeather = function (coords, date, cb) {
+    var time = date || new Date().toISOString().split('.')[0];
+    var latlng = [coords.lat, coords.lng];
+    var params = latlng.concat(time).join(',');
+    var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/' + params;
+    console.log(url);
+    $.getJSON(url + "?callback=?", function (data) {
+        cb(data);
+    });
+
+}
+
 setMap = function (context, coords, popup) {
     var map = L.map(context)
         .setView([coords.lat, coords.lng], coords.zoom);
     m = map;
+    map.scrollWheelZoom.disable();
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             id: 'examples.map-i875mjb7'
@@ -58,60 +71,40 @@ setMap = function (context, coords, popup) {
         $('[name="agencyProfile.coordinates.zoom"]')
             .val(zoom);
     });
-    /*
-        var ippMarker = L.marker([m.getCenter()
-            .lat, m.getCenter()
-            .lng
-        ], {
-            draggable: true
-        });
-        ippMarker.addTo(map);
-        ippMarker.on('drag', function(event) {
-            var marker = event.target;
-            var position = marker.getLatLng();
-            $('[name="agencyProfile.coordinates.lng"]')
-                .val(position.lng);
-            $('[name="agencyProfile.coordinates.lat"]')
-                .val(position.lat);
-
-        });
-        ippMarker.bindPopup('<b>' + popup + '</b>', {
-                noHide: true
-            })
-            .openPopup();*/
     return map;
 }
 
-newProjectSetMap = function (context, coords, popup) {
+newProjectSetMap = function (context, coords, points) {
+    var center = [coords.lat, coords.lng];
     var map = L.map(context)
-        .setView([coords.lat, coords.lng], coords.zoom);
+        .setView(center, coords.zoom);
     m = map;
+    map.scrollWheelZoom.disable();
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             id: 'examples.map-i875mjb7'
         })
         .addTo(map);
 
-    var ippMarker = L.marker([m.getCenter()
-        .lat, m.getCenter()
-        .lng
-    ], {
-        draggable: true
+    var marker = L.marker(center, {
+        draggable: true,
+        className: 'z2'
     });
-    ippMarker.addTo(map);
-    ippMarker.on('drag', function (event) {
-        var marker = event.target;
-        var position = marker.getLatLng();
-        $('[name="agencyProfile.coordinates.lng"]')
-            .val(position.lng);
-        $('[name="agencyProfile.coordinates.lat"]')
-            .val(position.lat);
 
-    });
-    ippMarker.bindPopup('<b>' + popup + '</b>', {
+    marker.bindLabel(points.text, {
             noHide: true
         })
-        .openPopup();
+        .addTo(map);
+
+    marker.on('dragend', function (event) {
+        var marker = event.target;
+        var position = marker.getLatLng();
+        $('[name="' + points.name + '.lng"]')
+            .val(position.lng).trigger("change");
+        $('[name="' + points.name + '.lat"]')
+            .val(position.lat).trigger("change");
+
+    });
     return map;
 }
 
@@ -120,6 +113,7 @@ formSetMap = function (context, coords, points) {
     var map = L.map(context)
         .setView(center, coords.zoom);
     m = map;
+    map.scrollWheelZoom.disable();
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             id: 'examples.map-i875mjb7'
@@ -133,53 +127,40 @@ formSetMap = function (context, coords, points) {
     var w = sw.lng;
     var diff = ne.lng - sw.lng;
     var factor = diff / (points.length);
-    console.log(factor)
-    var newLat = n - ((n - coords.lat) * .2);
-    points.forEach(function (d, i) {
-        var newLng = w + (factor * i) + (factor / 3);
-        var marker = L.marker([newLat, newLng], {
-                draggable: true,
-                className:'z2'
-            });
+    
 
-            marker.bindLabel(d.text, {
+    var newCoords = function(i){
+     var newLat = n - ((n - coords.lat) * .5);
+     var newLng = w + (factor * i) + (factor / (points.length));  
+     return [newLat, newLng];
+    }
+    points.forEach(function (d, i) {
+
+
+        var coords = d.coords;
+console.log(coords)
+        //var newLng = w + (factor * i) + (factor / (points.length));
+        var coord = (coords) ? [coords.lat,coords.lng] : newCoords(i);
+        console.log(coord)
+        var marker = L.marker(coord, {
+            draggable: true,
+            className: 'z2'
+        });
+
+        marker.bindLabel(d.text, {
                 noHide: true
             })
             .addTo(map);
 
+        marker.on('dragend', function (event) {
+            var marker = event.target;
+            var position = marker.getLatLng();
+            $('[name="' + d.name + '.lng"]')
+                .val(position.lng).trigger("change");;
+            $('[name="' + d.name + '.lat"]')
+                .val(position.lat).trigger("change");;
 
-            marker.on('drag', function (event) {
-                var marker = event.target;
-                var position = marker.getLatLng();
-                $('[name="'+d.name+'.lng"]')
-                    .val(position.lng);
-                $('[name="'+d.name+'.lat"]')
-                    .val(position.lat);
-
-            });
-        /*
-
-            var marker = L.marker([coords.lat, coords.lng], {
-                draggable: true
-            });
-
-            marker.bindLabel("My Label", {noHide: true, className: "my-label", offset: [0, 0] });
-            marker.addTo(map);
-            marker.on('drag', function (event) {
-                var marker = event.target;
-                var position = marker.getLatLng();
-                $('[name="'+d.name+'.lng"]')
-                    .val(position.lng);
-                $('[name="'+d.name+'.lat"]')
-                    .val(position.lat);
-
-            });
-            marker.bindPopup('<b>' + d.text + '</b>', {
-                    noHide: true
-                })
-                .openPopup();
-
-        */
+        });
 
     });
 

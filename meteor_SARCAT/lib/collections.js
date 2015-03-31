@@ -105,16 +105,12 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Record Name',
         autoValue: function (d, e) {
-            console.log('go');
             if (this.isInsert) {
-                console.log('insert');
                 var value = this.value;
                 console.log(value)
                 if (value) {
-                    console.log('value');
                     return value;
                 } else {
-                    console.log('else');
                     return Records.defaultName();
                 }
             }
@@ -310,7 +306,7 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
         label: 'Land Owner',
     },
-    weather: {
+   /* weather: {
         type: String,
         optional: true,
         allowedValues: ['Unknown', 'Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
@@ -359,70 +355,152 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         allowedValues: ['Unknown', 'Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
         label: 'Light',
-    }
+    }*/
 });
 
+Schemas.weather = new SimpleSchema({
+    /*
+        light: {
+            type: String,
+            optional: true,
+            allowedValues: ["clear-day", " clear-night", " rain", " snow", " sleet", " wind", " fog", " cloudy", " partly-cloudy-day", " or partly-cloudy-night"],
+            label: 'Light',
+        }
+    */
+
+    /*"time": {
+        "type": String,
+        "optional": true,
+        "label": "time"
+    },*/
+    /*"summary": {
+        "type": String,
+        "optional": true,
+        "label": "Summary"
+    },*/
+    "icon": {
+        "type": String,
+        "optional": true,
+        "label": "Summary"
+    },
+    "precipIntensity": {
+        "type": String,
+        "optional": true,
+        "label": "Precipitation Intensity"
+    },
+    /*"precipProbability": {
+        "type": String,
+        "optional": true,
+        "label": "precipProbability"
+    },*/
+    "precipType": {
+        "type": String,
+        "optional": true,
+        "label": "Precipitation Type"
+    },
+    "temperature": {
+        "type": String,
+        "optional": true,
+        "label": "Temperature"
+    },
+    "apparentTemperature": {
+        "type": String,
+        "optional": true,
+        "label": "Apparent Temperature"
+    },
+    "dewPoint": {
+        "type": String,
+        "optional": true,
+        "label": "Dew Point"
+    },
+    "humidity": {
+        "type": String,
+        "optional": true,
+        "label": "Humidity"
+    },
+    "windSpeed": {
+        "type": String,
+        "optional": true,
+        "label": "Wind Speed"
+    },
+    "windBearing": {
+        "type": String,
+        "optional": true,
+        "label": "Wind Bearing"
+    },
+    "visibility": {
+        "type": String,
+        "optional": true,
+        "label": "Visibility"
+    },
+    "pressure": {
+        "type": String,
+        "optional": true,
+        "label": "Pressure"
+    }
+})
+
 Schemas.subjects = new SimpleSchema({
-    subjects: {
+    subject: {
         type: Array,
         optional: true
     },
-    'subjects.$': {
+    'subject.$': {
         type: Object
     },
 
-    'subjects.$.age': {
+    'subject.$.age': {
         type: Number,
         label: 'Age',
         optional: true
     },
-    'subjects.$.sex': {
+    'subject.$.sex': {
         type: String,
         allowedValues: ['Unknown', 'Male', 'Femail'],
         label: 'Sex',
         optional: true
     },
-    'subjects.$.local': {
+    'subject.$.local': {
         type: String,
         allowedValues: ['Unknown', 'Yes', 'No', 'Guide'],
         label: 'Local?',
         optional: true
     },
-    'subjects.$.weight': {
+    'subject.$.weight': {
         type: String,
         label: 'Weight',
         optional: true
     },
-    'subjects.$.height': {
+    'subject.$.height': {
         type: String,
         label: 'Height',
         optional: true
     },
-    'subjects.$.physical fitness': {
+    'subject.$.physical fitness': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Physical Fitness',
         optional: true
     },
-    'subjects.$.experience': {
+    'subject.$.experience': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Experience',
         optional: true
     },
-    'subjects.$.equipment': {
+    'subject.$.equipment': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Equipment',
         optional: true
     },
-    'subjects.$.clothing': {
+    'subject.$.clothing': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Clothing',
         optional: true
     },
-    'subjects.$.survival training': {
+    'subject.$.survival training': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Survival training',
@@ -548,20 +626,23 @@ Schemas.timeLog = new SimpleSchema({
         optional: true
     }
 });
-Schemas.incidentOperations = new SimpleSchema({
+
+Schemas.coords = new SimpleSchema({
     ippCoordinates: {
         type: Object,
         label: 'IPP Coordinates',
         optional: true
     },
     'ippCoordinates.lat': {
-        type: String,
+        type: Number,
         label: 'Latitude',
+        decimal: true,
         optional: true
     },
     'ippCoordinates.lng': {
-        type: String,
+        type: Number,
         label: 'Longitude',
+        decimal: true,
         optional: true
     },
 
@@ -597,16 +678,19 @@ Schemas.incidentOperations = new SimpleSchema({
         optional: true
     },
 
-    'initialDirectionofTravel': {
-        type: String,
-        label: 'Initial Direction of Travel',
+    'findCoord': {
+        type: Object,
+        label: 'Find Coordinates',
         optional: true
     },
-
-    'DOTHowdetermined': {
+    'findCoord.lat': {
         type: String,
-        allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
-        label: 'DOT How determined',
+        label: 'Latitude',
+        optional: true
+    },
+    'findCoord.lng': {
+        type: String,
+        label: 'Longitude',
         optional: true
     },
 
@@ -622,6 +706,23 @@ Schemas.incidentOperations = new SimpleSchema({
     'revisedLKP-PLS.lng': {
         type: String,
         label: 'Longitude',
+        optional: true
+    },
+
+});
+
+Schemas.incidentOperations = new SimpleSchema({
+
+    'initialDirectionofTravel': {
+        type: String,
+        label: 'Initial Direction of Travel',
+        optional: true
+    },
+
+    'DOTHowdetermined': {
+        type: String,
+        allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
+        label: 'DOT How determined',
         optional: true
     },
 
@@ -649,22 +750,6 @@ Schemas.incidentOperations = new SimpleSchema({
     }
 });
 Schemas.incidentOutcome = new SimpleSchema({
-
-    'findCoord': {
-        type: Object,
-        label: 'Find Coordinates',
-        optional: true
-    },
-    'findCoord.lat': {
-        type: String,
-        label: 'Latitude',
-        optional: true
-    },
-    'findCoord.lng': {
-        type: String,
-        label: 'Longitude',
-        optional: true
-    },
 
     'incidentOutcome': {
         type: String,
@@ -705,7 +790,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     },
 
-    'distanceIPP': {
+    /*'distanceIPP': {
         type: String,
         label: 'Distance IPP',
         optional: true
@@ -714,7 +799,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         type: String,
         label: 'Find Bearing',
         optional: true
-    },
+    },*/
     'findFeature': {
         type: String,
         allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/woods', 'ice/snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
@@ -949,8 +1034,17 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true
             //optional: true
     },
+    coords: {
+        type: Schemas.coords,
+        optional: true
+            //optional: true
+    },
     incident: {
         type: Schemas.incident,
+        optional: true
+    },
+    weather: {
+        type: Schemas.weather,
         optional: true
     },
     subjects: {
@@ -1171,6 +1265,17 @@ Schemas.formEditions = new SimpleSchema({
     },
 
     'incident.$': {
+        type: String
+    },
+
+    weather: {
+        type: Array,
+        allowedValues: Schemas.weather._firstLevelSchemaKeys,
+        defaultValue: Schemas.weather._firstLevelSchemaKeys,
+        label: 'weather',
+    },
+
+    'weather.$': {
         type: String
     },
 
