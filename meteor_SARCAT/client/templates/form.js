@@ -1,46 +1,61 @@
 var firstRender = true;
 listFadeInHold = null;
 var weather = false;
+var config;
+var record;
 Template.registerHelper("Schemas", Schemas);
-/*
-if(!weather){
-$.ajax({
-    url: 'https://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/70,20',
-    jsonp: 'callback',
-    dataType: 'jsonp',
-    success: function(data) {
-        console.log('!!!!');
-        Session.set('weather', data);
-        weather=true;
-    }
-});
-}
-*/
-Template.form.rendered = function () {
 
-    var config = Session.get('config');
+Template.form.created = function () {
+    config = Session.get('config');
+    record = this.data.record;
+    Session.set('currentRecord', record);
+};
+Template.form.rendered = function () {
+    var coords = record.coords;
+    var weatherCoords;
+
+
+    if (coords && coords.ippCoordinates) {
+        weatherCoords = coords.ippCoordinates;
+    } else{
+        weatherCoords = config.agencyProfile.coordinates;
+    }
+
+    if (!record.weather) {
+
+        getWeather(weatherCoords, null, function (data) {
+            Session.set('weather', data);
+            var data = data.currently;
+            _.each(data, function (d, name) {
+                $('[name="weather.' + name + '"]').val(d);
+            })
+        });
+    }
 
     var agencyProfile = config.agencyProfile;
 
     var mapPoints = [{
-        "name": "incidentOperations.ippCoordinates",
-        "text": "IPP Location"
+        "name": "coords.ippCoordinates",
+        "text": "IPP Location",
+        "coords": weatherCoords
     }, {
-        "name": "incidentOperations.decisionPointCoord",
+        "name": "coords.decisionPointCoord",
         "text": "Decision Point"
     }, {
-        "name": "incidentOperations.destinationCoord",
+        "name": "coords.destinationCoord",
         "text": "Subject Destination"
     }];
-
-    formSetMap('formMap', agencyProfile.coordinates,mapPoints);
+    var center = weatherCoords;
+    var zoom = agencyProfile.coordinates.zoom;
+    center.zoom = zoom;
+    formSetMap('formMap', center, mapPoints);
 
     Session.set('userView', this.data.record._id);
     $('.collapse')
         .collapse({
             toggle: false
         });
-    Session.set('currentRecord', this.data.record);
+
     /*
         var data = {
             "time": 1426269221,
@@ -94,6 +109,9 @@ Template.form.helpers({
     getData: function (obj, name) {
         return this.data.record;
     },
+    current: function () {
+        return Records.findOne(this.record._id)
+    },
     Schemas: function () {
         return Schemas;
     },
@@ -135,7 +153,7 @@ Template.form.helpers({
             return;
         }
         result = [];
-        var use = ['recordInfo']; //, 'incident', 'subjectInfo', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
+        var use = ['recordInfo', 'coords', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
         var record = this.record;
         _.each(use, function (d) {
             if (record[d]) {
@@ -171,7 +189,7 @@ Template.form.helpers({
     schemas: function () {
         var record = this.record;
         //'incidentOperations'
-        var schemas = ['recordInfo', 'recordInfo', 'incident', 'subjects', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
+        var schemas = ['recordInfo', 'recordInfo', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
         return schemas.map(function (d) {
             return {
                 field: d,

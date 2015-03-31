@@ -1,14 +1,14 @@
-Handlebars.registerHelper('json', function(context) {
+Handlebars.registerHelper('json', function (context) {
     return JSON.stringify(context);
 });
-Handlebars.registerHelper('isEqual', function(a, b) {
+Handlebars.registerHelper('isEqual', function (a, b) {
     return a === b;
 });
 Router.configure({
     layoutTemplate: 'appBody',
     notFoundTemplate: 'appNotFound',
     loadingTemplate: 'appLoading',
-    waitOn: function() {
+    waitOn: function () {
         return [
             Meteor.subscribe('publicLists'),
             Meteor.subscribe('userData'),
@@ -16,7 +16,7 @@ Router.configure({
             Meteor.subscribe('roles'),
         ];
     },
-    onBeforeAction: function() {
+    onBeforeAction: function () {
         Session.set('config', Config.findOne());
         if (Config.findOne({
                 initSetup: true
@@ -25,7 +25,7 @@ Router.configure({
         }
         this.next();
     },
-    action: function() {
+    action: function () {
         if (this.ready()) {
             this.render();
         } else {
@@ -34,23 +34,25 @@ Router.configure({
     }
 });
 if (Meteor.isClient) {
-    Tracker.autorun(function() {
-        var count = Session.get('userView');
-        console.log('autorun1:' + count);
-    });
-    Tracker.autorun(function() {
-        var count = Session.get('adminUser');
-        console.log('autorun2:' + count);
-    });
 
+
+
+    Tracker.autorun(function () {
+        var count = Session.get('userView');
+        //console.log('autorun1:' + count);
+    });
+    Tracker.autorun(function () {
+        var count = Session.get('adminUser');
+        //console.log('autorun2:' + count);
+    });
 
     Roles.userIsInRole(Meteor.userId(), ['admin']);
     L.Icon.Default.imagePath = '/img';
 }
 Router.route('home', {
     path: '/',
-    action: function() {
-        console.log('!')
+    action: function () {
+        //console.log('!')
         if (Meteor.user()) {
             Router.go('user-home', Meteor.user());
         } else {
@@ -61,7 +63,7 @@ Router.route('home', {
 Router.route('adminSetup', {
     path: '/adminSetup/',
     layoutTemplate: null,
-    onBeforeAction: function() {
+    onBeforeAction: function () {
         this.next();
     }
 });
@@ -69,7 +71,7 @@ Router.route('join');
 Router.route('signin')
 Router.route('user-home', {
     path: '/user/:_id',
-    data: function() {
+    data: function () {
         var obj = {};
         obj.user = Meteor.user();
         obj.users = Meteor.users.find();
@@ -79,16 +81,16 @@ Router.route('user-home', {
 });
 Router.route('form', {
     path: '/form/:_id',
-    waitOn: function() {
+    waitOn: function () {
         return this.subscribe('item', this.params._id);
     },
-    data: function() {
+    data: function () {
         var obj = {};
         obj.record = Records.findOne(this.params._id);
-        console.log(obj.record);
+        //console.log(obj.record);
         return obj;
     },
-    action: function() {
+    action: function () {
         if (this.ready()) {
             this.render();
         }

@@ -5,6 +5,19 @@
 Meteor.startup(function () {
 
 
+function b(){
+
+            var apiKey = '<PRIVATE>';
+            var url = 'https://api.forecast.io/forecast/';
+            var lati = 0;
+            var longi = 0;
+            var data;
+
+           
+        }
+
+
+
 
     if (!Config.find().count() && !Meteor.users.find().count()) {
         //Config.insert(Meteor.settings.production.public);
@@ -14,8 +27,8 @@ Meteor.startup(function () {
         };
         Config.insert(customSettings);
         var admin = Accounts.createUser({
-            email: 'a@a', //dmin@sarcat',
-            password: 'a', //dmin',
+            email: 'admin@sarcat',
+            password: 'admin',
             username: 'default'
         });
         Roles.addUsersToRoles(admin, ['admin']);
