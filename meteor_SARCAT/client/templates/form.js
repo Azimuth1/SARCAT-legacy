@@ -2,6 +2,7 @@ var firstRender = true;
 listFadeInHold = null;
 var weather = false;
 var config;
+var agencyProfile;
 var record;
 var map;
 Template.registerHelper("Schemas", Schemas);
@@ -12,22 +13,43 @@ var getCoords = function () {
         "val": "ippCoordinates",
         "name": "coords.ippCoordinates",
         "text": "IPP Location",
+        icon:'fa-times-circle-o'
     }, {
         "val": "decisionPointCoord",
         "name": "coords.decisionPointCoord",
-        "text": "Decision Point"
+        "text": "Decision Point",
+        icon:'fa-exclamation-circle'
     }, {
         "val": "destinationCoord",
         "name": "coords.destinationCoord",
-        "text": "Subject Destination"
+        "text": "Intended Destination",
+        icon:'fa-bullseye'
     }, {
         "val": "revisedLKP-PLS",
         "name": "coords.revisedLKP-PLS",
-        "text": "Revised IPP"
+        "text": "Revised IPP",
+        icon:'fa-bullseye'
     }, {
         "val": "findCoord",
         "name": "coords.findCoord",
-        "text": "Find Location"
+        "text": "Find Location",
+        icon:'fa-male'
+    }, {
+        "val": "intendedRoute",
+        "name": "coords.intendedRoute",
+        "text": "Intended Route",
+        path:{stroke:'#A94442'}
+    }, {
+        "val": "actualRoute",
+        "name": "coords.actualRoute",
+        "text": "Actual Route",
+        path:{stroke:'#3C763D',weight:8}
+    }, {
+        "val": "travelDirection",
+        "name": "coords.travelDirection",
+        "text": "Travel Direction",
+        icon:'fa-arrow-circle-o-up fa-5x'
+        
     }];
 
     mapPoints = _.object(_.map(mapPoints, function (x) {
@@ -52,23 +74,30 @@ var getCoords = function () {
 
 Template.form.created = function () {
     config = Session.get('config');
+    agencyProfile = config.agencyProfile;
     record = this.data.record;
     Session.set('currentRecord', record);
 };
 Template.form.rendered = function () {
+
     var coords = record.coords;
-    var agencyProfile = config.agencyProfile;
-    var center = coords.ippCoordinates;
-    map = formSetMap('formMap', center);
+    var bounds = coords.bounds;
+    var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
+    mapBounds = boundsString2Array(mapBounds);
+
+    //var center = coords.ippCoordinates;
+
+ 
+
+    map = formSetMap('formMap', mapBounds);
 
     a = map
 
     var coords = getCoords();
-    console.log(coords);
     coords.forEach(function (d) {
         if (d.coords) {
             $('[data="' + d.val + '"]').addClass('active');
-            map.addPoint(d);
+            map.add(d);
         }
 
     });
@@ -337,13 +366,18 @@ Template.form.events({
         var item = _.findWhere(coords, {
             val: pointType
         });
-        console.log(item)
+        console.log(item);
+
+
+
+
+
+
 
         if (!active) {
-
-            map.addPoint(item);
+            map.add(item);
         } else {
-            map.removePoint(item);
+            map.remove(item);
         }
         /* coords.forEach(function(d) {
                  if (d.coords) {
@@ -424,3 +458,4 @@ AutoForm.hooks({
     }
 });*/
 AutoForm.addHooks('kaf_recordInfo', hooks2);
+

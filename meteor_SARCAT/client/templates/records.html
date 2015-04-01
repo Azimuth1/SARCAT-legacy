@@ -10,19 +10,12 @@
                     {{#if newRecord}} 
 
 
-    {{> quickForm collection="Records" doc=newRecord class="hideBody hideSubmit hideHeader" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates"}} 
 
-                    {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo,coords"}} 
-
-                   
-
-                    {{> afQuickField name='recordInfo'}} 
+                    {{> quickForm collection="Records" doc=newRecord class="_hideBody hideSubmit hideHeader" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}} 
 
 
-                    {{/autoForm}} 
 
-
-                    {{/if}}
+                    {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo,coords"}} {{> afQuickField name='recordInfo'}} {{/autoForm}} {{/if}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn _btn-default js-deleteRecord" data-dismiss="modal">Close</button>
