@@ -74,12 +74,14 @@
                     </thead>
                     <tbody class='white-bg'>
                         {{#each users}}
+                        {{#unless isEqual this._id currentUser._id}}
+                    
                         <tr>
                             <td>{{this.username}}</td>
                             <td>
                                 <div class="admin_ChangeRole">
                                     <label class="radio-inline">
-                                        <input disabled='true' class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{roleIsChecked}}">Viewer
+                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{roleIsChecked}}">Viewer
                                     </label>
                                     <label class="radio-inline">
                                         <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsChecked}}">Editor
@@ -94,6 +96,7 @@
                                 <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
                             </td>
                         </tr>
+                        {{/unless}}
                         {{/each}}
                     </tbody>
                 </table>

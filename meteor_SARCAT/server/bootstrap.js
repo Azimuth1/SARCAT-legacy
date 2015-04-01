@@ -23,12 +23,12 @@ function b(){
         //Config.insert(Meteor.settings.production.public);
 
         var customSettings = {
-            'initSetup': true
+            'initSetup': false
         };
         Config.insert(customSettings);
         var admin = Accounts.createUser({
-            email: 'admin@sarcat',
-            password: 'admin',
+            email: 'a@a',//dmin@sarcat',
+            password: 'a',//dmin',
             username: 'default'
         });
         Roles.addUsersToRoles(admin, ['admin']);

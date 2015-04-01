@@ -1,6 +1,6 @@
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
-Records.defaultName = function() {
+Records.defaultName = function () {
     var nextLetter = 'A',
         nextName = 'Incident ' + nextLetter;
     while (Records.findOne({
@@ -11,7 +11,7 @@ Records.defaultName = function() {
     }
     return nextName;
 };
-Records.defaultNum = function() {
+Records.defaultNum = function () {
     var nextLetter = 1;
     while (Records.findOne({
             'recordInfo.incidentnum': nextLetter
@@ -59,13 +59,12 @@ Schemas.User = new SimpleSchema({
     },
 });
 Meteor.users.attachSchema(Schemas.User);
-
 Schemas.admin = new SimpleSchema({
     user: {
         type: String,
         optional: true,
         label: 'Prepared By',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.user()
                     .username;
@@ -76,7 +75,7 @@ Schemas.admin = new SimpleSchema({
         type: String,
         optional: true,
         regEx: SimpleSchema.RegEx.Email,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.user()
                     .emails[0].address;
@@ -90,7 +89,7 @@ Schemas.admin = new SimpleSchema({
         autoform: {
             omit: true
         },
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 //var config = Config.findOne();
                 return Config.findOne()
@@ -99,15 +98,13 @@ Schemas.admin = new SimpleSchema({
         }
     }
 });
-
 Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        autoValue: function(d, e) {
+        autoValue: function (d, e) {
             if (this.isInsert) {
                 var value = this.value;
-                console.log(value)
                 if (value) {
                     return value;
                 } else {
@@ -121,23 +118,12 @@ Schemas.recordInfo = new SimpleSchema({
         allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
         label: 'Incident Status',
         defaultValue: 'Open',
-        /*autoValue: function() {
-            if (this.isInsert) {
-                var value = this.value;
-                if (value) {
-                    return value;
-                } else {
-                    return 'Open';
-                }
-            }
-        },*/
     },
     leadagency: {
         type: String,
         label: 'Lead Agency',
         max: 200,
-
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -153,8 +139,7 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Organization/Agency',
         max: 200,
-
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -169,7 +154,7 @@ Schemas.recordInfo = new SimpleSchema({
     incidentnum: {
         type: String,
         label: 'Incident #',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 var value = this.value;
                 if (value) {
@@ -190,14 +175,14 @@ Schemas.recordInfo = new SimpleSchema({
         defaultValue: 'Search',
         allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
         label: 'Incident Type',
-    },
+    }
 });
 Schemas.incident = new SimpleSchema({
     'incidentdate': {
         type: Date,
         optional: true,
         label: 'Incident Date',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return new Date();
             }
@@ -228,7 +213,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         label: 'Response Country',
         optional: true,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Config.findOne()
                     .agencyProfile.country;
@@ -239,7 +224,7 @@ Schemas.incident = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Response State/Region',
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Config.findOne()
                     .agencyProfile['state-region'];
@@ -357,89 +342,86 @@ Schemas.incident = new SimpleSchema({
          label: 'Light',
      }*/
 });
-
 Schemas.weather = new SimpleSchema({
     /*
         light: {
             type: String,
             optional: true,
-            allowedValues: ["clear-day", " clear-night", " rain", " snow", " sleet", " wind", " fog", " cloudy", " partly-cloudy-day", " or partly-cloudy-night"],
+            allowedValues: ['clear-day', ' clear-night', ' rain', ' snow', ' sleet', ' wind', ' fog', ' cloudy', ' partly-cloudy-day', ' or partly-cloudy-night'],
             label: 'Light',
         }
     */
-
-    /*"time": {
-        "type": String,
-        "optional": true,
-        "label": "time"
+    /*'time': {
+        'type': String,
+        'optional': true,
+        'label': 'time'
     },*/
-    /*"summary": {
-        "type": String,
-        "optional": true,
-        "label": "Summary"
+    /*'summary': {
+        'type': String,
+        'optional': true,
+        'label': 'Summary'
     },*/
-    "icon": {
-        "type": String,
-        "optional": true,
-        "label": "Summary"
+    'icon': {
+        'type': String,
+        'optional': true,
+        'label': 'Summary'
     },
-    "precipIntensity": {
-        "type": String,
-        "optional": true,
-        "label": "Precipitation Intensity"
+    'precipIntensity': {
+        'type': String,
+        'optional': true,
+        'label': 'Precipitation Intensity'
     },
-    /*"precipProbability": {
-        "type": String,
-        "optional": true,
-        "label": "precipProbability"
+    /*'precipProbability': {
+        'type': String,
+        'optional': true,
+        'label': 'precipProbability'
     },*/
-    "precipType": {
-        "type": String,
-        "optional": true,
-        "label": "Precipitation Type"
+    'precipType': {
+        'type': String,
+        'optional': true,
+        'label': 'Precipitation Type'
     },
-    "temperature": {
-        "type": String,
-        "optional": true,
-        "label": "Temperature"
+    'temperature': {
+        'type': String,
+        'optional': true,
+        'label': 'Temperature'
     },
-    "apparentTemperature": {
-        "type": String,
-        "optional": true,
-        "label": "Apparent Temperature"
+    'apparentTemperature': {
+        'type': String,
+        'optional': true,
+        'label': 'Apparent Temperature'
     },
-    "dewPoint": {
-        "type": String,
-        "optional": true,
-        "label": "Dew Point"
+    'dewPoint': {
+        'type': String,
+        'optional': true,
+        'label': 'Dew Point'
     },
-    "humidity": {
-        "type": String,
-        "optional": true,
-        "label": "Humidity"
+    'humidity': {
+        'type': String,
+        'optional': true,
+        'label': 'Humidity'
     },
-    "windSpeed": {
-        "type": String,
-        "optional": true,
-        "label": "Wind Speed"
+    'windSpeed': {
+        'type': String,
+        'optional': true,
+        'label': 'Wind Speed'
     },
-    "windBearing": {
-        "type": String,
-        "optional": true,
-        "label": "Wind Bearing"
+    'windBearing': {
+        'type': String,
+        'optional': true,
+        'label': 'Wind Bearing'
     },
-    "visibility": {
-        "type": String,
-        "optional": true,
-        "label": "Visibility"
+    'visibility': {
+        'type': String,
+        'optional': true,
+        'label': 'Visibility'
     },
-    "pressure": {
-        "type": String,
-        "optional": true,
-        "label": "Pressure"
+    'pressure': {
+        'type': String,
+        'optional': true,
+        'label': 'Pressure'
     }
 })
-
 Schemas.subjects = new SimpleSchema({
     subject: {
         type: Array,
@@ -448,7 +430,6 @@ Schemas.subjects = new SimpleSchema({
     'subject.$': {
         type: Object
     },
-
     'subject.$.age': {
         type: Number,
         label: 'Age',
@@ -626,8 +607,17 @@ Schemas.timeLog = new SimpleSchema({
         optional: true
     }
 });
-
 Schemas.coords = new SimpleSchema({
+    bounds: {
+        type: String,
+        optional: true,
+        //defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665",
+
+    },
+    travelDirection: {
+        type: String,
+        optional: true,
+    },
     ippCoordinates: {
         type: Object,
         label: 'IPP Coordinates',
@@ -645,7 +635,6 @@ Schemas.coords = new SimpleSchema({
         decimal: true,
         optional: true
     },
-
     decisionPointCoord: {
         type: Object,
         label: 'decisionPointCoord',
@@ -663,7 +652,6 @@ Schemas.coords = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
-
     destinationCoord: {
         type: Object,
         label: 'Destination Coordinates',
@@ -681,7 +669,6 @@ Schemas.coords = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
-
     'findCoord': {
         type: Object,
         label: 'Find Coordinates',
@@ -699,7 +686,6 @@ Schemas.coords = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
-
     'revisedLKP-PLS': {
         type: Object,
         optional: true
@@ -716,24 +702,31 @@ Schemas.coords = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
+    intendedRoute: {
+        type: String,
+        optional: true,
+        //defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665",
 
+    },
+    actualRoute: {
+        type: String,
+        optional: true,
+        //defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665",
+
+    },
 });
-
 Schemas.incidentOperations = new SimpleSchema({
-
     'initialDirectionofTravel': {
         type: String,
         label: 'Initial Direction of Travel',
         optional: true
     },
-
     'DOTHowdetermined': {
         type: String,
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
         label: 'DOT How determined',
         optional: true
     },
-
     'revisedHowDetermined': {
         type: String,
         allowedValues: ['Unknown', 'Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
@@ -758,7 +751,6 @@ Schemas.incidentOperations = new SimpleSchema({
     }
 });
 Schemas.incidentOutcome = new SimpleSchema({
-
     'incidentOutcome': {
         type: String,
         allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
@@ -797,7 +789,6 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: '# Saved',
         optional: true
     },
-
     /*'distanceIPP': {
         type: String,
         label: 'Distance IPP',
@@ -998,7 +989,7 @@ Schemas.SARCAT = new SimpleSchema({
     userId: {
         type: String,
         optional: false,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.userId();
             }
@@ -1009,7 +1000,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     updated: {
         type: Date,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isUpdate) {
                 return new Date();
             }
@@ -1019,7 +1010,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     created: {
         type: Date,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return new Date;
             } else if (this.isUpsert) {
@@ -1064,7 +1055,6 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true
             //optional: true
     },
-
     incidentOperations: {
         type: Schemas.incidentOperations,
         optional: true
@@ -1094,29 +1084,24 @@ Schemas.agencyProfile = new SimpleSchema({
                 return Meteor.user().username;
             }
         }*/
-
     },
     phoneNum: {
         type: String,
         label: 'Phone Number',
         //optional: true,
-
     },
     country: {
         type: String,
         // optional: true,
-
     },
     'state-region': {
         type: String,
         // optional: true,
-
     },
     bounds: {
         type: String,
         optional: true,
-        defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665"
-
+        defaultValue: '-150.29296875,27.21555620902969,-41.66015625,50.736455137010665'
     },
     /*
         coordinates: {
@@ -1157,10 +1142,10 @@ var bronze = Schemas.incident._firstLevelSchemaKeys.map(function (d) {
         defaultValue: true,
         allowedValues: [true, false],
         autoform: {
-            type: "select-radio-inline",
+            type: 'select-radio-inline',
         },
         type: Boolean,
-        //allowedValues: ["true", "bar"]
+        //allowedValues: ['true', 'bar']
     };
 });
 
@@ -1168,7 +1153,7 @@ bronze = _.object(_.map(bronze, function (x) {
     return [x.label, x]
 }))
 
-var allValues = ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
+var allValues = ['recordInfo.name', 'recordInfo.status', 'recordInfo.leadagency', 'recordInfo.organizationagency', 'recordInfo.incidentnum', 'recordInfo.missionnum', 'recordInfo.incidenttype', 'incident.incidentdate', 'incident.incidenttime', 'incident.incidentEnvironment', 'incident.country', 'incident.stateregion', 'incident.subjectcategory', 'incident.contactmethod', 'incident.ipptype', 'incident.ippclassification', 'incident.ecoregiondomain', 'incident.ecoregionDivision', 'incident.populationDensity', 'incident.terrain', 'incident.landCover', 'incident.landOwner', 'incident.weather', 'incident.maxTemp', 'incident.minTemp', 'incident.wind', 'incident.rain', 'incident.snow', 'incident.light', 'timeLog.last seen date-time', 'timeLog.sar notified date-time', 'timeLog.subject located date-time', 'timeLog.incident closed date-time', 'timeLog.total hours', 'timeLog.search hours'];
 
 allValues = allValues.map(function (d) {
     return {
@@ -1177,7 +1162,7 @@ allValues = allValues.map(function (d) {
     };
 });
 
-//var allValues = ["recordInfo.name", "recordInfo.status", "recordInfo.leadagency", "recordInfo.organizationagency", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidenttype", "incident.incidentdate", "incident.incidenttime", "incident.incidentEnvironment", "incident.country", "incident.stateregion", "incident.subjectcategory", "incident.contactmethod", "incident.ipptype", "incident.ippclassification", "incident.ecoregiondomain", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "incident.landOwner", "incident.weather", "incident.maxTemp", "incident.minTemp", "incident.wind", "incident.rain", "incident.snow", "incident.light", "timeLog.last seen date-time", "timeLog.sar notified date-time", "timeLog.subject located date-time", "timeLog.incident closed date-time", "timeLog.total hours", "timeLog.search hours"];
+//var allValues = ['recordInfo.name', 'recordInfo.status', 'recordInfo.leadagency', 'recordInfo.organizationagency', 'recordInfo.incidentnum', 'recordInfo.missionnum', 'recordInfo.incidenttype', 'incident.incidentdate', 'incident.incidenttime', 'incident.incidentEnvironment', 'incident.country', 'incident.stateregion', 'incident.subjectcategory', 'incident.contactmethod', 'incident.ipptype', 'incident.ippclassification', 'incident.ecoregiondomain', 'incident.ecoregionDivision', 'incident.populationDensity', 'incident.terrain', 'incident.landCover', 'incident.landOwner', 'incident.weather', 'incident.maxTemp', 'incident.minTemp', 'incident.wind', 'incident.rain', 'incident.snow', 'incident.light', 'timeLog.last seen date-time', 'timeLog.sar notified date-time', 'timeLog.subject located date-time', 'timeLog.incident closed date-time', 'timeLog.total hours', 'timeLog.search hours'];
 
 var keys1 = Schemas.SARCAT._firstLevelSchemaKeys;
 
@@ -1202,7 +1187,7 @@ allValues = _.chain(keys1)
             defaultValue: true,
 
             autoform: {
-                type: "select-checkbox-inline",
+                type: 'select-checkbox-inline',
                 options: function () {
                     return d.value.map(function (e) {
 
@@ -1228,140 +1213,117 @@ allValues2 = _.object(_.map(allValues, function(x) {
     vals.optional = true;
     return [x.label, vals];
 }));*/
-
 /*var vals = _.object(_.map(allValues, function(x) {
     return [x.label, xx.value]
 }));*/
 //console.log(allValues2)
-
 //timeLog
-
 Schemas.formEditions = new SimpleSchema({
     type: {
         type: String,
         label: 'Choose SARCAT Edition',
         defaultValue: 'Platinum Edition',
         autoform: {
-            type: "select-radio-inline",
-            options: function() {
+            type: 'select-radio-inline',
+            options: function () {
                 return [{
-                    "label": "Platinum Edition",
-                    "value": "Platinum Edition"
+                    'label': 'Platinum Edition',
+                    'value': 'Platinum Edition'
                 }, {
-                    "label": "Gold Edition",
-                    "value": "Gold Edition"
+                    'label': 'Gold Edition',
+                    'value': 'Gold Edition'
                 }, {
-                    "label": "Silver Edition",
-                    "value": "Silver Edition"
+                    'label': 'Silver Edition',
+                    'value': 'Silver Edition'
                 }, {
-                    "label": "Basic Edition",
-                    "value": "Basic Edition"
+                    'label': 'Basic Edition',
+                    'value': 'Basic Edition'
                 }];
             }
         }
     },
-
     recordInfo: {
         type: Array,
         allowedValues: Schemas.recordInfo._firstLevelSchemaKeys,
         defaultValue: Schemas.recordInfo._firstLevelSchemaKeys,
         label: 'Record Info',
     },
-
     'recordInfo.$': {
         type: String
     },
-
     incident: {
         type: Array,
         allowedValues: Schemas.incident._firstLevelSchemaKeys,
         defaultValue: Schemas.incident._firstLevelSchemaKeys,
         label: 'incident',
     },
-
     'incident.$': {
         type: String
     },
-
     weather: {
         type: Array,
         allowedValues: Schemas.weather._firstLevelSchemaKeys,
         defaultValue: Schemas.weather._firstLevelSchemaKeys,
         label: 'weather',
     },
-
     'weather.$': {
         type: String
     },
-
     subjects: {
         type: Array,
         allowedValues: Schemas.subjects._firstLevelSchemaKeys,
         defaultValue: Schemas.subjects._firstLevelSchemaKeys,
         label: 'subjects',
     },
-
     'subjects.$': {
         type: String
     },
-
     timeLog: {
         type: Array,
         allowedValues: Schemas.timeLog._firstLevelSchemaKeys,
         defaultValue: Schemas.timeLog._firstLevelSchemaKeys,
         label: 'timeLog',
     },
-
     'timeLog.$': {
         type: String
     },
-
     incidentOperations: {
         type: Array,
         allowedValues: Schemas.incidentOperations._firstLevelSchemaKeys,
         defaultValue: Schemas.incidentOperations._firstLevelSchemaKeys,
         label: 'incidentOperations',
     },
-
     'incidentOperations.$': {
         type: String
     },
-
     incidentOutcome: {
         type: Array,
         allowedValues: Schemas.incidentOutcome._firstLevelSchemaKeys,
         defaultValue: Schemas.incidentOutcome._firstLevelSchemaKeys,
         label: 'incidentOutcome',
     },
-
     'incidentOutcome.$': {
         type: String
     },
-
     medical: {
         type: Array,
         allowedValues: Schemas.medical._firstLevelSchemaKeys,
         defaultValue: Schemas.medical._firstLevelSchemaKeys,
         label: 'medical',
     },
-
     'medical.$': {
         type: String
     },
-
     resources: {
         type: Array,
         allowedValues: Schemas.resources._firstLevelSchemaKeys,
         defaultValue: Schemas.resources._firstLevelSchemaKeys,
         label: 'resources',
     },
-
     'resources.$': {
         type: String
     },
-
 })
-
 Schemas.config = new SimpleSchema({
     initSetup: {
         type: Boolean,
@@ -1375,7 +1337,7 @@ Schemas.config = new SimpleSchema({
     },
     formEditions: {
         type: Schemas.formEditions,
-
     },
 });
 Config.attachSchema(Schemas.config);
+

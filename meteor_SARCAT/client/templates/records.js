@@ -121,13 +121,14 @@ Template.records.events({
                 var agencyProfile = config.agencyProfile;
                 var bounds = agencyProfile.bounds;
                 var newBounds = boundsString2Array(bounds);
-console.log(newBounds)
+
                 var mapPoints = {
                     "name": "coords.ippCoordinates",
                     "text": "IPP Location"
                 };
 
                 newProjectSetMap('recordMap', newBounds, mapPoints);
+                mapDrawn=true;
             });
 
         /*if (!map) {
