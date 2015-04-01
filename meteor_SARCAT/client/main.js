@@ -1,4 +1,4 @@
-getLocation = function(cb) {
+getLocation = function (cb) {
     var result;
 
     function requestLocation() {
@@ -38,10 +38,15 @@ getLocation = function(cb) {
 
 }
 
-boundsString2Array = function(bounds) {
-if(!bounds){return [[0,0],[1,1]];}
+boundsString2Array = function (bounds) {
+    if (!bounds) {
+        return [
+            [0, 0],
+            [1, 1]
+        ];
+    }
     bounds = bounds.split(',')
-        .map(function(d) {
+        .map(function (d) {
             return +d;
         });
 
@@ -52,7 +57,7 @@ if(!bounds){return [[0,0],[1,1]];}
 
 };
 
-getWeather = function(coords, date, cb) {
+getWeather = function (coords, date, cb) {
     var time = date || new Date()
         .toISOString()
         .split('.')[0];
@@ -61,13 +66,13 @@ getWeather = function(coords, date, cb) {
         .join(',');
     var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/' + params;
     console.log(url);
-    $.getJSON(url + "?callback=?", function(data) {
+    $.getJSON(url + "?callback=?", function (data) {
         cb(data);
     });
 
 }
 
-setMap = function(context, bounds) {
+setMap = function (context, bounds) {
 
     var map = L.map(context);
     m = map;
@@ -80,7 +85,7 @@ setMap = function(context, bounds) {
         })
         .addTo(map);
 
-    map.on('moveend', function() {
+    map.on('moveend', function () {
         var bounds = map.getBounds()
             .toBBoxString();
 
@@ -93,7 +98,7 @@ setMap = function(context, bounds) {
 
 }
 
-newProjectSetMap = function(context, bounds, points) {
+newProjectSetMap = function (context, bounds, points) {
 
     var map = L.map(context);
 
@@ -125,7 +130,7 @@ newProjectSetMap = function(context, bounds, points) {
         .val(center.lat)
         .trigger("change");
 
-    marker.on('dragend', function(event) {
+    marker.on('dragend', function (event) {
         var marker = event.target;
         var position = marker.getLatLng();
         $('[name="' + points.name + '.lng"]')
@@ -138,11 +143,11 @@ newProjectSetMap = function(context, bounds, points) {
     return map;
 }
 
-formSetMap = function(context, coords, points) {
+formSetMap = function (context, coords, points) {
 
-    console.log(coords)
+    var markers = {};
     var obj = {};
-    var map = L.map(context).setView(coords,10);
+    var map = L.map(context).setView(coords, 10);
     m = map;
     map.scrollWheelZoom.disable();
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
@@ -151,7 +156,21 @@ formSetMap = function(context, coords, points) {
         })
         .addTo(map);
 
-    obj.addPoint = function(d) {
+    obj.removePoint = function (d) {
+        var marker = markers[d.val]
+
+        $('[name="' + d.name + '.lng"]')
+            .val('')
+            .trigger("change");;
+        $('[name="' + d.name + '.lat"]')
+            .val('')
+            .trigger("change");;
+
+        map.removeLayer(marker);
+
+    };
+    obj.addPoint = function (d) {
+        console.log(d)
         var _coords = d.coords || map.getCenter();
         /*var ne = m.getBounds()
             ._northEast;
@@ -170,31 +189,31 @@ formSetMap = function(context, coords, points) {
         }
         points.forEach(function(d, i) {*/
 
-            //var coords = d.coords;
-           // console.log(coords)
-                //var newLng = w + (factor * i) + (factor / (points.length));
-       
-            var marker = L.marker(_coords, {
-                draggable: true,
-                className: 'z2'
-            });
+        //var coords = d.coords;
+        // console.log(coords)
+        //var newLng = w + (factor * i) + (factor / (points.length));
 
-            marker.bindLabel(d.text, {
-                    noHide: true
-                })
-                .addTo(map);
+        var marker = L.marker(_coords, {
+            draggable: true,
+            className: 'z2'
+        });
+        markers[d.val] = marker;
 
-            marker.on('dragend', function(event) {
-                var marker = event.target;
-                var position = marker.getLatLng();
-                $('[name="' + d.name + '.lng"]')
-                    .val(position.lng)
-                    .trigger("change");;
-                $('[name="' + d.name + '.lat"]')
-                    .val(position.lat)
-                    .trigger("change");;
+        marker.bindLabel(d.text, {
+                noHide: true
+            })
+            .addTo(map);
 
-            });
+        marker.on('dragend', function (event) {
+            var marker = event.target;
+            var position = marker.getLatLng();
+            $('[name="' + d.name + '.lng"]')
+                .val(position.lng)
+                .trigger("change");;
+            $('[name="' + d.name + '.lat"]')
+                .val(position.lat)
+                .trigger("change");;
+        });
 
         //});
     }
