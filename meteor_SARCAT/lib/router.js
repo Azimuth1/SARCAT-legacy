@@ -37,16 +37,14 @@ if (Meteor.isClient) {
 
 
 
-    Tracker.autorun(function () {
-        var count = Session.get('userView');
-        //console.log('autorun1:' + count);
-    });
-    Tracker.autorun(function () {
+
+    /*Tracker.autorun(function () {
         var count = Session.get('adminUser');
         //console.log('autorun2:' + count);
-    });
+    });*/
 
     Roles.userIsInRole(Meteor.userId(), ['admin']);
+    L.Icon.Default.imagePath = '/img';
     L.Icon.Default.imagePath = '/img';
 }
 Router.route('home', {
@@ -73,8 +71,8 @@ Router.route('user-home', {
     path: '/user/:_id',
     data: function () {
         var obj = {};
-        obj.user = Meteor.user();
-        obj.users = Meteor.users.find();
+        //obj.user = Meteor.user();
+        obj.users = Meteor.users.find().fetch();
         obj.records = Records.find();
         return obj;
     },

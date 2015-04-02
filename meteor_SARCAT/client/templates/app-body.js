@@ -1,64 +1,44 @@
-var agencyProfileIncomplete = function() {
-    var config = Session.get('config');
-    if (!config) {
-        return;
-    }
-    var agencyProfile = config.agencyProfile;
-    var apKeys = Object.keys(agencyProfile);
-    return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
-}
+
+
 var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
-var agencyProfileIncomplete = function() {
-    var config = Session.get('config');
-    if (!config) {
-        return;
-    }
-    var agencyProfile = config.agencyProfile;
-    var apKeys = Object.keys(agencyProfile);
-    return apKeys.length < Schemas.agencyProfile._firstLevelSchemaKeys.length;
-};
-Meteor.startup(function() {
+
+Meteor.startup(function () {
     $(document.body)
         .touchwipe({
-            wipeLeft: function() {
+            wipeLeft: function () {
                 Session.set(MENU_KEY, false);
             },
-            wipeRight: function() {
+            wipeRight: function () {
                 Session.set(MENU_KEY, true);
             },
             preventDefaultEvents: false
         });
 });
-Template.appBody.created = function() {};
-Template.appBody.rendered = function() {};
+Template.appBody.created = function () {};
+Template.appBody.rendered = function () {};
 Template.appBody.helpers({
-    isUserView: function(view) {
+    isUserView: function (view) {
         view = view || this._id;
         var active = Session.get('userView') === view;
         return active ? 'primary-bg' : '';
     },
-    isAdmin: function() {
+    isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    noProfile: function() {
-        var profile = agencyProfileIncomplete();
-        return profile;
+    noProfile: function () {
+        var profile = agencyProfileComplete();
+        return !profile;
     },
-    createNewBtn: function() {
-        var profile = !agencyProfileIncomplete();
-        var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
-        return profile && role;
-    },
-    thisArray: function() {
+    thisArray: function () {
         return [this];
     },
-    menuOpen: function() {
+    menuOpen: function () {
         return Session.get(MENU_KEY) && 'menu-open';
     },
-    cordova: function() {
+    cordova: function () {
         return Meteor.isCordova && 'cordova';
     },
     /* emailLocalPart: function() {
@@ -73,16 +53,16 @@ Template.appBody.helpers({
     /*userMenuOpen: function() {
         return Session.get(USER_MENU_KEY);
     },*/
-    lists: function() {
+    lists: function () {
         return Records.find();
     },
-    activeListClass: function() {
+    activeListClass: function () {
         var current = Router.current();
         if (current.params._id === this._id) {
             return 'active';
         }
     },
-    connected: function() {
+    connected: function () {
         if (Session.get(SHOW_CONNECTION_ISSUE_KEY)) {
             return Meteor.status()
                 .connected;
@@ -90,28 +70,28 @@ Template.appBody.helpers({
             return true;
         }
     },
-    samplerecords: function() {
+    samplerecords: function () {
         return sampleRecords.find();
     }
 });
 Template.appBody.events({
-    'click .userView': function(event) {
+    'click .userView': function (event) {
         var target = $(event.target)
             .attr('data');
         Session.set('userView', target);
         Router.go('user-home', Meteor.user());
     },
-    'click .js-menu': function() {
+    'click .js-menu': function () {
         Session.set(MENU_KEY, !Session.get(MENU_KEY));
     },
-    'click .content-overlay': function(event) {
+    'click .content-overlay': function (event) {
         Session.set(MENU_KEY, false);
         event.preventDefault();
     },
-    'click #menu a': function() {
+    'click #menu a': function () {
         Session.set(MENU_KEY, false);
     },
-    'click .js-logout': function() {
+    'click .js-logout': function () {
         Session.set('adminRole', false);
         Meteor.logout();
         Router.go('signin');
@@ -129,3 +109,4 @@ Template.appBody.events({
             });
         }*/
 });
+

@@ -3,17 +3,30 @@
         <section id="menu">
             {{#if currentUser}}
                 <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> </div>
+
+
+
                 <div class="btns-group-vertical btns-userHome">
-                    <!--<a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'userStats'}}" data='userStats'>Team Stats</a> -->
-                    {{#if isAdmin}} <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> {{/if}} <a class="btn-pad js-sharedRecords userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> <a class="btn-pad js-logout btn-secondary">Logout</a> </div>
-                <!--{{#if createNewBtn}}
-            <div class="btns-group-vertical">
-                <a class="btn-pad js-newRecord btn-secondary">+ New Record</a>
-            </div>
-            {{/if}}-->
+                    {{#if isAdmin}} 
+                    <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> 
+                    {{/if}}
+                    
+
+                    <a class="btn-pad js-sharedRecords userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
+
+
+                    <a class="btn-pad js-logout btn-secondary">Logout</a> 
+
+                </div>
+
+
+
                 {{#if noProfile}}
                     <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a> </div>
-                {{/if}} {{else}}
+                {{/if}} 
+
+
+                {{else}}
                 <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
             {{/if}}
             <div class="list-todos">

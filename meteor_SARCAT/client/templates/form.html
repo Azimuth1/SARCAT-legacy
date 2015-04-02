@@ -21,55 +21,78 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="btn-group-vertical btn-group-sm mapPoints" data-toggle="buttons">
-                                    <a class="btn btn-default" data="ippCoordinates">
+
+
+
+
+
+                                    <div class="btn text-success primary-bg white" data="i_ppCoordinates">
                                     &nbsp; IPP
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-times-circle-o fa-2x fa-fw"></i>
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
+                                        </span>
+                                    
+                                    </div>
+
+<!--
+           <a class="btn btn-default text-success mar2y" data="i_ppCoordinates">
+                                    &nbsp; IPP
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
                                         </span>
                                         <input type="checkbox" autocomplete="off"> &nbsp; 
                                     </a>
+
+-->
+
+
+
+                                    <a class="btn btn-default  mar1y" data="revisedLKP-PLS">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-success"></i>
+                                        </span>
+                                    </a>
                                     <a class="btn btn-default" data="destinationCoord">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-bullseye fa-2x fa-fw"></i>
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-bullseye fa-2x fa-fw text-default"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default" data="revisedLKP-PLS">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-bullseye fa-2x fa-fw"></i>
+                                      <a class="btn btn-default  mar1y" data="findCoord">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Find Location
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-male fa-2x fa-fw text-success"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default" data="travelDirection">
+                                   <!-- <a class="btn btn-default  mar1y" data="intendedRoute">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
+                                        </span>
+                                    </a>
+                                    -->
+                                    <!--<a class="btn btn-default" data="travelDirection">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Direction of Travel
-                                        <span class="fa-stack pull-right">
+                                        <span class="fa-stack _pull-right">
                                           <i class="fa fa-arrow-circle-o-up fa-2x fa-fw"></i>
                                         </span>
-                                    </a>
+                                    </a>-->
                                     <a class="btn btn-default" data="decisionPointCoord">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-exclamation-circle fa-2x fa-fw"></i>
+                                        <span class="fa-stack _pull-right">
+                                          <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default" data="findCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Find Location
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw"></i>
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-default" data="intendedRoute">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-location-arrow fa-2x fa-fw text-danger"></i>
-                                        </span>
-                                    </a>
+                                    <!--
                                     <a class="btn btn-default" data="actualRoute">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
-                                        <span class="fa-stack pull-right">
+                                        <span class="fa-stack _pull-right">
                                           <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
                                         </span>
                                     </a>
+                                    -->
+                                  
                                 </div>
                             </div>
                             <div class="col-md-10">
@@ -78,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" }}
+                        {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
                     </div>
                 </div>
                 <!-- {{> formMap}}-->
@@ -112,10 +135,19 @@ collection='Records'
 doc=record
 scope="subjects"}}
 -->
-               
-                {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' _autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }}
+             
 
-                {{> afQuickFields}} {{/autoForm}}
+
+
+
+
+
+
+
+
+
+
+
 
                 <!--
  {{
