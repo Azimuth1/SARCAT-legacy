@@ -1,8 +1,12 @@
 var mapDrawn;
 var drawn;
 var config;
-Template.records.rendered = function () {
 
+//Template.records.created = function () {
+  //  Session.set('userView', 'records');
+//};
+Template.records.rendered = function () {
+Session.set('userView', 'records');
     config = Session.get('config');
     var agencyProfile = config.agencyProfile;
     var bounds = agencyProfile.bounds;

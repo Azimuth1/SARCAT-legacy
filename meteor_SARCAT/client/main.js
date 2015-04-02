@@ -1,3 +1,67 @@
+getCoords = function () {
+
+    var mapPoints = [{
+        "val": "ippCoordinates",
+        "name": "coords.ippCoordinates",
+        "text": 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>', //"IPP Location",
+        icon: 'fa-times-circle-o text-black'
+    }, {
+        "val": "decisionPointCoord",
+        "name": "coords.decisionPointCoord",
+        "text": "Decision Point",
+        icon: 'fa-code-fork text-danger'
+    }, {
+        "val": "destinationCoord",
+        "name": "coords.destinationCoord",
+        "text": "Intended Destination",
+        icon: 'fa-bullseye text-default'
+    }, {
+        "val": "revisedLKP-PLS",
+        "name": "coords.revisedLKP-PLS",
+        "text": "Revised IPP",
+        icon: 'fa-times-circle-o 4x text-success'
+    }, {
+        "val": "findCoord",
+        "name": "coords.findCoord",
+        "text": "Find Location",
+        icon: 'fa-male text-success'
+    }, {
+        "val": "intendedRoute",
+        "name": "coords.intendedRoute",
+        "text": "Intended Route",
+        path: {
+            stroke: '#018996'
+        }
+    }, {
+        "val": "actualRoute",
+        "name": "coords.actualRoute",
+        "text": "Actual Route",
+        path: {
+            stroke: '#3C763D',
+            weight: 8
+        }
+    }];
+
+    mapPoints = _.object(_.map(mapPoints, function (x) {
+        return [x.val, x];
+    }));
+
+    record = Session.get('currentRecord');
+    if (!record.coords) {
+        return mapPoints;
+    }
+    var coords = record.coords;
+
+    _.each(mapPoints, function (d, e) {
+        mapPoints[e].coords = coords[e];
+
+    });
+    return _.map(mapPoints, function (d) {
+        return d;
+    });
+
+};
+
 agencyProfileComplete = function () {
     var config = Session.get('config');
     if (!config) {
@@ -62,10 +126,28 @@ getWeather = function (coords, date, cb) {
     var params = latlng.concat(time)
         .join(',');
     var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/' + params;
-    console.log(url);
-    $.getJSON(url + "?callback=?", function (data) {
-        cb(data);
-    });
+    /*
+        $.getJSON(url + "?callback=?")
+
+        .done(function () {
+                cb(data, err);})
+
+
+            .fail(function () {
+                console.log('!!!')
+                cb(null, 'err');
+            })
+      
+    */
+    $.getJSON(url + "?callback=?")
+        .done(function (json) {
+            cb(json);
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("Request Failed: " + err);
+        });
+
 }
 setMap = function (context, bounds) {
     console.log(bounds)
@@ -185,7 +267,7 @@ formSetMap = function (context, bounds, points) {
     });
 
     obj.add = function (d) {
-        console.log(d)
+
         z = coords;
         var val = d.val;
 
@@ -245,10 +327,10 @@ formSetMap = function (context, bounds, points) {
 
     };
     obj.remove = function (d) {
-       // console.log(d)
+        // console.log(d)
         var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
         if (removePath) {
-           // console.log(removePath)
+            // console.log(removePath)
             obj.removePoly(coords[removePath]);
         }
 
@@ -332,7 +414,7 @@ formSetMap = function (context, bounds, points) {
                 //clickable: true
             })
             //
-        if(d.val==='ippCoordinates'){
+        if (d.val === 'ippCoordinates') {
             marker.openPopup();
         }
         marker.setZIndexOffset(4);

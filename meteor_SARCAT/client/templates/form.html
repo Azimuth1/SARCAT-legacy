@@ -6,7 +6,7 @@
             <div class="x">
                 <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
                     {{#each schemas}}
-                        <button type="button" data="{{this}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{formComplete}} </small></button>
+                        <button type="button" data="{{this.field}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{formComplete}} </small></button>
                     {{/each}}
                 </div>
             </div>
@@ -139,6 +139,12 @@ scope="subjects"}}
 
 
 
+
+
+
+                {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }}
+
+                {{> afQuickFields}} {{/autoForm}}
 
 
 

@@ -1,5 +1,3 @@
-
-
 var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
@@ -78,8 +76,12 @@ Template.appBody.events({
     'click .userView': function (event) {
         var target = $(event.target)
             .attr('data');
+
         Session.set('userView', target);
-        Router.go('user-home', Meteor.user());
+
+        if (target === 'records') {
+            Router.go('user-home', Meteor.user());
+        }
     },
     'click .js-menu': function () {
         Session.set(MENU_KEY, !Session.get(MENU_KEY));
