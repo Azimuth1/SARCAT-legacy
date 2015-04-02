@@ -12,44 +12,38 @@ var getCoords = function () {
     var mapPoints = [{
         "val": "ippCoordinates",
         "name": "coords.ippCoordinates",
-        "text": "IPP Location",
-        icon:'fa-times-circle-o'
+        "text": 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>',//"IPP Location",
+        icon:'fa-times-circle-o text-black'
     }, {
         "val": "decisionPointCoord",
         "name": "coords.decisionPointCoord",
         "text": "Decision Point",
-        icon:'fa-exclamation-circle'
+        icon:'fa-code-fork text-danger'
     }, {
         "val": "destinationCoord",
         "name": "coords.destinationCoord",
         "text": "Intended Destination",
-        icon:'fa-bullseye'
+        icon:'fa-bullseye text-default'
     }, {
         "val": "revisedLKP-PLS",
         "name": "coords.revisedLKP-PLS",
         "text": "Revised IPP",
-        icon:'fa-bullseye'
+        icon:'fa-times-circle-o 4x text-success'
     }, {
         "val": "findCoord",
         "name": "coords.findCoord",
         "text": "Find Location",
-        icon:'fa-male'
+        icon:'fa-male text-success'
     }, {
         "val": "intendedRoute",
         "name": "coords.intendedRoute",
         "text": "Intended Route",
-        path:{stroke:'#A94442'}
+        path:{stroke:'#018996'}
     }, {
         "val": "actualRoute",
         "name": "coords.actualRoute",
         "text": "Actual Route",
         path:{stroke:'#3C763D',weight:8}
-    }, {
-        "val": "travelDirection",
-        "name": "coords.travelDirection",
-        "text": "Travel Direction",
-        icon:'fa-arrow-circle-o-up fa-5x'
-        
     }];
 
     mapPoints = _.object(_.map(mapPoints, function (x) {
@@ -362,11 +356,11 @@ Template.form.events({
         var active = context.hasClass('active')
 
         var coords = getCoords();
-        console.log(coords)
+        //console.log(coords)
         var item = _.findWhere(coords, {
             val: pointType
         });
-        console.log(item);
+       // console.log(item);
 
 
 

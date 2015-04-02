@@ -182,11 +182,11 @@ Schemas.incident = new SimpleSchema({
         type: Date,
         optional: true,
         label: 'Incident Date',
-        autoValue: function () {
+        /*autoValue: function () {
             if (this.isInsert) {
                 return new Date();
             }
-        }
+        }*/
     },
     'incidenttime': {
         type: String,
@@ -1101,7 +1101,7 @@ Schemas.agencyProfile = new SimpleSchema({
     bounds: {
         type: String,
         optional: true,
-        defaultValue: '-150.29296875,27.21555620902969,-41.66015625,50.736455137010665'
+        defaultValue: "-143.61328125,11.350796722383684,106.34765625,62.99515845212052"
     },
     /*
         coordinates: {

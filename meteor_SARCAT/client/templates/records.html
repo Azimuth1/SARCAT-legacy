@@ -5,17 +5,25 @@
                 <div class="modal-header primary-bg">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
+
+
                 <div class="modal-body">
                     <div id='recordMap' style="width:100%;height:400px"></div>
                     {{#if newRecord}} 
 
 
 
-                    {{> quickForm collection="Records" doc=newRecord class="_hideBody hideSubmit hideHeader" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}} 
+                    {{> quickForm collection="Records" doc=newRecord class="hide" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}} 
 
 
 
-                    {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo,coords"}} {{> afQuickField name='recordInfo'}} {{/autoForm}} {{/if}}
+                    {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo"}} 
+
+
+                    {{> afQuickField name='recordInfo'}} 
+
+
+                    {{/autoForm}} {{/if}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn _btn-default js-deleteRecord" data-dismiss="modal">Close</button>
@@ -40,11 +48,15 @@
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search"> </div>
                 </form>-->
-                {{#if isNotViewer}}
+
+
+                {{#if createNewBtn}}
                 <ul class="nav navbar-nav navbar-right">
                     <button type="button" class="btn btn-primary black js-newRecord mar0" data-target="#createRecordModal" data-toggle="modal">New Record</button>
                 </ul>
                 {{/if}}
+
+
             </div>
             <!-- /.navbar-collapse -->
         </div>

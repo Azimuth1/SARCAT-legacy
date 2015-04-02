@@ -1,6 +1,23 @@
 var mapDrawn;
 var drawn;
-Template.records.rendered = function() {
+var config;
+Template.records.rendered = function () {
+
+    config = Session.get('config');
+    var agencyProfile = config.agencyProfile;
+    var bounds = agencyProfile.bounds;
+    var newBounds = boundsString2Array(bounds);
+
+    var mapPoints = {
+        "name": "coords.ippCoordinates",
+        "text": "IPP Location"
+    };
+
+    mapDrawn = newProjectSetMap('recordMap', newBounds, mapPoints);
+    $('#createRecordModal')
+        .on('shown.bs.modal', function (e) {
+            mapDrawn.reset();
+        });
     /*
         console.log(this.data);
         var data = Records.find()
@@ -71,107 +88,49 @@ Template.records.rendered = function() {
         drawn = true;*/
 };
 Template.records.helpers({
-    lists: function() {
+    lists: function () {
         return Records.find();
     },
-    isNotViewer: function() {
-        return Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
-    },
-    newRecord: function() {
+    newRecord: function () {
         return Records.findOne(Session.get('newRecord'));
+    },
+    createNewBtn: function () {
+        var profile = agencyProfileComplete();
+        var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
+        return profile && role;
     },
 
 });
 Template.records.events({
-    'click #createRecordModal button': function() {
+    'click #createRecordModal button': function () {
         // $('#createRecordModal').modal('hide')
     },
-    'click .js-deleteRecord': function() {
+    'click .js-deleteRecord': function () {
         var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function(error, d) {
+        Meteor.call('removeRecord', record, function (error, d) {
             console.log(error, d)
         })
     },
 
-    'click .modal-backdrop': function() {
+    'click .modal-backdrop': function () {
         var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function(error, d) {
+        Meteor.call('removeRecord', record, function (error, d) {
             console.log(error, d)
         })
     },
 
-    'click .js-newRecord': function(event, template) {
-        var config = Session.get('config');
+    'click .js-newRecord': function (event, template) {
+
         var list = {
             userId: Meteor.userId()
         };
-        list._id = Meteor.call('addRecord', list, function(error, d) {
+        list._id = Meteor.call('addRecord', list, function (error, d) {
             if (error) {
                 console.log(error);
             }
             Session.set('newRecord', d);
         });
 
-        template.$('#createRecordModal')
-            .on('shown.bs.modal', function(e) {
-                if (mapDrawn) {
-                    return;
-                }
-
-                var agencyProfile = config.agencyProfile;
-                var bounds = agencyProfile.bounds;
-                var newBounds = boundsString2Array(bounds);
-
-                var mapPoints = {
-                    "name": "coords.ippCoordinates",
-                    "text": "IPP Location"
-                };
-
-                newProjectSetMap('recordMap', newBounds, mapPoints);
-                mapDrawn=true;
-            });
-
-        /*if (!map) {
-            setTimeout(function () {
-                var config = Session.get('config');
-                var coords = config.agencyProfile.coordinates;
-
-                var mapPoints = [{
-                    "name": "incidentOperations.ippCoordinates",
-                    "text": "IPP Location"
-                }];
-
-                formSetMap('formMap', agencyProfile.coordinates, mapPoints);
-                map = newFormSetMap('recordMap', config.agencyProfile.coordinates, mapPoints);
-            }, 500);
-
-
-*/
-        /*
-                if (mapDrawn) {
-                    return;
-                }
-                var config = Session.get('config');
-
-                var mapPoints = {
-                    "name": "coords.ippCoordinates",
-                    "text": "IPP Location"
-                };
-
-                setTimeout(function (d) {
-                    var config = Session.get('config');
-
-                            var agencyProfile = config.agencyProfile;
-                        var bounds = agencyProfile.bounds;
-                        var newBounds = boundsString2Array(bounds);
-
-
-                    newProjectSetMap('recordMap', newBounds, mapPoints);
-                }, 500);
-                mapDrawn = true;
-                return;*/
-
-        // }
-
     }
 });
+

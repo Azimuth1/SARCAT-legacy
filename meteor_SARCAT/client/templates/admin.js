@@ -5,11 +5,12 @@ var mapDrawn;
 
 var config;
 Template.admin.created = function () {
+
     config = Session.get('config');
+    mapDrawn = false;
 };
 
 Template.admin.rendered = function () {
-
     this.data.users.forEach(function (d) {
         var role = d.roles[0];
         var id = d._id;
@@ -75,7 +76,7 @@ Template.admin.helpers({
             .value();
     },
     roleIsChecked: function (e, f) {
-        console.log(this, e, f)
+        //console.log(this, e, f)
         return true;
         return this.roles[0] === $(e.target)
             .val();
@@ -84,11 +85,17 @@ Template.admin.helpers({
             .val();
         return 'checked';
     },
+    userRoleList: function () {
+        return this.users.filter(function (d) {
+            return d._id !== Meteor.userId()
+        })
+    },
 });
 
 var drawMap = function (newBounds) {
-
+    //setTimeout(function(){
     mapDrawn = setMap('adminMap', newBounds);
+    //},1000)
 
 };
 Template.admin.events({
@@ -119,21 +126,14 @@ Template.admin.events({
     },
     'change .adminUserRoles': function (event) {
         var user = this._id;
-
-        /* if (Meteor.userId() === this._id) {
-             alert('Cannot change admin role of self!');
-             return;
-         }*/
         var val = $('input[name="role_' + user + '"]:checked')
             .val();
-        console.log(user, val);
-        //var checked = event.target.checked;
-        //var val = $(e.target).val();
         Meteor.call('changeRole', user, val, function (err) {
-            console.log(err);
+            if (err) {
+                console.log(err);
+            }
         });
-        //$('input[name="role_oS8Y6oZC5WraaCnPW"]:checked').val();
-        //.prop('checked', true);
+
     }
 });
 hooks2 = {
