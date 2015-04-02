@@ -8,11 +8,11 @@
 
                 <div class="btns-group-vertical btns-userHome">
                     {{#if isAdmin}} 
-                    <a class="btn-pad js-dashboard userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> 
+                    <a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> 
                     {{/if}}
                     
 
-                    <a class="btn-pad js-sharedRecords userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
+                    <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
 
 
                     <a class="btn-pad js-logout btn-secondary">Logout</a> 

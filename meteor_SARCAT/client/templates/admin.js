@@ -5,7 +5,7 @@ var mapDrawn;
 
 var config;
 Template.admin.created = function () {
-
+ Session.set('userView', 'admin');
     config = Session.get('config');
     mapDrawn = false;
 };
@@ -86,8 +86,9 @@ Template.admin.helpers({
         return 'checked';
     },
     userRoleList: function () {
-        return this.users.filter(function (d) {
-            return d._id !== Meteor.userId()
+        console.log(this)
+        return this.users.fetch().filter(function (d) {
+            return d._id === Meteor.userId()
         })
     },
 });

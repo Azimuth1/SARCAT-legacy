@@ -66,7 +66,7 @@ Router.route('adminSetup', {
     }
 });
 Router.route('join');
-Router.route('signin')
+Router.route('signin');
 Router.route('user-home', {
     path: '/user/:_id',
     data: function () {
@@ -77,6 +77,71 @@ Router.route('user-home', {
         return obj;
     },
 });
+
+
+Router.route('records', {
+    path: '/records',
+    waitOn: function () {
+        return this.subscribe('publicLists');
+    },
+    data: function () {
+        var obj = {};
+        //obj.user = Meteor.user();
+        obj.users = Meteor.users.find();
+        obj.records = Records.find();
+        return obj;
+    },
+
+    action: function () {
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});
+
+Router.route('admin', {
+    path: '/admin',
+    waitOn: function () {
+        return this.subscribe('userData');
+    },
+    data: function () {
+        var obj = {};
+        //obj.user = Meteor.user();
+        obj.users = Meteor.users.find();
+        obj.records = Records.find();
+        console.log(obj)
+        return obj;
+    },
+
+    action: function () {
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});
+/*
+Router.route('admin', {
+    path: '/admin',
+    waitOn: function () {
+        return this.subscribe('userData');
+    },
+    data: function () {
+        var obj = {};
+        //obj.user = Meteor.user();
+        obj.users = Meteor.users.find();
+        obj.records = Records.find();
+        console.log(obj)
+        return obj;
+    },
+
+    action: function () {
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});*/
+
+
 Router.route('form', {
     path: '/form/:_id',
     waitOn: function () {

@@ -121,7 +121,7 @@ Schemas.recordInfo = new SimpleSchema({
     },
     leadagency: {
         type: String,
-        label: 'Lead Agency',
+        label: 'Agency Having Jurisdiction',
         max: 200,
         autoValue: function () {
             if (this.isInsert) {
@@ -166,7 +166,7 @@ Schemas.recordInfo = new SimpleSchema({
         }
     },
     missionnum: {
-        type: Number,
+        type: String,
         optional: true,
         label: 'Mission #',
     },
@@ -178,15 +178,11 @@ Schemas.recordInfo = new SimpleSchema({
     }
 });
 Schemas.incident = new SimpleSchema({
-    'incidentdate': {
+    /*'incidentdate': {
         type: Date,
         optional: true,
         label: 'Incident Date',
-        /*autoValue: function () {
-            if (this.isInsert) {
-                return new Date();
-            }
-        }*/
+      
     },
     'incidenttime': {
         type: String,
@@ -197,12 +193,19 @@ Schemas.incident = new SimpleSchema({
                 type: 'time'
             }
         },
-        /* autoValue: function() {
-             if (this.isInsert) {
-                 return '15:22';
-             }
-         }*/
+     
+    },*/
+    'incidentDataTime': {
+        type: 'datetime',
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        'label': 'Incident Date/Time',
+        optional: true
     },
+
     incidentEnvironment: {
         type: String,
         optional: true,
@@ -835,12 +838,22 @@ Schemas.incidentOutcome = new SimpleSchema({
     },
     'trackOffset': {
         type: String,
-        label: 'Track Offset',
+        label: function () {
+            var unit = Config.findOne().agencyProfile.measureUnits;
+            var unitType = {Metric:'Meters',English:'Feet'};
+            unit = unitType[unit];
+            return 'Track Offset ('+unit+')'
+        },
         optional: true
     },
     'elevationChange': {
         type: String,
-        label: 'Elevation Change (ft.)',
+        label: function () {
+            var unit = Config.findOne().agencyProfile.measureUnits;
+            var unitType = {Metric:'Meters',English:'Feet'};
+            unit = unitType[unit];
+            return 'Elevation Change ('+unit+')'
+        },
         optional: true
     }
 });
@@ -1044,6 +1057,7 @@ Schemas.SARCAT = new SimpleSchema({
     },
     weather: {
         type: Schemas.weather,
+        label: 'Weather - Autoset from forecast.io based on Incident Date/Time',
         optional: true
     },
     subjects: {
@@ -1093,6 +1107,12 @@ Schemas.agencyProfile = new SimpleSchema({
     country: {
         type: String,
         // optional: true,
+    },
+    measureUnits: {
+        type: String,
+        label: 'Unit of Measurement',
+        defaultValue: 'Metric',
+        allowedValues: ['Metric', 'English'],
     },
     'state-region': {
         type: String,

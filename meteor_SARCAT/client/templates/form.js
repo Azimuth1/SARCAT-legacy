@@ -7,66 +7,8 @@ var record;
 var map;
 Template.registerHelper("Schemas", Schemas);
 
-var getCoords = function () {
-
-    var mapPoints = [{
-        "val": "ippCoordinates",
-        "name": "coords.ippCoordinates",
-        "text": 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>',//"IPP Location",
-        icon:'fa-times-circle-o text-black'
-    }, {
-        "val": "decisionPointCoord",
-        "name": "coords.decisionPointCoord",
-        "text": "Decision Point",
-        icon:'fa-code-fork text-danger'
-    }, {
-        "val": "destinationCoord",
-        "name": "coords.destinationCoord",
-        "text": "Intended Destination",
-        icon:'fa-bullseye text-default'
-    }, {
-        "val": "revisedLKP-PLS",
-        "name": "coords.revisedLKP-PLS",
-        "text": "Revised IPP",
-        icon:'fa-times-circle-o 4x text-success'
-    }, {
-        "val": "findCoord",
-        "name": "coords.findCoord",
-        "text": "Find Location",
-        icon:'fa-male text-success'
-    }, {
-        "val": "intendedRoute",
-        "name": "coords.intendedRoute",
-        "text": "Intended Route",
-        path:{stroke:'#018996'}
-    }, {
-        "val": "actualRoute",
-        "name": "coords.actualRoute",
-        "text": "Actual Route",
-        path:{stroke:'#3C763D',weight:8}
-    }];
-
-    mapPoints = _.object(_.map(mapPoints, function (x) {
-        return [x.val, x];
-    }));
-
-    var record = Session.get('currentRecord');
-    if (!record.coords) {
-        return mapPoints;
-    }
-    var coords = record.coords;
-
-    _.each(mapPoints, function (d, e) {
-        mapPoints[e].coords = coords[e];
-
-    });
-    return _.map(mapPoints, function (d) {
-        return d;
-    });
-
-};
-
 Template.form.created = function () {
+   Session.set('userView', this.data.record._id);  
     config = Session.get('config');
     agencyProfile = config.agencyProfile;
     record = this.data.record;
@@ -79,92 +21,24 @@ Template.form.rendered = function () {
     var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
     mapBounds = boundsString2Array(mapBounds);
 
-    //var center = coords.ippCoordinates;
-
- 
-
     map = formSetMap('formMap', mapBounds);
-
-    a = map
 
     var coords = getCoords();
     coords.forEach(function (d) {
         if (d.coords) {
-            $('[data="' + d.val + '"]').addClass('active');
+            $('[data="' + d.val + '"]')
+                .addClass('active');
             map.add(d);
         }
 
     });
 
-    /*
-    var weatherCoords;
-
-    if (coords && coords.ippCoordinates) {
-        weatherCoords = coords.ippCoordinates;
-    } else {
-        weatherCoords = config.agencyProfile.coordinates;
-    }
-
-    if (!record.weather) {
-
-        getWeather(weatherCoords, null, function(data) {
-            Session.set('weather', data);
-            var data = data.currently;
-            _.each(data, function(d, name) {
-                $('[name="weather.' + name + '"]')
-                    .val(d);
-            })
-        });
-    }
-
-    var agencyProfile = config.agencyProfile;
-*/
-    //var center = weatherCoords;
-
-    Session.set('userView', this.data.record._id);
+    
     $('.collapse')
         .collapse({
             toggle: false
         });
 
-    /*
-        var data = {
-            "time": 1426269221,
-            "summary": "Windy and Mostly Cloudy",
-            "icon": "wind",
-            "precipIntensity": 0,
-            "precipProbability": 0,
-            "temperature": 44.09,
-            "apparentTemperature": 33.76,
-            "dewPoint": 1.66,
-            "humidity": 0.17,
-            "windSpeed": 31.77,
-            "windBearing": 218,
-            "cloudCover": 0.6,
-            "pressure": 1021.8,
-            "ozone": 345.58
-        };
-        data = _.map(data, function(d, e) {
-            return {
-                key: e,
-                val: d
-            };
-        });
-
-        console.log(data);
-
-        var tbl_body = '';
-        var odd_even = false;
-        $.each(data, function() {
-            var tbl_row = '';
-            $.each(this, function(k, v) {
-                tbl_row += '<td>' + v + '</td>';
-            })
-            tbl_body += '<tr class=\'' + (odd_even ? 'odd' : 'even') + '\'>' + tbl_row + '</tr>';
-            odd_even = !odd_even;
-        });
-
-        $('#target_table_id').html(tbl_body);*/
 };
 Template.form.helpers({
     formType: function () {
@@ -260,7 +134,7 @@ Template.form.helpers({
     schemas: function () {
         var record = this.record;
         //'incidentOperations'
-        var schemas = ['recordInfo', 'recordInfo', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
+        var schemas = ['recordInfo', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
         return schemas.map(function (d) {
             return {
                 field: d,
@@ -346,7 +220,32 @@ Template.form.events({
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'change ._afInput': function (event, template) {},
+
+    'change .formNav': function (event, template) {
+        $('.collapse')
+            .collapse('hide');
+        $('#collapse_' + this.name)
+            .collapse('toggle');
+    },
+
+    'change [name="incident.incidentDataTime"]': function (event, template) {
+
+        var date = this.value.split('.')[0];; //event.target.value;
+
+        var weatherCoords = record.coords.ippCoordinates;
+
+        getWeather(weatherCoords, date, function (data, err) {
+            //if(){}
+            console.log(data, err)
+            Session.set('weather', data);
+            var data = data.currently;
+            _.each(data, function (d, name) {
+                $('[name="weather.' + name + '"]')
+                    .val(d);
+            })
+        });
+
+    },
     'change [name="resources.resourcesUsed"]': function (event, template) {
         console.log('!')
     },
@@ -360,96 +259,14 @@ Template.form.events({
         var item = _.findWhere(coords, {
             val: pointType
         });
-       // console.log(item);
-
-
-
-
-
-
+        // console.log(item);
 
         if (!active) {
             map.add(item);
         } else {
             map.remove(item);
         }
-        /* coords.forEach(function(d) {
-                 if (d.coords) {
-                     $('[data="' + d.val + '"]')
-                         .addClass('active');
-                 }
-
-                 map.addPoint(d);*/
-
-        /*
-                 var d = mapPoints.filter(function(d) {
-                     return d.name === 'coords.' + pointType;
-                 })[0];
-
-                 var marker = L.marker(map.getCenter(), {
-                     draggable: true,
-                     className: 'z2'
-                 });
-
-                 marker.bindLabel(d.text, {
-                         noHide: true
-                     })
-                     .addTo(map);
-
-                 marker.on('dragend', function(event) {
-                     var marker = event.target;
-                     var position = marker.getLatLng();
-                     $('[name="coords.' + pointType + '.lng"]')
-                         .val(position.lng)
-                         .trigger("change");;
-                     $('[name="coords.' + pointType + '.lat"]')
-                         .val(position.lat)
-                         .trigger("change");;
-
-                 });*/
 
     },
 });
-hooks2 = {
-    onSubmit: function (doc) {
-        console.log(doc);
-        Schemas.SARCAT.clean(doc);
-        console.log(doc);
-        this.done();
-        return false;
-    },
-    // Schemas.SARCAT.clean(doc);
-    onSuccess: function (formType, result) {
-        console.log(formType, result);
-    },
-    onError: function (formType, error) {
-        console.log(formType, error);
-    },
-    beginSubmit: function (a) {
-        // console.log()
-        console.log('beginSubmit');
-    },
-    endSubmit: function () {
-        console.log('endSubmit');
-    }
-};
-/*
-AutoForm.hooks({
-    recordAdminForm: {
-        // Schemas.SARCAT.clean(doc);
-        onSuccess: function(operation, result, template) {
-            console.log(operation, result);
-        },
-        onError: function(operation, error, template) {
-            console.log(error);
-        },
-        beginSubmit: function() {
-            console.log('beginSubmit');
-        },
-        endSubmit: function() {
-            console.log('endSubmit');
-        }
-    }
-});*/
-AutoForm.addHooks('kaf_recordInfo', hooks2);
 
