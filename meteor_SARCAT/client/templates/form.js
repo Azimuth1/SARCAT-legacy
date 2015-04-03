@@ -41,6 +41,14 @@ Template.form.rendered = function () {
 
 };
 Template.form.helpers({
+    agencyProfile: function () {
+        return Session.get('config')
+            .agencyProfile;
+    },
+    measureUnits: function () {
+        return Session.get('config')
+            .agencyProfile.measureUnits;
+    },
     formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
@@ -73,7 +81,8 @@ Template.form.helpers({
         if (!_record) {
             return 0;
         }
-        return Object.keys(_record).length;
+        return Object.keys(_record)
+            .length;
         /*var formLen = _.filter(_record, function (d) {
                 var val = d;
                 if (val === '' || !val) {
@@ -95,7 +104,8 @@ Template.form.helpers({
         var record = this.record;
         var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, "userId", "coords", "updated", "created", "admin");
         return schemas.map(function (d) {
-            var count = (record[d]) ? Object.keys(record[d]).length || 0 : 0;
+            var count = (record[d]) ? Object.keys(record[d])
+                .length || 0 : 0;
             return {
                 field: d,
                 current: count,
@@ -189,21 +199,25 @@ Template.form.events({
             .collapse('toggle');
     },
 
-    'change [name="incident.incidentDataTime"]': function (event, template) {
+    'change [name="incident.incidentdate"]': function (event, template) {
 
-        var date = this.value.split('.')[0];; //event.target.value;
+        var date = this.value; //.split('.')[0];; //event.target.value;
 
         var weatherCoords = record.coords.ippCoordinates;
 
         getWeather(weatherCoords, date, function (data, err) {
             //if(){}
-            console.log(data, err)
+            z = data
+                //console.log(data, err)
             Session.set('weather', data);
-            var data = data.currently;
-            _.each(data, function (d, name) {
+            //var data = data.currently;
+            var dailyData = data.daily.data[0];
+            console.log('MAX: ' + dailyData.temperatureMax)
+            _.each(dailyData, function (d, name) {
                 $('[name="weather.' + name + '"]')
                     .val(d);
-            })
+            });
+
         });
 
     },
@@ -223,7 +237,7 @@ Template.form.events({
         if (!item) {
             return;
         };
-console.log(item)
+        console.log(item)
         if (!active) {
             map.add(item);
         } else {
@@ -232,3 +246,11 @@ console.log(item)
 
     },
 });
+
+function convertToC(fTempVal) {
+    return Math.round(cTempVal = (fTempVal - 32) * (5 / 9));
+}
+
+function convertToF(cTempVal) {
+    return (cTempVal * (9 / 5)) + 32;
+}

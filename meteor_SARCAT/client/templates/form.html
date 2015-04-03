@@ -60,7 +60,14 @@
                         {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
                     </div>
                 </div>
+
+<!--
                 {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }} {{> afQuickFields}} {{/autoForm}}
+-->
+
+
+
+                {{> quickForm collection='Records' validation="submit" doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" resetOnSuccess=false}} 
             </div>
         </div>
     </div>

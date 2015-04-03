@@ -129,13 +129,26 @@ boundsString2Array = function (bounds) {
     ];
 };
 getWeather = function (coords, date, cb) {
-    var time = date || new Date()
-        .toISOString()
-        .split('.')[0];
-    var latlng = [coords.lat, coords.lng];
-    var params = latlng.concat(time)
-        .join(',');
-    var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/' + params;
+    if (!date) {
+        return;
+    }
+    var latlng = [coords.lat, coords.lng].join(',');;
+    var time = 'T12:00:00-0400';
+    var dateTime = [date, time].join('');
+    var latlngDate = [latlng, dateTime].join(',');
+
+    var units = 'units=si';//(Session.get('config').agencyProfile.measureUnits == 'Metric') ? 'units=si' : 'units=us';
+    //Config.findOne().agencyProfile.measureUnits
+    //var time = date || new Date().toISOString().split('.')[0];
+
+    //var params = latlng.concat(time).join(',');
+
+    //var params = [latlng, dateTime, units].join(',');
+    var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/';
+    url += latlngDate + '?';
+    url += units;
+    console.log(url);
+    //return
     /*
         $.getJSON(url + "?callback=?")
 
@@ -149,7 +162,7 @@ getWeather = function (coords, date, cb) {
             })
       
     */
-    $.getJSON(url + "?callback=?")
+    $.getJSON(url + "&callback=?")
         .done(function (json) {
             cb(json);
         })
@@ -548,7 +561,8 @@ formSetMap = function (context, bounds, points) {
 
     }
     obj.fitBounds = function () {
-        map.fitBounds(drawnPaths.getBounds().pad(.3));
+        map.fitBounds(drawnPaths.getBounds()
+            .pad(.3));
     };
     return obj;
 }
@@ -604,7 +618,6 @@ recordStats = function (data) {
         .compact()
         .value();
 
-
     var drawGraph = function (d) {
 
         var title = d.field;
@@ -614,10 +627,12 @@ recordStats = function (data) {
             .append("div")
             .attr('class', 'col-md-4');
 
-        container.append('h3').text(title);
+        container.append('h3')
+            .text(title);
 
-        var width = parseInt(d3.select("#recordStats").style('width')) / 4;
-console.log(width)
+        var width = parseInt(d3.select("#recordStats")
+            .style('width')) / 4;
+        console.log(width)
         var margin = {
                 top: 10,
                 right: 20,
@@ -672,7 +687,8 @@ console.log(width)
 
         svg.selectAll(".bar")
             .data(data)
-            .enter().append("rect")
+            .enter()
+            .append("rect")
             .attr("class", "bar")
             .attr("x", function (d) {
                 return x(d.letter);
@@ -997,7 +1013,9 @@ statsSetMap = function (context, bounds, points) {
 
     }
     obj.fitBounds = function () {
-        map.fitBounds(drawnPaths.getBounds().pad(.3));
+        map.fitBounds(drawnPaths.getBounds()
+            .pad(.3));
     };
     return obj;
 }
+
