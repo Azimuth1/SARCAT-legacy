@@ -390,19 +390,7 @@ Schemas.incident = new SimpleSchema({
      }*/
 });
 Schemas.weather = new SimpleSchema({
-    measureUnits: {
-        type: String,
-        label: 'Unit of Measurement',
-        //defaultValue: 'Metric',
-        //allowedValues: ['Metric', 'English'],
-        autoValue: function () {
-            var config = Config.findOne();
-            var agencyProfile = config.agencyProfile;
-            var currentUnit = agencyProfile.measureUnits;
-            console.log(currentUnit)
-            return currentUnit;
-        }
-    },
+
     'summary': {
         'type': String,
         'optional': true,
@@ -420,16 +408,26 @@ Schemas.weather = new SimpleSchema({
         'label': 'Precipitation Type'
     },
 
-    'temperatureMax': {
+    'temperatureMax.$': {
+        'type': Object,
+        label: 'Max Temperature'
+    },
+    'temperatureMax.$.C': {
         'type': Number,
         decimal: true,
         'optional': true,
-        label: function (a) {
-            //console.log(a, this)
-            var unit = Records.units('temperature');
-            //var unit = this.field('measureUnits').value;
-            return 'Max Temperature (' + unit + ')'
-        }
+        label: 'Max Temperature (C)'
+    },
+    'temperatureMax.$.F': {
+        'type': Number,
+        decimal: true,
+        'optional': true,
+        label: 'Max Temperature (F)',
+        autoValue: function(){
+            t=this;
+            console.log(this)
+            return 
+        },
     },
     'temperatureMin': {
         'type': Number,
