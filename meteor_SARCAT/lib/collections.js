@@ -20,6 +20,50 @@ Records.defaultNum = function () {
     }
     return nextLetter.toString();
 };
+
+Records.units = function (type) {
+    var config = Config.findOne();
+    var agencyProfile = config.agencyProfile;
+    var currentUnit = agencyProfile.measureUnits;
+
+    var unitType = {
+        distance: {
+            Metric: 'Meters',
+            English: 'Feet'
+        },
+        temperature: {
+            Metric: '°C',
+            English: '°F'
+        },
+        speed: {
+            Metric: 'kph',
+            English: 'mph'
+        }
+    };
+    return unitType[type][currentUnit]
+
+};
+
+convertDeg = function (val) {
+
+    function convertToC(fTempVal) {
+        return cTempVal = (fTempVal - 32) * (5 / 9);
+    }
+
+    function convertToF(cTempVal) {
+        return (cTempVal * (9 / 5)) + 32;
+    }
+
+    var config = Config.findOne();
+    var agencyProfile = config.agencyProfile;
+    var currentUnit = agencyProfile.measureUnits;
+    if (currentUnit === 'Metric') {
+        return val;
+    }
+    return convertToC(val);
+
+};
+
 Schemas = {};
 Schemas = {};
 Schemas.User = new SimpleSchema({
@@ -135,7 +179,7 @@ Schemas.recordInfo = new SimpleSchema({
             }
         },
     },
-    organizationagency: {
+    /*organizationagency: {
         type: String,
         label: 'Organization/Agency',
         max: 200,
@@ -150,7 +194,7 @@ Schemas.recordInfo = new SimpleSchema({
                 }
             }
         }
-    },
+    },*/
     incidentnum: {
         type: String,
         label: 'Incident #',
@@ -178,11 +222,11 @@ Schemas.recordInfo = new SimpleSchema({
     }
 });
 Schemas.incident = new SimpleSchema({
-    /*'incidentdate': {
+    'incidentdate': {
         type: Date,
         optional: true,
         label: 'Incident Date',
-      
+
     },
     'incidenttime': {
         type: String,
@@ -193,9 +237,9 @@ Schemas.incident = new SimpleSchema({
                 type: 'time'
             }
         },
-     
-    },*/
-    'incidentDataTime': {
+
+    },
+    /*'incidentDataTime': {
         type: 'datetime',
         autoform: {
             afFieldInput: {
@@ -204,7 +248,7 @@ Schemas.incident = new SimpleSchema({
         },
         'label': 'Incident Date/Time',
         optional: true
-    },
+    },*/
 
     incidentEnvironment: {
         type: String,
@@ -346,91 +390,73 @@ Schemas.incident = new SimpleSchema({
      }*/
 });
 Schemas.weather = new SimpleSchema({
-    /*
-        light: {
-            type: String,
-            optional: true,
-            allowedValues: ['clear-day', ' clear-night', ' rain', ' snow', ' sleet', ' wind', ' fog', ' cloudy', ' partly-cloudy-day', ' or partly-cloudy-night'],
-            label: 'Light',
+    measureUnits: {
+        type: String,
+        label: 'Unit of Measurement',
+        //defaultValue: 'Metric',
+        //allowedValues: ['Metric', 'English'],
+        autoValue: function () {
+            var config = Config.findOne();
+            var agencyProfile = config.agencyProfile;
+            var currentUnit = agencyProfile.measureUnits;
+            console.log(currentUnit)
+            return currentUnit;
         }
-    */
-    /*'time': {
-        'type': String,
-        'optional': true,
-        'label': 'time'
-    },*/
-    /*'summary': {
-        'type': String,
-        'optional': true,
-        'label': 'Summary'
-    },*/
-    'icon': {
-        'type': String,
-        'optional': true,
-        'label': 'Summary',
-        allowedValues: ["clear-day", "clear-night", "rain", "snow", "sleet", "wind", "fog", "cloudy", "partly-cloudy-day", "partly-cloudy-night", "hail", "thunderstorm", "tornado"],
     },
-    'precipIntensity': {
+    'summary': {
         'type': String,
         'optional': true,
-        'label': 'Precipitation Intensity (inches/hour)'
+        'label': 'Brief Summary',
+        autoform: {
+            rows: 2
+        }
+        //allowedValues: ["clear-day", "clear-night", "rain", "snow", "sleet", "wind", "fog", "cloudy", "partly-cloudy-day", "partly-cloudy-night", "hail", "thunderstorm", "tornado"],
     },
-    /*'precipProbability': {
-        'type': String,
-        'optional': true,
-        'label': 'precipProbability'
-    },*/
+
     'precipType': {
         'type': String,
         'optional': true,
         allowedValues: ['rain', 'snow', 'sleet'],
         'label': 'Precipitation Type'
     },
-    'temperature': {
-        'type': String,
+
+    'temperatureMax': {
+        'type': Number,
+        decimal: true,
         'optional': true,
-        'label': 'Temperature (F)'
+        label: function (a) {
+            //console.log(a, this)
+            var unit = Records.units('temperature');
+            //var unit = this.field('measureUnits').value;
+            return 'Max Temperature (' + unit + ')'
+        }
     },
-    'apparentTemperature': {
-        'type': String,
+    'temperatureMin': {
+        'type': Number,
         'optional': true,
-        'label': 'Apparent Temperature (F)'
+        decimal: true,
+        label: function () {
+            var unit = Records.units('temperature');
+            //var unit = this.field('measureUnits').value
+            return 'Min Temperature (' + unit + ')'
+        },
     },
-    /*'dewPoint': {
-        'type': String,
-        'optional': true,
-        'label': 'Dew Point (F)'
-    },*/
-    'humidity': {
-        'type': String,
-        'optional': true,
-        'label': 'Humidity (%)'
-    },
+
     'windSpeed': {
         'type': String,
         'optional': true,
-        'label': 'Wind Speed (mph)'
-    },
-    'windBearing': {
-        'type': String,
-        'optional': true,
-        'label': 'Wind Bearing (deg)'
-    },
-    'visibility': {
-        'type': String,
-        'optional': true,
-        'label': 'Visibility (miles)'
-    },
-    /*'pressure': {
-        'type': String,
-        'optional': true,
-        'label': 'Pressure'
-    }*/
+        label: function () {
+            var unit = Records.units('speed');
+            return 'Wind Speed (' + unit + ')'
+        },
+
+    }
 })
+
 Schemas.subjects = new SimpleSchema({
     subject: {
         type: Array,
-        label:'Subject Info',
+        label: 'Subject Info',
         optional: true
     },
     'subject.$': {
@@ -722,11 +748,11 @@ Schemas.coords = new SimpleSchema({
     },
 });
 Schemas.incidentOperations = new SimpleSchema({
-   /* 'initialDirectionofTravel': {
-        type: String,
-        label: 'Initial Direction of Travel',
-        optional: true
-    },*/
+    /* 'initialDirectionofTravel': {
+         type: String,
+         label: 'Initial Direction of Travel',
+         optional: true
+     },*/
     'DOTHowdetermined': {
         type: String,
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
@@ -842,12 +868,7 @@ Schemas.incidentOutcome = new SimpleSchema({
     'trackOffset': {
         type: String,
         label: function () {
-            var unit = Config.findOne().agencyProfile.measureUnits;
-            var unitType = {
-                Metric: 'Meters',
-                English: 'Feet'
-            };
-            unit = unitType[unit];
+            var unit = Records.units('distance');
             return 'Track Offset (' + unit + ')'
         },
         optional: true
@@ -855,12 +876,7 @@ Schemas.incidentOutcome = new SimpleSchema({
     'elevationChange': {
         type: String,
         label: function () {
-            var unit = Config.findOne().agencyProfile.measureUnits;
-            var unitType = {
-                Metric: 'Meters',
-                English: 'Feet'
-            };
-            unit = unitType[unit];
+            var unit = Records.units('distance');
             return 'Elevation Change (' + unit + ')'
         },
         optional: true
@@ -1369,3 +1385,4 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
+
