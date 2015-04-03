@@ -214,7 +214,7 @@ Template.form.events({
             var dailyData = data.daily.data[0];
             console.log('MAX: ' + dailyData.temperatureMax)
             _.each(dailyData, function (d, name) {
-                $('[name="weather.' + name + '"]')
+                $('[name="weather.' + name + '.0.C"]')
                     .val(d);
             });
 
