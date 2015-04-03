@@ -86,9 +86,8 @@ Template.admin.helpers({
         return 'checked';
     },
     userRoleList: function () {
-        console.log(this)
         return this.users.fetch().filter(function (d) {
-            return d._id === Meteor.userId()
+            return d._id !== Meteor.userId()
         })
     },
 });

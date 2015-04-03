@@ -84,7 +84,7 @@ Template.join.events({
                     'none': error.reason
                 });
             }
-            Router.go('user-home', Meteor.user());
+            Router.go('home', Meteor.user());
         });
     }
 });

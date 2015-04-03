@@ -11,7 +11,7 @@ Meteor.startup(function () {
         //Config.insert(Meteor.settings.production.public);
 
         var customSettings = {
-            'initSetup': false,
+            'initSetup': true,
         };
         Config.insert(customSettings);
         var admin = Accounts.createUser({
