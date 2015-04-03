@@ -8,7 +8,7 @@ var map;
 Template.registerHelper("Schemas", Schemas);
 
 Template.form.created = function () {
-   Session.set('userView', this.data.record._id);  
+    Session.set('userView', this.data.record._id);
     config = Session.get('config');
     agencyProfile = config.agencyProfile;
     record = this.data.record;
@@ -32,8 +32,8 @@ Template.form.rendered = function () {
         }
 
     });
+    map.fitBounds();
 
-    
     $('.collapse')
         .collapse({
             toggle: false
@@ -66,13 +66,15 @@ Template.form.helpers({
     currentRecord: function () {
         return Session.get('currentRecord');
     },
-    formComplete: function (name) {
+    formComplete: function () {
         var name = this.field;
-        var record = this.doc;
-        if (!record) {
-            return;
+        var _record = Session.get('currentRecord')[name];
+
+        if (!_record) {
+            return 0;
         }
-        var formLen = _.filter(record, function (d) {
+        return Object.keys(_record).length;
+        /*var formLen = _.filter(_record, function (d) {
                 var val = d;
                 if (val === '' || !val) {
                     val = false;
@@ -80,65 +82,24 @@ Template.form.helpers({
                 return val;
             })
             .length;
-        var schemaLen = Schemas[name]._schemaKeys.length;
+        var schemaLen = this.length;
         var complete = (formLen === schemaLen);
-        return formLen + '/' + schemaLen;
+        return formLen + '/' + schemaLen;*/
     },
-    formId: function (name) {
-        return 'af_' + this.field;
-    },
+
     autoSaveMode: function () {
         return true;
     },
-    isSchema: function (obj, obj2) {
-        return obj === obj2;
-    },
-    arrRecord: function (val) {
-        if (!this.record) {
-            return;
-        }
-        result = [];
-        var use = ['recordInfo', 'coords', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOperations', 'incidentOutcome', 'medical', 'resources'];
-        var record = this.record;
-        _.each(use, function (d) {
-            if (record[d]) {
-                result.push({
-                    name: d,
-                    value: record[d]
-                });
-            }
-        });
-        return val ? record[val] : result;
-    },
-    arrRecords: function () {
-        if (!this.record) {
-            return;
-        }
-        var record = this.record;
-        return _.chain(record)
-            .map(function (d, key) {
-                if (_.isObject(d)) {
-                    return _.map(d, function (d2, key2) {
-                        return {
-                            name: key + '.' + key2,
-                            //name: 'Schemas.'+key2,
-                            val: d2
-                        };
-                    });
-                }
-            })
-            .flatten()
-            .compact()
-            .value();
-    },
+
     schemas: function () {
         var record = this.record;
-        //'incidentOperations'
-        var schemas = ['recordInfo', 'incident', 'weather', 'subjects', 'timeLog', 'incidentOutcome', 'medical', 'resources'];
+        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, "userId", "coords", "updated", "created", "admin");
         return schemas.map(function (d) {
+            var count = (record[d]) ? Object.keys(record[d]).length || 0 : 0;
             return {
                 field: d,
-                doc: record[d]
+                current: count,
+                total: Schemas[d]._firstLevelSchemaKeys.length
             };
         });
     },
@@ -255,12 +216,14 @@ Template.form.events({
         var active = context.hasClass('active')
 
         var coords = getCoords();
-        //console.log(coords)
+
         var item = _.findWhere(coords, {
             val: pointType
         });
-        // console.log(item);
-
+        if (!item) {
+            return;
+        };
+console.log(item)
         if (!active) {
             map.add(item);
         } else {
@@ -269,4 +232,3 @@ Template.form.events({
 
     },
 });
-

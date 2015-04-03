@@ -1,12 +1,4 @@
-var agencyProfileIncomplete = function() {
-    var config = Session.get('config');
-    if (!config) {
-        return;
-    }
-    var agencyProfile = config.agencyProfile;
-    var apKeys = Object.keys(agencyProfile);
-    return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
-}
+
 Template.userHome.created = function() {
     //console.log(Records.find().fetch())
     //console.log(this.data.records.fetch())

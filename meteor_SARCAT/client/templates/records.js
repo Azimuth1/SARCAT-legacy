@@ -2,94 +2,38 @@ var mapDrawn;
 var drawn;
 var config;
 
-//Template.records.created = function () {
-  //  Session.set('userView', 'records');
-//};
 Template.records.rendered = function () {
-Session.set('userView', 'records');
+    Session.set('userView', 'records');
     config = Session.get('config');
     var agencyProfile = config.agencyProfile;
     var bounds = agencyProfile.bounds;
     var newBounds = boundsString2Array(bounds);
 
-    var mapPoints = {
+    mapDrawn = newProjectSetMap('recordMap', newBounds, {
         "name": "coords.ippCoordinates",
         "text": "IPP Location"
-    };
-
-    mapDrawn = newProjectSetMap('recordMap', newBounds, mapPoints);
+    });
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
             mapDrawn.reset();
         });
-    /*
-        console.log(this.data);
-        var data = Records.find()
-            .fetch();
-        console.log(data);
-        if (drawn) {
-            return;
-        }
-        var keyCount = Schemas.SARCAT._schemaKeys.map(function (d) {
-            //return d
-            var result = d.split('.');
-            return result[result.length - 1]
-        });
-        keyCount = _.object(_.map(keyCount, function (x) {
-            // console.log(x);
-            return [x, []]
-        }));
-        _.each(data, function (d) {
-            _.each(d, function (e, f) {
-                if (_.isString(e)) {
-                    if (keyCount[f]) {
-                        keyCount[f].push(e);
-                    }
-                }
-                if (_.isObject(e)) {
-                    _.each(e, function (g, h) {
-                        if (keyCount[h]) {
-                            keyCount[h].push(g);
-                        }
-                    });
-                }
-            });
-        });
-        count = _.chain(keyCount)
-            .map(function (d, e) {
-                var count = _.countBy(d);
-                var keys = _.keys(count);
-                if (_.keys(count)
-                    .length && keys[0]) {
-                    var string = _.map(count, function (val, key) {
-                            return key + ': ' + val;
-                        })
-                        .join(' || ');
-                    return {
-                        field: e,
-                        count: string
-                    };
-                }
+
+    //return
+    /*var tbl_body = '';
+    data.forEach(function (d) {
+        var odd_even = false;
+        $.each(data, function () {
+            var tbl_row = '';
+            $.each(this, function (k, v) {
+                tbl_row += '<td>' + v + '</td>';
             })
-            .compact()
-            .value();
-        var data = count;
-        console.log(data)
-        var tbl_body = '';
-        data.forEach(function (d) {
-            var odd_even = false;
-            $.each(data, function () {
-                var tbl_row = '';
-                $.each(this, function (k, v) {
-                    tbl_row += '<td>' + v + '</td>';
-                })
-                tbl_body += '<tr class=\'' + (odd_even ? 'odd' : 'even') + '\'>' + tbl_row + '</tr>';
-                odd_even = !odd_even;
-            });
-        })
-        $('#target_table_id')
-            .html(tbl_body);
-        drawn = true;*/
+            tbl_body += '<tr class=\'' + (odd_even ? 'odd' : 'even') + '\'>' + tbl_row + '</tr>';
+            odd_even = !odd_even;
+        });
+    })
+    $('#target_table_id')
+        .html(tbl_body);*/
+
 };
 Template.records.helpers({
     lists: function () {
@@ -122,6 +66,91 @@ Template.records.events({
             console.log(error, d)
         })
     },
+    'click .recordStats': function (event, template) {
+        if (drawn) {
+            return;
+        }
+        drawn = true;
+        template.$('a[data-toggle="tab"][href="#recordStats"]')
+            .on('shown.bs.tab', function (e) {
+
+                var records = Records.find().fetch();
+
+                data = recordStats(records);
+
+                var coords = records.map(function (d) {
+                    return d.coords
+                });
+                var mapBounds = coords[0].bounds;
+                mapBounds = boundsString2Array(mapBounds);
+
+                map = statsSetMap('statsMap', mapBounds);
+
+                var mapPoints = {
+                    "ippCoordinates": {
+                        "val": "ippCoordinates",
+                        "name": "coords.ippCoordinates",
+                        "text": "IPP Location. <br>Direction of Travel (hover to edit): <div class=\"fa fa-arrow-circle-up fa-2x fa-fw travelDirection\"></div>",
+                        "icon": "fa-times-circle-o text-black"
+                    },
+                    "decisionPointCoord": {
+                        "val": "decisionPointCoord",
+                        "name": "coords.decisionPointCoord",
+                        "text": "Decision Point",
+                        "icon": "fa-code-fork text-danger"
+                    },
+                    "destinationCoord": {
+                        "val": "destinationCoord",
+                        "name": "coords.destinationCoord",
+                        "text": "Intended Destination",
+                        "icon": "fa-bullseye text-default"
+                    },
+                    "revisedLKP-PLS": {
+                        "val": "revisedLKP-PLS",
+                        "name": "coords.revisedLKP-PLS",
+                        "text": "Revised IPP",
+                        "icon": "fa-times-circle-o 4x text-success"
+                    },
+                    "findCoord": {
+                        "val": "findCoord",
+                        "name": "coords.findCoord",
+                        "text": "Find Location",
+                        "icon": "fa-male text-success"
+                    },
+                    "intendedRoute": {
+                        "val": "intendedRoute",
+                        "name": "coords.intendedRoute",
+                        "text": "Intended Route",
+                        "path": {
+                            "stroke": "#018996"
+                        }
+                    },
+                    "actualRoute": {
+                        "val": "actualRoute",
+                        "name": "coords.actualRoute",
+                        "text": "Actual Route",
+                        "path": {
+                            "stroke": "#3C763D",
+                            "weight": 8
+                        }
+                    }
+                };
+                _.each(mapPoints, function (d) {
+                    coords.forEach(function (e) {
+                        var latlng = e[d.val];
+                        if (!latlng) {
+                            return
+                        };
+                        d.coords = latlng;
+                        map.add(d);
+                    });
+
+                })
+
+                map.fitBounds();
+            });
+
+    },
 
     'click .js-newRecord': function (event, template) {
 
@@ -137,4 +166,3 @@ Template.records.events({
 
     }
 });
-

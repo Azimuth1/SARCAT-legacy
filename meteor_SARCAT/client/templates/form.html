@@ -6,9 +6,10 @@
             <div class="x">
                 <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
                     {{#each schemas}}
-                        <button type="button" data="{{this.field}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{formComplete}} </small></button>
+                    <button type="button" data="{{this.field}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{this.current}}/{{this.total}} </small></button>
                     {{/each}}
                 </div>
+                {{json schemas.recordInfo}}
             </div>
         </nav>
         <div class="content-scrollable list-items">
@@ -19,328 +20,47 @@
                     </div>
                     <div class="panel-body afBody">
                         <div class="row">
-                            <div class="col-md-2">
-                                <div class="btn-group-vertical btn-group-sm mapPoints" data-toggle="buttons">
-
-
-
-
-
-                                    <div class="btn text-success primary-bg white" data="i_ppCoordinates">
-                                    &nbsp; IPP
-                                        <span class="fa-stack _pull-right">
+                            <div class="col-md-12">
+                                <div id='formMap' style="width:100%;height:400px">
+                                    <div class="btn-group-vertical btn-group-sm mapPoints mapLeft" data-toggle="buttons">
+                                        <div class="btn text-success primary-bg white" data="i_ppCoordinates">
+                                            &nbsp; IPP
+                                            <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
                                         </span>
-                                    
-                                    </div>
-
-<!--
-           <a class="btn btn-default text-success mar2y" data="i_ppCoordinates">
-                                    &nbsp; IPP
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
-                                        </span>
-                                        <input type="checkbox" autocomplete="off"> &nbsp; 
-                                    </a>
-
--->
-
-
-
-                                    <a class="btn btn-default  mar1y" data="revisedLKP-PLS">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
-                                        <span class="fa-stack _pull-right">
+                                        </div>
+                                        <a class="btn btn-default  mar1y" data="revisedLKP-PLS">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
+                                            <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-success"></i>
                                         </span>
-                                    </a>
-                                    <a class="btn btn-default" data="destinationCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
-                                        <span class="fa-stack _pull-right">
+                                        </a>
+                                        <a class="btn btn-default" data="destinationCoord">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
+                                            <span class="fa-stack _pull-right">
                                           <i class="fa fa-bullseye fa-2x fa-fw text-default"></i>
                                         </span>
-                                    </a>
-                                      <a class="btn btn-default  mar1y" data="findCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Find Location
-                                        <span class="fa-stack _pull-right">
+                                        </a>
+                                        <a class="btn btn-default  mar1y" data="findCoord">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Find Location
+                                            <span class="fa-stack _pull-right">
                                           <i class="fa fa-male fa-2x fa-fw text-success"></i>
                                         </span>
-                                    </a>
-                                   <!-- <a class="btn btn-default  mar1y" data="intendedRoute">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
-                                        </span>
-                                    </a>
-                                    -->
-                                    <!--<a class="btn btn-default" data="travelDirection">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Direction of Travel
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-arrow-circle-o-up fa-2x fa-fw"></i>
-                                        </span>
-                                    </a>-->
-                                    <a class="btn btn-default" data="decisionPointCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
-                                        <span class="fa-stack _pull-right">
+                                        </a>
+                                        <a class="btn btn-default" data="decisionPointCoord">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
+                                            <span class="fa-stack _pull-right">
                                           <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
                                         </span>
-                                    </a>
-                                    <!--
-                                    <a class="btn btn-default" data="actualRoute">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
-                                        </span>
-                                    </a>
-                                    -->
-                                  
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div id='formMap' style="width:100%;height:400px">
-                                    <div class="mapTop"></div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
                     </div>
                 </div>
-                <!-- {{> formMap}}-->
-                <!--
-{{#each schemas}}
-{{#autoForm
-collection='Records' 
-doc=../record
-id=formId
-class="recordForm forminline hideSubmit"
-type='update'
-validation='keyup' 
-_removeEmptyStrings=true 
-noselect="true"   
-autosave=true
-fields=this.field
-_label-style="color: #2CC5D2"
-}}
-  {{#each afFieldNames}}
-    {{json this}}
-  {{/each}}
-{{> afQuickField name=this.field}}
-{{/autoForm}}
-{{/each}}
--->
-                <!--
-{{> quickForm 
-id="updatePushForm" 
-type="update-pushArray" 
-collection='Records' 
-doc=record
-scope="subjects"}}
--->
-             
-
-
-
-
-
-
-                {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }}
-
-                {{> afQuickFields}} {{/autoForm}}
-
-
-
-
-
-
-
-
-
-
-                <!--
- {{
- #autoForm 
- collection="Records" 
- doc=newRecord 
- class="_hideSubmit hideHeader" 
- id="createRecordModalForm" 
- autosave=true 
- type="update" 
- removeEmptyStrings=true 
- fields="recordInfo,coords"
- }} 
--->
-                <!--
-
-                {{#each schemas}} {{> quickForm collection='Records' doc=../record id=formId class="_recordForm form-inline _hideSubmit" type=formType validation='keyup' _removeEmptyStrings=true noselect=true _autosave=true fields=this.field label-style="color: #2CC5D2" buttonContent= "Save"}} {{/each}}
-             
-  {{#autoForm
-                           collection='Records' 
-                           doc=record
-                           id='af_recordInfo'
-                           _class="hideHeader" 
-                           type='update'
-                           _validation='keyup' 
-                           _removeEmptyStrings=true _options=afOptionsFromSchema
-                           noselect=true 
-                           template="bootstrap3-inline"
-                           autosave=true
-                           omitFields="_id,created"
-                        
- }}
--->
-                <!--
- {{> afQuickFields template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
- -->
-                <!--
-{{#each arrRecords}}
-<div class='primary-bg_'>
-{{this.name}}
-{{> afQuickField 
-_template="bootstrap3-horizontal" 
-label-class="col-sm-2" 
-input-col-class="col-sm-4" 
-name=this.name
-_options="allowed"
-}}
-</div>
-{{/each}}
--->
-                <!--
-{{> afQuickField name="admin.name"}}
-
-{{#each afFieldNames name=this.name}} 
-{{json this}} 
-{{/each}}
-
-{{> afObjectField name="admin" template="bootstrap3-inline"}}
-{{> afQuickField name="recordInfo" template="bootstrap3-inline"}}
-{{> afQuickField name="incident" template="bootstrap3-inline"}}
--->
-                <!--
-{{#each arrRecords}}
-{{json this}}<br>
-{{> afQuickField name=this.name}}
-{{/each}}
--->
-                <!--{{/autoForm}}-->
-                <!--
- {{#each arrRecord}}
-
-
-
-
-
-                           {{> quickForm 
-                           collection='Records' 
-                           Schema='Schemas.SARCAT'
-                           doc=../record 
-                           id='af_recordInfo'
-                           _class="hideHeader" 
-                           type='update'
-                           validation='keyup' 
-                           _removeEmptyStrings=true options="allowed" 
-                           noselect=true 
-                           template="bootstrap3-inline"
-                           autosave=true
-                           fields=this.name
-                           buttonContent="Save"
-                           }}
- {{/each}}
--->
-                <!--
-{{#autoForm id="demo" schema='Schemas.SARCAT'}}
-  {{#each afFieldNames}}
-    aaa
-  {{/each}}
-  <div>
-    <button type="submit">Submit</button>
-  </div>
-{{/autoForm}}
-
-{{#each arrRecord}}
-                           {{> quickForm 
-                          
-                           collection='Records' 
-                           doc=../record id=formId 
-                           class="hideHeader" 
-                           type=formType 
-                           fields=this.name 
-                           _validation='keyup' _removeEmptyStrings=true options="allowed" 
-                           noselect=true 
-                           template="bootstrap3-inline"
-
-                           }} 
-{{/each}}
--->
-                <!--
-                {{#each arrRecord}}
-
-                    <div class="afContainer">
-                        <div class="panel afPanel {{formComplete this.name}} mar0">
-                            <div class="panel-heading collapsed" role="tab" id="heading_{{this.name}}" data-toggle="collapse" href="#collapse_{{this.name}}" aria-expanded="false" aria-controls="collapse_{{this.name}}">
-                                <h4 class="text-uppercase">{{this.name}}</h4> </div>
-                            <div id="collapse_{{this.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{this.name}}">
-                                <div class="panel-body afBody"> 
-
-                           {{> quickForm 
-                          
-                           collection='Records' doc=../record id=formId class="hideHeader" type=formType fields=this.name validation='keyup' removeEmptyStrings=true options="allowed" noselect=true template="bootstrap3-inline"}} 
-
-
-
-                           </div>
-                            </div>
-                        </div>
-                    </div>
-                {{/each}}
--->
-                <!--
-{{#each schemas}}
-{{formId}}
-<br>
-  {{#autoForm
-                           collection='Records' 
-                           doc=this.doc
-                           id=formId
-                           _class="hideHeader" 
-                           type='update'
-                           _validation='keyup' 
-                           _removeEmptyStrings=true 
-                           _noselect=true 
-                           _template="bootstrap3-inline"
-                           _autosave=true
-                           fields=this.field
-                         
-                        
- }}
-  {{#each afFieldNames}}
-    {{> afQuickField name=this.name }}
-  {{/each}}
-{{/autoForm}}
-{{/each}}
--->
-                <!--
-{{#each schemas}}
-{{#autoForm
-                           collection='Records' 
-                           doc=../record
-                           id=formId
-                          class="hideSubmit" 
-                           type='update'
-                           _validation='keyup' 
-                           _removeEmptyStrings=true 
-                           _noselect=true 
-                           template="bootstrap3-inline"
-                           autosave=true
-                           fields=this.field
-                           color='red'
-}}
-  {{> afQuickFields}}
-  <div>
-    <button type="submit">Submit</button>
-  </div>
-{{/autoForm}}
-{{/each}}
--->
+                {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }} {{> afQuickFields}} {{/autoForm}}
             </div>
         </div>
     </div>

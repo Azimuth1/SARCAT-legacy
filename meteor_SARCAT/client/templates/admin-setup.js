@@ -79,7 +79,7 @@ Template.adminSetup.events({
 
                 Meteor.loginWithPassword(email, password, function() {
                     Meteor.call('removeUser', _id);
-                    Router.go('user-home', Meteor.user());
+                    Router.go('home', Meteor.user());
                 });
             });
 

@@ -3,94 +3,127 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent; // for some Androids
 }
-html, button, input, textarea, select {
+
+html,
+button,
+input,
+textarea,
+select {
     outline: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 body {
     .type-regular;
     color: @color-full;
     color: #00444A;
     font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
 }
+
 // Default type layout
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     .type-regular;
     margin: 0;
     padding: 0;
 }
+
 h1 {
     .font-l1;
 }
+
 h2 {
     .font-m3;
 }
+
 h3 {
     .font-m2;
 }
+
 h4 {
     .font-m1;
 }
+
 h5 {
     .font-s2;
     color: @color-medium-rare;
     text-transform: uppercase;
 }
+
 h6 {
     color: @color-medium;
 }
+
 p {
     .font-s3;
 }
-sub, sup {
+
+sub,
+sup {
     font-size: .8em;
 }
+
 sub {
     bottom: -.2em;
 }
+
 sup {
     top: -.2em;
 }
+
 b {
     font-weight: bold;
 }
+
 em {
     font-style: italic;
 }
+
 .em {
     font-style: italic;
 }
+
 .strong {
     font-weight: bold;
 }
+
 .text-default {
     color: @color-primary;
 }
+
 .white-bg {
     background: #fff
 }
+
 .white {
     color: #fff
 }
 
-.black{
-    color:#000 !important;
+.black {
+    color: #000 !important;
 }
+
 .grey {
     color: #BDBDBD;
 }
+
 .text-primary {
     color: #2CC5D2;
 }
 
-.text-default{
-    color:#018996;
+.text-default {
+    color: #018996;
 }
 
 .panel-primary {
     border-color: #2CC5D2;
 }
+
 .panel-primary > .panel-heading {
     background-color: #2CC5D2;
     color: #FFF;
@@ -100,19 +133,12 @@ em {
 .panel-default {
     border-color: #018996;
 }
+
 .panel-default > .panel-heading {
     background-color: #018996;
     color: #FFF;
     border-color: #018996;
 }
-
-
-
-
-
-
-
-
 /*
 .afTablePane {
     display: inline-block;
@@ -120,56 +146,56 @@ em {
     max-height:200px;
 }*/
 
-.afTablePane table td{
+.afTablePane table td {
     border: 1px solid #018996 !important;
-    cursor:pointer;
-    margin:5px;
-        text-align: center;
+    cursor: pointer;
+    margin: 5px;
+    text-align: center;
     margin: auto;
 }
 
-
 .recordForm .panel {
     border-color: #018996;
-    cursor:pointer;
-    margin:5px;
+    cursor: pointer;
+    margin: 5px;
 }
+
 .recordForm .panel > .panel-heading {
     background-color: #018996;
     color: #FFF;
     border-color: #018996;
 }
 
-
 .afPanel.warning-bg {
     border-color: #FF7B6F;
 }
+
 .afPanel.warning-bg > .panel-heading {
     background: #FF7B6F;
     border-color: #FF7B6F;
 }
-.btn.warning-bg, .warning-bg {
+
+.btn.warning-bg,
+.warning-bg {
     border-color: #FF7B6F;
     background: #FF7B6F;
 }
 
-
-.btn-primary{
-      border-color: #32B6C2;
+.btn-primary {
+    border-color: #32B6C2;
 }
 
-.btn.btn-default{
-      color: #32B6C2;
+.btn.btn-default {
+    color: #32B6C2;
 }
-
-
 
 .hideHeader .panel .panel-heading {
     display: none;
 }
 
-.hideBody, .hideBody .panel .panel-body {
-    display: none;  
+.hideBody,
+.hideBody .panel .panel-body {
+    display: none;
 }
 
 .btnBlock .form-group button {
@@ -180,99 +206,123 @@ em {
     display: none;
 }
 
-
 .primary-bg {
     background-color: #2CC5D2;
     color: #FFF;
     border-color: #2CC5D2;
 }
+
 .default-bg {
     background-color: #018996;
     color: #FFF;
     background-color: #018996;
 }
 
-
-
 .my-label {
     position: absolute;
-    width:1000px;
-    font-size:20px;
+    width: 1000px;
+    font-size: 20px;
 }
-.mapTop{
-    position:absolute;
-    height:50px;
-    left:0;
-    right:0;
-    background:#1F1F1F;
-    z-index:1;
-    opacity:.5;
+
+.mapTop {
+    position: absolute;
+    height: 50px;
+    left: 0;
+    right: 0;
+    background: #1F1F1F;
+    z-index: 1;
+    opacity: .5;
 }
-.z2{
-    z-index:2;
+
+.mapLeft {
+    z-index: 1;
+    top: 81px;
+    position: absolute;
 }
-input[type="text"] {color:#018996}
-input[type="text"]:focus {color:black}
 
+.z2 {
+    z-index: 2;
+}
 
+input[type="text"] {
+    color: #018996
+}
 
+input[type="text"]:focus {
+    color: black
+}
 /* Margin
 ------------------------------------------------------- */
 
-.mar00{
-    margin:0;
+.mar00 {
+    margin: 0;
 }
+
 .mar0 {
     margin: 5px;
 }
+
 .mar0y {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
 .mar0x {
     margin-right: 5px;
     margin-left: 5px;
 }
+
 .mar1 {
     margin: 10px;
 }
+
 .mar2 {
     margin: 20px;
 }
+
 .mar4 {
     margin: 40px;
 }
+
 .mar1x {
     margin-left: 10px;
     margin-right: 10px;
 }
+
 .mar2x {
     margin-left: 20px;
     margin-right: 20px;
 }
+
 .mar4x {
     margin-left: 40px;
     margin-right: 40px;
 }
+
 .mar1y {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 .mar2y {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 .mar4y {
     margin-top: 40px;
     margin-bottom: 40px;
 }
+
 .mar8 {
     margin: 80px;
 }
+
 .mar8y {
     margin-top: 80px;
     margin-bottom: 80px;
 }
+
 .mar8x {
     margin-left: 80px;
     margin-right: 80px;
@@ -283,69 +333,86 @@ input[type="text"]:focus {color:black}
 .pad0 {
     padding: 5px;
 }
+
 .pad0y {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
 .pad0x {
     padding-right: 5px;
     padding-left: 5px;
 }
+
 .pad1 {
     padding: 10px;
 }
+
 .pad2 {
     padding: 20px;
 }
+
 .pad4 {
     padding: 40px;
 }
+
 .pad1x {
     padding-left: 10px;
     padding-right: 10px;
 }
+
 .pad2x {
     padding-left: 20px;
     padding-right: 20px;
 }
+
 .pad4x {
     padding-left: 40px;
     padding-right: 40px;
 }
+
 .pad1y {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
 .pad2y {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
 .pad4y {
     padding-top: 40px;
     padding-bottom: 40px;
 }
+
 .pad8 {
     padding: 80px;
 }
+
 .pad8y {
     padding-top: 80px;
     padding-bottom: 80px;
 }
+
 .pad8x {
     padding-left: 80px;
     padding-right: 80px;
 }
+
 .panel-heading span:after {
     font-family: 'Glyphicons Halflings';
     content: "\e114";
     float: right;
     color: grey;
 }
+
 .panel-heading.collapsed span:after {
     content: "\e080";
 }
+
 .flex-container {
-display: -webkit-box;
+    display: -webkit-box;
     display: -moz-box;
     display: -ms-inline-flexbox;
     display: -webkit-inline-flex;
@@ -374,10 +441,10 @@ display: -webkit-box;
     -ms-flex-align: center;
     align-items: center;
 }
+
 .flex-item {
-border-radius: 4px !important;
-   
-   -webkit-box-ordinal-group: 1;
+    border-radius: 4px !important;
+    -webkit-box-ordinal-group: 1;
     -moz-box-ordinal-group: 1;
     -webkit-order: 0;
     -ms-flex-order: 0;
@@ -391,7 +458,6 @@ border-radius: 4px !important;
     -ms-flex-item-align: auto;
     align-self: auto;
 }
-
 /*
     Legacy Firefox implementation treats all flex containers
     as inline-block elements.
@@ -404,46 +470,69 @@ border-radius: 4px !important;
     }
 }
 
-.list-items{
-    margin-top:147px
+.list-items {
+    margin-top: 147px
 }
 
-a {color:#fff;}
-
-.scroll{
-    overflow-y:scroll;
+a {
+    color: #fff;
 }
 
-.admin{
-  position: absolute;
-  top: 60px;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: auto;
-  height: auto;
-  overflow:scroll;
+.scroll {
+    overflow-y: scroll;
 }
 
-.full{
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: auto;
-  height: auto;
-  overflow:hidden
+.admin {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    overflow: scroll;
 }
 
-.rad0{
-    border-radius:0;
+.full {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    overflow: hidden
 }
 
-.pointer{
-    cursor:pointer;
+.rad0 {
+    border-radius: 0;
 }
 
-.text-black{
-    color:#000
+.pointer {
+    cursor: pointer;
+}
+
+.text-black {
+    color: #000
+}
+
+#recordss svg {
+    .bar {
+        fill: steelblue;
+    }
+    .bar:hover {
+        fill: brown;
+    }
+    .axis {
+        font: 10px sans-serif;
+    }
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    .x.axis path {
+        display: none;
+    }
 }

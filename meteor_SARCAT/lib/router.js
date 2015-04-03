@@ -35,15 +35,12 @@ Router.configure({
 });
 if (Meteor.isClient) {
 
-
-
-
     /*Tracker.autorun(function () {
         var count = Session.get('adminUser');
         //console.log('autorun2:' + count);
     });*/
 
-    Roles.userIsInRole(Meteor.userId(), ['admin']);
+    //Roles.userIsInRole(Meteor.userId(), ['admin']);
     L.Icon.Default.imagePath = '/img';
     L.Icon.Default.imagePath = '/img';
 }
@@ -52,7 +49,12 @@ Router.route('home', {
     action: function () {
         //console.log('!')
         if (Meteor.user()) {
-            Router.go('user-home', Meteor.user());
+            if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
+                Router.go('admin');
+            } else {
+                Router.go('records', Meteor.user());
+            }
+
         } else {
             Router.go('signin');
         }
@@ -67,6 +69,7 @@ Router.route('adminSetup', {
 });
 Router.route('join');
 Router.route('signin');
+/*
 Router.route('user-home', {
     path: '/user/:_id',
     data: function () {
@@ -77,7 +80,7 @@ Router.route('user-home', {
         return obj;
     },
 });
-
+*/
 
 Router.route('records', {
     path: '/records',
@@ -106,10 +109,8 @@ Router.route('admin', {
     },
     data: function () {
         var obj = {};
-        //obj.user = Meteor.user();
         obj.users = Meteor.users.find();
         obj.records = Records.find();
-        console.log(obj)
         return obj;
     },
 
@@ -140,7 +141,6 @@ Router.route('admin', {
         }
     }
 });*/
-
 
 Router.route('form', {
     path: '/form/:_id',

@@ -237,7 +237,7 @@ Schemas.incident = new SimpleSchema({
     subjectcategory: {
         type: String,
         optional: true,
-        allowedValues: ['Unknown', 'Abduction', 'Aircraft Incident', 'Non-Powered Boat', 'Person in Current Water', 'Person in Flat Water', 'Person in Flood Water', 'Power Boat', 'ATV', 'Motorcycle', 'Mountain Bike', 'Vehicle (4WD)', 'Vehicle (Road)', 'Autism', 'Dementia', 'Despondent', 'Intellectual Disability', 'Mental Illness', 'Substance Intoxication', 'Ages 1-3 (Toddler)', 'Ages 4-6 (PreSchool)', 'Ages 7-9 (SchoolAge)', 'Ages 10-12 (Pre-Teenager)', 'Ages 13-15 (Adolescent)', 'Abandoned Vehicle', 'Angler', 'Car Camper', 'Caver', 'Day Climber', 'Extreme Race', 'Gatherer', 'Hiker', 'Horseback Rider', 'Hunter', 'Mountaineer', 'Runner', 'Worker', 'Alpine Skier', 'Nordic Skier', 'Snowboarder', 'Snowmobiler', 'Snowshoer'],
+        allowedValues: ["ATV", "Abandoned Vehicle", "Abduction", "Ages 1-3 (Toddler)", "Ages 10-12 (Pre-Teenager)", "Ages 13-15 (Adolescent)", "Ages 4-6 (PreSchool)", "Ages 7-9 (SchoolAge)", "Aircraft Incident", "Alpine Skier", "Angler", "Autism", "Car Camper", "Caver", "Day Climber", "Dementia", "Despondent", "Extreme Race", "Gatherer", "Hiker", "Horseback Rider", "Hunter", "Intellectual Disability", "Mental Illness", "Motorcycle", "Mountain Bike", "Mountaineer", "Non-Powered Boat", "Nordic Skier", "Person in Current Water", "Person in Flat Water", "Person in Flood Water", "Power Boat", "Runner", "Snowboarder", "Snowmobiler", "Snowshoer", "Substance Intoxication", "Unknown", "Vehicle (4WD)", "Vehicle (Road)", "Worker"],
         label: 'Subject Category',
     },
     contactmethod: {
@@ -367,12 +367,13 @@ Schemas.weather = new SimpleSchema({
     'icon': {
         'type': String,
         'optional': true,
-        'label': 'Summary'
+        'label': 'Summary',
+        allowedValues: ["clear-day", "clear-night", "rain", "snow", "sleet", "wind", "fog", "cloudy", "partly-cloudy-day", "partly-cloudy-night", "hail", "thunderstorm", "tornado"],
     },
     'precipIntensity': {
         'type': String,
         'optional': true,
-        'label': 'Precipitation Intensity'
+        'label': 'Precipitation Intensity (inches/hour)'
     },
     /*'precipProbability': {
         'type': String,
@@ -382,52 +383,54 @@ Schemas.weather = new SimpleSchema({
     'precipType': {
         'type': String,
         'optional': true,
+        allowedValues: ['rain', 'snow', 'sleet'],
         'label': 'Precipitation Type'
     },
     'temperature': {
         'type': String,
         'optional': true,
-        'label': 'Temperature'
+        'label': 'Temperature (F)'
     },
     'apparentTemperature': {
         'type': String,
         'optional': true,
-        'label': 'Apparent Temperature'
+        'label': 'Apparent Temperature (F)'
     },
-    'dewPoint': {
+    /*'dewPoint': {
         'type': String,
         'optional': true,
-        'label': 'Dew Point'
-    },
+        'label': 'Dew Point (F)'
+    },*/
     'humidity': {
         'type': String,
         'optional': true,
-        'label': 'Humidity'
+        'label': 'Humidity (%)'
     },
     'windSpeed': {
         'type': String,
         'optional': true,
-        'label': 'Wind Speed'
+        'label': 'Wind Speed (mph)'
     },
     'windBearing': {
         'type': String,
         'optional': true,
-        'label': 'Wind Bearing'
+        'label': 'Wind Bearing (deg)'
     },
     'visibility': {
         'type': String,
         'optional': true,
-        'label': 'Visibility'
+        'label': 'Visibility (miles)'
     },
-    'pressure': {
+    /*'pressure': {
         'type': String,
         'optional': true,
         'label': 'Pressure'
-    }
+    }*/
 })
 Schemas.subjects = new SimpleSchema({
     subject: {
         type: Array,
+        label:'Subject Info',
         optional: true
     },
     'subject.$': {
@@ -719,18 +722,18 @@ Schemas.coords = new SimpleSchema({
     },
 });
 Schemas.incidentOperations = new SimpleSchema({
-    'initialDirectionofTravel': {
+   /* 'initialDirectionofTravel': {
         type: String,
         label: 'Initial Direction of Travel',
         optional: true
-    },
+    },*/
     'DOTHowdetermined': {
         type: String,
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
-        label: 'DOT How determined',
+        label: 'Direction of Travel Determined By: ',
         optional: true
     },
-    'revisedHowDetermined': {
+    /*'revisedHowDetermined': {
         type: String,
         allowedValues: ['Unknown', 'Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
         label: 'Revised How Determined',
@@ -740,7 +743,7 @@ Schemas.incidentOperations = new SimpleSchema({
         type: String,
         label: 'Revised DOT',
         optional: true
-    },
+    },*/
     'typeofDecisionPoint': {
         type: String,
         allowedValues: ['Unknown', 'Other', 'Saddle', 'Shortcut', 'Trail', 'Animal', 'Trail Crossed', 'Trail Junction', 'Trail Lost', 'Trail Social', 'Trail Turnoff'],
@@ -840,9 +843,12 @@ Schemas.incidentOutcome = new SimpleSchema({
         type: String,
         label: function () {
             var unit = Config.findOne().agencyProfile.measureUnits;
-            var unitType = {Metric:'Meters',English:'Feet'};
+            var unitType = {
+                Metric: 'Meters',
+                English: 'Feet'
+            };
             unit = unitType[unit];
-            return 'Track Offset ('+unit+')'
+            return 'Track Offset (' + unit + ')'
         },
         optional: true
     },
@@ -850,9 +856,12 @@ Schemas.incidentOutcome = new SimpleSchema({
         type: String,
         label: function () {
             var unit = Config.findOne().agencyProfile.measureUnits;
-            var unitType = {Metric:'Meters',English:'Feet'};
+            var unitType = {
+                Metric: 'Meters',
+                English: 'Feet'
+            };
             unit = unitType[unit];
-            return 'Elevation Change ('+unit+')'
+            return 'Elevation Change (' + unit + ')'
         },
         optional: true
     }
@@ -1360,4 +1369,3 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
-

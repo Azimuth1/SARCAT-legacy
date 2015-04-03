@@ -1,3 +1,13 @@
+var agencyProfileIncomplete = function () {
+    var config = Session.get('config');
+    if (!config) {
+        return;
+    }
+    var agencyProfile = config.agencyProfile;
+    var apKeys = Object.keys(agencyProfile);
+    return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
+}
+
 getCoords = function () {
 
     var mapPoints = [{
@@ -246,7 +256,7 @@ formSetMap = function (context, bounds, points) {
     var coords = {};
     var obj = {};
     var map = L.map(context);
-    map.fitBounds(bounds);
+    //map.fitBounds(bounds);
     m = map;
     drawnPaths = new L.FeatureGroup()
         .addTo(map);
@@ -385,7 +395,7 @@ formSetMap = function (context, bounds, points) {
         $('[name="' + d.name + '.lat"]')
             .val('')
             .trigger("change");
-        map.removeLayer(marker);
+        drawnPaths.removeLayer(marker);
         delete coords[d.val];
     };
 
@@ -400,15 +410,20 @@ formSetMap = function (context, bounds, points) {
 
         var marker = L.marker(_coords, {
             draggable: true,
+            editable: true,
             icon: myIcon,
             name: d.name,
-            val: d.val
+            val: d.val,
+
         });
 
         var text = d.text;
 
         coords[d.val].layer = marker;
-        marker.addTo(map);
+        //marker.addTo(map);
+        //console.log(marker,drawnPaths)
+        drawnPaths.addLayer(marker);
+
         marker.bindPopup(d.text, {
                 //noHide: true,
                 //clickable: true
@@ -459,7 +474,6 @@ formSetMap = function (context, bounds, points) {
         if (_.contains(pathPoints, d.val)) {
 
             function drag(layer, index, position) {
-                //layer.editing.disable();
                 layer.spliceLatLngs(index, 1, position);
             };
 
@@ -467,13 +481,17 @@ formSetMap = function (context, bounds, points) {
                 if (val) {
                     drawnPaths.getLayers()
                         .forEach(function (layer) {
-                            layer.editing.enable();
+                            if (layer.editing) {
+                                layer.editing.enable();
+                            }
                         });
 
                 } else {
                     drawnPaths.getLayers()
                         .forEach(function (layer) {
-                            layer.editing.disable();
+                            if (layer.editing) {
+                                layer.editing.disable();
+                            }
                         });
                 }
             };
@@ -504,7 +522,9 @@ formSetMap = function (context, bounds, points) {
 
                     drawnPaths.getLayers()
                         .forEach(function (layer) {
-                            drag(layer, index, position);
+                            if (layer.editing) {
+                                drag(layer, index, position);
+                            }
                         })
 
                 }
@@ -527,6 +547,457 @@ formSetMap = function (context, bounds, points) {
         return marker;
 
     }
+    obj.fitBounds = function () {
+        map.fitBounds(drawnPaths.getBounds().pad(.3));
+    };
     return obj;
 }
 
+recordStats = function (data) {
+
+    var keyCount = Schemas.SARCAT._schemaKeys.map(function (d) {
+        return d;
+        var result = d.split('.');
+        return result[result.length - 1]
+    });
+    keyCount = _.object(_.map(keyCount, function (x) {
+        return [x, []]
+    }));
+    _.each(data, function (d) {
+        _.each(d, function (e, f) {
+            if (_.isString(e)) {
+                if (keyCount[f]) {
+                    keyCount[f].push(e);
+                }
+            }
+            if (_.isObject(e)) {
+                _.each(e, function (g, h) {
+                    //console.log(f + '.' + h)
+                    if (keyCount[f + '.' + h]) {
+                        keyCount[f + '.' + h].push(g);
+                    }
+                });
+            }
+        });
+    });
+
+    count = _.chain(keyCount)
+        .map(function (d, e) {
+            var count = _.countBy(d);
+            var keys = _.keys(count);
+            if (_.keys(count)
+                .length && keys[0]) {
+                var string = _.map(count, function (val, key) {
+                        return {
+                            letter: key,
+                            frequency: val
+                        }
+                        // return key + ': ' + val;
+                    })
+                    //.join(' || ');
+                return {
+                    field: e,
+                    count: string
+                };
+            }
+        })
+        .compact()
+        .value();
+
+
+    var drawGraph = function (d) {
+
+        var title = d.field;
+        var data = d.count;
+
+        var container = d3.select("#recordss")
+            .append("div")
+            .attr('class', 'col-md-4');
+
+        container.append('h3').text(title);
+
+        var width = parseInt(d3.select("#recordStats").style('width')) / 4;
+console.log(width)
+        var margin = {
+                top: 10,
+                right: 20,
+                bottom: 30,
+                left: 40
+            },
+            width = width - margin.left - margin.right,
+            height = 250 - margin.top - margin.bottom;
+
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            // .ticks(10, "%");
+
+        var svg = container.append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        x.domain(data.map(function (d) {
+            return d.letter;
+        }));
+        y.domain([0, d3.max(data, function (d) {
+            return d.frequency;
+        })]);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Frequency");
+
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function (d) {
+                return x(d.letter);
+            })
+            .attr("width", x.rangeBand())
+            .attr("y", function (d) {
+                return y(d.frequency);
+            })
+            .attr("height", function (d) {
+                return height - y(d.frequency);
+            });
+
+    }
+
+    function type(d) {
+        d.frequency = +d.frequency;
+        return d;
+    }
+
+    count.forEach(function (d) {
+        drawGraph(d);
+    })
+
+    return count;
+
+};
+statsSetMap = function (context, bounds, points) {
+    var markers = {};
+    var paths = {};
+    var coords = {};
+    var obj = {};
+    var map = L.map(context);
+    //map.fitBounds(bounds);
+    m = map;
+    drawnPaths = new L.FeatureGroup()
+        .addTo(map);
+
+    map.scrollWheelZoom.disable();
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            id: 'examples.map-i875mjb7'
+        })
+        .addTo(map);
+
+    map.on('moveend', function () {
+        var bounds = map.getBounds()
+            .toBBoxString();
+        $('[name="coords.bounds"]')
+            .val(bounds)
+            .trigger("change");
+    });
+
+    obj.add = function (d) {
+
+        z = coords;
+        var val = d.val;
+
+        if (!d.path) {
+            coords[val] = d;
+            obj.addPoint(d);
+        }
+        if (!coords.ippCoordinates) {
+            return;
+        }
+        if (val === 'destinationCoord') {
+
+            d = {
+                "val": "intendedRoute",
+                "name": "coords.intendedRoute",
+                "text": "Intended Route",
+                path: {
+                    stroke: '#018996'
+                }
+            };
+            coords[d.val] = d;
+            //console.log(coords.ippCoordinates, coords.destinationCoord)
+
+            var start = coords.ippCoordinates.layer.getLatLng();
+            var end = coords.destinationCoord.layer.getLatLng();
+
+            var latlngs = [
+                [start.lat, start.lng],
+                [end.lat, end.lng]
+            ];
+            obj.addPoly(d, latlngs);
+        }
+
+        if (val === 'findCoord') {
+            d = {
+                "val": "actualRoute",
+                "name": "coords.actualRoute",
+                "text": "Actual Route",
+                path: {
+                    stroke: '#3C763D',
+                    weight: 8
+                }
+            }
+
+            coords[d.val] = d;
+
+            var start = coords.ippCoordinates.layer.getLatLng();
+            var end = coords.findCoord.layer.getLatLng();
+            //console.log(start, end);
+
+            var latlngs = [
+                [start.lat, start.lng],
+                [end.lat, end.lng]
+            ];
+            obj.addPoly(d, latlngs);
+        }
+
+    };
+    obj.remove = function (d) {
+        // console.log(d)
+        var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
+        if (removePath) {
+            // console.log(removePath)
+            obj.removePoly(coords[removePath]);
+        }
+
+        if (d.path) {
+            obj.removePoly(d);
+        } else {
+            obj.removePoint(d);
+            return;
+        }
+    };
+
+    obj.addPoly = function (d, latlngs) {
+        color = d.path.stroke;
+
+        polyline = L.polyline(latlngs, {
+            color: color,
+            opacity: 0.9,
+            name: d.name,
+            val: d.val,
+            editable: true
+        });
+        //polyline.addTo(map)
+        drawnPaths.addLayer(polyline);
+
+        //paths[d.val] = polyline;
+        coords[d.val].layer = polyline;
+
+        var lineString = JSON.stringify(latlngs);
+
+        $('[name="' + d.name + '"]')
+            .val(lineString)
+            .trigger("change");
+
+        //var lineString = JSON.stringify(layer.toGeoJSON());
+
+    };
+
+    obj.removePoly = function (d) {
+        var path = coords[d.val].layer;
+        $('[name="' + d.name + '"]')
+            .val('')
+            .trigger("change");
+
+        drawnPaths.removeLayer(path);
+        delete coords[d.val];
+    };
+    obj.removePoint = function (d) {
+        var marker = coords[d.val].layer;
+        $('[name="' + d.name + '.lng"]')
+            .val('')
+            .trigger("change");
+        $('[name="' + d.name + '.lat"]')
+            .val('')
+            .trigger("change");
+        drawnPaths.removeLayer(marker);
+        delete coords[d.val];
+    };
+
+    obj.addPoint = function (d) {
+
+        var _coords = d.coords || map.getCenter();
+
+        var myIcon = L.divIcon({
+            iconSize: [41, 39],
+            className: 'fa ' + d.icon + ' fa-4x fa-fw'
+        });
+
+        var marker = L.marker(_coords, {
+            draggable: true,
+            editable: true,
+            icon: myIcon,
+            name: d.name,
+            val: d.val,
+
+        });
+
+        var text = d.text;
+
+        coords[d.val].layer = marker;
+        //marker.addTo(map);
+        //console.log(marker,drawnPaths)
+        drawnPaths.addLayer(marker);
+
+        marker.bindPopup(d.text, {
+                //noHide: true,
+                //clickable: true
+            })
+            //
+        if (d.val === 'ippCoordinates') {
+            marker.openPopup();
+        }
+        marker.setZIndexOffset(4);
+        if (d.val === 'ippCoordinates') {
+            var travelDirection = $('.travelDirection');
+
+            var spin;
+            var direction = 0;
+
+            $('#' + context)
+                .on('mouseover', '.travelDirection', function (event) {
+                    spin = window.setInterval(function () {
+                        direction = direction + 1;
+                        if (direction > 360) {
+                            direction = 0;
+                        }
+                        $(event.target)
+                            .css('transform', 'rotate(' + direction + 'deg)');
+                    }, 10);
+                });
+
+            $('#' + context)
+                .on('mouseout', '.travelDirection', function (event) {
+                    clearTimeout(spin);
+                    $('[name="coords.travelDirection"]')
+                        .val(direction)
+                        .trigger("change");
+                });
+
+        }
+
+        $('[name="' + d.name + '.lng"]')
+            .val(_coords.lng)
+            .trigger("change");
+        $('[name="' + d.name + '.lat"]')
+            .val(_coords.lat)
+            .trigger("change");
+
+        obj.editPoly
+
+        var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
+        if (_.contains(pathPoints, d.val)) {
+
+            function drag(layer, index, position) {
+                layer.spliceLatLngs(index, 1, position);
+            };
+
+            function routeEditing(val) {
+                if (val) {
+                    drawnPaths.getLayers()
+                        .forEach(function (layer) {
+                            if (layer.editing) {
+                                layer.editing.enable();
+                            }
+                        });
+
+                } else {
+                    drawnPaths.getLayers()
+                        .forEach(function (layer) {
+                            if (layer.editing) {
+                                layer.editing.disable();
+                            }
+                        });
+                }
+            };
+
+            marker.on('dragstart', function (event) {
+                routeEditing(false);
+            })
+
+            marker.on('drag', function (event) {
+                var marker = event.target;
+                var position = marker.getLatLng();
+                var layer;
+                if (d.val === 'destinationCoord') {
+                    layer = coords.intendedRoute.layer;
+                    index = layer.getLatLngs()
+                        .length - 1;
+                    drag(layer, index, position);
+
+                }
+                if (d.val === 'findCoord') {
+                    layer = coords.actualRoute.layer;
+                    index = layer.getLatLngs()
+                        .length - 1;
+                    drag(layer, index, position);
+                }
+                if (d.val === 'ippCoordinates') {
+                    index = 0;
+
+                    drawnPaths.getLayers()
+                        .forEach(function (layer) {
+                            if (layer.editing) {
+                                drag(layer, index, position);
+                            }
+                        })
+
+                }
+
+            });
+
+        }
+
+        marker.on('dragend', function (event) {
+            routeEditing(true);
+            var marker = event.target;
+            var position = marker.getLatLng();
+            $('[name="' + d.name + '.lng"]')
+                .val(position.lng)
+                .trigger("change");
+            $('[name="' + d.name + '.lat"]')
+                .val(position.lat)
+                .trigger("change");
+        });
+        return marker;
+
+    }
+    obj.fitBounds = function () {
+        map.fitBounds(drawnPaths.getBounds().pad(.3));
+    };
+    return obj;
+}
