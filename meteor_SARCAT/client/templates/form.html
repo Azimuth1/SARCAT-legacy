@@ -22,19 +22,25 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div id='formMap' style="width:100%;height:400px">
-                                    <div class="btn-group-vertical btn-group-sm mapPoints mapLeft" data-toggle="buttons">
-                                        <div class="btn text-success primary-bg white" data="i_ppCoordinates">
-                                            &nbsp; IPP
-                                            <span class="fa-stack _pull-right">
-                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
+                                    <div class="btn-group-vertical btn-group-sm mapPoints mapLeft mar0x" data-toggle="buttons">
+                                        <div class="btn text-success primary-bg white mar1y" data="i_ppCoordinates">
+                                            <div class='text-left'>Incident Location
+                                                <span class="fa-stack _pull-right">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw travelDirection text-black"></i>
                                         </span>
+                                            </div>
+                                            <div class='text-left'><em>Direction of Travel: </em>
+                                                <span class="fa-stack _pull-right">
+                                          <i class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection text-black"></i>
+                                        </span>
+                                            </div>
                                         </div>
-                                        <a class="btn btn-default  mar1y" data="revisedLKP-PLS">
+                                        <!--<a class="btn btn-default  mar1y" data="revisedLKP-PLS">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
                                             <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-success"></i>
                                         </span>
-                                        </a>
+                                        </a>-->
                                         <a class="btn btn-default" data="destinationCoord">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
                                             <span class="fa-stack _pull-right">
@@ -47,27 +53,109 @@
                                           <i class="fa fa-male fa-2x fa-fw text-success"></i>
                                         </span>
                                         </a>
-                                        <a class="btn btn-default" data="decisionPointCoord">
+                                        <a class="btn btn-default mar1y" data="decisionPointCoord">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
                                             <span class="fa-stack _pull-right">
                                           <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
                                         </span>
                                         </a>
+                                        <a class="btn btn-default" data="intendedRoute">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
+                                            <span class="fa-stack pull-right">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
+                                        </span>
+                                        </a>
+                                        <a class="btn btn-default" data="actualRoute">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
+                                            <span class="fa-stack pull-right">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
+                                        </span>
+                                        </a>
                                     </div>
                                 </div>
+                                {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
+
                             </div>
                         </div>
-                        {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Subject Info</h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        <table class="table table-hover table-bordered table-condensed">
+                            <thead class='default-bg'>
+                                <tr>
+                                    {{#each subjectKeys}}
+                                    <td class='afTable'>{{this}}</td>
+                                    {{/each}}
+                                    <td class='afTable'>Action</td>
+                                </tr>
+                            </thead>
+                            <tbody class='white-bg'>
+                                {{#each current.subjects.subject}}
+                                <tr>
+                                    <td>{{this.age}}</td>
+                                    <td>{{this.sex}}</td>
+                                    <td>{{this.local}}</td>
+                                    <td>{{this.weight}}</td>
+                                    <td>{{this.height}}</td>
+                                    <td>{{this.physical_fitness}}</td>
+                                    <td>{{this.experience}}</td>
+                                    <td>{{this.equipment}}</td>
+                                    <td>{{this.clothing}}</td>
+                                    <td>{{this.survival_training}}</td>
+                                    <td>
+                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeSubject btn-block">Remove</button>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="form-inline" doc=current field="subjects" scope="subjects.subject" buttonContent= "Add Subject" resetOnSuccess=true}}
                     </div>
                 </div>
 
+
+{{#autoForm 
+collection='Records' 
+validation="submit" 
+doc=current
+class="_recordForm _form-inline _hideSubmit" 
+id='formdIdMedical' 
+autosave=true 
+type='update'
+fields="medical" 
+}}
+
+
 <!--
-                {{ #autoForm collection='Records' doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" }} {{> afQuickFields}} {{/autoForm}}
+{{> afQuickField name="medical.status" options="allowed" noselect=true}}
+{{#if afFieldValueIs name="medical.status" value="Injured"}}
+{{> afQuickFields}} 
+{{/if}}
 -->
+{{/autoForm}}
 
 
 
-                {{> quickForm collection='Records' validation="submit" doc=current class="_recordForm form-inline _hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords" buttonContent= "Save" resetOnSuccess=false}} 
+
+{{> quickForm 
+collection='Records' 
+validation="submit" 
+doc=current 
+class="_recordForm form-inline _hideSubmit" 
+id='formdId' 
+autosave=true 
+type=formType 
+omitFields="admin,updated,created, coords, subjects" 
+buttonContent= "Save" 
+resetOnSuccess='false'
+}}
+
+
+
             </div>
         </div>
     </div>

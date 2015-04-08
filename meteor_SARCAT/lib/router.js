@@ -41,8 +41,8 @@ if (Meteor.isClient) {
     });*/
 
     //Roles.userIsInRole(Meteor.userId(), ['admin']);
-    L.Icon.Default.imagePath = '/img';
-    L.Icon.Default.imagePath = '/img';
+    //L.Icon.Default.imagePath = '/img';
+    L.Icon.Default.imagePath = '/packages/leaflet/images';
 }
 Router.route('home', {
     path: '/',

@@ -14,7 +14,6 @@ twbs:bootstrap
 accounts-base
 alanning:roles
 underscore
-mrt:leaflet
 http
 fortawesome:fontawesome
 d3

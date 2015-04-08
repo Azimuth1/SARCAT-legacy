@@ -28,7 +28,7 @@ Meteor.methods({
                     initSetup: false
                 }
             });
-       // Meteor.users.remove(Meteor.userId());
+        // Meteor.users.remove(Meteor.userId());
     },
     addRole: function (id, role) {
         Roles.addUsersToRoles(id, [role]);
@@ -125,7 +125,17 @@ Meteor.methods({
                 }
             });
         }
-    }
+    },
+    removeSubject: function (recordId, subjectId) {
+        newSubjects = Records.findOne(recordId).subjects.subject.filter(function (d) {
+            return d._key !== subjectId;
+        });
+        Records.update(recordId, {
+            $set: {
+                'subjects.subject': newSubjects
+            }
+        })
+    },
 });
 Records.allow({
     update: function () {
