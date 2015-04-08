@@ -13,15 +13,24 @@ Template.form.created = function () {
     agencyProfile = config.agencyProfile;
     record = this.data.record;
     Session.set('currentRecord', record);
+
 };
 Template.form.rendered = function () {
+    var currentUnit = record.measureUnits;
+    var units = labelUnits(currentUnit, 'temperature');
+    console.log(units);
+    $('[name="weather.temperatureMax"]').prev().append(' (' + labelUnits(currentUnit, 'temperature') + ')');
+    $('[name="weather.temperatureMin"]').prev().append(' (' + labelUnits(currentUnit, 'temperature') + ')');
+    $('[name="weather.windSpeed"]').prev().append(' (' + labelUnits(currentUnit, 'speed') + ')');
+    $('[name="incidentOutcome.trackOffset"]').prev().append(' (' + labelUnits(currentUnit, 'distance') + ')');
+    $('[name="incidentOutcome.elevationChange"]').prev().append(' (' + labelUnits(currentUnit, 'distance') + ')');
 
     var coords = record.coords;
     var bounds = coords.bounds;
     var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
     mapBounds = boundsString2Array(mapBounds);
 
-    map = formSetMap('formMap', mapBounds);
+    map = formSetMap('formMap');
 
     var coords = getCoords();
     coords.forEach(function (d) {
@@ -102,7 +111,7 @@ Template.form.helpers({
 
     schemas: function () {
         var record = this.record;
-        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, "userId", "coords", "updated", "created", "admin");
+        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "coords", "updated", "created", "admin");
         return schemas.map(function (d) {
             var count = (record[d]) ? Object.keys(record[d])
                 .length || 0 : 0;
@@ -111,6 +120,17 @@ Template.form.helpers({
                 current: count,
                 total: Schemas[d]._firstLevelSchemaKeys.length
             };
+        });
+    },
+    subjectKeys: function () {
+        return Schemas.subject._schemaKeys;
+    },
+    subjects: function () {
+        return record.subjects.subject;
+    },
+    subject: function () {
+        return _.map(this, function (d) {
+            return d;
         });
     },
 });
@@ -191,6 +211,13 @@ Template.form.events({
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
+    'click .removeSubject': function (event, template) {
+        console.log(record._id, this._key)
+        Meteor.call('removeSubject', record._id, this._key, function (err) {
+            console.log(err);
+        });
+
+    },
 
     'change .formNav': function (event, template) {
         $('.collapse')
@@ -214,9 +241,11 @@ Template.form.events({
             var dailyData = data.daily.data[0];
             console.log('MAX: ' + dailyData.temperatureMax)
             _.each(dailyData, function (d, name) {
-                $('[name="weather.' + name + '.0.C"]')
-                    .val(d);
+                $('[name="weather.' + name + '"]').val(d);
             });
+            if (!dailyData.precipType) {
+                $('[name="weather.precipType"]').val('none').trigger('change');
+            }
 
         });
 
@@ -243,14 +272,30 @@ Template.form.events({
         } else {
             map.remove(item);
         }
-
     },
+    'mouseover .travelDirection': function (event, template) {
+        direction = 0;
+        spin = window.setInterval(function () {
+            direction = direction + 1;
+            if (direction > 360) {
+                direction = 0;
+            }
+            $(event.target)
+                .css('transform', 'rotate(' + direction + 'deg)');
+        }, 10);
+    },
+    'mouseout .travelDirection': function (event, template) {
+        clearTimeout(spin);
+        $('[name="coords.travelDirection"]')
+            .val(direction)
+            .trigger("change");
+    }
 });
 
-function convertToC(fTempVal) {
-    return Math.round(cTempVal = (fTempVal - 32) * (5 / 9));
-}
-
-function convertToF(cTempVal) {
-    return (cTempVal * (9 / 5)) + 32;
-}
+AutoForm.hooks({
+    updateSubjectForm: {
+        onSuccess: function (insertDoc, updateDoc, currentDoc) {
+            $('#updateSubjectForm').find('input').val('');
+        }
+    }
+});

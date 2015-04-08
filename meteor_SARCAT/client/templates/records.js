@@ -11,7 +11,7 @@ Template.records.rendered = function () {
 
     mapDrawn = newProjectSetMap('recordMap', newBounds, {
         "name": "coords.ippCoordinates",
-        "text": "IPP Location"
+        "text": "Incident Location"
     });
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
@@ -37,7 +37,7 @@ Template.records.rendered = function () {
 };
 Template.records.helpers({
     lists: function () {
-        return Records.find();
+        return Records.find({}, {sort: {name: 1}});
     },
     newRecord: function () {
         return Records.findOne(Session.get('newRecord'));

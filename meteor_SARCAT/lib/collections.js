@@ -1,5 +1,6 @@
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
+
 Records.defaultName = function () {
     var nextLetter = 'A',
         nextName = 'Incident ' + nextLetter;
@@ -21,28 +22,14 @@ Records.defaultNum = function () {
     return nextLetter.toString();
 };
 
-Records.units = function (type) {
-    var config = Config.findOne();
-    var agencyProfile = config.agencyProfile;
-    var currentUnit = agencyProfile.measureUnits;
+/*
+function convertToC(fTempVal) {
+    return cTempVal = (fTempVal - 32) * (5 / 9);
+}
 
-    var unitType = {
-        distance: {
-            Metric: 'Meters',
-            English: 'Feet'
-        },
-        temperature: {
-            Metric: '°C',
-            English: '°F'
-        },
-        speed: {
-            Metric: 'kph',
-            English: 'mph'
-        }
-    };
-    return unitType[type][currentUnit]
-
-};
+function convertToF(cTempVal) {
+    return (cTempVal * (9 / 5)) + 32;
+}
 
 convertDeg = function (val) {
 
@@ -63,7 +50,7 @@ convertDeg = function (val) {
     return convertToC(val);
 
 };
-
+*/
 Schemas = {};
 Schemas = {};
 Schemas.User = new SimpleSchema({
@@ -103,6 +90,7 @@ Schemas.User = new SimpleSchema({
     },
 });
 Meteor.users.attachSchema(Schemas.User);
+
 Schemas.admin = new SimpleSchema({
     user: {
         type: String,
@@ -165,19 +153,9 @@ Schemas.recordInfo = new SimpleSchema({
     },
     leadagency: {
         type: String,
+        optional:true,
         label: 'Agency Having Jurisdiction',
-        max: 200,
-        autoValue: function () {
-            if (this.isInsert) {
-                var value = this.value;
-                if (value) {
-                    return value;
-                } else {
-                    return Config.findOne()
-                        .agencyProfile.agency;
-                }
-            }
-        },
+        max: 200
     },
     /*organizationagency: {
         type: String,
@@ -246,7 +224,7 @@ Schemas.incident = new SimpleSchema({
                 type: 'datetime-local'
             }
         },
-        'label': 'Incident Date/Time',
+        label: 'Incident Date/Time',
         optional: true
     },*/
 
@@ -389,68 +367,6 @@ Schemas.incident = new SimpleSchema({
          label: 'Light',
      }*/
 });
-Schemas.weather = new SimpleSchema({
-
-    'summary': {
-        'type': String,
-        'optional': true,
-        'label': 'Brief Summary',
-        autoform: {
-            rows: 2
-        }
-        //allowedValues: ["clear-day", "clear-night", "rain", "snow", "sleet", "wind", "fog", "cloudy", "partly-cloudy-day", "partly-cloudy-night", "hail", "thunderstorm", "tornado"],
-    },
-
-    'precipType': {
-        'type': String,
-        'optional': true,
-        allowedValues: ['rain', 'snow', 'sleet'],
-        'label': 'Precipitation Type'
-    },
-
-    'temperatureMax.$': {
-        'type': Object,
-        label: 'Max Temperature'
-    },
-    'temperatureMax.$.C': {
-        'type': Number,
-        decimal: true,
-        'optional': true,
-        label: 'Max Temperature (C)'
-    },
-    'temperatureMax.$.F': {
-        'type': Number,
-        decimal: true,
-        'optional': true,
-        label: 'Max Temperature (F)',
-        autoValue: function(){
-            t=this;
-            console.log(this)
-            return 
-        },
-    },
-    'temperatureMin': {
-        'type': Number,
-        'optional': true,
-        decimal: true,
-        label: function () {
-            var unit = Records.units('temperature');
-            //var unit = this.field('measureUnits').value
-            return 'Min Temperature (' + unit + ')'
-        },
-    },
-
-    'windSpeed': {
-        'type': String,
-        'optional': true,
-        label: function () {
-            var unit = Records.units('speed');
-            return 'Wind Speed (' + unit + ')'
-        },
-
-    }
-})
-
 Schemas.subjects = new SimpleSchema({
     subject: {
         type: Array,
@@ -460,6 +376,18 @@ Schemas.subjects = new SimpleSchema({
     'subject.$': {
         type: Object
     },
+    'subject.$._key': {
+        type: String,
+        label: 'Name/Alias',
+        optional: true,
+        autoValue: function () {
+            return new Date().toISOString();
+        },
+        autoform: {
+            omit: true
+        }
+    },
+
     'subject.$.age': {
         type: Number,
         label: 'Age',
@@ -467,7 +395,7 @@ Schemas.subjects = new SimpleSchema({
     },
     'subject.$.sex': {
         type: String,
-        allowedValues: ['Unknown', 'Male', 'Femail'],
+        allowedValues: ['Unknown', 'Male', 'Female'],
         label: 'Sex',
         optional: true
     },
@@ -487,7 +415,7 @@ Schemas.subjects = new SimpleSchema({
         label: 'Height',
         optional: true
     },
-    'subject.$.physical fitness': {
+    'subject.$.physical_fitness': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Physical Fitness',
@@ -511,22 +439,15 @@ Schemas.subjects = new SimpleSchema({
         label: 'Clothing',
         optional: true
     },
-    'subject.$.survival training': {
+    'subject.$.survival_training': {
         type: String,
         allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
         label: 'Survival training',
         optional: true
     }
 });
-/*
-Schemas.allSubjects = new SimpleSchema({
-    'allSubjects': {
-        type: [Object],
-        label: 'Number of Subjects',
-        defaultValue: []
-    },
-});
-Schemas.subjectInfo = new SimpleSchema({
+
+Schemas.subject = new SimpleSchema({
     'age': {
         type: Number,
         label: 'Age',
@@ -584,7 +505,7 @@ Schemas.subjectInfo = new SimpleSchema({
         label: 'Survival training',
         optional: true
     }
-});*/
+});
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
@@ -593,7 +514,7 @@ Schemas.timeLog = new SimpleSchema({
                 type: 'datetime-local'
             }
         },
-        'label': 'Last Seen Date/Time',
+        label: 'Last Seen Date/Time',
         optional: true
     },
     'sar notified date-time': {
@@ -603,7 +524,7 @@ Schemas.timeLog = new SimpleSchema({
                 type: 'datetime-local'
             }
         },
-        'label': 'SAR Notified Date/Time',
+        label: 'SAR Notified Date/Time',
         optional: true
     },
     'subject located date-time': {
@@ -613,7 +534,7 @@ Schemas.timeLog = new SimpleSchema({
                 type: 'datetime-local'
             }
         },
-        'label': 'Subject Located Date/Time',
+        label: 'Subject Located Date/Time',
         optional: true
     },
     'incident closed date-time': {
@@ -623,17 +544,17 @@ Schemas.timeLog = new SimpleSchema({
                 type: 'datetime-local'
             }
         },
-        'label': 'Incident Closed Date/Time',
+        label: 'Incident Closed Date/Time',
         optional: true
     },
     'total hours': {
         type: Number,
-        'label': 'Total Missing Hours',
+        label: 'Total Missing Hours',
         optional: true
     },
     'search hours': {
         type: Number,
-        'label': 'Total Search Hours',
+        label: 'Total Search Hours',
         optional: true
     }
 });
@@ -865,25 +786,19 @@ Schemas.incidentOutcome = new SimpleSchema({
     },
     'trackOffset': {
         type: String,
-        label: function () {
-            var unit = Records.units('distance');
-            return 'Track Offset (' + unit + ')'
-        },
+        label: 'Track Offset',
         optional: true
     },
     'elevationChange': {
         type: String,
-        label: function () {
-            var unit = Records.units('distance');
-            return 'Elevation Change (' + unit + ')'
-        },
+        label: 'Elevation Change',
         optional: true
     }
 });
 Schemas.medical = new SimpleSchema({
     'status': {
         type: String,
-        allowedValues: ['Unknown', 'Alive and well', 'Injuired', 'DOA'],
+        allowedValues: ['Unknown', 'Alive and well', 'Injured', 'DOA'],
         label: 'Subject Status',
         optional: true
     },
@@ -1021,7 +936,61 @@ Schemas.resources = new SimpleSchema({
         optional: true
     }
 });
+
+Schemas.weather = new SimpleSchema({
+    'summary': {
+        type: String,
+        optional: true,
+        label: 'Brief Summary',
+        autoform: {
+            rows: 2
+        }
+    },
+    'precipType': {
+        type: String,
+        optional: true,
+        allowedValues: ['rain', 'snow', 'sleet', 'none'],
+        label: 'Precipitation Type'
+    },
+    'temperatureMax': {
+        type: Number,
+        decimal: true,
+        optional: true,
+        label: 'Max Temperature',
+    },
+
+    'temperatureMin': {
+        type: Number,
+        optional: true,
+        decimal: true,
+        label: 'Min Temperature',
+    },
+
+    'windSpeed': {
+        type: String,
+        optional: true,
+        label: 'Wind Speed',
+
+    }
+})
+
 Schemas.SARCAT = new SimpleSchema({
+    measureUnits: {
+        type: String,
+        optional: false,
+        label: 'Units',
+        allowedValues: ['US', 'Metric'],
+        autoform: {
+            omit: true
+        },
+        autoValue: function () {
+            if (this.isInsert) {
+                return Config.findOne().agencyProfile.measureUnits;
+            } else {
+                this.unset();
+            }
+        }
+    },
     userId: {
         type: String,
         optional: false,
@@ -1058,6 +1027,11 @@ Schemas.SARCAT = new SimpleSchema({
             }
         }
     },
+    coords: {
+        type: Schemas.coords,
+        optional: true
+            //optional: true
+    },
     admin: {
         type: Schemas.admin,
         optional: true,
@@ -1069,18 +1043,13 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true
             //optional: true
     },
-    coords: {
-        type: Schemas.coords,
-        optional: true
-            //optional: true
-    },
     incident: {
         type: Schemas.incident,
         optional: true
     },
     weather: {
         type: Schemas.weather,
-        label: 'Weather - Autoset from forecast.io based on Incident Date/Time',
+        label: 'Weather - Autoset from forecast.io based on Incident Date & Location',
         optional: true
     },
     subjects: {
@@ -1134,8 +1103,8 @@ Schemas.agencyProfile = new SimpleSchema({
     measureUnits: {
         type: String,
         label: 'Unit of Measurement',
-        defaultValue: 'Metric',
-        allowedValues: ['Metric', 'English'],
+        defaultValue: 'US',
+        allowedValues: ['Metric', 'US'],
     },
     'state-region': {
         type: String,
@@ -1270,16 +1239,16 @@ Schemas.formEditions = new SimpleSchema({
             type: 'select-radio-inline',
             options: function () {
                 return [{
-                    'label': 'Platinum Edition',
+                    label: 'Platinum Edition',
                     'value': 'Platinum Edition'
                 }, {
-                    'label': 'Gold Edition',
+                    label: 'Gold Edition',
                     'value': 'Gold Edition'
                 }, {
-                    'label': 'Silver Edition',
+                    label: 'Silver Edition',
                     'value': 'Silver Edition'
                 }, {
-                    'label': 'Basic Edition',
+                    label: 'Basic Edition',
                     'value': 'Basic Edition'
                 }];
             }
@@ -1383,4 +1352,3 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
-
