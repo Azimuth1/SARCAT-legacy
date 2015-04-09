@@ -34,6 +34,7 @@ Meteor.methods({
         Roles.addUsersToRoles(id, [role]);
     },
     updateConfig: function (val) {
+        console.log(val)
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -133,6 +134,16 @@ Meteor.methods({
         Records.update(recordId, {
             $set: {
                 'subjects.subject': newSubjects
+            }
+        })
+    },
+    removeResource: function (recordId, resourceId) {
+        newResource = Records.findOne(recordId).resourcesUsed.resource.filter(function (d) {
+            return d._key !== resourceId;
+        });
+        Records.update(recordId, {
+            $set: {
+                'resourcesUsed.resource': newResource
             }
         })
     },

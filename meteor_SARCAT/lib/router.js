@@ -17,7 +17,6 @@ Router.configure({
         ];
     },
     onBeforeAction: function () {
-        Session.set('config', Config.findOne());
         if (Config.findOne({
                 initSetup: true
             })) {
@@ -35,6 +34,15 @@ Router.configure({
 });
 if (Meteor.isClient) {
 
+Tracker.autorun(function () {
+//  Meteor.subscribe("config", Config.findOne());
+//Session.set('config', Config.findOne());
+//Session.set('profileComplete',agencyProfileComplete());
+
+
+
+});
+
     /*Tracker.autorun(function () {
         var count = Session.get('adminUser');
         //console.log('autorun2:' + count);
@@ -42,14 +50,17 @@ if (Meteor.isClient) {
 
     //Roles.userIsInRole(Meteor.userId(), ['admin']);
     //L.Icon.Default.imagePath = '/img';
-    L.Icon.Default.imagePath = '/packages/leaflet/images';
+    //L.Icon.Default.imagePath = '/packages/leaflet/images';
 }
 Router.route('home', {
     path: '/',
     action: function () {
         //console.log('!')
+        console.log(Meteor.user())
         if (Meteor.user()) {
+            
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
+
                 Router.go('admin');
             } else {
                 Router.go('records', Meteor.user());
@@ -85,7 +96,7 @@ Router.route('user-home', {
 Router.route('records', {
     path: '/records',
     waitOn: function () {
-        return this.subscribe('publicLists');
+        return [this.subscribe('publicLists')];
     },
     data: function () {
         var obj = {};
@@ -115,6 +126,7 @@ Router.route('admin', {
     },
 
     action: function () {
+
         if (this.ready()) {
             this.render();
         }

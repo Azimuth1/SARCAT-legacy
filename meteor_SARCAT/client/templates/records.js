@@ -1,10 +1,13 @@
 var mapDrawn;
 var drawn;
-var config;
 
-Template.records.rendered = function () {
+
+Template.records.onRendered(function () {
+
+
+
     Session.set('userView', 'records');
-    config = Session.get('config');
+    var config = Config.findOne();
     var agencyProfile = config.agencyProfile;
     var bounds = agencyProfile.bounds;
     var newBounds = boundsString2Array(bounds);
@@ -18,23 +21,9 @@ Template.records.rendered = function () {
             mapDrawn.reset();
         });
 
-    //return
-    /*var tbl_body = '';
-    data.forEach(function (d) {
-        var odd_even = false;
-        $.each(data, function () {
-            var tbl_row = '';
-            $.each(this, function (k, v) {
-                tbl_row += '<td>' + v + '</td>';
-            })
-            tbl_body += '<tr class=\'' + (odd_even ? 'odd' : 'even') + '\'>' + tbl_row + '</tr>';
-            odd_even = !odd_even;
-        });
-    })
-    $('#target_table_id')
-        .html(tbl_body);*/
 
-};
+
+});
 Template.records.helpers({
     lists: function () {
         return Records.find({}, {sort: {name: 1}});
@@ -43,9 +32,10 @@ Template.records.helpers({
         return Records.findOne(Session.get('newRecord'));
     },
     createNewBtn: function () {
-        var profile = agencyProfileComplete();
+        var profile = Config.findOne().agencyProfileComplete;
+        var agencyMapComplete = Config.findOne().agencyMapComplete;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
-        return profile && role;
+        return profile && agencyMapComplete && role;
     },
 
 });

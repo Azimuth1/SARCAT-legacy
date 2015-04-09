@@ -1,6 +1,14 @@
 labelUnits = function (currentUnit, type) {
 
     var unitType = {
+        height: {
+            Metric: 'cm',
+            US: 'in'
+        },
+        weight: {
+            Metric: 'kg',
+            US: 'lbs'
+        },
         distance: {
             Metric: 'Meters',
             US: 'Feet'
@@ -18,17 +26,7 @@ labelUnits = function (currentUnit, type) {
 
 };
 
-var agencyProfileIncomplete = function () {
-    var config = Session.get('config');
-    if (!config) {
-        return;
-    }
-    var agencyProfile = config.agencyProfile;
-    var apKeys = Object.keys(agencyProfile);
-    return apKeys.length < Schemas.agencyProfile._schemaKeys.length;
-}
-
-getCoords = function () {
+getCoords = function (record) {
 
     var mapPoints = [{
         "val": "ippCoordinates",
@@ -76,7 +74,7 @@ getCoords = function () {
         return [x.val, x];
     }));
 
-    record = Session.get('currentRecord');
+   // record = Session.get('currentRecord');
     if (!record.coords) {
         return mapPoints;
     }
@@ -91,16 +89,6 @@ getCoords = function () {
     });
 
 };
-
-agencyProfileComplete = function () {
-    var config = Session.get('config');
-    if (!config) {
-        return;
-    }
-    var agencyProfile = config.agencyProfile;
-    var apKeys = Object.keys(agencyProfile);
-    return apKeys.length === Schemas.agencyProfile._schemaKeys.length;
-}
 
 getLocation = function (cb) {
     var result;
@@ -157,7 +145,8 @@ getWeather = function (coords, date, cb) {
     var dateTime = [date, time].join('');
     var latlngDate = [latlng, dateTime].join(',');
 
-    var units = (Session.get('currentRecord').measureUnits == 'Metric') ? 'units=si' : 'units=us';
+    var units = (Session.get('currentRecord')
+        .measureUnits == 'Metric') ? 'units=si' : 'units=us';
     //Config.findOne().agencyProfile.measureUnits
     //var time = date || new Date().toISOString().split('.')[0];
 
@@ -208,14 +197,26 @@ setMap = function (context, bounds) {
     };
 
     layers.Streets.addTo(map);
-    L.control.layers(layers).addTo(map);
+    L.control.layers(layers)
+        .addTo(map);
 
     map.on('moveend', function () {
+
         var bounds = map.getBounds()
             .toBBoxString();
         $('[name="agencyProfile.bounds"]')
             .val(bounds)
-            .trigger("change");;
+            .trigger("change");
+
+        Meteor.call('updateConfig', {
+            agencyMapComplete: true
+        }, function (error, d) {
+            if (error) {
+                console.log(error);
+            }
+
+        });
+
     });
     return map;
 }
@@ -253,7 +254,8 @@ newProjectSetMap = function (context, bounds, points) {
     };
 
     layers.Streets.addTo(map);
-    L.control.layers(layers).addTo(map);
+    L.control.layers(layers)
+        .addTo(map);
 
     var myIcon = L.divIcon({
         iconSize: [31, 37],
@@ -312,7 +314,8 @@ formSetMap = function (context) {
     };
 
     layers.Streets.addTo(map);
-    L.control.layers(layers).addTo(map);
+    L.control.layers(layers)
+        .addTo(map);
 
     map.on('moveend', function () {
         var bounds = map.getBounds()
@@ -592,7 +595,7 @@ formSetMap = function (context) {
     }
     obj.fitBounds = function () {
         map.fitBounds(drawnPaths.getBounds()
-            .pad(.3));
+            .pad(1));
     };
     return obj;
 }
@@ -780,6 +783,7 @@ statsSetMap = function (context, bounds, points) {
             coords[val] = d;
             obj.addPoint(d);
         }
+        return;
         if (!coords.ippCoordinates) {
             return;
         }
@@ -1042,3 +1046,4 @@ L.RotatedMarker = L.Marker.extend({
 L.rotatedMarker = function (pos, options) {
     return new L.RotatedMarker(pos, options);
 };
+

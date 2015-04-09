@@ -3,20 +3,9 @@ Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 
-Meteor.startup(function () {
-    $(document.body)
-        .touchwipe({
-            wipeLeft: function () {
-                Session.set(MENU_KEY, false);
-            },
-            wipeRight: function () {
-                Session.set(MENU_KEY, true);
-            },
-            preventDefaultEvents: false
-        });
-});
-Template.appBody.created = function () {};
-Template.appBody.rendered = function () {};
+Template.appBody.onCreated(function () {});
+Template.appBody.onRendered(function () {});
+
 Template.appBody.helpers({
     isUserView: function (view) {
         view = view || this._id;
@@ -26,9 +15,21 @@ Template.appBody.helpers({
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    noProfile: function () {
-        var profile = agencyProfileComplete();
-        return !profile;
+    agencyProfileInComplete: function () {
+        var config = Config.findOne();
+        if (!config) {
+            return;
+        }
+        return !config.agencyProfileComplete;
+
+    },
+    agencyMapInComplete: function () {
+        var config = Config.findOne();
+        if (!config) {
+            return;
+        }
+        return !config.agencyMapComplete;
+
     },
     thisArray: function () {
         return [this];
@@ -79,9 +80,9 @@ Template.appBody.events({
 
         Session.set('userView', target);
 
-        if (target === 'records') {
+        /*if (target === 'records') {
             Router.go('user-home', Meteor.user());
-        }
+        }*/
     },
     'click .js-menu': function () {
         Session.set(MENU_KEY, !Session.get(MENU_KEY));

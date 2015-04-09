@@ -1,6 +1,18 @@
 <template name="appBody">
     <div id="container" class="{{menuOpen}} {{cordova}}">
         <section id="menu">
+
+
+
+                {{#if agencyProfileInComplete}}
+                    <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a> </div>
+                {{/if}} 
+
+                {{#if agencyMapInComplete}}
+                    <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency Response Area must be complete to begin adding records</a> </div>
+                {{/if}} 
+
+                
             {{#if currentUser}}
                 <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> </div>
 
@@ -20,10 +32,6 @@
                 </div>
 
 
-
-                {{#if noProfile}}
-                    <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a> </div>
-                {{/if}} 
 
 
                 {{else}}
