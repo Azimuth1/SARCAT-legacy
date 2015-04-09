@@ -8,31 +8,63 @@ var map;
 Template.registerHelper("Schemas", Schemas);
 
 Template.form.created = function () {
+
     Session.set('userView', this.data.record._id);
-    config = Session.get('config');
+    config = Config.findOne();
     agencyProfile = config.agencyProfile;
     record = this.data.record;
     Session.set('currentRecord', record);
 
 };
 Template.form.rendered = function () {
+
+    var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
-    console.log(units);
-    $('[name="weather.temperatureMax"]').prev().append(' (' + labelUnits(currentUnit, 'temperature') + ')');
-    $('[name="weather.temperatureMin"]').prev().append(' (' + labelUnits(currentUnit, 'temperature') + ')');
-    $('[name="weather.windSpeed"]').prev().append(' (' + labelUnits(currentUnit, 'speed') + ')');
-    $('[name="incidentOutcome.trackOffset"]').prev().append(' (' + labelUnits(currentUnit, 'distance') + ')');
-    $('[name="incidentOutcome.elevationChange"]').prev().append(' (' + labelUnits(currentUnit, 'distance') + ')');
+
+    $('[name="weather.temperatureMax"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'temperature') + ')');
+    $('[name="weather.temperatureMin"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'temperature') + ')');
+    $('[name="weather.windSpeed"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'speed') + ')');
+    $('[name="incidentOutcome.trackOffset"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+    $('[name="incidentOutcome.elevationChange"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+
+    $('[data-subjecttable="weight"]')
+        .append(' (' + labelUnits(currentUnit, 'weight') + ')');
+    $('[data-subjecttable="height"]')
+        .append(' (' + labelUnits(currentUnit, 'height') + ')');
 
     var coords = record.coords;
+
+    var dialVal = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
+    $(".dial")
+        .val(dialVal);
+    $(".dial")
+        .knob({
+            'release': function (v) {
+                $('[name="incidentOperations.initialDirectionofTravel"]')
+                    .val(v)
+                    .trigger("change");
+
+            }
+        });
+
     var bounds = coords.bounds;
     var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
     mapBounds = boundsString2Array(mapBounds);
 
     map = formSetMap('formMap');
 
-    var coords = getCoords();
+    var coords = getCoords(record);
     coords.forEach(function (d) {
         if (d.coords) {
             $('[data="' + d.val + '"]')
@@ -50,17 +82,33 @@ Template.form.rendered = function () {
 
 };
 Template.form.helpers({
-    agencyProfile: function () {
+    /*agencyProfile: function () {
         return Session.get('config')
             .agencyProfile;
-    },
-    measureUnits: function () {
-        return Session.get('config')
-            .agencyProfile.measureUnits;
-    },
+    },*/
+    /* measureUnits: function () {
+         return Config.findOne()
+             .agencyProfile.measureUnits;
+
+            
+     },
+     measureUnitsHeight: function () {
+         var units = Config.findOne()
+             .agencyProfile.measureUnits;
+              return labelUnits(units,'height')
+     },
+     measureUnitsWeight: function () {
+         var units = Config.findOne()
+             .agencyProfile.measureUnits;
+              return labelUnits(units,'weight')
+     },*/
     formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
+    },
+    formType2: function () {
+        var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
+        return highRole ? 'update-pushArray' : 'disabled';
     },
     todosReady: function () {
         return true;
@@ -83,28 +131,12 @@ Template.form.helpers({
     currentRecord: function () {
         return Session.get('currentRecord');
     },
-    formComplete: function () {
-        var name = this.field;
-        var _record = Session.get('currentRecord')[name];
 
-        if (!_record) {
-            return 0;
-        }
-        return Object.keys(_record)
-            .length;
-        /*var formLen = _.filter(_record, function (d) {
-                var val = d;
-                if (val === '' || !val) {
-                    val = false;
-                }
-                return val;
-            })
-            .length;
-        var schemaLen = this.length;
-        var complete = (formLen === schemaLen);
-        return formLen + '/' + schemaLen;*/
+    hasDecisionPoint: function () {
+
+        var record = this.record;
+        return record.coords && record.coords.decisionPointCoord;
     },
-
     autoSaveMode: function () {
         return true;
     },
@@ -115,8 +147,10 @@ Template.form.helpers({
         return schemas.map(function (d) {
             var count = (record[d]) ? Object.keys(record[d])
                 .length || 0 : 0;
-          
-                if(!Schemas[d]){return;}
+
+            if (!Schemas[d]) {
+                return;
+            }
             return {
                 field: d,
                 current: count,
@@ -125,16 +159,47 @@ Template.form.helpers({
         });
     },
     subjectKeys: function () {
-        return Schemas.subject._schemaKeys;
+        return Schemas.subject._schemaKeys
     },
     subjects: function () {
-        return record.subjects.subject;
+        return this.data.record.subjects.subject;
     },
     subject: function () {
         return _.map(this, function (d) {
             return d;
         });
     },
+
+    resourceKeys: function () {
+        return ["Resource Type", "Total Used", "Total Hours"];
+        return _.chain(Schemas.resourcesUsed._schemaKeys)
+            .filter(function (d) {
+                return d.indexOf("$") > -1;
+            })
+            .map(function (d) {
+                return d.split('.')[2];
+            })
+            .compact()
+            .without('_key')
+            .value();
+    },
+    resources: function () {
+        return this.data.record.subjects.subject;
+    },
+    resource: function () {
+        return _.map(this, function (d) {
+            return d;
+        });
+    },
+
+    medicalDetails: function () {
+        var medical = this.record.medical;
+        if(!medical){return false;}
+        var val = medical.status;
+        var detailsTrue = (val === 'Injured' || val === 'DOA') ? true : false;
+        return detailsTrue;
+    },
+
 });
 var editList = function (list, template) {
     Tracker.flush();
@@ -204,7 +269,7 @@ Template.form.events({
         return result ? 'a' : 'b';
     },
     'click .js-delete-list': function (event, template) {
-        var record = Session.get('currentRecord');
+        var record = this.data.record;
         deleteList(record);
     },
     'click .formNav': function (event, template) {
@@ -218,6 +283,14 @@ Template.form.events({
         Meteor.call('removeSubject', record._id, this._key, function (err) {
             console.log(err);
         });
+},
+    'click .removeResource': function (event, template) {
+        console.log(record._id, this._key)
+        Meteor.call('removeResource', record._id, this._key, function (err) {
+            console.log(err);
+        });
+
+
 
     },
 
@@ -243,24 +316,24 @@ Template.form.events({
             var dailyData = data.daily.data[0];
             console.log('MAX: ' + dailyData.temperatureMax)
             _.each(dailyData, function (d, name) {
-                $('[name="weather.' + name + '"]').val(d);
+                $('[name="weather.' + name + '"]')
+                    .val(d);
             });
             if (!dailyData.precipType) {
-                $('[name="weather.precipType"]').val('none').trigger('change');
+                $('[name="weather.precipType"]')
+                    .val('none')
+                    .trigger('change');
             }
 
         });
 
-    },
-    'change [name="resources.resourcesUsed"]': function (event, template) {
-        console.log('!')
     },
     'click .mapPoints a': function (event, template) {
         var context = template.$(event.target);
         var pointType = context.attr('data');
         var active = context.hasClass('active')
 
-        var coords = getCoords();
+        var coords = getCoords(this.record);
 
         var item = _.findWhere(coords, {
             val: pointType
@@ -275,29 +348,16 @@ Template.form.events({
             map.remove(item);
         }
     },
-    'mouseover .travelDirection': function (event, template) {
-        direction = 0;
-        spin = window.setInterval(function () {
-            direction = direction + 1;
-            if (direction > 360) {
-                direction = 0;
-            }
-            $(event.target)
-                .css('transform', 'rotate(' + direction + 'deg)');
-        }, 10);
-    },
-    'mouseout .travelDirection': function (event, template) {
-        clearTimeout(spin);
-        $('[name="coords.travelDirection"]')
-            .val(direction)
-            .trigger("change");
-    }
+
 });
 
 AutoForm.hooks({
     updateSubjectForm: {
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
-            $('#updateSubjectForm').find('input').val('');
+            $('#updateSubjectForm')
+                .find('input')
+                .val('');
         }
     }
 });
+

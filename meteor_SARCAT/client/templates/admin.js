@@ -5,7 +5,7 @@ var mapDrawn;
 
 var config;
 Template.admin.created = function () {
- Session.set('userView', 'admin');
+    Session.set('userView', 'admin');
     config = Session.get('config');
     mapDrawn = false;
 };
@@ -28,7 +28,7 @@ Template.admin.helpers({
         return !complete;
     },
     configs: function () {
-        return Session.get('config');
+        return Config.findOne();
     },
     userEmail: function () {
         return this.emails[0].address;
@@ -86,9 +86,10 @@ Template.admin.helpers({
         return 'checked';
     },
     userRoleList: function () {
-        return this.users.fetch().filter(function (d) {
-            return d._id !== Meteor.userId()
-        })
+        return this.users.fetch()
+            .filter(function (d) {
+                return d._id !== Meteor.userId()
+            })
     },
 });
 
@@ -116,7 +117,7 @@ Template.admin.events({
                 if (mapDrawn) {
                     return;
                 }
-
+                var config = Config.findOne();
                 var agencyProfile = config.agencyProfile;
                 var bounds = agencyProfile.bounds;
                 var newBounds = boundsString2Array(bounds);
@@ -178,4 +179,37 @@ AutoForm.hooks({
     }
 });*/
 AutoForm.addHooks('adminRoles', hooks2);
+
+AutoForm.hooks({
+    formIdAgencyProfile: {
+        beginSubmit: function (a) {
+            // console.log()
+            console.log('beginSubmit');
+        },
+        endSubmit: function () {
+            console.log('endSubmit');
+        },
+        onSuccess: function (insertDoc, updateDoc, currentDoc) {
+            var config = Config.findOne();
+            if (!config) {
+                return;
+            }
+            var agencyProfile = config.agencyProfile;
+            var apKeys = Object.keys(agencyProfile);
+            var complete = apKeys.length === Schemas.agencyProfile._schemaKeys.length;
+            //Session.set('profileComplete', complete);
+            if (complete) {
+
+                Meteor.call('updateConfig', {
+                    agencyProfileComplete: true
+                }, function (error, d) {
+                    if (error) {
+                        console.log(error);
+                    }
+
+                });
+            }
+        }
+    }
+});
 

@@ -1,18 +1,26 @@
 <template name="form">
-    <div class="page _lists-show">
-        <nav class="formNav">
-            <h4 class="text-default nav-title"><strong>{{record.recordInfo.name}}</strong> <small><span class="default-bg_label">Prepared By: <strong> <em>{{record.admin.user}} </em></strong></span> | <span class="default-bg_label">Created: <strong> <em>{{record.created}}</em></strong></span></small>
+
+
+
+    <nav class="navbar default-bg rad0 mar1yb">
+        <div class="container-fluid pad1y">
+            <h4 class="white nav-title "><strong class="text-uppercase">{{record.recordInfo.name}}</strong> <small><span class="white">Prepared By: <strong> <em>{{record.admin.user}} </em></strong></span> | <span class="white">Created: <strong> <em>{{record.created}}</em></strong></span></small>
             </h4>
-            <div class="x">
-                <div class="flex-container _btn-group col-md-12" role="group" aria-label="...">
+        
+                <div class="flex-container _btn-group col-md-12 pad00" role="group" aria-label="...">
                     {{#each schemas}}
-                    <button type="button" data="{{this.field}}" class="formNav flex-item btn default-bg mar0 _pad1">{{this.field}} <small>{{this.current}}/{{this.total}} </small></button>
+                        <button type="button" data="{{this.field}}" class="formNav flex-item btn primary-bg marXs">{{this.field}} <small>{{this.current}}/{{this.total}} </small></button>
                     {{/each}}
                 </div>
-                {{json schemas.recordInfo}}
-            </div>
-        </nav>
-        <div class="content-scrollable list-items">
+                </div>
+    </nav>
+
+
+
+
+
+
+        <div class="admin" style="top:80px;z-index:-1">
             <div class="pad2">
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab">
@@ -21,19 +29,24 @@
                     <div class="panel-body afBody">
                         <div class="row">
                             <div class="col-md-12">
-                                <div id='formMap' style="width:100%;height:400px">
+                                <div id='formMap' style="width:100%;height:550px">
                                     <div class="btn-group-vertical btn-group-sm mapPoints mapLeft mar0x" data-toggle="buttons">
-                                        <div class="btn text-success primary-bg white mar1y" data="i_ppCoordinates">
-                                            <div class='text-left'>Incident Location
+                                        <div class="btn text-success primary-bg white" data="_ippCoordinates">
+                                            <div class='text-center'>Incident Location
                                                 <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw travelDirection text-black"></i>
-                                        </span>
+                                                </span>
                                             </div>
-                                            <div class='text-left'><em>Direction of Travel: </em>
-                                                <span class="fa-stack _pull-right">
-                                          <i class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection text-black"></i>
-                                        </span>
+                                        </div>
+                                        <div class="text-success primary-bg white row borderTop mar00 wFull pad0y" data="_decisionPointCoord">
+                                            <div class="col-md-6"><em>Direction of Travel (degrees): </em></div>
+                                            <div class="col-md-6">
+                                                <input class="dial" data-width="50" data-height="50" data-cursor=true data-fgColor="#222222" data-thickness=.3 data-min=0 data-max=360>
                                             </div>
+                                            {{> quickForm collection='Records' doc=current id='formId33341' class="hide" type=formType autosave=true fields="incidentOperations.initialDirectionofTravel" resetOnSuccess='false'}}
+                                        </div>
+                                        <div class="text-success primary-bg white row borderTop mar00 wFull mar1yb pad0y" data="_decisionPointCoord">
+                                            {{> quickForm collection='Records' doc=current id='formId3334' class="form-inline hideSubmit" type=formType autosave=true fields="incidentOperations.DOTHowdetermined" resetOnSuccess='false'}}
                                         </div>
                                         <!--<a class="btn btn-default  mar1y" data="revisedLKP-PLS">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Revised PLS/LKP
@@ -53,13 +66,18 @@
                                           <i class="fa fa-male fa-2x fa-fw text-success"></i>
                                         </span>
                                         </a>
-                                        <a class="btn btn-default mar1y" data="decisionPointCoord">
+                                        <a class="btn btn-default" data="decisionPointCoord">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
                                             <span class="fa-stack _pull-right">
                                           <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
                                         </span>
                                         </a>
-                                        <a class="btn btn-default" data="intendedRoute">
+                                        {{#if hasDecisionPoint}}
+                                            <div class="text-success primary-bg white row borderTop mar00 wFull pad0y" data="decisionPointCoord">
+                                                {{> quickForm collection='Records' doc=current id='formId3334' class="form-inline hideSubmit" type=formType autosave=true fields="incidentOperations.typeofDecisionPoint" resetOnSuccess='false'}}
+                                            </div>
+                                        {{/if}}
+                                        <a class="btn btn-default mar1yt" data="intendedRoute">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
                                             <span class="fa-stack pull-right">
                                           <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
@@ -73,8 +91,8 @@
                                         </a>
                                     </div>
                                 </div>
-                                {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
-
+                                {{> quickForm collection='Records' doc=record id='formId333' class="hide" type=formType autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
+                                <!--
 
 {{#autoForm
 collection='Records' 
@@ -85,19 +103,22 @@ autosave=true
 type='update'
 
 }}
+
+
   {{#each afFieldNames name="incidentOperations"}}
     {{> afQuickField name=this.name options=afOptionsFromSchema}}
   {{/each}}
+
+
+
 {{/autoForm}}
-
-
-
-
+-->
                             </div>
                         </div>
                     </div>
                 </div>
-               
+                {{> quickForm collection='Records' validation="submit" doc=current class="_recordForm form-inline hideSubmit" id='formdId' autosave=true type=formType omitFields="admin,updated,created, coords, subjects, medical,incidentOperations, medicalStatus, resourcesUsed" buttonContent= "Save" resetOnSuccess='false' }}
+                
 
 
 
@@ -105,21 +126,51 @@ type='update'
 
 
 
-{{> quickForm 
-collection='Records' 
-validation="submit" 
-doc=current 
-class="_recordForm form-inline hideSubmit" 
-id='formdId' 
-autosave=true 
-type=formType 
-omitFields="admin,updated,created, coords, subjects, medical,incidentOperations, medicalStatus" 
-buttonContent= "Save" 
-resetOnSuccess='false'
-}}
 
 
- <div class="panel panel-default">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Resources Used</h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        <table class="table table-hover table-bordered table-condensed" style="table-layout: fixed;">
+                            <thead class='default-bg'>
+                                <tr>
+                                    {{#each resourceKeys}}
+                                        <th data-subjectTable={{this}} class='afTable col-md-1 text-uppercase' style="font-size: .8em;">{{this}}</th>
+                                    {{/each}}
+                                    <th class='afTable col-md-1' style="font-size: .8em;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class='white-bg'>
+                                {{#each current.resourcesUsed.resource}}
+                                    <tr>
+                                     
+                                        <td>{{this.type}}</td>
+                                        <td>{{this.count}}</td>
+                                        <td>{{this.hours}}</td>
+                                        <td>
+                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-primary btn-xs _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        {{> quickForm id="updateResourceForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 _form-inline hideLabel" doc=current field="resourcesUsed" scope="resourcesUsed.resource" buttonContent= "Add Resource" resetOnSuccess=true}}
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Subject Info</h3>
                     </div>
@@ -128,72 +179,59 @@ resetOnSuccess='false'
                             <thead class='default-bg'>
                                 <tr>
                                     {{#each subjectKeys}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;">{{this}}</th>
+                                        <th data-subjectTable={{this}} class='afTable col-md-1 text-uppercase' style="font-size: .8em;">{{this}}</th>
                                     {{/each}}
                                     <th class='afTable col-md-1' style="font-size: .8em;">Action</th>
                                 </tr>
                             </thead>
                             <tbody class='white-bg'>
                                 {{#each current.subjects.subject}}
-                                <tr>
-                                    <td>{{this.age}}</td>
-                                    <td>{{this.sex}}</td>
-                                    <td>{{this.local}}</td>
-                                    <td>{{this.weight}}</td>
-                                    <td>{{this.height}}</td>
-                                    <td>{{this.physical_fitness}}</td>
-                                    <td>{{this.experience}}</td>
-                                    <td>{{this.equipment}}</td>
-                                    <td>{{this.clothing}}</td>
-                                    <td>{{this.survival_training}}</td>
-                                    <td>
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-primary btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>{{this.age}}</td>
+                                        <td>{{this.sex}}</td>
+                                        <td>{{this.local}}</td>
+                                        <td>{{this.weight}}</td>
+                                        <td>{{this.height}}</td>
+                                        <td>{{this.physical_fitness}}</td>
+                                        <td>{{this.experience}}</td>
+                                        <td>{{this.equipment}}</td>
+                                        <td>{{this.clothing}}</td>
+                                        <td>{{this.survival_training}}</td>
+                                        <td>
+                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-primary btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                                        </td>
+                                    </tr>
                                 {{/each}}
                             </tbody>
                         </table>
-                         {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 _form-inline hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add Subject" resetOnSuccess=true}}
+                        {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 _form-inline hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add Subject" resetOnSuccess=true}}
                     </div>
                 </div>
 
 
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Medical</h3>
-    </div>
-    <div class="panel-body afBody">
-    
-{{#autoForm 
-collection='Records' 
-validation="submit" 
-doc=current
-class="_recordForm form-inline _hideSubmit" 
-id='formdIdMedical' 
-autosave=true 
-type='update'
-}}
-
-{{> afQuickField name="medical.status" options="allowed" _noselect=true}}
-
-{{#if afFieldValueIs class="_form-inline" name="medical.status" value="Injured"}}
- {{#each afFieldNames name="medical" omitFields="medical.status"}}
-    {{> afQuickField name=this.name options="allowed"}}
-  {{/each}}
-{{/if}}
-
-{{/autoForm}}
-
-
-
-    </div>
-</div>
 
 
 
 
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Medical</h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        {{#autoForm collection='Records' validation="submit" doc=current class="_recordForm form-inline _hideSubmit" id='formdIdMedical' autosave=true type=formType }}
+                            {{> afQuickField name="medical.status" options="allowed" _noselect=true}}
+                            {{#if medicalDetails }}
+                                {{#each afFieldNames name="medical" omitFields="medical.status" }}
+                                    {{> afQuickField name=this.name options="allowed"}}
+                                {{/each}}
+                            {{/if}}
+                        {{/autoForm}}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+  
 </template>

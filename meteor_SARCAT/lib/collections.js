@@ -153,7 +153,7 @@ Schemas.recordInfo = new SimpleSchema({
     },
     leadagency: {
         type: String,
-        optional:true,
+        optional: true,
         label: 'Agency Having Jurisdiction',
         max: 200
     },
@@ -386,7 +386,10 @@ Schemas.subjects = new SimpleSchema({
         label: 'Name/Alias',
         optional: true,
         autoValue: function () {
-            return new Date().toISOString();
+            if(!this.isSet){
+            return new Date()
+                .toISOString();
+            }
         },
         autoform: {
             omit: true
@@ -672,28 +675,17 @@ Schemas.coords = new SimpleSchema({
     },
 });
 Schemas.incidentOperations = new SimpleSchema({
-    /* 'initialDirectionofTravel': {
-         type: String,
-         label: 'Initial Direction of Travel',
-         optional: true
-     },*/
+    'initialDirectionofTravel': {
+        type: Number,
+        label: 'Initial Direction of Travel',
+        optional: true
+    },
     'DOTHowdetermined': {
         type: String,
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
         label: 'Direction of Travel Determined By: ',
         optional: true
     },
-    /*'revisedHowDetermined': {
-        type: String,
-        allowedValues: ['Unknown', 'Physical Clue', 'Trail Register', 'Sighting', 'Tracks', 'Other'],
-        label: 'Revised How Determined',
-        optional: true
-    },
-    'revisedDOT': {
-        type: String,
-        label: 'Revised DOT',
-        optional: true
-    },*/
     'typeofDecisionPoint': {
         type: String,
         allowedValues: ['Unknown', 'Other', 'Saddle', 'Shortcut', 'Trail', 'Animal', 'Trail Crossed', 'Trail Junction', 'Trail Lost', 'Trail Social', 'Trail Turnoff'],
@@ -942,6 +934,48 @@ Schemas.resources = new SimpleSchema({
     }
 });
 
+Schemas.resourcesUsed = new SimpleSchema({
+    'resource': {
+        type: Array,
+        label: 'Resource',
+        optional: true
+    },
+    'resource.$': {
+        type: Object
+    },
+    'resource.$._key': {
+        type: String,
+        label: 'Name/Alias',
+        optional: true,
+        autoValue: function () {
+            console.log(this)
+            if(!this.isSet){
+            return new Date()
+                .toISOString();
+            }
+        },
+        autoform: {
+            omit: true
+        }
+    },
+    'resource.$.type': {
+        type: String,
+        allowedValues: ["ATV", "Bike", "Boat", "Boats", "CERT", "Cave", "Containment", "Diver", "Dog-Airscent", "Dog-Disaster", "Dog-Tracking", "Dog-Trailing", "Dogs", "EMS", "Family/Friend", "Fire", "Fixed Wing", "GSAR", "Grid", "Hasty", "Helicopter", "Horseback rider", "Investigation", "Law", "Other", "Parks", "Patrol", "Public", "Sweep", "Swiftwater", "Tracker", "USAR", "Unknown"],
+        label: 'Resource Type',
+        optional: true
+    },
+        'resource.$.count': {
+        type: String,
+        label: 'Total Used',
+        optional: true
+    },
+        'resource.$.hours': {
+        type: String,
+        label: 'Total Hours',
+        optional: true
+    },
+});
+
 Schemas.weather = new SimpleSchema({
     'summary': {
         type: String,
@@ -990,7 +1024,8 @@ Schemas.SARCAT = new SimpleSchema({
         },
         autoValue: function () {
             if (this.isInsert) {
-                return Config.findOne().agencyProfile.measureUnits;
+                return Config.findOne()
+                    .agencyProfile.measureUnits;
             } else {
                 this.unset();
             }
@@ -1059,11 +1094,18 @@ Schemas.SARCAT = new SimpleSchema({
     },
     subjects: {
         type: Schemas.subjects,
+        label: 'Subject Information',
+        optional: true
+    },
+
+    resourcesUsed: {
+        type: Schemas.resourcesUsed,
         optional: true
     },
     timeLog: {
         type: Schemas.timeLog,
-        optional: true
+        optional: true,
+        label: 'Time Log'
             //optional: true
     },
     incidentOperations: {
@@ -1346,6 +1388,23 @@ Schemas.config = new SimpleSchema({
         type: Boolean,
         defaultValue: true
     },
+    agencyProfileComplete: {
+        type: Boolean,
+        autoValue: function () {
+            var config = Config.findOne();
+            if (!config) {
+                return false;
+            }
+            var agencyProfile = config.agencyProfile;
+            var apKeys = Object.keys(agencyProfile);
+            var complete = apKeys.length === Schemas.agencyProfile._schemaKeys.length;
+            return complete;
+        }
+    },
+    agencyMapComplete: {
+        type: Boolean,
+        defaultValue: false
+    },
     agencyProfile: {
         type: Schemas.agencyProfile,
         defaultValue: {},
@@ -1357,3 +1416,4 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
+
