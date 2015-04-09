@@ -115,6 +115,8 @@ Template.form.helpers({
         return schemas.map(function (d) {
             var count = (record[d]) ? Object.keys(record[d])
                 .length || 0 : 0;
+          
+                if(!Schemas[d]){return;}
             return {
                 field: d,
                 current: count,
