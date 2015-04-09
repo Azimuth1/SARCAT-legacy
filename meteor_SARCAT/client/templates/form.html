@@ -75,22 +75,62 @@
                                 </div>
                                 {{> quickForm collection='Records' doc=record id='formId333' class="hide" type='update' autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
 
+
+{{#autoForm
+collection='Records' 
+doc=current
+class="_recordForm _form-inline hideSubmit" 
+id='formdIdMap2' 
+autosave=true 
+type='update'
+
+}}
+  {{#each afFieldNames name="incidentOperations"}}
+    {{> afQuickField name=this.name options=afOptionsFromSchema}}
+  {{/each}}
+{{/autoForm}}
+
+
+
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
+               
+
+
+
+
+
+
+
+{{> quickForm 
+collection='Records' 
+validation="submit" 
+doc=current 
+class="_recordForm form-inline hideSubmit" 
+id='formdId' 
+autosave=true 
+type=formType 
+omitFields="admin,updated,created, coords, subjects, medical,incidentOperations, medicalStatus" 
+buttonContent= "Save" 
+resetOnSuccess='false'
+}}
+
+
+ <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Subject Info</h3>
                     </div>
                     <div class="panel-body afBody">
-                        <table class="table table-hover table-bordered table-condensed">
+                        <table class="table table-hover table-bordered table-condensed" style="table-layout: fixed;">
                             <thead class='default-bg'>
                                 <tr>
                                     {{#each subjectKeys}}
-                                    <td class='afTable'>{{this}}</td>
+                                    <th class='afTable col-md-1' style="font-size: .8em;">{{this}}</th>
                                     {{/each}}
-                                    <td class='afTable'>Action</td>
+                                    <th class='afTable col-md-1' style="font-size: .8em;">Action</th>
                                 </tr>
                             </thead>
                             <tbody class='white-bg'>
@@ -107,52 +147,49 @@
                                     <td>{{this.clothing}}</td>
                                     <td>{{this.survival_training}}</td>
                                     <td>
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeSubject btn-block">Remove</button>
+                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-primary btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
                                     </td>
                                 </tr>
                                 {{/each}}
                             </tbody>
                         </table>
-                        {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="form-inline" doc=current field="subjects" scope="subjects.subject" buttonContent= "Add Subject" resetOnSuccess=true}}
+                         {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 _form-inline hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add Subject" resetOnSuccess=true}}
                     </div>
                 </div>
 
 
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Medical</h3>
+    </div>
+    <div class="panel-body afBody">
+    
 {{#autoForm 
 collection='Records' 
 validation="submit" 
 doc=current
-class="_recordForm _form-inline _hideSubmit" 
+class="_recordForm form-inline _hideSubmit" 
 id='formdIdMedical' 
 autosave=true 
 type='update'
-fields="medical" 
 }}
 
+{{> afQuickField name="medical.status" options="allowed" _noselect=true}}
 
-<!--
-{{> afQuickField name="medical.status" options="allowed" noselect=true}}
-{{#if afFieldValueIs name="medical.status" value="Injured"}}
-{{> afQuickFields}} 
+{{#if afFieldValueIs class="_form-inline" name="medical.status" value="Injured"}}
+ {{#each afFieldNames name="medical" omitFields="medical.status"}}
+    {{> afQuickField name=this.name options="allowed"}}
+  {{/each}}
 {{/if}}
--->
+
 {{/autoForm}}
 
 
 
+    </div>
+</div>
 
-{{> quickForm 
-collection='Records' 
-validation="submit" 
-doc=current 
-class="_recordForm form-inline _hideSubmit" 
-id='formdId' 
-autosave=true 
-type=formType 
-omitFields="admin,updated,created, coords, subjects" 
-buttonContent= "Save" 
-resetOnSuccess='false'
-}}
 
 
 
