@@ -1,5 +1,4 @@
 labelUnits = function (currentUnit, type) {
-
     var unitType = {
         height: {
             Metric: 'cm',
@@ -23,11 +22,8 @@ labelUnits = function (currentUnit, type) {
         }
     };
     return unitType[type][currentUnit]
-
 };
-
 getCoords = function (record) {
-
     var mapPoints = [{
         "val": "ippCoordinates",
         "name": "coords.ippCoordinates",
@@ -69,29 +65,22 @@ getCoords = function (record) {
             weight: 8
         }
     }];
-
     mapPoints = _.object(_.map(mapPoints, function (x) {
         return [x.val, x];
     }));
-
     // record = Session.get('currentRecord');
     if (!record.coords) {
         return mapPoints;
     }
     var coords = record.coords;
-
     _.each(mapPoints, function (d, e) {
         mapPoints[e].coords = coords[e];
-
     });
     return _.map(mapPoints, function (d) {
         return d;
     });
-
 };
-
 boundsString2Array = function (bounds) {
-
     bounds = bounds.split(',')
         .map(function (d) {
             return +d;
@@ -109,33 +98,13 @@ getWeather = function (coords, date, cb) {
     var time = 'T12:00:00-0400';
     var dateTime = [date, time].join('');
     var latlngDate = [latlng, dateTime].join(',');
-
     var units = (Session.get('currentRecord')
         .measureUnits == 'Metric') ? 'units=si' : 'units=us';
-    //Config.findOne().agencyProfile.measureUnits
-    //var time = date || new Date().toISOString().split('.')[0];
 
-    //var params = latlng.concat(time).join(',');
-
-    //var params = [latlng, dateTime, units].join(',');
     var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/';
     url += latlngDate + '?';
     url += units;
     console.log(url);
-    //return
-    /*
-        $.getJSON(url + "?callback=?")
-
-        .done(function () {
-                cb(data, err);})
-
-
-            .fail(function () {
-                console.log('!!!')
-                cb(null, 'err');
-            })
-      
-    */
     $.getJSON(url + "&callback=?")
         .done(function (json) {
             cb(json);
@@ -144,100 +113,97 @@ getWeather = function (coords, date, cb) {
             var err = textStatus + ", " + error;
             console.log("Request Failed: " + err);
         });
-
 }
 setMap = function (context, bounds, agencyMapComplete) {
     var map = L.map(context);
     map.fitBounds(bounds);
-
-    if (!agencyMapComplete) {
-        var lc = L.control.locate({
+    var lc = L.control.locate({
+            onLocationError: function (err) {
+                alert(err.message)
+            }, 
+            onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
+                alert(context.options.strings.outsideMapBoundsMsg);
+            },
             locateOptions: {
                 maxZoom: 13,
-                onLocationError: function (err) {
-                    alert(err.message)
-                }
             }
-        }).addTo(map);
-
+        })
+        .addTo(map);
+    if (!agencyMapComplete) {
         lc.start();
-
     }
-
     map.scrollWheelZoom.disable();
-
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.ik7djhcc/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-igb471ik/{z}/{x}/{y}.png')
     };
-
     layers.Streets.addTo(map);
     L.control.layers(layers)
         .addTo(map);
-
     map.on('moveend', function () {
-
         var bounds = map.getBounds()
             .toBBoxString();
         $('[name="agencyProfile.bounds"]')
             .val(bounds)
             .trigger("change");
-
         Meteor.call('updateConfig', {
             agencyMapComplete: true
         }, function (error, d) {
             if (error) {
                 console.log(error);
             }
-
         });
-
     });
     return map;
 }
-
 newProjectSetMap = function (context, bounds, points) {
     var obj = {};
-    var marker;
+    //marker;
     var map = L.map(context);
+    m = map;
     var latLngBounds = L.latLngBounds(bounds);
     var center = latLngBounds.getCenter();
-
     obj.reset = function () {
         map.fitBounds(latLngBounds);
         marker.setLatLng(center);
-
         $('[name="' + points.name + '.lng"]')
             .val(center.lng)
             .trigger("change");
         $('[name="' + points.name + '.lat"]')
             .val(center.lat)
             .trigger("change");
-
         $('[name="coords.bounds"]')
             .val(bounds.toString())
             .trigger("change");
-
     };
 
-    map.scrollWheelZoom.disable();
+    L.control.locate({
+            onLocationError: function (err) {
+                alert(err.message)
+            }, // define an error callback function
+            onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
+                alert(context.options.strings.outsideMapBoundsMsg);
+            },
+            locateOptions: {
+                maxZoom: 13,
+            }
+        })
+        .addTo(map);
 
+    map.scrollWheelZoom.disable();
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.ik7djhcc/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-igb471ik/{z}/{x}/{y}.png')
     };
-
     layers.Streets.addTo(map);
     L.control.layers(layers)
         .addTo(map);
-
     var myIcon = L.divIcon({
         iconSize: [31, 37],
         className: 'fa fa-times-circle-o fa-3x fa-fw'
     });
-
     marker = L.marker(center, {
         draggable: true,
         icon: myIcon,
@@ -246,8 +212,11 @@ newProjectSetMap = function (context, bounds, points) {
     marker.bindLabel('Drag marker to <br>Initial Planning Point/Incident Location', {
         noHide: true
     });
-
     marker.addTo(map);
+
+    map.on('locationfound', function (e) {
+        marker.setLatLng(e.latlng);
+    });
 
     marker.on('dragend', function (event) {
         var marker = event.target;
@@ -259,7 +228,6 @@ newProjectSetMap = function (context, bounds, points) {
             .val(position.lat)
             .trigger("change");
     });
-
     map.on('moveend', function () {
         var bounds = map.getBounds()
             .toBBoxString();
@@ -267,7 +235,6 @@ newProjectSetMap = function (context, bounds, points) {
             .val(bounds)
             .trigger("change");;
     });
-
     return obj;
 }
 formSetMap = function (context) {
@@ -277,22 +244,17 @@ formSetMap = function (context) {
     var obj = {};
     var map = L.map(context);
     //map.fitBounds(bounds);
-    m = map;
     drawnPaths = new L.FeatureGroup()
         .addTo(map);
-
     map.scrollWheelZoom.disable();
-
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.ik7djhcc/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-igb471ik/{z}/{x}/{y}.png')
     };
-
     layers.Streets.addTo(map);
     L.control.layers(layers)
         .addTo(map);
-
     map.on('moveend', function () {
         var bounds = map.getBounds()
             .toBBoxString();
@@ -300,11 +262,8 @@ formSetMap = function (context) {
             .val(bounds)
             .trigger("change");
     });
-
     obj.add = function (d) {
-
         var val = d.val;
-
         if (!d.path) {
             coords[val] = d;
             obj.addPoint(d);
@@ -313,36 +272,28 @@ formSetMap = function (context) {
             coords[d.val] = d;
             var start = coords.ippCoordinates.layer.getLatLng();
             var end = (coords.destinationCoord) ? coords.destinationCoord.layer.getLatLng() : map.getCenter();
-
             var latlngs = [
                 [start.lat, start.lng],
                 [end.lat, end.lng]
             ];
             obj.addPoly(d, latlngs);
         }
-
         if (val === 'actualRoute') {
-
             coords[d.val] = d;
-
             var start = coords.ippCoordinates.layer.getLatLng();
             var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : map.getCenter();
-
             var latlngs = [
                 [start.lat, start.lng],
                 [end.lat, end.lng]
             ];
             obj.addPoly(d, latlngs);
         }
-
     };
     obj.remove = function (d) {
-
         /*var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
         if (removePath) {
             obj.removePoly(coords[removePath]);
         }*/
-
         if (d.path) {
             obj.removePoly(d);
         } else {
@@ -350,10 +301,8 @@ formSetMap = function (context) {
             return;
         }
     };
-
     obj.addPoly = function (d, latlngs) {
         color = d.path.stroke;
-
         polyline = L.polyline(latlngs, {
             color: color,
             opacity: 0.9,
@@ -363,26 +312,19 @@ formSetMap = function (context) {
         });
         //polyline.addTo(map)
         drawnPaths.addLayer(polyline);
-
         //paths[d.val] = polyline;
         coords[d.val].layer = polyline;
-
         var lineString = JSON.stringify(latlngs);
-
         $('[name="' + d.name + '"]')
             .val(lineString)
             .trigger("change");
-
         //var lineString = JSON.stringify(layer.toGeoJSON());
-
     };
-
     obj.removePoly = function (d) {
         var path = coords[d.val].layer;
         $('[name="' + d.name + '"]')
             .val('')
             .trigger("change");
-
         drawnPaths.removeLayer(path);
         delete coords[d.val];
     };
@@ -397,32 +339,24 @@ formSetMap = function (context) {
         drawnPaths.removeLayer(marker);
         delete coords[d.val];
     };
-
     obj.addPoint = function (d) {
-
         var _coords = d.coords || map.getCenter();
-
         var myIcon = L.divIcon({
             iconSize: [41, 39],
             className: 'fa ' + d.icon + ' fa-4x fa-fw'
         });
-
         marker = L.rotatedMarker(_coords, {
             draggable: true,
             //editable: true,
             icon: myIcon,
             name: d.name,
             val: d.val,
-
         });
-
         var text = d.text;
-
         coords[d.val].layer = marker;
         //marker.addTo(map);
         //console.log(marker,drawnPaths)
         drawnPaths.addLayer(marker);
-
         /* marker.bindPopup(d.text, {
                  //noHide: true,
                  //clickable: true
@@ -434,7 +368,6 @@ formSetMap = function (context) {
         marker.setZIndexOffset(4);
         if (d.val === 'ippCoordinates') {
             var travelDirection = $('.travelDirection');
-
             var spin;
             direction = 0;
             /* 
@@ -480,21 +413,16 @@ formSetMap = function (context) {
                                        });
 
                        */
-
         }
-
         $('[name="' + d.name + '.lng"]')
             .val(_coords.lng)
             .trigger("change");
         $('[name="' + d.name + '.lat"]')
             .val(_coords.lat)
             .trigger("change");
-
         obj.editPoly
-
         var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
         if (_.contains(pathPoints, d.val)) {
-
             function drag(layer, index, position) {
                 layer.spliceLatLngs(index, 1, position);
             };
@@ -507,7 +435,6 @@ formSetMap = function (context) {
                                 layer.editing.enable();
                             }
                         });
-
                 } else {
                     drawnPaths.getLayers()
                         .forEach(function (layer) {
@@ -517,11 +444,9 @@ formSetMap = function (context) {
                         });
                 }
             };
-
             /*marker.on('dragstart', function (event) {
                 routeEditing(false);
             })*/
-
             /*marker.on('drag', function (event) {
                 var marker = event.target;
                 var position = marker.getLatLng();
@@ -552,9 +477,7 @@ formSetMap = function (context) {
                 }
 
             });*/
-
         }
-
         marker.on('dragend', function (event) {
             routeEditing(true);
             var marker = event.target;
@@ -567,7 +490,6 @@ formSetMap = function (context) {
                 .trigger("change");
         });
         return marker;
-
     }
     obj.fitBounds = function () {
         map.fitBounds(drawnPaths.getBounds()
@@ -575,9 +497,7 @@ formSetMap = function (context) {
     };
     return obj;
 }
-
 recordStats = function (data) {
-
     var keyCount = Schemas.SARCAT._schemaKeys.map(function (d) {
         return d;
         var result = d.split('.');
@@ -603,7 +523,6 @@ recordStats = function (data) {
             }
         });
     });
-
     count = _.chain(keyCount)
         .map(function (d, e) {
             var count = _.countBy(d);
@@ -626,19 +545,14 @@ recordStats = function (data) {
         })
         .compact()
         .value();
-
     var drawGraph = function (d) {
-
         var title = d.field;
         var data = d.count;
-
         var container = d3.select("#recordss")
             .append("div")
             .attr('class', 'col-md-4');
-
         container.append('h3')
             .text(title);
-
         var width = parseInt(d3.select("#recordStats")
             .style('width')) / 4;
         console.log(width)
@@ -650,40 +564,32 @@ recordStats = function (data) {
             },
             width = width - margin.left - margin.right,
             height = 250 - margin.top - margin.bottom;
-
         var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], .1);
-
         var y = d3.scale.linear()
             .range([height, 0]);
-
         var xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom");
-
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left")
             // .ticks(10, "%");
-
         var svg = container.append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
         x.domain(data.map(function (d) {
             return d.letter;
         }));
         y.domain([0, d3.max(data, function (d) {
             return d.frequency;
         })]);
-
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
-
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
@@ -693,7 +599,6 @@ recordStats = function (data) {
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .text("Frequency");
-
         svg.selectAll(".bar")
             .data(data)
             .enter()
@@ -709,20 +614,16 @@ recordStats = function (data) {
             .attr("height", function (d) {
                 return height - y(d.frequency);
             });
-
     }
 
     function type(d) {
         d.frequency = +d.frequency;
         return d;
     }
-
     count.forEach(function (d) {
         drawGraph(d);
     })
-
     return count;
-
 };
 statsSetMap = function (context, bounds, points) {
     var markers = {};
@@ -734,14 +635,12 @@ statsSetMap = function (context, bounds, points) {
     m = map;
     drawnPaths = new L.FeatureGroup()
         .addTo(map);
-
     map.scrollWheelZoom.disable();
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             id: 'examples.map-i875mjb7'
         })
         .addTo(map);
-
     map.on('moveend', function () {
         var bounds = map.getBounds()
             .toBBoxString();
@@ -749,12 +648,9 @@ statsSetMap = function (context, bounds, points) {
             .val(bounds)
             .trigger("change");
     });
-
     obj.add = function (d) {
-
         z = coords;
         var val = d.val;
-
         if (!d.path) {
             coords[val] = d;
             obj.addPoint(d);
@@ -764,7 +660,6 @@ statsSetMap = function (context, bounds, points) {
             return;
         }
         if (val === 'destinationCoord') {
-
             d = {
                 "val": "intendedRoute",
                 "name": "coords.intendedRoute",
@@ -775,17 +670,14 @@ statsSetMap = function (context, bounds, points) {
             };
             coords[d.val] = d;
             //console.log(coords.ippCoordinates, coords.destinationCoord)
-
             var start = coords.ippCoordinates.layer.getLatLng();
             var end = coords.destinationCoord.layer.getLatLng();
-
             var latlngs = [
                 [start.lat, start.lng],
                 [end.lat, end.lng]
             ];
             obj.addPoly(d, latlngs);
         }
-
         if (val === 'findCoord') {
             d = {
                 "val": "actualRoute",
@@ -796,20 +688,16 @@ statsSetMap = function (context, bounds, points) {
                     weight: 8
                 }
             }
-
             coords[d.val] = d;
-
             var start = coords.ippCoordinates.layer.getLatLng();
             var end = coords.findCoord.layer.getLatLng();
             //console.log(start, end);
-
             var latlngs = [
                 [start.lat, start.lng],
                 [end.lat, end.lng]
             ];
             obj.addPoly(d, latlngs);
         }
-
     };
     obj.remove = function (d) {
         // console.log(d)
@@ -818,7 +706,6 @@ statsSetMap = function (context, bounds, points) {
             // console.log(removePath)
             obj.removePoly(coords[removePath]);
         }
-
         if (d.path) {
             obj.removePoly(d);
         } else {
@@ -826,10 +713,8 @@ statsSetMap = function (context, bounds, points) {
             return;
         }
     };
-
     obj.addPoly = function (d, latlngs) {
         color = d.path.stroke;
-
         polyline = L.polyline(latlngs, {
             color: color,
             opacity: 0.9,
@@ -839,26 +724,19 @@ statsSetMap = function (context, bounds, points) {
         });
         //polyline.addTo(map)
         drawnPaths.addLayer(polyline);
-
         //paths[d.val] = polyline;
         coords[d.val].layer = polyline;
-
         var lineString = JSON.stringify(latlngs);
-
         $('[name="' + d.name + '"]')
             .val(lineString)
             .trigger("change");
-
         //var lineString = JSON.stringify(layer.toGeoJSON());
-
     };
-
     obj.removePoly = function (d) {
         var path = coords[d.val].layer;
         $('[name="' + d.name + '"]')
             .val('')
             .trigger("change");
-
         drawnPaths.removeLayer(path);
         delete coords[d.val];
     };
@@ -873,52 +751,39 @@ statsSetMap = function (context, bounds, points) {
         drawnPaths.removeLayer(marker);
         delete coords[d.val];
     };
-
     obj.addPoint = function (d) {
-
         var _coords = d.coords || map.getCenter();
-
         var myIcon = L.divIcon({
             iconSize: [41, 39],
             className: 'fa ' + d.icon + ' fa-4x fa-fw'
         });
-
         var marker = L.marker(_coords, {
             draggable: true,
             editable: true,
             icon: myIcon,
             name: d.name,
             val: d.val,
-
         });
-
         var text = d.text;
-
         coords[d.val].layer = marker;
         //marker.addTo(map);
         //console.log(marker,drawnPaths)
         drawnPaths.addLayer(marker);
-
         marker.bindPopup(d.text, {
                 //noHide: true,
                 //clickable: true
             })
             //
-
         marker.setZIndexOffset(4);
-
         $('[name="' + d.name + '.lng"]')
             .val(_coords.lng)
             .trigger("change");
         $('[name="' + d.name + '.lat"]')
             .val(_coords.lat)
             .trigger("change");
-
         obj.editPoly
-
         var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
         if (_.contains(pathPoints, d.val)) {
-
             function drag(layer, index, position) {
                 layer.spliceLatLngs(index, 1, position);
             };
@@ -931,7 +796,6 @@ statsSetMap = function (context, bounds, points) {
                                 layer.editing.enable();
                             }
                         });
-
                 } else {
                     drawnPaths.getLayers()
                         .forEach(function (layer) {
@@ -941,11 +805,9 @@ statsSetMap = function (context, bounds, points) {
                         });
                 }
             };
-
             marker.on('dragstart', function (event) {
                 routeEditing(false);
             })
-
             marker.on('drag', function (event) {
                 var marker = event.target;
                 var position = marker.getLatLng();
@@ -955,7 +817,6 @@ statsSetMap = function (context, bounds, points) {
                     index = layer.getLatLngs()
                         .length - 1;
                     drag(layer, index, position);
-
                 }
                 if (d.val === 'findCoord') {
                     layer = coords.actualRoute.layer;
@@ -965,20 +826,15 @@ statsSetMap = function (context, bounds, points) {
                 }
                 if (d.val === 'ippCoordinates') {
                     index = 0;
-
                     drawnPaths.getLayers()
                         .forEach(function (layer) {
                             if (layer.editing) {
                                 drag(layer, index, position);
                             }
                         })
-
                 }
-
             });
-
         }
-
         marker.on('dragend', function (event) {
             routeEditing(true);
             var marker = event.target;
@@ -991,7 +847,6 @@ statsSetMap = function (context, bounds, points) {
                 .trigger("change");
         });
         return marker;
-
     }
     obj.fitBounds = function () {
         map.fitBounds(drawnPaths.getBounds()
@@ -999,7 +854,6 @@ statsSetMap = function (context, bounds, points) {
     };
     return obj;
 }
-
 L.RotatedMarker = L.Marker.extend({
     options: {
         angle: 0
@@ -1022,3 +876,4 @@ L.RotatedMarker = L.Marker.extend({
 L.rotatedMarker = function (pos, options) {
     return new L.RotatedMarker(pos, options);
 };
+

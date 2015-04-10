@@ -7,16 +7,38 @@ var record;
 var map;
 Template.registerHelper("Schemas", Schemas);
 
-Template.form.created = function () {
+Template.form.onCreated(function () {
+    console.log('created');
+    console.log($(".dial"))
+    Session.set('userView', this.data.record._id);
+    config = Config.findOne();
+    agencyProfile = config.agencyProfile;
+record = this.data.record;
+    Session.set('currentRecord', this.data.record);
+
+});
+Template.form.onRendered(function () {
+    console.log('!')
+
+    record = this.data.record;
+    var dialVal = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
+    $(".dial")
+        .val(dialVal);
+    $(".dial")
+        .knob({
+            'release': function (v) {
+                $('[name="incidentOperations.initialDirectionofTravel"]')
+                    .val(v)
+                    .trigger("change");
+
+            }
+        });
 
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
     agencyProfile = config.agencyProfile;
-    record = this.data.record;
-    Session.set('currentRecord', record);
 
-};
-Template.form.rendered = function () {
+    Session.set('currentRecord', record);
 
     var record = this.data.record;
     var currentUnit = record.measureUnits;
@@ -45,19 +67,6 @@ Template.form.rendered = function () {
 
     var coords = record.coords;
 
-    var dialVal = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
-    $(".dial")
-        .val(dialVal);
-    $(".dial")
-        .knob({
-            'release': function (v) {
-                $('[name="incidentOperations.initialDirectionofTravel"]')
-                    .val(v)
-                    .trigger("change");
-
-            }
-        });
-
     var bounds = coords.bounds;
     var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
     mapBounds = boundsString2Array(mapBounds);
@@ -80,7 +89,7 @@ Template.form.rendered = function () {
             toggle: false
         });
 
-};
+});
 Template.form.helpers({
     /*agencyProfile: function () {
         return Session.get('config')
@@ -194,7 +203,9 @@ Template.form.helpers({
 
     medicalDetails: function () {
         var medical = this.record.medical;
-        if(!medical){return false;}
+        if (!medical) {
+            return false;
+        }
         var val = medical.status;
         var detailsTrue = (val === 'Injured' || val === 'DOA') ? true : false;
         return detailsTrue;
@@ -283,14 +294,12 @@ Template.form.events({
         Meteor.call('removeSubject', record._id, this._key, function (err) {
             console.log(err);
         });
-},
+    },
     'click .removeResource': function (event, template) {
         console.log(record._id, this._key)
         Meteor.call('removeResource', record._id, this._key, function (err) {
             console.log(err);
         });
-
-
 
     },
 
@@ -329,6 +338,9 @@ Template.form.events({
 
     },
     'click .mapPoints a': function (event, template) {
+
+       
+
         var context = template.$(event.target);
         var pointType = context.attr('data');
         var active = context.hasClass('active')
