@@ -74,7 +74,7 @@ getCoords = function (record) {
         return [x.val, x];
     }));
 
-   // record = Session.get('currentRecord');
+    // record = Session.get('currentRecord');
     if (!record.coords) {
         return mapPoints;
     }
@@ -90,41 +90,6 @@ getCoords = function (record) {
 
 };
 
-getLocation = function (cb) {
-    var result;
-
-    function requestLocation() {
-        var options = {
-            enableHighAccuracy: false,
-            timeout: 7000,
-            maximumAge: 0
-        };
-
-        function success(pos) {
-            var lng = pos.coords.longitude;
-            var lat = pos.coords.latitude;
-            if (!result) {
-                result = {
-                    lat: lat,
-                    lng: lng
-                };
-                cb(result);
-            }
-        }
-
-        function error(err) {
-            if (!result) {
-                cb(null, err);
-            }
-        }
-        navigator.geolocation.getCurrentPosition(success, error, options);
-    }
-    if ('geolocation' in navigator) {
-        requestLocation();
-    } else {
-        cb();
-    }
-}
 boundsString2Array = function (bounds) {
 
     bounds = bounds.split(',')
@@ -181,12 +146,23 @@ getWeather = function (coords, date, cb) {
         });
 
 }
-setMap = function (context, bounds) {
-    console.log(bounds)
-    a = bounds
+setMap = function (context, bounds, agencyMapComplete) {
     var map = L.map(context);
-    m = map;
     map.fitBounds(bounds);
+
+    if (!agencyMapComplete) {
+        var lc = L.control.locate({
+            locateOptions: {
+                maxZoom: 13,
+                onLocationError: function (err) {
+                    alert(err.message)
+                }
+            }
+        }).addTo(map);
+
+        lc.start();
+
+    }
 
     map.scrollWheelZoom.disable();
 
@@ -1046,4 +1022,3 @@ L.RotatedMarker = L.Marker.extend({
 L.rotatedMarker = function (pos, options) {
     return new L.RotatedMarker(pos, options);
 };
-
