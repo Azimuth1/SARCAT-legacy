@@ -266,24 +266,13 @@ Schemas.incident = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Subject Sub-Category',
+        //changeName???
     },
     contactmethod: {
         type: String,
         optional: true,
         allowedValues: ['Unknown', 'Reported Missing', 'Vehicle Found', 'Registration Card', 'ELT/PLB/EPIRP', 'Satelitte Alerting Technology', 'Subject Cell Phone', 'Radio', 'Distress Signal'],
         label: 'Contact Method',
-    },
-    ipptype: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Point Last Seen', 'Last Known Point'],
-        label: 'IPP Type',
-    },
-    ippclassification: {
-        type: String,
-        optional: true,
-        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
-        label: 'IPP Classification',
     },
     ecoregiondomain: {
         type: String,
@@ -302,6 +291,8 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         allowedValues: ['Unknown', 'Wilderness', 'Rural', 'Suburban', 'Urban', 'Water'],
         label: 'Population Density',
+        //ask Bob
+        //UTI????
     },
     terrain: {
         type: String,
@@ -675,6 +666,18 @@ Schemas.coords = new SimpleSchema({
     },
 });
 Schemas.incidentOperations = new SimpleSchema({
+    ipptype: {
+        type: String,
+        optional: true,
+        allowedValues: ['Unknown', 'Point Last Seen', 'Last Known Point'],
+        label: 'IPP Type',
+    },
+    ippclassification: {
+        type: String,
+        optional: true,
+        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
+        label: 'IPP Classification',
+    },
     'initialDirectionofTravel': {
         type: Number,
         label: 'Initial Direction of Travel',
@@ -717,7 +720,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Suspension Reasons',
         optional: true
     },
-    '#Well': {
+    /*'#Well': {
         type: Number,
         label: '# Well',
         optional: true
@@ -736,7 +739,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         type: String,
         label: '# Saved',
         optional: true
-    },
+    },*/
     /*'distanceIPP': {
         type: String,
         label: 'Distance IPP',

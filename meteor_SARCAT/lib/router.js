@@ -167,6 +167,7 @@ Router.route('form', {
     },
     action: function () {
         if (this.ready()) {
+            console.log('ready')
             this.render();
         }
     }
