@@ -13,7 +13,7 @@ Template.form.onCreated(function () {
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
     agencyProfile = config.agencyProfile;
-record = this.data.record;
+    record = this.data.record;
     Session.set('currentRecord', this.data.record);
 
 });
@@ -131,6 +131,9 @@ Template.form.helpers({
     current: function () {
         return Records.findOne(this.record._id)
     },
+    current2: function () {
+        return Records.findOne(this.record._id)
+    },
     Schemas: function () {
         return Schemas;
     },
@@ -168,28 +171,57 @@ Template.form.helpers({
         });
     },
     subjectKeys: function () {
-        return Schemas.subject._schemaKeys
+        return _.chain(Schemas.subjects._schema)
+            .filter(function (e,d) {
+                return d.indexOf("$.") > -1;
+            })
+            .map(function (d) {
+                return d.label;
+            })
+            .compact()
+            .without('Name/Alias')
+            .value();
     },
     subjects: function () {
         return this.data.record.subjects.subject;
     },
+getSubjectsArray: function() {
+
+  var self = this;
+  self.myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
+  return _.map(self.myArray, function(value, index){
+    console.log(value,index)
+    return {value: value, index: index,name:"subjects.subject."+index};
+  });
+},
+    /*subjectRescueKeys: function () {
+        return _.chain(Schemas.subjectRescue._schema)
+            .filter(function (e,d) {
+                return d.indexOf("$.") > -1;
+            })
+            .map(function (d) {
+                return d.label;
+            })
+            .compact()
+            .without('Name/Alias')
+            .value();
+    },*/
     subject: function () {
         return _.map(this, function (d) {
             return d;
         });
     },
-
     resourceKeys: function () {
-        return ["Resource Type", "Total Used", "Total Hours"];
-        return _.chain(Schemas.resourcesUsed._schemaKeys)
-            .filter(function (d) {
-                return d.indexOf("$") > -1;
+        //return ["Resource Type", "Total Used", "Total Hours","findResource"];
+        return _.chain(Schemas.resourcesUsed._schema)
+            .filter(function (e,d) {
+                return d.indexOf("$.") > -1;
             })
             .map(function (d) {
-                return d.split('.')[2];
+                return d.label;
             })
             .compact()
-            .without('_key')
+            .without('Name/Alias')
             .value();
     },
     resources: function () {
@@ -339,8 +371,6 @@ Template.form.events({
     },
     'click .mapPoints a': function (event, template) {
 
-       
-
         var context = template.$(event.target);
         var pointType = context.attr('data');
         var active = context.hasClass('active')
@@ -372,4 +402,3 @@ AutoForm.hooks({
         }
     }
 });
-

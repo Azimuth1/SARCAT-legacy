@@ -28,6 +28,9 @@ Template.records.helpers({
     lists: function () {
         return Records.find({}, {sort: {name: 1}});
     },
+    noRecords: function () {
+        return !Records.find({}, {sort: {name: 1}}).fetch().length;
+    },
     newRecord: function () {
         return Records.findOne(Session.get('newRecord'));
     },

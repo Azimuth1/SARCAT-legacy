@@ -57,6 +57,11 @@
                         </tr>
                     </thead>
                     <tbody class='white-bg'>
+                    {{#if noRecords}}
+                     <tr><td colspan="5" class="text-center text-default">Create new Records to Begin!</td></tr>
+                     {{/if}}
+
+
                         {{#each lists}}
                         <tr>
                             <td><a href="{{pathFor 'form'}}" class="btn btn-primary btn-sm">View</a>
