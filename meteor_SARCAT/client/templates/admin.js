@@ -46,10 +46,18 @@ Template.admin.helpers({
     return 'checked';*/
     // },
     userRoleList: function () {
-        return this.users.fetch()
+        var users =  this.users.fetch()
             .filter(function (d) {
                 return d._id !== Meteor.userId()
-            })
+            });
+            return users.length ? users : false;
+    },
+noUsers: function () {
+        var users =  this.users.fetch()
+            .filter(function (d) {
+                return d._id !== Meteor.userId()
+            });
+            return !users.length;
     },
 });
 

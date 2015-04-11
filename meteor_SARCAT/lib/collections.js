@@ -312,199 +312,8 @@ Schemas.incident = new SimpleSchema({
         allowedValues: ['Unknown', 'Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
         label: 'Land Owner',
     },
-    /* weather: {
-         type: String,
-         optional: true,
-         allowedValues: ['Unknown', 'Clear', 'Partly Cloudy', 'Overcast', 'Foggy', 'Drizzle', 'Showers', 'Rain', 'Hail', 'Sleet', 'Snow', 'Blizzard', 'Smokey'],
-         label: 'Weather',
-     },
-     maxTemp: {
-         type: String,
-         optional: true,
-         label: 'Max Temp',
-         autoValue: function () {
-             if (this.isInsert) {
-                 return '';
-             }
-         }
-     },
-     minTemp: {
-         type: String,
-         optional: true,
-         label: 'Min Temp',
-         autoValue: function () {
-             if (this.isInsert) {
-                 return '';
-             }
-         }
-     },
-     wind: {
-         type: String,
-         optional: true,
-         allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
-         label: 'Wind',
-     },
-     rain: {
-         type: String,
-         optional: true,
-         allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
-         label: 'Rain',
-     },
-     snow: {
-         type: String,
-         optional: true,
-         allowedValues: ['Unknown', 'Light', 'Medium', 'Heavy'],
-         label: 'Snow',
-     },
-     light: {
-         type: String,
-         optional: true,
-         allowedValues: ['Unknown', 'Day', 'Night', 'Night (bright)', 'Day+NightObscured', 'Twilight'],
-         label: 'Light',
-     }*/
-});
-Schemas.subjects = new SimpleSchema({
-    subject: {
-        type: Array,
-        label: 'Subject Info',
-        optional: true
-    },
-    'subject.$': {
-        type: Object
-    },
-    'subject.$._key': {
-        type: String,
-        label: 'Name/Alias',
-        optional: true,
-        autoValue: function () {
-            if(!this.isSet){
-            return new Date()
-                .toISOString();
-            }
-        },
-        autoform: {
-            omit: true
-        }
-    },
-
-    'subject.$.age': {
-        type: Number,
-        label: 'Age',
-        optional: true
-    },
-    'subject.$.sex': {
-        type: String,
-        allowedValues: ['Unknown', 'Male', 'Female'],
-        label: 'Sex',
-        optional: true
-    },
-    'subject.$.local': {
-        type: String,
-        allowedValues: ['Unknown', 'Yes', 'No', 'Guide'],
-        label: 'Local?',
-        optional: true
-    },
-    'subject.$.weight': {
-        type: String,
-        label: 'Weight',
-        optional: true
-    },
-    'subject.$.height': {
-        type: String,
-        label: 'Height',
-        optional: true
-    },
-    'subject.$.physical_fitness': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Physical Fitness',
-        optional: true
-    },
-    'subject.$.experience': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Experience',
-        optional: true
-    },
-    'subject.$.equipment': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Equipment',
-        optional: true
-    },
-    'subject.$.clothing': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Clothing',
-        optional: true
-    },
-    'subject.$.survival_training': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Survival training',
-        optional: true
-    }
 });
 
-Schemas.subject = new SimpleSchema({
-    'age': {
-        type: Number,
-        label: 'Age',
-        optional: true
-    },
-    'sex': {
-        type: String,
-        allowedValues: ['Unknown', 'Male', 'Femail'],
-        label: 'Sex',
-        optional: true
-    },
-    'local': {
-        type: String,
-        allowedValues: ['Unknown', 'Yes', 'No', 'Guide'],
-        label: 'Local?',
-        optional: true
-    },
-    'weight': {
-        type: String,
-        label: 'Weight',
-        optional: true
-    },
-    'height': {
-        type: String,
-        label: 'Height',
-        optional: true
-    },
-    'physical fitness': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Physical Fitness',
-        optional: true
-    },
-    'experience': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Experience',
-        optional: true
-    },
-    'equipment': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Equipment',
-        optional: true
-    },
-    'clothing': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Clothing',
-        optional: true
-    },
-    'survival training': {
-        type: String,
-        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
-        label: 'Survival training',
-        optional: true
-    }
-});
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
@@ -720,26 +529,6 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Suspension Reasons',
         optional: true
     },
-    /*'#Well': {
-        type: Number,
-        label: '# Well',
-        optional: true
-    },
-    '#Injured': {
-        type: Number,
-        label: '# Injured',
-        optional: true
-    },
-    '#DOA': {
-        type: Number,
-        label: '# DOA',
-        optional: true
-    },
-    '#Saved': {
-        type: String,
-        label: '# Saved',
-        optional: true
-    },*/
     /*'distanceIPP': {
         type: String,
         label: 'Distance IPP',
@@ -795,37 +584,121 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     }
 });
-Schemas.medical = new SimpleSchema({
-    'status': {
+
+Schemas.subjects = new SimpleSchema({
+    subject: {
+        type: Array,
+        label: 'Subject Info',
+        optional: true
+    },
+    'subject.$': {
+        type: Object
+    },
+    'subject.$._key': {
+        type: String,
+        label: 'Name/Alias',
+        optional: true,
+        autoValue: function () {
+            if (!this.isSet) {
+                return new Date()
+                    .toISOString();
+            }
+        },
+        autoform: {
+            omit: true
+        }
+    },
+    'subject.$.age': {
+        type: Number,
+        label: 'Age',
+        optional: true
+    },
+    'subject.$.sex': {
+        type: String,
+        allowedValues: ['Unknown', 'Male', 'Female'],
+        label: 'Sex',
+        optional: true
+    },
+    'subject.$.local': {
+        type: String,
+        allowedValues: ['Unknown', 'Yes', 'No', 'Guide'],
+        label: 'Local?',
+        optional: true
+    },
+    'subject.$.weight': {
+        type: String,
+        label: 'Weight',
+        optional: true
+    },
+    'subject.$.height': {
+        type: String,
+        label: 'Height',
+        optional: true
+    },
+    'subject.$.physical_fitness': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Fitness Level',
+        optional: true
+    },
+    'subject.$.experience': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Experience',
+        optional: true
+    },
+    'subject.$.equipment': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Equipment',
+        optional: true
+    },
+    'subject.$.clothing': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Clothing',
+        optional: true
+    },
+    'subject.$.survival_training': {
+        type: String,
+        allowedValues: ['Unknown', 'Poor', 'Fair', 'Good', 'Excellent'],
+        label: 'Survival training',
+        optional: true
+    },
+    'subject.$.status': {
         type: String,
         allowedValues: ['Unknown', 'Alive and well', 'Injured', 'DOA'],
         label: 'Subject Status',
         optional: true
     },
-    'mechanism': {
+
+    'subject.$.mechanism': {
         type: String,
         allowedValues: ['Unknown', 'Animal attack/bite/sting', 'Human attack', 'Fall - ground level', 'Fall - height', 'Gunshot', 'Avalanche', 'Tree fall', 'Rock fall', 'Water', 'Environment', 'Medical condition', 'Other'],
         label: 'Mechanism',
         optional: true
     },
-    'injuryType': {
+    'subject.$.injuryType': {
         type: String,
         allowedValues: ['Unknown', 'Abrasion', 'Bruise', 'Burn', 'Cramp', 'Crush', 'Fracture', 'Flail Chest', 'Frostbite', 'Infection', 'Laceration', 'Pain', 'Soft Tissue', 'Sprain', 'Multi-Trauma', 'Drowning'],
         label: 'Injury Type',
         optional: true
     },
-    'illness': {
+    'subject.$.illness': {
         type: String,
         allowedValues: ['Unknown', 'Addision', 'Allergic reaction', 'Altitude disorder', 'Appendicitis', 'Asthma', 'Dehydration', 'Exhaustion', 'Hypertherimic', 'Hypothermic', 'Illness', 'Intoxicated', 'Seizures', 'Shock', 'Shortness of Breath', 'Stroke', 'Unconscious', 'UTI', 'Other'],
         label: 'Illness',
         optional: true
     },
-    'treatmentby': {
+    'subject.$.treatmentby': {
         type: String,
         allowedValues: ['Unknown', 'None', 'Self', 'Public', 'First-Aid', 'First-Responder', 'EMT', 'WEMT', 'ALS', 'RN', 'MD', 'N/A'],
         label: 'Treatment by',
         optional: true
     },
+});
+/*
+Schemas.medical = new SimpleSchema({
     'rescue-EvacuationMethods': {
         type: String,
         allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
@@ -847,10 +720,12 @@ Schemas.medical = new SimpleSchema({
         allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
         label: 'Signalling',
         optional: true
-    }
-});
+    },
+
+});*/
+
 Schemas.resources = new SimpleSchema({
-    'resourcesUsed': {
+   /* 'resourcesUsed': {
         type: Array,
         allowedValues: ['Unknown', 'GSAR', 'Dogs', 'EMS', 'Fire', 'Tracker', 'Law', 'Divers', 'Boats', 'Cave', 'Parks', 'USAR', 'Helicopter', 'Fixed Wing', 'Swiftwater', 'Other'],
         label: 'Resources Used',
@@ -899,6 +774,28 @@ Schemas.resources = new SimpleSchema({
         type: Number,
         label: 'Emergent Volunters',
         optional: true
+    },*/
+    'rescue-EvacuationMethods': {
+        type: String,
+        allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
+        label: 'Rescue/Evacuation Methods',
+        optional: true
+    },
+    'injuredSearcher': {
+        type: String,
+        label: 'Injured Searcher',
+        optional: true
+    },
+    'injuredSearcherDetails': {
+        type: String,
+        label: 'Injured Searcher Details',
+        optional: true
+    },
+    'signalling': {
+        type: String,
+        allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
+        label: 'Signalling',
+        optional: true
     },
     'totalPersonnel': {
         type: Number,
@@ -910,7 +807,7 @@ Schemas.resources = new SimpleSchema({
         label: 'Total Man Hours',
         optional: true
     },
-    'totalDogHours': {
+    /*'totalDogHours': {
         type: Number,
         label: 'Total Dog Hours',
         optional: true
@@ -919,10 +816,10 @@ Schemas.resources = new SimpleSchema({
         type: Number,
         label: '# Vehicles',
         optional: true
-    },
+    },*/
     'distanceTraveled': {
         type: String,
-        label: 'Distance Traveled',
+        label: 'Total Distance Traveled',
         optional: true
     },
     'totalCost': {
@@ -952,9 +849,9 @@ Schemas.resourcesUsed = new SimpleSchema({
         optional: true,
         autoValue: function () {
             console.log(this)
-            if(!this.isSet){
-            return new Date()
-                .toISOString();
+            if (!this.isSet) {
+                return new Date()
+                    .toISOString();
             }
         },
         autoform: {
@@ -963,19 +860,31 @@ Schemas.resourcesUsed = new SimpleSchema({
     },
     'resource.$.type': {
         type: String,
-        allowedValues: ["ATV", "Bike", "Boat", "Boats", "CERT", "Cave", "Containment", "Diver", "Dog-Airscent", "Dog-Disaster", "Dog-Tracking", "Dog-Trailing", "Dogs", "EMS", "Family/Friend", "Fire", "Fixed Wing", "GSAR", "Grid", "Hasty", "Helicopter", "Horseback rider", "Investigation", "Law", "Other", "Parks", "Patrol", "Public", "Sweep", "Swiftwater", "Tracker", "USAR", "Unknown"],
+        allowedValues: ["ATV", "Bike", "Boat", "Boats", "CERT", "Cave", "Containment", "Diver", "Dog-Airscent", "Dog-Disaster", "Dog-Tracking", "Dog-Trailing", "Dogs", "EMS", "Family/Friend", "Fire", "Fixed Wing", "GSAR", "Grid", "Hasty", "Helicopter", "Horseback rider", "Investigation", "Law", "Other", "Parks", "Patrol", "Public", "Sweep", "Swiftwater", "Tracker", "USAR", "Volunteer", "Unknown"],
         label: 'Resource Type',
         optional: true
     },
-        'resource.$.count': {
+    'resource.$.count': {
         type: String,
         label: 'Total Used',
         optional: true
     },
-        'resource.$.hours': {
+    'resource.$.hours': {
         type: String,
         label: 'Total Hours',
         optional: true
+    },
+    'resource.$.findResource': {
+        type: Boolean,
+        label: 'Find Resource?',
+        allowedValues: [true, false],
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: "boolean-checkbox"
+            }
+        }
+
     },
 });
 
@@ -1120,16 +1029,18 @@ Schemas.SARCAT = new SimpleSchema({
         label: 'Incident Outcome',
         optional: true
     },
-    medical: {
+    /*medical: {
         type: Schemas.medical,
         optional: true
-    },
+    },*/
     resources: {
         type: Schemas.resources,
+        label:'Final Resources',
         optional: true
     }
 });
 Records.attachSchema(Schemas.SARCAT);
+
 Schemas.agencyProfile = new SimpleSchema({
     agency: {
         type: String,
@@ -1367,7 +1278,7 @@ Schemas.formEditions = new SimpleSchema({
     'incidentOutcome.$': {
         type: String
     },
-    medical: {
+    /*medical: {
         type: Array,
         allowedValues: Schemas.medical._firstLevelSchemaKeys,
         defaultValue: Schemas.medical._firstLevelSchemaKeys,
@@ -1375,7 +1286,7 @@ Schemas.formEditions = new SimpleSchema({
     },
     'medical.$': {
         type: String
-    },
+    },*/
     resources: {
         type: Array,
         allowedValues: Schemas.resources._firstLevelSchemaKeys,
@@ -1419,4 +1330,3 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
-
