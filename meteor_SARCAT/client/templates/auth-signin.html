@@ -2,13 +2,13 @@
     <div class="page auth">
         <nav>
             <div class="nav-group">
-                <a href="#" class="js-menu nav-item"><span class="icon-list-unordered"></span></a>
+                <a href="#" class="js-menu nav-item"><span class="tmp icon-list-unordered"></span></a>
             </div>
         </nav>
         <div class="content-scrollable">
             <div class="wrapper-auth">
                     <h1 class="title-auth">SARCAT</h1>
-                    <p class="subtitle-auth">Search and Rescue Collection & Analysis Tool</p>
+                    <p class="subtitle-auth">Search and Rescue Data Collection & Analysis Tool</p>
               
                 <form>
                     {{#if errorMessages}}
@@ -20,11 +20,11 @@
                     {{/if}}
                     <div class="input-symbol {{errorClass 'email'}}">
                         <input type="email" name="email" placeholder="Your Email" />
-                        <span class="icon-email" title="Your Email"></span>
+                        <span class="tmp icon-email" title="Your Email"></span>
                     </div>
                     <div class="input-symbol {{errorClass 'password'}}">
                         <input type="password" name="password" placeholder="Password" />
-                        <span class="icon-lock" title="Password"></span>
+                        <span class="tmp icon-lock" title="Password"></span>
                     </div>
                     <button type="submit" class="btn-primary btn-pad">Sign in</button>
                 </form>

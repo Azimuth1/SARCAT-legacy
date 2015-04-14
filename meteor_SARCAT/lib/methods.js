@@ -52,9 +52,15 @@ Meteor.methods({
         return Records.insert(list);
     },
     removeRecord: function (id) {
+        console.log(id)
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
+        /*return Records.update(id, {
+            $set: {
+                remove: "true"
+            }
+        },function(d,e){console.log(d,e)});*/
         return Records.remove(id);
     },
     updateRecord: function (id, name) {
@@ -149,6 +155,9 @@ Meteor.methods({
     },
 });
 Records.allow({
+    remove: function () {
+        return true;
+    },
     update: function () {
         return true;
     },

@@ -9,7 +9,7 @@
                 <div class="content-scrollable">
                     <div class="wrapper-auth">
                         <h2 class="title-auth">Welcome to SARCAT</h2>
-                        <p class="subtitle-audth">Search and Rescue Collection & Analysis Tool</p>
+                        <p class="subtitle-audth">Search and Rescue Data Collection & Analysis Tool</p>
                         {{#if currentUser}}
                             <p class="text-danger em"> Create a new admin account! </p>
                             <form>
@@ -26,12 +26,12 @@
                                     <input type="username" name="lastname" placeholder="Last Name" /> <span class="customfa fa-user" title="FLast Name"></span> </div>
                                 <div class="mar0"></div>
                                 <div class="input-symbol  {{errorClass 'email'}}">
-                                    <input type="email" name="email" placeholder="Email" /> <span class="icon-email" title="Email"></span> </div>
+                                    <input type="email" name="email" placeholder="Email" /> <span class="tmp icon-email" title="Email"></span> </div>
                                 <div class="input-symbol  {{errorClass 'password'}}">
-                                    <input type="password" name="password" placeholder="Password" /> <span class="icon-lock" title="Password"></span> </div>
+                                    <input type="password" name="password" placeholder="Password" /> <span class="tmp icon-lock" title="Password"></span> </div>
                                 <div class="input-symbol {{errorClass 'confirm'}}">
-                                    <input type="password" name="confirm" placeholder="Confirm Password" /> <span class="icon-lock" title="Confirm Password"></span> </div>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block"> <span class="icon-user-add" aria-hidden="true"></span>Join Now</button>
+                                    <input type="password" name="confirm" placeholder="Confirm Password" /> <span class="tmp icon-lock" title="Confirm Password"></span> </div>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block"> <span class="tmp icon-user-add" aria-hidden="true"></span>Join Now</button>
                             </form> {{else}}
                             <p class="text-danger em"> Please login with default admin account </p>
                             <form>
@@ -43,9 +43,9 @@
                                     </div>
                                 {{/if}}
                                 <div class="input-symbol {{errorClass 'email'}}">
-                                    <input type="email" name="email" placeholder="Email" /> <span class="icon-email" title="Email"></span> </div>
+                                    <input type="email" name="email" placeholder="Email" /> <span class="tmp icon-email" title="Email"></span> </div>
                                 <div class="input-symbol {{errorClass 'password'}}">
-                                    <input type="password" name="password" placeholder="Password" /> <span class="icon-lock" title="Password"></span> </div>
+                                    <input type="password" name="password" placeholder="Password" /> <span class="tmp icon-lock" title="Password"></span> </div>
                                 <button type="submit" class="btn-primary admin1 btn-pad">Sign in</button>
                             </form>
                         {{/if}}

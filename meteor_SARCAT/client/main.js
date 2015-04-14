@@ -12,6 +12,10 @@ labelUnits = function (currentUnit, type) {
             Metric: 'Meters',
             US: 'Feet'
         },
+        distance: {
+            Metric: 'Kilometers',
+            US: 'Miles'
+        },
         temperature: {
             Metric: '°C',
             US: '°F'
@@ -43,7 +47,7 @@ getCoords = function (record) {
         "val": "revisedLKP-PLS",
         "name": "coords.revisedLKP-PLS",
         "text": "Revised IPP",
-        icon: 'fa-times-circle-o 4x text-success'
+        icon: 'fa-male 4x text-danger'
     }, {
         "val": "findCoord",
         "name": "coords.findCoord",
@@ -118,9 +122,14 @@ setMap = function (context, bounds, agencyMapComplete) {
     var map = L.map(context);
     map.fitBounds(bounds);
     var lc = L.control.locate({
+            strings: {
+        
+                popup: "You are within {distance} {unit} from this point", 
+                outsideMapBoundsMsg: "You seem located outside the boundaries of the map" 
+            },
             onLocationError: function (err) {
                 alert(err.message)
-            }, 
+            },
             onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
                 alert(context.options.strings.outsideMapBoundsMsg);
             },
@@ -159,7 +168,7 @@ setMap = function (context, bounds, agencyMapComplete) {
 }
 newProjectSetMap = function (context, bounds, points) {
     var obj = {};
-    //marker;
+
     var map = L.map(context);
     m = map;
     var latLngBounds = L.latLngBounds(bounds);
@@ -181,7 +190,7 @@ newProjectSetMap = function (context, bounds, points) {
     L.control.locate({
             onLocationError: function (err) {
                 alert(err.message)
-            }, // define an error callback function
+            },
             onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
                 alert(context.options.strings.outsideMapBoundsMsg);
             },
@@ -288,6 +297,14 @@ formSetMap = function (context) {
             ];
             obj.addPoly(d, latlngs);
         }
+        if (val === 'findCoord') {
+
+            //var start = coords.ippCoordinates.layer.getLatLng();
+            //var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng();
+            //var distance = L.latLng(start).distanceTo(end);
+
+        }
+
     };
     obj.remove = function (d) {
         /*var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
@@ -876,4 +893,3 @@ L.RotatedMarker = L.Marker.extend({
 L.rotatedMarker = function (pos, options) {
     return new L.RotatedMarker(pos, options);
 };
-

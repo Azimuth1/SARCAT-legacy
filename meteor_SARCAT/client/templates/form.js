@@ -8,8 +8,6 @@ var map;
 Template.registerHelper("Schemas", Schemas);
 
 Template.form.onCreated(function () {
-    console.log('created');
-    console.log($(".dial"))
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
     agencyProfile = config.agencyProfile;
@@ -18,21 +16,15 @@ Template.form.onCreated(function () {
 
 });
 Template.form.onRendered(function () {
-    console.log('!')
 
     record = this.data.record;
-    var dialVal = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
-    $(".dial")
-        .val(dialVal);
-    $(".dial")
-        .knob({
-            'release': function (v) {
-                $('[name="incidentOperations.initialDirectionofTravel"]')
-                    .val(v)
-                    .trigger("change");
-
-            }
-        });
+    r = record;
+    var degree = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
+    var travelBearing = $('.travelDirection');
+    travelBearing.css('-moz-transform', 'rotate(' + degree + 'deg)');
+    travelBearing.css('-webkit-transform', 'rotate(' + degree + 'deg)');
+    travelBearing.css('-o-transform', 'rotate(' + degree + 'deg)');
+    travelBearing.css('-ms-transform', 'rotate(' + degree + 'deg)');
 
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
@@ -60,10 +52,16 @@ Template.form.onRendered(function () {
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distance') + ')');
 
-    $('[data-subjecttable="weight"]')
+    $('[name="rescueDetails.distanceTraveled"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+
+    $('[data-subjecttable="Weight"]')
         .append(' (' + labelUnits(currentUnit, 'weight') + ')');
-    $('[data-subjecttable="height"]')
+    $('[data-subjecttable="Height"]')
         .append(' (' + labelUnits(currentUnit, 'height') + ')');
+    $('.panel-title:contains("Weather")')
+        .append('- Autoset from forecast.io based on Incident Date & Location');
 
     var coords = record.coords;
 
@@ -91,26 +89,7 @@ Template.form.onRendered(function () {
 
 });
 Template.form.helpers({
-    /*agencyProfile: function () {
-        return Session.get('config')
-            .agencyProfile;
-    },*/
-    /* measureUnits: function () {
-         return Config.findOne()
-             .agencyProfile.measureUnits;
 
-            
-     },
-     measureUnitsHeight: function () {
-         var units = Config.findOne()
-             .agencyProfile.measureUnits;
-              return labelUnits(units,'height')
-     },
-     measureUnitsWeight: function () {
-         var units = Config.findOne()
-             .agencyProfile.measureUnits;
-              return labelUnits(units,'weight')
-     },*/
     formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
@@ -156,6 +135,7 @@ Template.form.helpers({
     schemas: function () {
         var record = this.record;
         var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "coords", "updated", "created", "admin");
+
         return schemas.map(function (d) {
             var count = (record[d]) ? Object.keys(record[d])
                 .length || 0 : 0;
@@ -163,8 +143,10 @@ Template.form.helpers({
             if (!Schemas[d]) {
                 return;
             }
+            var label = Schemas.SARCAT._schema[d].label;
+
             return {
-                field: d,
+                field: label,
                 current: count,
                 total: Schemas[d]._firstLevelSchemaKeys.length
             };
@@ -172,7 +154,7 @@ Template.form.helpers({
     },
     subjectKeys: function () {
         return _.chain(Schemas.subjects._schema)
-            .filter(function (e,d) {
+            .filter(function (e, d) {
                 return d.indexOf("$.") > -1;
             })
             .map(function (d) {
@@ -185,27 +167,33 @@ Template.form.helpers({
     subjects: function () {
         return this.data.record.subjects.subject;
     },
-getSubjectsArray: function() {
+    getSubjectsArray: function () {
 
-  var self = this;
-  self.myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
-  return _.map(self.myArray, function(value, index){
-    console.log(value,index)
-    return {value: value, index: index,name:"subjects.subject."+index};
-  });
-},
-    /*subjectRescueKeys: function () {
-        return _.chain(Schemas.subjectRescue._schema)
-            .filter(function (e,d) {
-                return d.indexOf("$.") > -1;
-            })
-            .map(function (d) {
-                return d.label;
-            })
-            .compact()
-            .without('Name/Alias')
-            .value();
-    },*/
+        var self = this;
+        self.myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
+        return _.map(self.myArray, function (value, index) {
+
+            return {
+                value: value,
+                index: index,
+                name: "subjects.subject." + index
+            };
+        });
+    },
+    getResourceArray: function () {
+
+        var self = this;
+        self.myArray = (this.record && this.record.resourcesUsed) ? this.record.resourcesUsed.resource : [];
+        return _.map(self.myArray, function (value, index) {
+
+            return {
+                value: value,
+                index: index,
+                name: "resourcesUsed.resource." + index
+            };
+        });
+    },
+
     subject: function () {
         return _.map(this, function (d) {
             return d;
@@ -214,7 +202,7 @@ getSubjectsArray: function() {
     resourceKeys: function () {
         //return ["Resource Type", "Total Used", "Total Hours","findResource"];
         return _.chain(Schemas.resourcesUsed._schema)
-            .filter(function (e,d) {
+            .filter(function (e, d) {
                 return d.indexOf("$.") > -1;
             })
             .map(function (d) {
@@ -292,7 +280,47 @@ var toggleListPrivacy = function (list) {
         });
     }
 };
+
+var clicking = false;
+var travelDirectionDegree;
 Template.form.events({
+
+    'mousedown .travelDirection': function (evt, template) {
+        clicking = true;
+    },
+    'mouseout .travelDirection': function (event, template) {
+        clicking = false;
+        $('[name="incidentOperations.initialDirectionofTravel"]')
+            .val(travelDirectionDegree)
+            .trigger("change");
+    },
+    'mouseup .travelDirection': function (event, template) {
+
+        clicking = false;
+        $('[name="incidentOperations.initialDirectionofTravel"]')
+            .val(travelDirectionDegree)
+            .trigger("change");
+
+    },
+    'mousemove .travelDirection': function (evt, template) {
+
+        var travelBearing = $(evt.target);
+        if (clicking == false) return;
+        var offset = travelBearing.offset();
+        var center_x = (offset.left) + (travelBearing.width() / 2);
+        var center_y = (offset.top) + (travelBearing.height() / 2);
+        var mouse_x = evt.pageX;
+        var mouse_y = evt.pageY;
+        var radians = Math.atan2(mouse_x - center_x, mouse_y - center_y);
+        travelDirectionDegree = (radians * (180 / Math.PI) * -1) + 90;
+        travelDirectionDegree = Math.round((travelDirectionDegree < 0) ? (360 - (Math.abs(travelDirectionDegree))) : travelDirectionDegree);
+        //console.log(travelDirectionDegree);
+        travelBearing.css('-moz-transform', 'rotate(' + travelDirectionDegree + 'deg)');
+        travelBearing.css('-webkit-transform', 'rotate(' + travelDirectionDegree + 'deg)');
+        travelBearing.css('-o-transform', 'rotate(' + travelDirectionDegree + 'deg)');
+        travelBearing.css('-ms-transform', 'rotate(' + travelDirectionDegree + 'deg)');
+
+    },
     'change .list-edit': function (event, template) {
         if ($(event.target)
             .val() === 'edit') {
@@ -322,14 +350,14 @@ Template.form.events({
             .collapse('toggle');
     },
     'click .removeSubject': function (event, template) {
-        console.log(record._id, this._key)
-        Meteor.call('removeSubject', record._id, this._key, function (err) {
+
+        Meteor.call('removeSubject', record._id, this.value._key, function (err) {
             console.log(err);
         });
     },
     'click .removeResource': function (event, template) {
-        console.log(record._id, this._key)
-        Meteor.call('removeResource', record._id, this._key, function (err) {
+
+        Meteor.call('removeResource', record._id, this.value._key, function (err) {
             console.log(err);
         });
 
@@ -344,29 +372,26 @@ Template.form.events({
 
     'change [name="incident.incidentdate"]': function (event, template) {
 
-        var date = this.value; //.split('.')[0];; //event.target.value;
-
         var weatherCoords = record.coords.ippCoordinates;
 
-        getWeather(weatherCoords, date, function (data, err) {
-            //if(){}
-            z = data
-                //console.log(data, err)
-            Session.set('weather', data);
-            //var data = data.currently;
-            var dailyData = data.daily.data[0];
-            console.log('MAX: ' + dailyData.temperatureMax)
-            _.each(dailyData, function (d, name) {
-                $('[name="weather.' + name + '"]')
-                    .val(d);
-            });
-            if (!dailyData.precipType) {
-                $('[name="weather.precipType"]')
-                    .val('none')
-                    .trigger('change');
-            }
+        
+            getWeather(weatherCoords, event.target.value, function (data, err) {
+                z = data
+                Session.set('weather', data);
+                var dailyData = data.daily.data[0];
+                console.log('MAX: ' + dailyData.temperatureMax)
+                _.each(dailyData, function (d, name) {
+                    $('[name="weather.' + name + '"]')
+                        .val(d);
+                });
+                if (!dailyData.precipType) {
+                    $('[name="weather.precipType"]')
+                        .val('none')
+                        .trigger('change');
+                }
 
-        });
+            });
+    
 
     },
     'click .mapPoints a': function (event, template) {
@@ -397,7 +422,14 @@ AutoForm.hooks({
     updateSubjectForm: {
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
             $('#updateSubjectForm')
-                .find('input')
+                .find('input,select')
+                .val('');
+        }
+    },
+    updateResourceForm: {
+        onSuccess: function (insertDoc, updateDoc, currentDoc) {
+            $('#updateResourceForm')
+                .find('input,select')
                 .val('');
         }
     }
