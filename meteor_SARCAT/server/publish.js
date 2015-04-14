@@ -1,4 +1,4 @@
-Meteor.publish('publicLists', function() {
+Meteor.publish('publicLists', function () {
     if (this.userId) {
         return Records.find({});
         //return Records.find({},{fields: {recordInfo: 1}});
@@ -6,14 +6,14 @@ Meteor.publish('publicLists', function() {
         this.ready();
     }
 });
-Meteor.publish('item', function(id) {
+Meteor.publish('item', function (id) {
     if (this.userId) {
         return Records.find(id);
     } else {
         this.ready();
     }
 });
-Meteor.publish('privateLists', function() {
+Meteor.publish('privateLists', function () {
     if (this.userId) {
         return Records.find({
             userId: this.userId
@@ -25,7 +25,7 @@ Meteor.publish('privateLists', function() {
         //this.ready();
     }
 });
-Meteor.publish('userData', function() {
+Meteor.publish('userData', function () {
     if (Roles.userIsInRole(this.userId, ['admin'])) {
         return Meteor.users.find();
     } else if (this.userId) {
@@ -40,13 +40,13 @@ Meteor.publish('userData', function() {
         this.ready();
     }
 });
-Meteor.publish('roles', function() {
+Meteor.publish('roles', function () {
     return Meteor.roles.find()
 })
-Meteor.publish('config', function() {
+Meteor.publish('config', function () {
     return Config.find();
 });
-Meteor.publish('adminDefault', function() {
+Meteor.publish('adminDefault', function () {
     return Meteor.users.find({
         emails: {
             $elemMatch: {
@@ -55,3 +55,4 @@ Meteor.publish('adminDefault', function() {
         }
     });
 });
+

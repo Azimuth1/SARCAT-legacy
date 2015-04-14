@@ -1,119 +1,107 @@
 <template name="admin">
     {{#if isInRole 'admin'}}
-    <nav class="navbar default-bg rad0 mar00">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand white" href="#"></a> </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs navbar-nav" role="tablist">
-                    <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Profile</a> </li>
-                    <li role="presentation"><a href="#adminMapTab" aria-controls="profile" role="tab" data-toggle="tab" class="white adminMap">Response Area</a> </li>
-                    <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-                    <li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>
-                </ul>
+        <nav class="navbar default-bg rad0 mar00">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    <a class="navbar-brand white" href="#"></a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs navbar-nav" role="tablist">
+                        <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Profile</a> </li>
+                        <li role="presentation"><a href="#adminMapTab" aria-controls="profile" role="tab" data-toggle="tab" class="white adminMap">Response Area</a> </li>
+                        <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
+                        <li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
             </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
-    <!-- Tab panes -->
-    <div class="tab-content admin">
-
-
-
-
-
-
-
-        <div role="tabpanel" class="tab-pane active pad0" id="profile">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Agency Profile
+            <!-- /.container-fluid -->
+        </nav>
+        <!-- Tab panes -->
+        <div class="tab-content admin">
+            <div role="tabpanel" class="tab-pane active pad0" id="profile">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Agency Profile
                     <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
-                </div>
-                <div class="panel-body afBody">
-                     {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save" validation='keyup'}}
-                   
+                    </div>
+                    <div class="panel-body afBody">
+                        {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save" validation='keyup'}}
+                        <div class="form-group">
+                            <label class="control-label">Upload Organization Logo</label>
+                            {{> upload_bootstrap formData=UploadImgFormData}}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-
-
-
-
-
-        <div role="tabpanel" class="tab-pane full" id="adminMapTab">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Set Map Extent To Default SAR Response Area
+            <div role="tabpanel" class="tab-pane full" id="adminMapTab">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Set Map Extent To Default SAR Response Area
                     <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
-                </div>
-                <div class="panel-body afBody">
-                    {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true  type='update' fields="agencyProfile.bounds" buttonContent= "Save Response Area"}}
-                    <div id='adminMap' style="width:100%;height:500px"></div>
-                   
+                    </div>
+                    <div class="panel-body afBody">
+                        {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true type='update' fields="agencyProfile.bounds" buttonContent= "Save Response Area"}}
+                        <div id='adminMap' style="width:100%;height:500px"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-
-        <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
-            <div class="afTablePane">
-                <table class="table table-hover table-bordered table-condensed">
-                    <thead class='default-bg'>
-                        <tr>
-                            <td class='afTable'>User</td>
-                            <td class='afTable'>Roles</td>
-                            <td class='afTable'>Email</td>
-                            <td class='afTable'>Action</td>
-                        </tr>
-                    </thead>
-                    <tbody class='white-bg'>
-                     {{#if noUsers}}
-                     <tr><td colspan="4" class="text-center text-default">You have no users</td></tr>
-                     {{/if}}
-                        {{#each userRoleList}}
-                    
-                    
-                        <tr>
-                            <td>{{this.username}}</td>
-                            <td>
-                                <div class="admin_ChangeRole">
-                                    <label class="radio-inline">
-                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsCkhecked}}">Editor
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="admin" checked="{{roleIsCkhecked}}"> Admin
-                                    </label>
-                                </div>
-                            </td>
-                            <td>{{userEmail}}</td>
-                            <td>
-                                <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
-                            </td>
-                        </tr>
-                    
-                        {{/each}}
-                    </tbody>
-                </table>
+            <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
+                <div class="afTablePane">
+                    <table class="table table-hover table-bordered table-condensed">
+                        <thead class='default-bg'>
+                            <tr>
+                                <td class='afTable'>User</td>
+                                <td class='afTable'>Roles</td>
+                                <td class='afTable'>Email</td>
+                                <td class='afTable'>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody class='white-bg'>
+                            {{#if noUsers}}
+                                <tr>
+                                    <td colspan="4" class="text-center text-default">You have no users</td>
+                                </tr>
+                            {{/if}}
+                            {{#each userRoleList}}
+                                <tr>
+                                    <td>{{this.username}}</td>
+                                    <td>
+                                        <div class="admin_ChangeRole">
+                                            <label class="radio-inline">
+                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsCkhecked}}">Editor
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="admin" checked="{{roleIsCkhecked}}"> Admin
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>{{userEmail}}</td>
+                                    <td>
+                                        <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div role="tabpanel" class="tab-pane pad0 scroll" id="options">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Data Form Type</h3> </div>
-                <div class="panel-body">
-                    {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}
+            <div role="tabpanel" class="tab-pane pad0 scroll" id="options">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Data Form Type</h3> </div>
+                    <div class="panel-body">
+                        {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {{/if}}
 </template>

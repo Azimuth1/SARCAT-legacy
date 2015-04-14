@@ -16,6 +16,10 @@ Template.admin.rendered = function () {
     });
 };
 Template.admin.helpers({
+    UploadImgFormData: function(){
+        return {type:'logo'};
+    },
+
     agencyCoordinates: function () {
         return agencyCoordinates;
     },
@@ -35,29 +39,20 @@ Template.admin.helpers({
             console.log(err);
         });
     },
-    // roleIsChecked: function (event) {
-    //var roles = this.roles;
-    //console.log(event)
-    //return true;
-    //return this.roles[0] === $(e.target).val();
-    /*console.log(this)
-    $('input[name="role_oS8Y6oZC5WraaCnPW"]:checked')
-        .val();
-    return 'checked';*/
-    // },
+
     userRoleList: function () {
-        var users =  this.users.fetch()
+        var users = this.users.fetch()
             .filter(function (d) {
                 return d._id !== Meteor.userId()
             });
-            return users.length ? users : false;
+        return users.length ? users : false;
     },
-noUsers: function () {
-        var users =  this.users.fetch()
+    noUsers: function () {
+        var users = this.users.fetch()
             .filter(function (d) {
                 return d._id !== Meteor.userId()
             });
-            return !users.length;
+        return !users.length;
     },
 });
 
@@ -68,9 +63,16 @@ Template.admin.events({
             alert('You cannot remove your own account!');
             return;
         }
-        Meteor.call('removeUser', this._id, function (err) {
-            console.log(err);
-        });
+
+        var r = confirm("Are you sure you want to delete user: " + this.username);
+        if (r == true) {
+            Meteor.call('removeUser', this._id, function (err) {
+                console.log(err);
+            });
+        } else {
+            return;
+        }
+
     },
     'click .adminMap': function (event, template) {
         template.$('a[data-toggle="tab"][href="#adminMapTab"]')
@@ -125,3 +127,4 @@ AutoForm.hooks({
         }
     }
 });
+

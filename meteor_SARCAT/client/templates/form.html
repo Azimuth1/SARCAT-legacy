@@ -26,7 +26,7 @@
             </h4>
             <div class="flex-container _btn-group col-md-12 pad00" role="group" aria-label="...">
                 {{#each schemas}}
-                <button type="button" data="{{this.field}}" class="formNav flex-item btn primary-bg marXs">{{this.field}} <small>{{this.current}}/{{this.total}} </small></button>
+                    <button type="button" data="{{this.field}}" class="formNav flex-item btn primary-bg marXs">{{this.field}} <small>{{this.current}}/{{this.total}} </small></button>
                 {{/each}}
             </div>
         </div>
@@ -89,105 +89,200 @@
                             <div class="row">
                                 <div id='formMap' style="width:100%; height:400px"></div>
                             </div>
-                            {{> quickForm collection='Records' doc=record id='formId333' class="hide" type=formType autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
-                            <div class="row">
-                                {{#autoForm collection='Records' doc=current id='formId3334' class="mar1yt form-inline hideSubmit" type=formType autosave=true fields="incidentOperations"}}
+                            <!--
+
+
+                            {{> quickForm collection='Records' doc=record id='_formIdMap' class="recordForm4 hideSubmit" type=formType autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
+
+                            -->
+                            {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
+                                {{#each coordKeys}}
+                                    {{> afQuickField name=this }}
+                                {{/each}}
+                            {{/autoForm}}
+                            {{#autoForm collection='Records' doc=record id='formIdMap1' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
                                 <div class="travelDir text-center col-md-3" style="width:25%">
                                     {{> afQuickField class="hideLabel hide" name="incidentOperations.initialDirectionofTravel"}}
                                     <i class="fa fa-5x fa-arrow-circle-o-up travelDirection"></i> </div>
-                                <div class="col-md-9" style="width:75%">
-                                    {{> afQuickField label-class="mar1yb" name="incidentOperations.DOTHowdetermined" options="allowed"}} {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.ippclassification" options="allowed"}} {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.ipptype" options="allowed"}} {{#if hasDecisionPoint}} {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.typeofDecisionPoint" options="allowed"}} {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.decisionPointFactor" options="allowed"}} {{/if}}
-                                </div> {{/autoForm}}
+                                {{> afQuickField name="incidentOperations.DOTHowdetermined" }} {{> afQuickField name="incidentOperations.ippclassification" }} {{> afQuickField name="incidentOperations.ipptype" }} {{> afQuickField name="incidentOperations.typeofDecisionPoint" }} {{> afQuickField name="incidentOperations.decisionPointFactor" }}
+                            {{/autoForm}}
+                            <!--
+
+                            <div class="row">
+                                {{#autoForm collection='Records' doc=current id='formId3334' class="mar1yt form-inline hideSubmit" type=formType autosave=true fields="incidentOperations" }}
+                                    <div class="travelDir text-center col-md-3" style="width:25%">
+                                        {{> afQuickField class="hideLabel hide" name="incidentOperations.initialDirectionofTravel"}}
+                                        <i class="fa fa-5x fa-arrow-circle-o-up travelDirection"></i> </div>
+                                    <div class="col-md-9" style="width:75%">
+                                        
+
+
+                                        {{> afQuickField label-class="mar1yb" name="incidentOperations.DOTHowdetermined" options="allowed"}} 
+
+                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.ippclassification" options="allowed"}} 
+
+                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.ipptype" options="allowed"}}
+                                        
+
+                                        {{#if hasDecisionPoint}} 
+
+
+                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.typeofDecisionPoint" options="allowed"}} 
+
+
+                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.decisionPointFactor" options="allowed"}} 
+
+                                        {{/if}}
+                                    </div>
+                                {{/autoForm}}
                             </div>
+-->
                         </div>
                     </div>
                 </div>
             </div>
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} 
+            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
+            
 
 
-
-
-
-
-
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
             <!--Subject Info-->
+            <!--
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Subject Info</h3>
                 </div>
                 <div class="panel-body afBody pad00">
-                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
-                    <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
-                        <thead class='default-bg'>
-                            <tr>
-                                {{#each subjectKeys}}
-                                <th data-subjectTable={{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                {{/each}}
-                                <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#each getSubjectsArray}}
-                            <tr class="noBorder">
-                                <td class="pad00 noBorder" colspan="15">
-                                <!--AutoForm.getFieldValue('subjects.subject.0.status','editSubjectForm')-->
-                                    {{> afQuickField name=this.name}}
-                                </td>
-                                <td class="padsm">
-                                    <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                    {{/autoForm}} {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
+                    <ul class="nav nav-tabs navbar-nav col-md-12" role="tablist">
+                        {{#each getSubjectsArray}}
+                            <li role="presentation" class="_active"><a href="#{{this._key}}" aria-controls="home" role="tab" data-toggle="tab" class="white">Subject {{this.index}}</a> </li>
+                        {{/each}}
+                    </ul>
+                    {{#autoForm id="_editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="recordForm4" }}
+                        {{#each getSubjectsArray}}
+                            <div class="tab-content _admin">
+                                <div role="tabpanel" class="tab-pane pad0" id="{{this._id}}">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Subject {{this.index}}
+                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+                                        </div>
+                                        <div class="panel-body afBody">
+                                            {{> afQuickField name=this.name}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                    {{/autoForm}}
+                    {{> quickForm id="_updateSubjectForm" type="update-pushArray" collection='Records' class="recordForm4" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
                 </div>
             </div>
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm4 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="timeLog" buttonContent= "Save"}} 
+-->
 
 
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
+            <!--Subject Info-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Subject Info
+
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">Description</button>
+    <button type="button" class="btn btn-default">Rescue</button>
+    <button type="button" class="btn btn-default">Personal</button>
+</div>
+
+
+                    </h3>
+
+                </div>
+                <div class="panel-body afBody pad00">
+
+
+
+
+
+
+
+                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
+                        <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
+                            <thead class='default-bg'>
+                                <tr>
+                                    {{#each subjectKeys}}
+                                        <th data-subjectTable= {{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                                    {{/each}}
+                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class='white-bg'>
+                                {{#each getSubjectsArray}}
+                                    <tr class="noBorder">
+                                        <td class="pad00 noBorder" colspan="15">
+                                            <!--AutoForm.getFieldValue('subjects.subject.0.status','editSubjectForm')-->
+                                            {{> afQuickField name=this.name}}
+                                        </td>
+                                        <td class="padsm">
+                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    {{/autoForm}}
+                    {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
+                </div>
+            </div>
+
+
+
+            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm4 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="timeLog" buttonContent= "Save"}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Additional Resources Used</h3>
                 </div>
                 <div class="panel-body afBody">
                     {{#autoForm id="editResourceForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
-                    <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
-                        <thead class='default-bg'>
-                            <tr>
-                                {{#each resourceKeys}}
-                                <th data-subjectTable={{this}} class='text-center afTable text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                        <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
+                            <thead class='default-bg'>
+                                <tr>
+                                    {{#each resourceKeys}}
+                                        <th data-subjectTable= {{this}} class='text-center afTable text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                                    {{/each}}
+                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class='white-bg'>
+                                {{#each getResourceArray}}
+                                    <tr class="noBorder">
+                                        <td class="pad00 _noBorder" colspan="4">
+                                            {{> afQuickField name=this.name}}
+                                        </td>
+                                        <td class="padsm">
+                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
+                                        </td>
+                                    </tr>
                                 {{/each}}
-                                <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#each getResourceArray}}
-                            <tr class="noBorder">
-                                <td class="pad00 _noBorder" colspan="4">
-                                    {{> afQuickField name=this.name}}
-                                </td>
-                                <td class="padsm">
-                                    <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     {{/autoForm}} {{> quickForm id="updateResourceForm" type="update-pushArray" collection='Records' class="recordForm2 pad00 col-md-12 _form-inline hideLabel" doc=current field="resourcesUsed" scope="resourcesUsed.resource" buttonContent= "Add Resource" resetOnSuccess=true options="allowed"}}
                 </div>
             </div>
-
-
-           
-   {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }} 
-
-
-
-
+            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Record Files</h3>
+                </div>
+                <div class="panel-body afBody">
+                    <div class="list-group">
+                        {{#if fileUploads.length}}
+                            <label class="control-label">Click File to View:</label>
+                        {{/if}}
+                        {{#each fileUploads}}
+                            <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a>
+                        {{/each}}
+                    </div>
+                    <label class="control-label">Upload Files</label>
+                    {{> upload_bootstrap formData=record multiple=true}} </div>
+            </div>
         </div>
     </div>
 </template>

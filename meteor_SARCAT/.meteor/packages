@@ -17,3 +17,5 @@ underscore
 http
 fortawesome:fontawesome
 d3
+tomi:upload-server
+tomi:upload-jquery
