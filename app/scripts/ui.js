@@ -1,2 +1,0 @@
-sarcat.ui = function(){
-};
