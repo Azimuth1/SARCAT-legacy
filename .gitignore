@@ -3,3 +3,7 @@ node_modules
 .DS_Store
 *.db
 .ignore
+
+
+main_logo
+/uploads/records
