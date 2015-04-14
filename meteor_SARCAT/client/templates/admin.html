@@ -35,7 +35,7 @@
                     <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
                 </div>
                 <div class="panel-body afBody">
-                     {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save"}}
+                     {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save" validation='keyup'}}
                    
                 </div>
             </div>
@@ -110,7 +110,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Data Form Type</h3> </div>
                 <div class="panel-body">
-                    {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.medical" options="allowed" noselect=true}} {{> afQuickField name="formEditions.resources" options="allowed" noselect=true}} {{/autoForm}}
+                    {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}
                 </div>
             </div>
         </div>

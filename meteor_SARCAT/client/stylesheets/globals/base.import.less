@@ -217,6 +217,10 @@ em {
     display: inline-flex;
 }
 
+#updateSubjectForm {
+    display: inline-flex;
+}
+
 #updateSubjectForm .form-group {
     width: 9.09%;
     -webkit-box-ordinal-group: 1;
@@ -234,22 +238,12 @@ em {
     align-self: auto;
 }
 
-#editSubjectForm select {
+#updateSubjectForm select {
     align-items: center;
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-    height: 30px;
-    line-height: 30px;
+    font-size: 11px;
     padding: 0 2px;
     -webkit-appearance: none;
-    border-color: #018996;
-}
-
-#editSubjectForm input {
-    height: 30px;
-    line-height: 30px;
+    /*border-color: #018996;*/
 }
 
 #updateSubjectForm .form-group button {
@@ -261,6 +255,30 @@ em {
     width: 100%;
 }
 
+#editSubjectForm th {
+    border: 1px solid #01717C;
+}
+
+#editSubjectForm select {
+    align-items: center;
+    font-size: 11px;
+    height: 38px;
+    -webkit-appearance: none;
+    /*border-color: #018996;*/
+    
+    border-radius: 0;
+}
+
+#editSubjectForm input {
+    height: 38px;
+    line-height: 30px;
+    border-radius: 0;
+}
+
+#editSubjectForm button {
+    font-size: 11px;
+}
+
 #editSubjectForm .panel-default {
     border: none;
     margin-bottom: 35px;
@@ -268,7 +286,6 @@ em {
 }
 
 #editSubjectForm .panel-body {
-    display: inline-flex;
     display: inline-flex;
     padding: 0;
 }
@@ -292,7 +309,7 @@ em {
     margin-top: -17px;
 }
 
-#editSubjectForm .panel-body .form-group .help-block {
+#editSubjectForm .help-block {
     display: none;
 }
 
@@ -322,6 +339,14 @@ em {
     align-self: auto;
 }
 
+#updateResourceForm select {
+    align-items: center;
+    font-size: 11px;
+    padding: 0 2px;
+    -webkit-appearance: none;
+    /*border-color: #018996;*/
+}
+
 #updateResourceForm .form-group button {
     padding: 1px 5px;
     font-size: 12px;
@@ -331,12 +356,145 @@ em {
     width: 100%;
 }
 
+#editResourceForm select {
+    align-items: center;
+    font-size: 11px;
+    height: 38px;
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
+#editResourceForm input {
+    height: 38px;
+    border-radius: 0;
+}
+
+#editResourceForm button {
+    font-size: 11px;
+}
+
+#editResourceForm .panel-default {
+    border: none;
+    margin-bottom: 35px;
+    margin: 0;
+}
+
+#editResourceForm .panel-body {
+    display: inline-flex;
+    padding: 0;
+    width: 100%;
+}
+
+#editResourceForm .panel-body .form-group {
+    width: 25%;
+    -webkit-box-ordinal-group: 1;
+    -moz-box-ordinal-group: 1;
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-box-flex: 0;
+    -moz-box-flex: 0;
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+    margin-bottom: 0;
+    margin-top: -18px;
+}
+
+#editResourceForm .panel-body .form-group .help-block {
+    display: none;
+}
+
+#editResourceForm table tbody tr td button {
+    height: 35px;
+    margin: 0;
+}
+
+#editResourceForm th {
+    width: 20%;
+}
+
+#editResourceForm table .checkbox {
+    margin: 0px;
+    top: 5px;
+}
+
+#editResourceForm .checkbox input {
+    margin: -5px -15px;
+}
+
+#editResourceForm .checkbox label {
+    display: initial;
+    font-size: 13px;
+}
+
 #updateResourceForm .checkbox label {
-    position: relative;
-    display: block;
-    margin: 25px 5px;
+    margin: 20px 10px;
     display: initial;
 }
+
+#formId3334 .form-group{
+     float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 1px;
+    padding-left: 1px;
+    width: 33%;
+    margin-bottom: 0px;
+}
+
+.travelDir{
+    width:20%
+}
+
+.small{
+      font-size: 85% !important;
+}
+
+.recordForm0 .form-group {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.recordForm2 .form-group {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 50%;
+    margin-bottom: 0px;
+}
+
+.recordForm3 .form-group {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 1px;
+    padding-left: 1px;
+    width: 33%;
+    margin-bottom: 0px;
+}
+
+.recordForm4 .form-group {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 1px;
+    padding-left: 1px;
+    width: 25%;
+    margin-bottom: 0px;
+}
+
+
 
 .btnBlock .form-group button {
     width: 100%;
@@ -378,6 +536,11 @@ em {
     z-index: 1;
     top: 70px;
     position: absolute;
+}
+
+.mapBtns .btn {
+    font-size: 10px;
+    margin: 0 2px 5px;
 }
 
 .z2 {
@@ -448,7 +611,7 @@ input[type="text"]:focus {
 }
 
 .mar1yb {
-    margin-bottom: 10px;
+    margin-bottom: 10px !important;
 }
 
 .mar1y {
@@ -482,6 +645,10 @@ input[type="text"]:focus {
 /* Padding
 ------------------------------------------------------- */
 
+.padsm {
+    padding: 1px !important;
+}
+
 .pad00 {
     padding: 0 !important;
 }
@@ -496,8 +663,8 @@ input[type="text"]:focus {
 }
 
 .pad0x {
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-right: 5px !important;
+    padding-left: 5px !important;
 }
 
 .pad1 {
@@ -691,6 +858,10 @@ a {
 
 .opFull {
     opacity: 1 !important;
+}
+
+.noBorder {
+    border: none!important;
 }
 
 #recordss svg {

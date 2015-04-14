@@ -32,11 +32,11 @@
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search"> </div>
                 </form>-->
-                {{#if createNewBtn}}
+                <!--{{#if createNewBtn}}
                 <ul class="nav navbar-nav navbar-right">
                     <button type="button" class="btn btn-primary black js-newRecord mar0" data-target="#createRecordModal" data-toggle="modal">New Record</button>
                 </ul>
-                {{/if}}
+                {{/if}}-->
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -46,32 +46,63 @@
     <div class="tab-content admin">
         <div role="tabpanel" class="tab-pane active pad0" id="records">
             <div class="afTablePane">
-                <table class="pointer table table-hover table-bordered table-condensed mar00">
+                <div class="col-md-12 text-right">
+                    <p class="small"><em>*Click column header to sort</em></p>
+                </div>
+                {{#if createNewBtn}}
+                <div id="toolbar" class="btn-group">
+                    <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
+                        <i class="glyphicon glyphicon-plus"></i> New Record
+                    </button>
+                    {{#if isAdmin}}
+                    <button type="button" class="btn btn-default">
+                        <i class="glyphicon glyphicon-save-file"></i>
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <i class="glyphicon glyphicon-cloud-upload"></i>
+                    </button>
+                    <button type="button" class="btn btn-default deleteRecord">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                    {{/if}}
+                </div>
+                {{/if}}
+                <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
                         <tr>
-                            <td class='afTable'></td>
-                            <td class='afTable'>Record</td>
-                            <td class='afTable'>Owner</td>
-                            <td class='afTable'>Created</td>
-                            <td class='afTable'>Status</td>
+                            <!--<th class='afTable'></th>-->
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th data-field="incidentnum" data-sortable="true" class='afTable'>Incident #</th>
+                            <th data-field="name" data-sortable="true" class='afTable'>Record</th>
+                            <th data-field="date" data-sortable="true" class='afTable'>Created</th>
+                            <th data-field="status" data-sortable="true" class='afTable'>Status</th>
+                            <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
+                            <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
+                            <th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>
+                            <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
                         </tr>
                     </thead>
                     <tbody class='white-bg'>
-                    {{#if noRecords}}
-                     <tr><td colspan="5" class="text-center text-default">Create new Records to Begin!</td></tr>
-                     {{/if}}
-
-
-                        {{#each lists}}
+                        {{#if noRecords}}
                         <tr>
-                            <td><a href="{{pathFor 'form'}}" class="btn btn-primary btn-sm">View</a>
-                            </td>
+                            <td colspan="5" class="text-center text-default">Create a new Record to Begin!</td>
+                        </tr>
+                         {{else}}
+
+                         {{#each records}}
+                        <tr class="openRecord" id="{{this._id}}">
+                        <td></td>
+                            <td>{{recordInfo.incidentnum}}</td>
                             <td>{{recordInfo.name}}</td>
-                            <td> {{admin.user}} </td>
-                            <td>{{created}}</td>
+                            <td> {{created}} </td>
                             <td> {{recordInfo.status}} </td>
+                            <td> {{recordInfo.incidenttype}} </td>
+                            <td> {{recordInfo.missionnum}} </td>
+                            <td> {{leadagency}} </td>
+                            <td> {{admin.user}} </td>
                         </tr>
                         {{/each}}
+                        {{/if}}
                     </tbody>
                 </table>
             </div>

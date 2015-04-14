@@ -15,8 +15,8 @@ Meteor.startup(function () {
         };
         Config.insert(customSettings);
         var admin = Accounts.createUser({
-            email: 'a@a',//dmin@sarcat',
-            password: 'a',//dmin',
+            email: 'admin@sarcat',
+            password: 'admin',
             username: 'default'
         });
         Roles.addUsersToRoles(admin, ['admin']);

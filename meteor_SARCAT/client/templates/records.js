@@ -1,10 +1,21 @@
 var mapDrawn;
 var drawn;
-
-
+Template.records.onCreated(function (a) {
+    aa = a;
+    b = this
+})
 Template.records.onRendered(function () {
-
-
+    a = this;
+    drawn = false;
+    /*console.log(this.data.records.fetch().map(function(d){
+        return d.recordInfo;
+    }));
+    var tableData=this.data.records.fetch().map(function(d){
+        return d.recordInfo;
+    });*/
+    if (this.data.records.fetch().length) {
+        $('.recordTable').bootstrapTable();
+    }
 
     Session.set('userView', 'records');
     var config = Config.findOne();
@@ -16,20 +27,42 @@ Template.records.onRendered(function () {
         "name": "coords.ippCoordinates",
         "text": "Incident Location"
     });
+
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
+            var lastRecord = Records.find({}, {
+                sort: {
+                    created: -1
+                },
+                limit: 2
+            }).fetch().pop();
+            var placeholder1 = lastRecord ? lastRecord.recordInfo.incidentnum : '';
+            $('[name="recordInfo.incidentnum"]').attr('placeholder', placeholder1);
+
+            var placeholder2 = lastRecord ? lastRecord.recordInfo.missionnum : '';
+            $('[name="recordInfo.missionnum"]').attr('placeholder', placeholder2);
+
             mapDrawn.reset();
         });
 
-
-
 });
 Template.records.helpers({
-    lists: function () {
-        return Records.find({}, {sort: {name: 1}});
+    isAdmin: function () {
+        return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
+    /*lists: function () {
+        return Records.find({}, {
+            sort: {
+                name: 1
+            }
+        });
+    },*/
     noRecords: function () {
-        return !Records.find({}, {sort: {name: 1}}).fetch().length;
+        return !Records.find({}, {
+            sort: {
+                name: 1
+            }
+        }).fetch().length;
     },
     newRecord: function () {
         return Records.findOne(Session.get('newRecord'));
@@ -49,8 +82,8 @@ Template.records.events({
     'click .js-deleteRecord': function () {
         var record = Records.findOne(Session.get('newRecord'));
         Meteor.call('removeRecord', record, function (error, d) {
-            console.log(error, d)
-        })
+
+        });
     },
 
     'click .modal-backdrop': function () {
@@ -60,6 +93,7 @@ Template.records.events({
         })
     },
     'click .recordStats': function (event, template) {
+        console.log(drawn)
         if (drawn) {
             return;
         }
@@ -74,6 +108,10 @@ Template.records.events({
                 var coords = records.map(function (d) {
                     return d.coords
                 });
+                console.log(records, coords);
+                if (!records.length) {
+                    return;
+                }
                 var mapBounds = coords[0].bounds;
                 mapBounds = boundsString2Array(mapBounds);
 
@@ -130,6 +168,9 @@ Template.records.events({
                 };
                 _.each(mapPoints, function (d) {
                     coords.forEach(function (e) {
+                        if (!e) {
+                            return;
+                        }
                         var latlng = e[d.val];
                         if (!latlng) {
                             return
@@ -144,9 +185,23 @@ Template.records.events({
             });
 
     },
+    'click .openRecord': function (event, template) {
+        if (event.target.className === 'bs-checkbox') {
+            return;
+        }
+        Router.go('form', {
+            _id: event.currentTarget.id
+        });
+    },
+    'click .deleteRecord': function (event, template) {
+        var checked = $('.bs-checkbox [name="btSelectItem"]:checked').parent().parent().each(function (d) {
+            Meteor.call('removeRecord', this.id, function (error, d) {
+                Meteor._reload.reload();
+            });
+        });
+    },
 
     'click .js-newRecord': function (event, template) {
-
         var list = {
             userId: Meteor.userId()
         };
@@ -154,6 +209,7 @@ Template.records.events({
             if (error) {
                 console.log(error);
             }
+
             Session.set('newRecord', d);
         });
 
