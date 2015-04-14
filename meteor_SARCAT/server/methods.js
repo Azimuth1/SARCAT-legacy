@@ -134,9 +134,10 @@ Meteor.methods({
         }
     },
     removeSubject: function (recordId, subjectId) {
-        newSubjects = Records.findOne(recordId).subjects.subject.filter(function (d) {
-            return d._key !== subjectId;
-        });
+        newSubjects = Records.findOne(recordId)
+            .subjects.subject.filter(function (d) {
+                return d._key !== subjectId;
+            });
         Records.update(recordId, {
             $set: {
                 'subjects.subject': newSubjects
@@ -144,15 +145,22 @@ Meteor.methods({
         })
     },
     removeResource: function (recordId, resourceId) {
-        newResource = Records.findOne(recordId).resourcesUsed.resource.filter(function (d) {
-            return d._key !== resourceId;
-        });
+        newResource = Records.findOne(recordId)
+            .resourcesUsed.resource.filter(function (d) {
+                return d._key !== resourceId;
+            });
         Records.update(recordId, {
             $set: {
                 'resourcesUsed.resource': newResource
             }
         })
     },
+    getFilesInPublicFolder: function (id) {
+
+        var fs = Npm.require('fs');
+        var files = fs.readdirSync('../web.browser/app/uploads/records/' + id);
+        return files;
+    }
 });
 Records.allow({
     remove: function () {
@@ -185,3 +193,4 @@ Meteor.users.allow({
         }
     }
 });
+

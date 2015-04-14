@@ -14,6 +14,10 @@ Template.form.onCreated(function () {
     record = this.data.record;
     Session.set('currentRecord', this.data.record);
 
+    Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
+        Session.set('fileUploads', d)
+    });
+
 });
 Template.form.onRendered(function () {
 
@@ -167,6 +171,12 @@ Template.form.helpers({
     subjects: function () {
         return this.data.record.subjects.subject;
     },
+    coordKeys: function () {
+        var coords = ["ippCoordinates", "decisionPointCoord", "destinationCoord", "findCoord", "revisedLKP-PLS"];
+        return coords.map(function (d) {
+            return 'coords.' + d;
+        });
+    },
     getSubjectsArray: function () {
 
         var self = this;
@@ -230,6 +240,9 @@ Template.form.helpers({
         var detailsTrue = (val === 'Injured' || val === 'DOA') ? true : false;
         return detailsTrue;
     },
+    fileUploads: function (d) {
+        return Session.get('fileUploads');
+    }
 
 });
 var editList = function (list, template) {
@@ -374,24 +387,22 @@ Template.form.events({
 
         var weatherCoords = record.coords.ippCoordinates;
 
-        
-            getWeather(weatherCoords, event.target.value, function (data, err) {
-                z = data
-                Session.set('weather', data);
-                var dailyData = data.daily.data[0];
-                console.log('MAX: ' + dailyData.temperatureMax)
-                _.each(dailyData, function (d, name) {
-                    $('[name="weather.' + name + '"]')
-                        .val(d);
-                });
-                if (!dailyData.precipType) {
-                    $('[name="weather.precipType"]')
-                        .val('none')
-                        .trigger('change');
-                }
-
+        getWeather(weatherCoords, event.target.value, function (data, err) {
+            z = data
+            Session.set('weather', data);
+            var dailyData = data.daily.data[0];
+            console.log('MAX: ' + dailyData.temperatureMax)
+            _.each(dailyData, function (d, name) {
+                $('[name="weather.' + name + '"]')
+                    .val(d);
             });
-    
+            if (!dailyData.precipType) {
+                $('[name="weather.precipType"]')
+                    .val('none')
+                    .trigger('change');
+            }
+
+        });
 
     },
     'click .mapPoints a': function (event, template) {
@@ -415,6 +426,16 @@ Template.form.events({
             map.remove(item);
         }
     },
+    'click .fileUpload': function (event, template) {
+
+        var file = event.target.getAttribute('data');
+
+        var url = '/uploads/records'
+        url += '/' + record._id;
+        url += '/' + file;
+        window.open(url);
+        //Router.go(url);
+    }
 
 });
 
@@ -434,3 +455,4 @@ AutoForm.hooks({
         }
     }
 });
+

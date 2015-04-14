@@ -13,8 +13,10 @@ Template.records.onRendered(function () {
     var tableData=this.data.records.fetch().map(function(d){
         return d.recordInfo;
     });*/
-    if (this.data.records.fetch().length) {
-        $('.recordTable').bootstrapTable();
+    if (Records.find()
+        .count()) {
+        $('.recordTable')
+            .bootstrapTable();
     }
 
     Session.set('userView', 'records');
@@ -31,16 +33,20 @@ Template.records.onRendered(function () {
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
             var lastRecord = Records.find({}, {
-                sort: {
-                    created: -1
-                },
-                limit: 2
-            }).fetch().pop();
+                    sort: {
+                        created: -1
+                    },
+                    limit: 2
+                })
+                .fetch()
+                .pop();
             var placeholder1 = lastRecord ? lastRecord.recordInfo.incidentnum : '';
-            $('[name="recordInfo.incidentnum"]').attr('placeholder', placeholder1);
+            $('[name="recordInfo.incidentnum"]')
+                .attr('placeholder', placeholder1);
 
             var placeholder2 = lastRecord ? lastRecord.recordInfo.missionnum : '';
-            $('[name="recordInfo.missionnum"]').attr('placeholder', placeholder2);
+            $('[name="recordInfo.missionnum"]')
+                .attr('placeholder', placeholder2);
 
             mapDrawn.reset();
         });
@@ -59,17 +65,21 @@ Template.records.helpers({
     },*/
     noRecords: function () {
         return !Records.find({}, {
-            sort: {
-                name: 1
-            }
-        }).fetch().length;
+                sort: {
+                    name: 1
+                }
+            })
+            .fetch()
+            .length;
     },
     newRecord: function () {
         return Records.findOne(Session.get('newRecord'));
     },
     createNewBtn: function () {
-        var profile = Config.findOne().agencyProfileComplete;
-        var agencyMapComplete = Config.findOne().agencyMapComplete;
+        var profile = Config.findOne()
+            .agencyProfileComplete;
+        var agencyMapComplete = Config.findOne()
+            .agencyMapComplete;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile && agencyMapComplete && role;
     },
@@ -101,7 +111,8 @@ Template.records.events({
         template.$('a[data-toggle="tab"][href="#recordStats"]')
             .on('shown.bs.tab', function (e) {
 
-                var records = Records.find().fetch();
+                var records = Records.find()
+                    .fetch();
 
                 data = recordStats(records);
 
@@ -194,20 +205,23 @@ Template.records.events({
         });
     },
     'click .deleteRecord': function (event, template) {
-        var checked = $('.bs-checkbox [name="btSelectItem"]:checked').parent().parent().each(function (d) {
-            Meteor.call('removeRecord', this.id, function (error, d) {
-                Meteor._reload.reload();
+        var checked = $('.bs-checkbox [name="btSelectItem"]:checked')
+            .parent()
+            .parent()
+            .each(function (d) {
+                Meteor.call('removeRecord', this.id, function (error, d) {
+                    Meteor._reload.reload();
+                });
             });
-        });
     },
 
     'click .js-newRecord': function (event, template) {
         var list = {
             userId: Meteor.userId()
         };
-        list._id = Meteor.call('addRecord', list, function (error, d) {
+        Meteor.call('addRecord', list, function (error, d) {
             if (error) {
-                console.log(error);
+                return console.log(error);
             }
 
             Session.set('newRecord', d);
@@ -215,3 +229,4 @@ Template.records.events({
 
     }
 });
+

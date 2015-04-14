@@ -417,16 +417,14 @@ Schemas.coords = new SimpleSchema({
     bounds: {
         type: String,
         optional: true,
-        //defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665",
+        autoform: {
+            omit: true
+        }
 
-    },
-    travelDirection: {
-        type: String,
-        optional: true,
     },
     ippCoordinates: {
         type: Object,
-        label: 'IPP Coordinates',
+        label: 'IPP',
         optional: true
     },
     'ippCoordinates.lat': {
@@ -441,26 +439,32 @@ Schemas.coords = new SimpleSchema({
         decimal: true,
         optional: true
     },
-    decisionPointCoord: {
+    'revisedLKP-PLS': {
         type: Object,
-        label: 'decisionPointCoord',
-        optional: true
+        optional: true,
+        label: 'Revised Point Last Seen'
     },
-    'decisionPointCoord.lat': {
+    'revisedLKP-PLS.lat': {
         type: Number,
         decimal: true,
         label: 'Latitude',
         optional: true
     },
-    'decisionPointCoord.lng': {
+    'revisedLKP-PLS.lng': {
         type: Number,
         decimal: true,
         label: 'Longitude',
         optional: true
     },
+    decisionPointCoord: {
+        type: Object,
+        label: 'Decision Point',
+        optional: true
+    },
+
     destinationCoord: {
         type: Object,
-        label: 'Destination Coordinates',
+        label: 'Intended Destination',
         optional: true
     },
     'destinationCoord.lat': {
@@ -477,7 +481,7 @@ Schemas.coords = new SimpleSchema({
     },
     'findCoord': {
         type: Object,
-        label: 'Find Coordinates',
+        label: 'Find Location',
         optional: true
     },
     'findCoord.lat': {
@@ -492,18 +496,13 @@ Schemas.coords = new SimpleSchema({
         label: 'Longitude',
         optional: true
     },
-    'revisedLKP-PLS': {
-        type: Object,
-        optional: true,
-        label: 'Revised Point Last Seen?'
-    },
-    'revisedLKP-PLS.lat': {
+    'decisionPointCoord.lat': {
         type: Number,
         decimal: true,
         label: 'Latitude',
         optional: true
     },
-    'revisedLKP-PLS.lng': {
+    'decisionPointCoord.lng': {
         type: Number,
         decimal: true,
         label: 'Longitude',
@@ -512,17 +511,23 @@ Schemas.coords = new SimpleSchema({
     intendedRoute: {
         type: String,
         optional: true,
-        //defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665",
-
+        autoform: {
+            omit: true
+        }
     },
     actualRoute: {
         type: String,
         optional: true,
-        //defaultValue: "-150.29296875,27.21555620902969,-41.66015625,50.736455137010665",
-
+        autoform: {
+            omit: true
+        }
     },
 });
 Schemas.incidentOperations = new SimpleSchema({
+    travelDirection: {
+        type: String,
+        optional: true,
+    },
     ipptype: {
         type: String,
         optional: true,
@@ -1318,7 +1323,7 @@ Schemas.agencyProfile = new SimpleSchema({
     },
     'state-region': {
         type: String,
-        label:'State/Region'
+        label: 'State/Region'
 
     },
     measureUnits: {
@@ -1523,9 +1528,6 @@ Schemas.config = new SimpleSchema({
 });
 Config.attachSchema(Schemas.config);
 
-
-
-
 /*
 var bronze = Schemas.incident._firstLevelSchemaKeys.map(function (d) {
     return {
@@ -1617,3 +1619,4 @@ allValues2 = _.object(_.map(allValues, function(x) {
 }));*/
 //console.log(allValues2)
 //timeLog
+

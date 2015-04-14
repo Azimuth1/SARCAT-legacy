@@ -147,7 +147,7 @@ setMap = function (context, bounds, agencyMapComplete) {
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.ik7djhcc/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-igb471ik/{z}/{x}/{y}.png')
     };
-    layers.Streets.addTo(map);
+    layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
     map.on('moveend', function () {
@@ -206,7 +206,7 @@ newProjectSetMap = function (context, bounds, points) {
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.ik7djhcc/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-igb471ik/{z}/{x}/{y}.png')
     };
-    layers.Streets.addTo(map);
+    layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
     var myIcon = L.divIcon({
@@ -261,7 +261,7 @@ formSetMap = function (context) {
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.ik7djhcc/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-igb471ik/{z}/{x}/{y}.png')
     };
-    layers.Streets.addTo(map);
+    layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
     map.on('moveend', function () {
