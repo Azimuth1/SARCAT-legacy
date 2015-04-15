@@ -5,9 +5,15 @@ Template.admin.created = function () {
     Session.set('userView', 'admin');
     //config = Session.get('config');
     mapDrawn = false;
+
+
 };
 
 Template.admin.rendered = function () {
+
+    Session.set('logo', 'uploads/logo/' + Config.findOne().agencyLogo)
+
+
     this.data.users.forEach(function (d) {
         var role = d.roles[0];
         var id = d._id;
@@ -16,12 +22,15 @@ Template.admin.rendered = function () {
     });
 };
 Template.admin.helpers({
+
     UploadImgFormData: function () {
         return {
             type: 'logo'
         };
     },
-
+    geolocatingShow: function () {
+        return Session.get('geolocate') ? '' : 'hide';
+    },
     agencyCoordinates: function () {
         return agencyCoordinates;
     },
@@ -56,7 +65,7 @@ Template.admin.helpers({
             });
         return !users.length;
     },
-    uploadLogo: function (a,b) {
+    uploadLogo: function (a, b) {
         //console.log(a,b,this)
         return {
             finished: function (index, fileInfo, context) {
@@ -71,7 +80,6 @@ Template.admin.helpers({
 });
 
 Template.admin.events({
-
 
     'click .removeUser': function (event, template) {
 
@@ -143,3 +151,4 @@ AutoForm.hooks({
         }
     }
 });
+

@@ -1297,24 +1297,28 @@ Schemas.agencyProfile = new SimpleSchema({
         type: String,
         label: 'Agency/Organization',
     },
-    phoneNum: {
-        type: String,
-        label: 'Phone Number',
-        min: 10
-
-    },
-    country: {
+    Address: {
         type: String,
 
     },
     'state-region': {
         type: String,
-        label: 'State/Region'
+        label: 'State/Province'
+
+    },
+    country: {
+        type: String,
+         label: 'Country/Region'
+
+    },
+    phoneNum: {
+        type: String,
+        label: 'Phone Number',
 
     },
     measureUnits: {
         type: String,
-        label: 'Unit of Measurement',
+        label: 'Preferred Unit of Measurement',
         defaultValue: 'US',
         autoform: {
             firstOption: function () {

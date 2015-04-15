@@ -128,10 +128,12 @@ setMap = function (context, bounds, agencyMapComplete) {
                 outsideMapBoundsMsg: "You seem located outside the boundaries of the map" 
             },
             onLocationError: function (err) {
-                alert(err.message)
+                alert(err.message);
+                Session.set('geolocate',false);
             },
-            onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
+            onLocationOutsideMapBounds: function (context) {
                 alert(context.options.strings.outsideMapBoundsMsg);
+                Session.set('geolocate',false);
             },
             locateOptions: {
                 maxZoom: 13,
@@ -139,7 +141,12 @@ setMap = function (context, bounds, agencyMapComplete) {
         })
         .addTo(map);
     if (!agencyMapComplete) {
+        Session.set('geolocate',true);
         lc.start();
+        setTimeout(function(){
+            lc.stop();
+            Session.set('geolocate',false);
+        },8000);
     }
     map.scrollWheelZoom.disable();
     var layers = {
@@ -154,6 +161,7 @@ setMap = function (context, bounds, agencyMapComplete) {
         
 
     map.on('moveend', function () {
+        Session.set('geolocate',false);
         var bounds = map.getBounds()
             .toBBoxString();
         $('[name="agencyProfile.bounds"]')
