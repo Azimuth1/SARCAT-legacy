@@ -3,7 +3,7 @@ var mapDrawn;
 var config;
 Template.admin.created = function () {
     Session.set('userView', 'admin');
-    config = Session.get('config');
+    //config = Session.get('config');
     mapDrawn = false;
 };
 
@@ -16,8 +16,10 @@ Template.admin.rendered = function () {
     });
 };
 Template.admin.helpers({
-    UploadImgFormData: function(){
-        return {type:'logo'};
+    UploadImgFormData: function () {
+        return {
+            type: 'logo'
+        };
     },
 
     agencyCoordinates: function () {
@@ -54,9 +56,23 @@ Template.admin.helpers({
             });
         return !users.length;
     },
+    uploadLogo: function (a,b) {
+        //console.log(a,b,this)
+        return {
+            finished: function (index, fileInfo, context) {
+                Meteor.call('updateConfig', {
+                    agencyLogo: fileInfo.name
+                }, function (err) {
+                    console.log(err);
+                });
+            }
+        };
+    },
 });
 
 Template.admin.events({
+
+
     'click .removeUser': function (event, template) {
 
         if (Meteor.userId() === this._id) {
@@ -127,4 +143,3 @@ AutoForm.hooks({
         }
     }
 });
-

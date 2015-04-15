@@ -32,8 +32,8 @@
                     <div class="panel-body afBody">
                         {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save" validation='keyup'}}
                         <div class="form-group">
-                            <label class="control-label">Upload Organization Logo</label>
-                            {{> upload_bootstrap formData=UploadImgFormData}}
+                            <label class="control-label">Upload Organization Logo (jpg/png)</label>
+                            {{> upload_bootstrap formData=UploadImgFormData callbacks=uploadLogo}}
                         </div>
                     </div>
                 </div>

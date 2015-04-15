@@ -158,9 +158,25 @@ Meteor.methods({
     getFilesInPublicFolder: function (id) {
 
         var fs = Npm.require('fs');
+        var dir = '../web.browser/app/uploads/records/' + id;
+        //var stats = fs.lstatSync(dir);
+        if (!fs.existsSync(dir)) {
+            return [];
+        }
         var files = fs.readdirSync('../web.browser/app/uploads/records/' + id);
         return files;
+    },
+    getEcoRegion: function (coord) {
+        coord = [coord.lng, coord.lat];
+        var result = pip(coord);
+        if (!result.length) {
+            return;
+        }
+        return result[0].properties;//.DOM_DESC;
+        //DIV_NUM+'-'+d.properties.DIV_DESC
     }
+
+
 });
 Records.allow({
     remove: function () {
@@ -193,4 +209,3 @@ Meteor.users.allow({
         }
     }
 });
-

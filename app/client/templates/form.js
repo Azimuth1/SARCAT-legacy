@@ -18,6 +18,15 @@ Template.form.onCreated(function () {
         Session.set('fileUploads', d)
     });
 
+    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision)
+        Meteor.call('getEcoRegion', record.coords.ippCoordinates, function (err, d) {
+            if (err) {
+                return;
+            }
+            $('[name="incident.ecoregiondomain"]').val(d.DOM_DESC).trigger('change');
+            $('[name="incident.ecoregionDivision"]').val(d.DIV_NUM + '-' + d.DIV_DESC).trigger('change');
+        });
+
 });
 Template.form.onRendered(function () {
 
@@ -132,6 +141,10 @@ Template.form.helpers({
         var record = this.record;
         return record.coords && record.coords.decisionPointCoord;
     },
+    hasRevisedPLS: function () {
+        var record = this.record;
+        return record.coords && record.coords['revisedLKP_PLS'];
+    },
     autoSaveMode: function () {
         return true;
     },
@@ -171,11 +184,20 @@ Template.form.helpers({
     subjects: function () {
         return this.data.record.subjects.subject;
     },
+    test: function () {
+        return this.record.coords;
+    },
     coordKeys: function () {
-        var coords = ["ippCoordinates", "decisionPointCoord", "destinationCoord", "findCoord", "revisedLKP-PLS"];
+        var coords = ["ippCoordinates", "decisionPointCoord", "destinationCoord", "findCoord", "revisedLKP_PLS"];
+        //var activeCoords = Object.keys(this.record.coords);
+        //coords = _.intersection(coords, activeCoords)
         return coords.map(function (d) {
-            return 'coords.' + d;
-        });
+            return 'coords.' + d
+
+        }); //.join(',');
+    },
+    hideCoord: function (d) {
+        return this.record.coords[d] ? '' : 'hide';
     },
     getSubjectsArray: function () {
 
@@ -416,10 +438,11 @@ Template.form.events({
         var item = _.findWhere(coords, {
             val: pointType
         });
+
         if (!item) {
             return;
         };
-        console.log(item)
+
         if (!active) {
             map.add(item);
         } else {
@@ -455,4 +478,3 @@ AutoForm.hooks({
         }
     }
 });
-

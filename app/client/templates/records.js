@@ -36,17 +36,32 @@ Template.records.onRendered(function () {
                     sort: {
                         created: -1
                     },
-                    limit: 2
                 })
-                .fetch()
-                .pop();
-            var placeholder1 = lastRecord ? lastRecord.recordInfo.incidentnum : '';
-            $('[name="recordInfo.incidentnum"]')
-                .attr('placeholder', placeholder1);
+                .fetch();
+            lastRecord.shift();
+            console.log(lastRecord);
 
-            var placeholder2 = lastRecord ? lastRecord.recordInfo.missionnum : '';
-            $('[name="recordInfo.missionnum"]')
-                .attr('placeholder', placeholder2);
+            if (lastRecord.length) {
+                var lastIncidentnum = _.find(lastRecord, function (d) {
+                    return d.recordInfo.incidentnum;
+                }).recordInfo.incidentnum;
+                var lastMissionnum = _.find(lastRecord, function (d) {
+                    return d.recordInfo.missionnum;
+                }).recordInfo.missionnum;
+
+                $('[name="recordInfo.incidentnum"]')
+                    .attr('placeholder', 'Last Assigned Incident #: ' + lastIncidentnum);
+
+                $('[name="recordInfo.missionnum"]')
+                    .attr('placeholder', 'Last Assigned Mission #: ' + lastMissionnum);
+
+            } else {
+                $('[name="recordInfo.incidentnum"]')
+                    .attr('value', Records.defaultNum()).trigger('change');
+
+                $('[name="recordInfo.missionnum"]')
+                    .attr('value', Records.defaultNum()).trigger('change');
+            }
 
             mapDrawn.reset();
         });
@@ -229,4 +244,3 @@ Template.records.events({
 
     }
 });
-

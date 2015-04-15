@@ -73,11 +73,12 @@
                             <!--<th class='afTable'></th>-->
                             <th data-field="state" data-checkbox="true"></th>
                             <th data-field="incidentnum" data-sortable="true" class='afTable'>Incident #</th>
+                            <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
                             <th data-field="name" data-sortable="true" class='afTable'>Record</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Created</th>
                             <th data-field="status" data-sortable="true" class='afTable'>Status</th>
                             <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
-                            <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
+                            
                             <th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>
                             <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
                         </tr>
@@ -93,12 +94,13 @@
                         <tr class="openRecord" id="{{this._id}}">
                         <td></td>
                             <td>{{recordInfo.incidentnum}}</td>
+                            <td> {{recordInfo.missionnum}} </td>
                             <td>{{recordInfo.name}}</td>
                             <td> {{created}} </td>
                             <td> {{recordInfo.status}} </td>
                             <td> {{recordInfo.incidenttype}} </td>
-                            <td> {{recordInfo.missionnum}} </td>
-                            <td> {{leadagency}} </td>
+                            
+                            <td> {{recordInfo.leadagency}} </td>
                             <td> {{admin.user}} </td>
                         </tr>
                         {{/each}}
