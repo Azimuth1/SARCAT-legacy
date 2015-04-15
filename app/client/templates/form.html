@@ -41,44 +41,46 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row text-center">
-                                <div class="btn-group btn-group-sm text-uppercase flex-container mapBtns mapPoints" data-toggle="buttons">
-                                    <div class="btn btn-primary flex-item pad0x" data="_ippCoordinates" disabled=true>
+                                <div class="btn-group text-uppercase flex-container mapBtns mapPoints" data-toggle="buttons">
+                                    <div class="btn btn-primary flex-item" data="_ippCoordinates" disabled=true>
                                         Incident Location / IPP
                                         <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
                                                 </span>
                                     </div>
-                                    <a class="btn btn-default flex-item pad0x" data="revisedLKP-PLS">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Revised Point Last Seen?
+                                    
+                                    <a class="btn btn-default flex-item" data="revisedLKP_PLS">
+                                        <input type="checkbox" autocomplete="off"> &nbsp; Subject Sighting
                                         <span class="fa-stack _pull-right">
                                           <i class="fa fa-male fa-2x fa-fw text-danger"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default flex-item pad0x" data="destinationCoord">
+                                    
+                                    <a class="btn btn-default flex-item" data="destinationCoord">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
                                         <span class="fa-stack _pull-right">
                                           <i class="fa fa-bullseye fa-2x fa-fw text-default"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default flex-item pad0x" data="findCoord">
+                                    <a class="btn btn-default flex-item" data="findCoord">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Find Location
                                         <span class="fa-stack _pull-right">
                                           <i class="fa fa-male fa-2x fa-fw text-success"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default flex-item pad0x" data="decisionPointCoord">
+                                    <a class="btn btn-default flex-item" data="decisionPointCoord">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
                                         <span class="fa-stack _pull-right">
                                           <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default flex-item pad0x" data="intendedRoute">
+                                    <a class="btn btn-default flex-item" data="intendedRoute">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
                                         <span class="fa-stack pull-right">
                                           <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
                                         </span>
                                     </a>
-                                    <a class="btn btn-default flex-item pad0x" data="actualRoute">
+                                    <a class="btn btn-default flex-item" data="actualRoute">
                                         <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
                                         <span class="fa-stack pull-right">
                                           <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
@@ -95,53 +97,74 @@
                             {{> quickForm collection='Records' doc=record id='_formIdMap' class="recordForm4 hideSubmit" type=formType autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
 
                             -->
+
                             {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
-                                {{#each coordKeys}}
-                                    {{> afQuickField name=this }}
-                                {{/each}}
+                              
+                              
+                                <div class="{{hideCoord 'ippCoordinates'}}">
+                                    {{> afQuickField name='coords.ippCoordinates' }}
+                                </div>
+                                 <div class="{{hideCoord 'decisionPointCoord'}}">
+                                    {{> afQuickField name='coords.decisionPointCoord' }}
+                                </div>
+
+                                <div class="{{hideCoord 'destinationCoord'}}">
+                                    {{> afQuickField name='coords.destinationCoord' }}
+                                </div>
+
+                                <div class="{{hideCoord 'findCoord'}}">
+                                    {{> afQuickField name='coords.findCoord' }}
+                               </div>
+
+                                 <div class="{{hideCoord 'revisedLKP_PLS'}}">
+                                    {{> afQuickField name='coords.revisedLKP_PLS' }}
+                                </div>
+
+                                    
+                                    
+
+                           
+
+
                             {{/autoForm}}
+
+
+
+
+
                             {{#autoForm collection='Records' doc=record id='formIdMap1' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
-                                <div class="travelDir text-center col-md-3" style="width:25%">
-                                    {{> afQuickField class="hideLabel hide" name="incidentOperations.initialDirectionofTravel"}}
-                                    <i class="fa fa-5x fa-arrow-circle-o-up travelDirection"></i> </div>
-                                {{> afQuickField name="incidentOperations.DOTHowdetermined" }} {{> afQuickField name="incidentOperations.ippclassification" }} {{> afQuickField name="incidentOperations.ipptype" }} {{> afQuickField name="incidentOperations.typeofDecisionPoint" }} {{> afQuickField name="incidentOperations.decisionPointFactor" }}
+                              
+
+
+                               
+
+                                {{> afQuickField name="incidentOperations.DOTHowdetermined" options="allowed"}} 
+                                {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}} 
+                                {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} 
+                                 
+
+
+                                {{#if hasDecisionPoint}}
+
+                                {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}}
+
+
+                                {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
+                                {{/if}}
+
+
                             {{/autoForm}}
-                            <!--
 
-                            <div class="row">
-                                {{#autoForm collection='Records' doc=current id='formId3334' class="mar1yt form-inline hideSubmit" type=formType autosave=true fields="incidentOperations" }}
-                                    <div class="travelDir text-center col-md-3" style="width:25%">
-                                        {{> afQuickField class="hideLabel hide" name="incidentOperations.initialDirectionofTravel"}}
-                                        <i class="fa fa-5x fa-arrow-circle-o-up travelDirection"></i> </div>
-                                    <div class="col-md-9" style="width:75%">
-                                        
-
-
-                                        {{> afQuickField label-class="mar1yb" name="incidentOperations.DOTHowdetermined" options="allowed"}} 
-
-                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.ippclassification" options="allowed"}} 
-
-                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.ipptype" options="allowed"}}
-                                        
-
-                                        {{#if hasDecisionPoint}} 
-
-
-                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.typeofDecisionPoint" options="allowed"}} 
-
-
-                                        {{> afQuickField label-class="mar1yb pad1x" name="incidentOperations.decisionPointFactor" options="allowed"}} 
-
-                                        {{/if}}
-                                    </div>
-                                {{/autoForm}}
-                            </div>
--->
                         </div>
                     </div>
                 </div>
             </div>
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
+            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} 
+
+
+
+
+            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
             
 
 

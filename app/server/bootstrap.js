@@ -4,6 +4,8 @@
 
 Meteor.startup(function () {
 
+
+    
     //console.log(__meteor_bootstrap__.serverDir);return
 
     //data = Assets.getBinary('uploads/main_logo');
@@ -17,7 +19,7 @@ Meteor.startup(function () {
                 return '/records/' + formData._id;
             }
             if (formData.type === 'logo') {
-                fileInfo.name = 'main_logo'
+                //fileInfo.name = 'main_logo'
                 return '/logo';
             }
 
@@ -45,4 +47,3 @@ Meteor.startup(function () {
     }
 
 });
-

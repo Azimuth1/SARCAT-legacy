@@ -163,19 +163,6 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Incident #',
-        /*autoform: {
-            placeholder:lastIncidentNum()
-        }*/
-        /*autoValue: function () {
-            if (this.isInsert) {
-                var value = this.value;
-                if (value) {
-                    return value;
-                } else {
-                    return Records.defaultNum('incidentnum');
-                }
-            }
-        }*/
     },
     missionnum: {
         type: String,
@@ -186,7 +173,6 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         optional: true,
         label: 'Agency Having Jurisdiction',
-        max: 200
     },
 
     incidenttype: {
@@ -310,7 +296,7 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Temperate', 'Dry', 'Polar', 'Tropical', 'Water'],
+        allowedValues: ["POLAR DOMAIN", "HUMID TEMPERATE DOMAIN", "DRY DOMAIN", "HUMID TROPICAL DOMAIN"],
         label: 'Ecoregion Domain',
     },
     ecoregionDivision: {
@@ -321,7 +307,7 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'M110 Icecap Regime Mountains', '120 Tundra Division', 'M120 Tundra Regime Mountains', '130 Subarctic Division', 'M130 Subarctic Regime Mountains', '210 Warm Continental Division', 'M210 Warm Continental Regime Mountains', '220 Hot Continental Division', 'M220 Hot Continental Regime Mountains', '230 Subtropical Division', 'M230 Subtropical Regime Mountains', '240 Marine Division', 'M240 Marine Regime Mountains', '250 Prairie Division', 'M250 Prairie Regime Mountains', '260 Mediterranean Division', 'M260 Mediterranean Regime Mountains', '310 Tropical/Subtropical Steppe Division', 'M310 Tropical/Subtropical Steppe Regime Mountains', '320 Tropical/Subtropical Dessert Division', 'M320 Tropical/Subtropical Regime Mountains', '330 Temperate Steppe Division'],
+        allowedValues: ["110-ICECAP DIVISION", "120-TUNDRA DIVISION", "130-SUBARCTIC DIVISION", "210-WARM CONTINENTAL DIVISION", "220-HOT CONTINENTAL DIVISION", "230-SUBTROPICAL DIVISION", "240-MARINE DIVISION", "250-PRAIRIE DIVISION", "260-MEDITERRANEAN DIVISION", "310-TROPICAL/SUBTROPICAL STEPPE DIVISION", "320-TROPICAL/SUBTROPICAL DESERT DIVISION", "330-TEMPERATE STEPPE DIVISION", "340-TEMPERATE DESERT DIVISION", "410-SAVANNA DIVISION", "420-RAINFOREST DIVISION", "M110-ICECAP REGIME MOUNTAINS", "M120-TUNDRA REGIME MOUNTAINS", "M130-SUBARCTIC REGIME MOUNTAINS", "M210-WARM CONTINENTAL REGIME MOUNTAINS", "M220-HOT CONTINENTAL REGIME MOUNTAINS", "M230-SUBTROPICAL REGIME MOUNTAINS", "M240-MARINE REGIME MOUNTAINS", "M250-PRAIRIE REGIME MOUNTAINS", "M260-MEDITERRANEAN REGIME MOUNTAINS", "M310-TROPICAL/SUBTROPICAL STEPPE REGIME MOUNTAINS", "M320-TROPICAL/SUBTROPICAL DESERT REGIME MOUNTAINS", "M330-TEMPERATE STEPPE REGIME MOUNTAINS", "M340-TEMPERATE DESERT REGIME MOUNTAINS", "M410-SAVANNA REGIME DIVISION", "M420-RAINFOREST REGIME MOUNTAINS"],
         label: 'Ecoregion Division',
     },
     populationDensity: {
@@ -439,18 +425,18 @@ Schemas.coords = new SimpleSchema({
         decimal: true,
         optional: true
     },
-    'revisedLKP-PLS': {
+    'revisedLKP_PLS': {
         type: Object,
         optional: true,
         label: 'Revised Point Last Seen'
     },
-    'revisedLKP-PLS.lat': {
+    'revisedLKP_PLS.lat': {
         type: Number,
         decimal: true,
         label: 'Latitude',
         optional: true
     },
-    'revisedLKP-PLS.lng': {
+    'revisedLKP_PLS.lng': {
         type: Number,
         decimal: true,
         label: 'Longitude',
@@ -1515,6 +1501,10 @@ Schemas.config = new SimpleSchema({
     agencyMapComplete: {
         type: Boolean,
         defaultValue: false
+    },
+    agencyLogo: {
+        type: String,
+        defaultValue: 'default_logo.png'
     },
     agencyProfile: {
         type: Schemas.agencyProfile,

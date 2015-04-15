@@ -2,25 +2,30 @@ var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
+var config;
+/*
+geojson.features=[geojson.features[99]]
+console.log(pip([132.0927,44.8397],geojson));
+
+
+var gjLayer = L.geoJson(geojson);
+results = leafletPip.pointInLayer([132.0927,44.8397], gjLayer);
+console.log(results)
+*/
+
+
 
 Template.appBody.onCreated(function () {
-
-    HTTP.get('/uploads/logo/main_logo', null, function (error, result) {
-        if (!error) {
-            result = '/uploads/logo/main_logo';
-            Session.set('logo', '/uploads/logo/main_logo');
-        } else {
-            Session.set('logo', '/uploads/logo/default_logo')
-
-        };
-    });
 
 });
 Template.appBody.onRendered(function () {});
 
 Template.appBody.helpers({
     logo: function (view) {
-        return Session.get('logo');
+        var config = Config.findOne();
+        if (config) {
+            return 'uploads/logo/' + config.agencyLogo;
+        } 
 
     },
     isUserView: function (view) {
@@ -101,4 +106,3 @@ Template.appBody.events({
     },
 
 });
-

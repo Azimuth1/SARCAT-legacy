@@ -44,8 +44,8 @@ getCoords = function (record) {
         "text": "Intended Destination",
         icon: 'fa-bullseye text-default'
     }, {
-        "val": "revisedLKP-PLS",
-        "name": "coords.revisedLKP-PLS",
+        "val": "revisedLKP_PLS",
+        "name": "coords.revisedLKP_PLS",
         "text": "Revised IPP",
         icon: 'fa-male 4x text-danger'
     }, {
@@ -150,6 +150,9 @@ setMap = function (context, bounds, agencyMapComplete) {
     layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
+
+        
+
     map.on('moveend', function () {
         var bounds = map.getBounds()
             .toBBoxString();

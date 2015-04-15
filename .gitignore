@@ -6,4 +6,4 @@ node_modules
 
 
 main_logo
-/uploads/records
+/uploads/records/**
