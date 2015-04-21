@@ -7,7 +7,9 @@
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div id='recordMap' style="width:100%;height:400px"></div>
-                    {{#if newRecord}} {{> quickForm collection="Records" doc=newRecord class="hide" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}} {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo"}} {{> afQuickField name='recordInfo'}} {{/autoForm}} {{/if}}
+                    {{#if newRecord}} {{> quickForm collection="Records" doc=newRecord class="hide" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}}
+                        {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo" }} {{> afQuickField name='recordInfo'}} {{/autoForm}}
+                    {{/if}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn _btn-default js-deleteRecord" data-dismiss="modal">Close</button>
@@ -50,22 +52,22 @@
                     <p class="small"><em>*Click column header to sort</em></p>
                 </div>
                 {{#if createNewBtn}}
-                <div id="toolbar" class="btn-group">
-                    <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
-                        <i class="glyphicon glyphicon-plus"></i> New Record
-                    </button>
-                    {{#if isAdmin}}
-                    <button type="button" class="btn btn-default">
-                        <i class="glyphicon glyphicon-save-file"></i>
-                    </button>
-                    <button type="button" class="btn btn-default">
-                        <i class="glyphicon glyphicon-cloud-upload"></i>
-                    </button>
-                    <button type="button" class="btn btn-default deleteRecord">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </button>
-                    {{/if}}
-                </div>
+                    <div id="toolbar" class="btn-group">
+                        <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
+                            <i class="glyphicon glyphicon-plus"></i> New Record
+                        </button>
+                        {{#if isAdmin}}
+                            <button type="button" class="btn btn-default">
+                                <i class="glyphicon glyphicon-save-file"></i>
+                            </button>
+                            <button type="button" class="btn btn-default">
+                                <i class="glyphicon glyphicon-cloud-upload"></i>
+                            </button>
+                            <button type="button" class="btn btn-default deleteRecord">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        {{/if}}
+                    </div>
                 {{/if}}
                 <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
@@ -74,36 +76,33 @@
                             <th data-field="state" data-checkbox="true"></th>
                             <th data-field="incidentnum" data-sortable="true" class='afTable'>Incident #</th>
                             <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
-                            <th data-field="name" data-sortable="true" class='afTable'>Record</th>
-                            <th data-field="date" data-sortable="true" class='afTable'>Created</th>
-                            <th data-field="status" data-sortable="true" class='afTable'>Status</th>
+                            <th data-field="name" data-sortable="true" class='afTable'>Record Name</th>
                             <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
-                            
                             <th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>
                             <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
+                            <th data-field="date" data-sortable="true" class='afTable'>Created</th>
+                            <th data-field="status" data-sortable="true" class='afTable'>Status</th>
                         </tr>
                     </thead>
                     <tbody class='white-bg'>
                         {{#if noRecords}}
-                        <tr>
-                            <td colspan="9" class="text-center text-default">Create a new Record to Begin!</td>
-                        </tr>
-                         {{else}}
-
-                         {{#each records}}
-                        <tr class="openRecord" id="{{this._id}}">
-                        <td></td>
-                            <td>{{recordInfo.incidentnum}}</td>
-                            <td> {{recordInfo.missionnum}} </td>
-                            <td>{{recordInfo.name}}</td>
-                            <td> {{created}} </td>
-                            <td> {{recordInfo.status}} </td>
-                            <td> {{recordInfo.incidenttype}} </td>
-                            
-                            <td> {{recordInfo.leadagency}} </td>
-                            <td> {{admin.user}} </td>
-                        </tr>
-                        {{/each}}
+                            <tr>
+                                <td colspan="9" class="text-center text-default">Create a new Record to Begin!</td>
+                            </tr>
+                        {{else}}
+                            {{#each records}}
+                                <tr class="openRecord text-center" id="{{this._id}}">
+                                    <td></td>
+                                    <td>{{recordInfo.incidentnum}}</td>
+                                    <td>{{recordInfo.missionnum}}</td>
+                                    <td>{{recordInfo.name}}</td>
+                                    <td>{{recordInfo.incidenttype}}</td>
+                                    <td>{{recordInfo.leadagency}}</td>
+                                    <td>{{admin.user}}</td>
+                                    <td>{{created}}</td>
+                                    <td>{{recordInfo.status}}</td>
+                                </tr>
+                            {{/each}}
                         {{/if}}
                     </tbody>
                 </table>

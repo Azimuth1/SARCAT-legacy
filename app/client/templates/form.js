@@ -23,8 +23,12 @@ Template.form.onCreated(function () {
             if (err) {
                 return;
             }
-            $('[name="incident.ecoregiondomain"]').val(d.DOM_DESC).trigger('change');
-            $('[name="incident.ecoregionDivision"]').val(d.DIV_NUM + '-' + d.DIV_DESC).trigger('change');
+            $('[name="incident.ecoregiondomain"]')
+                .val(d.DOM_DESC)
+                .trigger('change');
+            $('[name="incident.ecoregionDivision"]')
+                .val(d.DIV_NUM + '-' + d.DIV_DESC)
+                .trigger('change');
         });
 
 });
@@ -330,7 +334,7 @@ Template.form.events({
             .trigger("change");
     },
     'mouseup .travelDirection': function (event, template) {
-
+        console.log(travelDirectionDegree)
         clicking = false;
         $('[name="incidentOperations.initialDirectionofTravel"]')
             .val(travelDirectionDegree)
@@ -338,7 +342,7 @@ Template.form.events({
 
     },
     'mousemove .travelDirection': function (evt, template) {
-
+        // console.log(mouse_x, mouse_y);
         var travelBearing = $(evt.target);
         if (clicking == false) return;
         var offset = travelBearing.offset();
@@ -446,7 +450,11 @@ Template.form.events({
         if (!active) {
             map.add(item);
         } else {
-            map.remove(item);
+            if (confirm('Are you sure you want to remove ' + item.text + ' from the map?')) {
+                map.remove(item);
+            } else {
+                event.stopPropagation();
+            }
         }
     },
     'click .fileUpload': function (event, template) {
@@ -463,6 +471,9 @@ Template.form.events({
 });
 
 AutoForm.hooks({
+
+
+
     updateSubjectForm: {
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
             $('#updateSubjectForm')
@@ -478,3 +489,4 @@ AutoForm.hooks({
         }
     }
 });
+
