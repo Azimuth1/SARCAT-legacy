@@ -73,10 +73,10 @@ Template.records.onRendered(function () {
                 lastleadagency = (lastleadagency) ? lastleadagency.recordInfo.leadagency : null;
 
                 $('[name="recordInfo.incidentnum"]')
-                    .attr('placeholder', 'Last Assigned Incident #: ' + lastIncidentnum);
+                    .attr('placeholder', 'Last Assigned Incident: ' + lastIncidentnum);
 
                 $('[name="recordInfo.missionnum"]')
-                    .attr('placeholder', 'Last Assigned Mission #: ' + lastMissionnum);
+                    .attr('placeholder', 'Last Assigned Mission: ' + lastMissionnum);
 
                 $('[name="recordInfo.leadagency"]')
                     .attr('value', lastleadagency)
