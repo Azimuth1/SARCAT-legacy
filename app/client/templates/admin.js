@@ -6,14 +6,12 @@ Template.admin.created = function () {
     //config = Session.get('config');
     mapDrawn = false;
 
-
 };
 
 Template.admin.rendered = function () {
 
-    Session.set('logo', 'uploads/logo/' + Config.findOne().agencyLogo)
-
-
+    //Session.set('logo', 'uploads/logo/' + Config.findOne().agencyLogo)
+  
     this.data.users.forEach(function (d) {
         var role = d.roles[0];
         var id = d._id;
@@ -28,9 +26,7 @@ Template.admin.helpers({
             type: 'logo'
         };
     },
-    geolocatingShow: function () {
-        return Session.get('geolocate') ? '' : 'hide';
-    },
+
     agencyCoordinates: function () {
         return agencyCoordinates;
     },

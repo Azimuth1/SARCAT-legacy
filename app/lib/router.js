@@ -4,6 +4,8 @@ Handlebars.registerHelper('json', function (context) {
 Handlebars.registerHelper('isEqual', function (a, b) {
     return a === b;
 });
+
+
 Router.configure({
     layoutTemplate: 'appBody',
     notFoundTemplate: 'appNotFound',
@@ -55,8 +57,7 @@ Tracker.autorun(function () {
 Router.route('home', {
     path: '/',
     action: function () {
-        //console.log('!')
-        console.log(Meteor.user())
+
         if (Meteor.user()) {
             
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
@@ -162,12 +163,10 @@ Router.route('form', {
     data: function () {
         var obj = {};
         obj.record = Records.findOne(this.params._id);
-        //console.log(obj.record);
         return obj;
     },
     action: function () {
         if (this.ready()) {
-            console.log('ready')
             this.render();
         }
     }

@@ -33,9 +33,218 @@
     </nav>
     <div id="formPage">
         <div class="pad2">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab">
+                        <h3 class="panel-title">Incident Map</h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row text-center">
+                                    <div class="btn-group text-uppercase flex-container mapBtns mapPoints" data-toggle="buttons">
+                                        <div class="btn btn-primary flex-item" data="_ippCoordinates" disabled=true>
+                                            Incident Location / IPP
+                                            <span class="fa-stack _pull-right">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
+                                                </span>
+                                        </div>
+                                        <a class="btn btn-default flex-item" data="revisedLKP_PLS">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Last Known Subject Sighting
+                                            <span class="fa-stack _pull-right">
+                                          <i class="fa fa-male fa-2x fa-fw text-danger"></i>
+                                        </span>
+                                        </a>
+                                        <a class="btn btn-default flex-item" data="destinationCoord">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
+                                            <span class="fa-stack _pull-right">
+                                          <i class="fa fa-bullseye fa-2x fa-fw text-default"></i>
+                                        </span>
+                                        </a>
+                                        <a class="btn btn-default flex-item" data="findCoord">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Find Location
+                                            <span class="fa-stack _pull-right">
+                                          <i class="fa fa-male fa-2x fa-fw text-success"></i>
+                                        </span>
+                                        </a>
+                                        <a class="btn btn-default flex-item" data="decisionPointCoord">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
+                                            <span class="fa-stack _pull-right">
+                                          <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
+                                        </span>
+                                        </a>
+                                        <a class="btn btn-default flex-item" data="intendedRoute">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
+                                            <span class="fa-stack pull-right">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
+                                        </span>
+                                        </a>
+                                        <a class="btn btn-default flex-item" data="actualRoute">
+                                            <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
+                                            <span class="fa-stack pull-right">
+                                          <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
+                                        </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id='formMap' style="width:100%; height:400px"></div>
+                                </div>
+                                <div class="row">
+                                    {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
+                                        <div class="panel panel-default text-center" style="max-width:170px;">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Incident Location/IPP</h3>
+                                            </div>
+                                            {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
+                                        </div>
+                                        <div class="panel panel-default text-center" style="max-width:170px;">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Initial Direction of Travel</h3>
+                                            </div>
+                                            <div class="panel-body pad00">
+                                                <p class="small"><em>*Drag arrow towards direction of travel</em></p>
+                                                {{> afQuickField class="hide" name="incidentOperations.initialDirectionofTravel"}}
+                                                <div class="col-md-6 col-md-offset-3"><i class="fa fa-5x fa-arrow-circle-o-up travelDirection" style="width:58px;height:58px"></i></div>
+                                            </div>
+                                            {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
+                                        </div>
+                                        <div class="{{hideCoord 'decisionPointCoord'}} panel panel-default text-center" style="max-width:170px;">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Decision Point</h3>
+                                            </div>
+                                            {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.decisionPointCoord.lat,coords.decisionPointCoord.lng"}} {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
+                                        </div>
+                                        <div class="{{hideCoord 'revisedLKP_PLS'}} panel panel-default text-center" style="max-width:170px;">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Last Known Point/Point Last Seen</h3>
+                                            </div>
+                                            {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.revisedLKP_PLS.lat,coords.revisedLKP_PLS.lng"}} {{> afQuickField name="incidentOperations.PLS_HowDetermined" options="allowed"}}
+                                        </div>
+                                        <div class="{{hideCoord 'destinationCoord'}}">
+                                            {{> afQuickField name='coords.destinationCoord' }}
+                                        </div>
+                                        <div class="{{hideCoord 'findCoord'}}">
+                                            {{> afQuickField name='coords.findCoord' }}
+                                        </div>
+                                        <!-- <div class="{{hideCoord 'revisedLKP_PLS'}}">
+                                        {{> afQuickField name='coords.revisedLKP_PLS' }}
+                                    </div>-->
+                                        <div class="hide">
+                                            {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
+                                        </div>
+                                    {{/autoForm}}
+                                </div>
+                                <div class="row">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
+                <!--Subject Info-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Subject Info
+
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">Description</button>
+    <button type="button" class="btn btn-default">Rescue</button>
+    <button type="button" class="btn btn-default">Personal</button>
+</div>
 
 
+                    </h3>
+                    </div>
+                    <div class="panel-body afBody pad00" style="overflow-x: scroll;">
+                        <!--                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
+                        <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
+                            <thead class='default-bg'>
+                                <tr>
+                                    {{#each subjectKeys}}
+                                        <th data-subjectTable= {{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                                    {{/each}}
+                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class='white-bg'>
+                                {{#each getSubjectsArray}}
+                                    <tr class="noBorder">
+                                        <td class="pad00 noBorder" colspan="15">
+                                            {{> afQuickField name=this.name}}
+                                        </td>
+                                        <td class="padsm">
+                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    {{/autoForm}}
+-->
+                        {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader w2x" }}
+                            <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
+                                <thead class='default-bg'>
+                                    <tr>
+                                        {{#each subjectKeys}}
+                                            <th data-subjectTable= {{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                                        {{/each}}
+                                        <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class='white-bg'>
+                                    {{#each getSubjectsArray}}
+                                        <tr class="noBorder">
+                                            <td class="pad00 noBorder" colspan="15">
+                                                {{> afQuickField name=this.name}}
+                                            </td>
+                                            <td class="padsm">
+                                                <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        {{/autoForm}}
+                        {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
+                    </div>
+                </div>
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm4 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="timeLog" buttonContent= "Save"}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Additional Resources Used</h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        {{#autoForm id="editResourceForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
+                            <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
+                                <thead class='default-bg'>
+                                    <tr>
+                                        {{#each resourceKeys}}
+                                            <th data-subjectTable= {{this}} class='text-center afTable text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                                        {{/each}}
+                                        <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class='white-bg'>
+                                    {{#each getResourceArray}}
+                                        <tr class="noBorder">
+                                            <td class="pad00 _noBorder" colspan="4">
+                                                {{> afQuickField name=this.name}}
+                                            </td>
+                                            <td class="padsm">
+                                                <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        {{/autoForm}} {{> quickForm id="updateResourceForm" type="update-pushArray" collection='Records' class="recordForm2 pad00 col-md-12 _form-inline hideLabel" doc=current field="resourcesUsed" scope="resourcesUsed.resource" buttonContent= "Add Resource" resetOnSuccess=true options="allowed"}}
+                    </div>
+                </div>
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
+            </div>
 
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Record Files</h3>
@@ -52,296 +261,9 @@
                     <label class="control-label">Upload Files</label>
                     {{> upload_bootstrap formData=record multiple=true}} </div>
             </div>
-
-
-
-
-        
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab">
-                    <h3 class="panel-title">Incident Map</h3>
-                </div>
-                <div class="panel-body afBody">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row text-center">
-                                <div class="btn-group text-uppercase flex-container mapBtns mapPoints" data-toggle="buttons">
-                                    <div class="btn btn-primary flex-item" data="_ippCoordinates" disabled=true>
-                                        Incident Location / IPP
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
-                                                </span>
-                                    </div>
-                                    <a class="btn btn-default flex-item" data="revisedLKP_PLS">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Last Known Subject Sighting
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw text-danger"></i>
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-default flex-item" data="destinationCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-bullseye fa-2x fa-fw text-default"></i>
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-default flex-item" data="findCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Find Location
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw text-success"></i>
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-default flex-item" data="decisionPointCoord">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-code-fork fa-2x fa-fw text-danger"></i>
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-default flex-item" data="intendedRoute">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-location-arrow fa-2x fa-fw text-default"></i>
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-default flex-item" data="actualRoute">
-                                        <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
-                                        <span class="fa-stack pull-right">
-                                          <i class="fa fa-location-arrow fa-2x fa-fw text-success"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div id='formMap' style="width:100%; height:400px"></div>
-                            </div>
-                            <!--
-
-
-                            {{> quickForm collection='Records' doc=record id='_formIdMap' class="recordForm4 hideSubmit" type=formType autosave=true fields="coords" buttonContent= "Save Response Area" resetOnSuccess='false'}}
-
-                            -->
-                            <div class="row">
-                                {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
-
-
-
-
-                                    <div class="panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Incident Location/IPP</h3>
-                                        </div>
-
-
-
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} 
-
-<!--
-{{> quickForm id="updateIPPForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 hideLabel" doc=current scope="coords.ippCoordinates" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
--->
-
-
-                                        {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} 
-                                        {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
-                                    </div>
-
-
-
-                                    <div class="panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Initial Direction of Travel</h3>
-                                        </div>
-                                        <div class="panel-body pad00">
-                                            <p class="small"><em>*Drag arrow towards direction of travel</em></p>
-                                            {{> afQuickField class="hide" name="incidentOperations.initialDirectionofTravel"}}
-                                            <div class="col-md-6 col-md-offset-3"><i class="fa fa-5x fa-arrow-circle-o-up travelDirection" style="width:58px;height:58px"></i></div>
-                                        </div>
-                                        {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
-                                    </div>
-
-
-
-
-
-                                    <div class="{{hideCoord 'decisionPointCoord'}} panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Decision Point</h3>
-                                        </div>
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.decisionPointCoord.lat,coords.decisionPointCoord.lng"}} 
-
-                                        {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} 
-
-                                        {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
-                                    </div>
-
-
-
-                                    <div class="{{hideCoord 'revisedLKP_PLS'}} panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Last Known Point/Point Last Seen</h3>
-                                        </div>
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.revisedLKP_PLS.lat,coords.revisedLKP_PLS.lng"}} 
-
-                                   
-
-                                        {{> afQuickField name="incidentOperations.PLS_HowDetermined" options="allowed"}}
-                                    </div>
-
-        
-
-
-                                    <div class="{{hideCoord 'destinationCoord'}}">
-                                        {{> afQuickField name='coords.destinationCoord' }}
-                                    </div>
-                                    <div class="{{hideCoord 'findCoord'}}">
-                                        {{> afQuickField name='coords.findCoord' }}
-                                    </div>
-
-
-                                   <!-- <div class="{{hideCoord 'revisedLKP_PLS'}}">
-                                        {{> afQuickField name='coords.revisedLKP_PLS' }}
-                                    </div>-->
-                                    <div class="hide">
-                                    {{> afQuickField name='coords.intendedRoute' }} 
-                                    {{> afQuickField name='coords.actualRoute' }}
-                                    </div>
-
-
-
-
-
-                                    
-
-
-                                {{/autoForm}}
-
-<!--
-{{> quickForm id="updateIPPForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 hideLabel" doc=current scope="coords.ippCoordinates" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
--->
-
-                            </div>
-                            <div class="row">
-                                <!--{{#autoForm collection='Records' doc=record id='formIdMap1' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
-                                    {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}} 
-                                    {{> afQuickField name="incidentOperations.ipptype" options="allowed"}}
-                                    {{#if hasDecisionPoint}}
-                                        {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} 
-                                        {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
-                                    {{/if}}
-                                {{/autoForm}}-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
-            <!--Subject Info-->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Subject Info
-
-                    <div class="btn-group pull-right" role="group" aria-label="...">
-    <button type="button" class="btn btn-default">Description</button>
-    <button type="button" class="btn btn-default">Rescue</button>
-    <button type="button" class="btn btn-default">Personal</button>
-</div>
-
-
-                    </h3>
-                </div>
-
-
-
-
-                <div class="panel-body afBody pad00" style="overflow-x: scroll;">
-<!--                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
-                        <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
-                            <thead class='default-bg'>
-                                <tr>
-                                    {{#each subjectKeys}}
-                                        <th data-subjectTable= {{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                    {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class='white-bg'>
-                                {{#each getSubjectsArray}}
-                                    <tr class="noBorder">
-                                        <td class="pad00 noBorder" colspan="15">
-                                            {{> afQuickField name=this.name}}
-                                        </td>
-                                        <td class="padsm">
-                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    {{/autoForm}}
--->
-
-                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader w2x" }}
-                        <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
-                            <thead class='default-bg'>
-                                <tr>
-                                    {{#each subjectKeys}}
-                                        <th data-subjectTable= {{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                    {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class='white-bg'>
-                                {{#each getSubjectsArray}}
-                                    <tr class="noBorder">
-                                        <td class="pad00 noBorder" colspan="15">
-                                            {{> afQuickField name=this.name}}
-                                        </td>
-                                        <td class="padsm">
-                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    {{/autoForm}}
-
-
-                    
-                    {{> quickForm id="updateSubjectForm" type="update-pushArray" collection='Records' class="pad00 col-md-12 hideLabel" doc=current field="subjects" scope="subjects.subject" buttonClass="btn-sm" buttonContent= "Add" resetOnSuccess=true}}
-                </div>
-            </div>
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm4 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="timeLog" buttonContent= "Save"}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Additional Resources Used</h3>
-                </div>
-                <div class="panel-body afBody">
-                    {{#autoForm id="editResourceForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
-                        <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
-                            <thead class='default-bg'>
-                                <tr>
-                                    {{#each resourceKeys}}
-                                        <th data-subjectTable= {{this}} class='text-center afTable text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                    {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class='white-bg'>
-                                {{#each getResourceArray}}
-                                    <tr class="noBorder">
-                                        <td class="pad00 _noBorder" colspan="4">
-                                            {{> afQuickField name=this.name}}
-                                        </td>
-                                        <td class="padsm">
-                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    {{/autoForm}} {{> quickForm id="updateResourceForm" type="update-pushArray" collection='Records' class="recordForm2 pad00 col-md-12 _form-inline hideLabel" doc=current field="resourcesUsed" scope="resourcesUsed.resource" buttonContent= "Add Resource" resetOnSuccess=true options="allowed"}}
-                </div>
-            </div>
-            {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
+        </div>
 
         </div>
+
     </div>
 </template>

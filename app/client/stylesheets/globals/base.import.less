@@ -542,27 +542,29 @@ em {
     font-size: .7em;
     min-width: 210px;
     /*max-height:143px;*/
+    
     height: 210px;
 }
 
 #formIdMap .panel-heading {
-    padding:1px;
-    text-align:center;
-    margin-bottom:3px;
+    padding: 1px;
+    text-align: center;
+    margin-bottom: 3px;
 }
 
-.w2x{
-    width:200% !important;
+.w2x {
+    width: 200% !important;
 }
 
-#formIdMap input[type=text],#formIdMap input[type=number]{
-  height: 30px;
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-  width: 121px;
-  }
+#formIdMap input[type=text],
+#formIdMap input[type=number] {
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    width: 121px;
+}
 
 #formId3334 .form-group {
     float: left;
@@ -574,11 +576,9 @@ em {
     margin-bottom: 0px;
 }
 
-.travelDirection label{
-display:none;
+.travelDirection label {
+    display: none;
 }
-
-
 
 .small {
     font-size: 85% !important;
@@ -1011,4 +1011,30 @@ a {
     .x.axis path {
         display: none;
     }
+}
+
+.leaflet-container a.map-ui-button {
+    background: #3887BE;
+    color: #FFF;
+    display: block;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    width: 160px;
+    margin: -20px 0 0 -80px;
+    z-index: 100;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    z-index:3;
+    font-size: initial;
+}
+
+.leaflet-container a.map-ui-button:hover {
+    background: #3074a4;
+    color: #fff;
+}
+.leaflet-control-locate{
+    display:none;
 }

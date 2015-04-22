@@ -19,30 +19,34 @@ Template.form.onCreated(function () {
     });
 
     if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
-        Meteor.call('getEcoRegion', record.coords.ippCoordinates, function (err, d) {
+        Meteor.call('setEcoRegion', record._id, function (err, d) {
             if (err) {
                 return;
             }
-            $('[name="incident.ecoregiondomain"]')
-                .val(d.DOM_DESC)
-                .trigger('change');
-            $('[name="incident.ecoregionDivision"]')
-                .val(d.DIV_NUM + '-' + d.DIV_DESC)
-                .trigger('change');
+            console.log(d.DIV_NUM + '-' + d.DIV_DESC,d.DOM_DESC)
+                /* $('[name="incident.ecoregiondomain"]')
+                     .val(d.DOM_DESC)
+                     .trigger('change');
+                 $('[name="incident.ecoregionDivision"]')
+                     .val(d.DIV_NUM + '-' + d.DIV_DESC)
+                     .trigger('change');*/
         });
     }
-
-    if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
-
-        Meteor.call('getElevation', record.coords.ippCoordinates, record.coords.findCoord, function (err, d) {
+    /*
+        Meteor.call('setLocale', record._id, function (err, d) {
             if (err) {
+                console.log(err);
                 return;
             }
-            $('[name="incidentOutcome.elevationChange"]').val(d).trigger('change');
-
         });
-    }
 
+        Meteor.call('setElevation', record._id, function (err, d) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        });
+    */
 });
 Template.form.onRendered(function () {
 
@@ -64,6 +68,15 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
+
+    if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
+        Meteor.call('setElevation', record._id, function (err, d) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        });
+    }
 
     $('[name="weather.temperatureMax"]')
         .prev()
@@ -90,7 +103,10 @@ Template.form.onRendered(function () {
     $('[data-subjecttable="Height"]')
         .append(' (' + labelUnits(currentUnit, 'height') + ')');
 
-    $('.panel-title:contains("Weather")').parent().next().prepend('<p class="small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
+    $('.panel-title:contains("Weather")')
+        .parent()
+        .next()
+        .prepend('<p class="small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
 
     var coords = record.coords;
 
@@ -98,7 +114,7 @@ Template.form.onRendered(function () {
     var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
     mapBounds = boundsString2Array(mapBounds);
 
-    map = formSetMap('formMap');
+    map = formSetMap('formMap', record._id);
 
     var coords = getCoords(record);
     coords.forEach(function (d) {
@@ -382,28 +398,7 @@ Template.form.events({
         travelBearing.css('-ms-transform', 'rotate(' + travelDirectionDegree + 'deg)');
 
     },
-    'change .list-edit': function (event, template) {
-        if ($(event.target)
-            .val() === 'edit') {
-            editList(this, template);
-        } else if ($(event.target)
-            .val() === 'delete') {
-            deleteList(this, template);
-        } else {
-            Meteor.call('toggleListPrivacy', 'this', 'template');
-        }
-        event.target.selectedIndex = 0;
-    },
-    'click .js-toggle-list-privacy': function (event, template) {
-        var toggleTest = Session.get('toggleTest');
-        var result = !toggleTest;
-        Session.set('toggleTest', result);
-        return result ? 'a' : 'b';
-    },
-    'click .js-delete-list': function (event, template) {
-        var record = this.data.record;
-        deleteList(record);
-    },
+
     'click .formNav': function (event, template) {
         $('.collapse')
             .collapse('hide');
@@ -442,7 +437,8 @@ Template.form.events({
             console.log('MAX: ' + dailyData.temperatureMax)
             _.each(dailyData, function (d, name) {
                 $('[name="weather.' + name + '"]')
-                    .val(d).trigger('change');
+                    .val(d)
+                    .trigger('change');
             });
             if (!dailyData.precipType) {
                 $('[name="weather.precipType"]')
@@ -509,3 +505,4 @@ AutoForm.hooks({
         }
     }
 });
+
