@@ -19,17 +19,11 @@ Template.records.onRendered(function () {
             .bootstrapTable();
     }
 
-
-
     Session.set('userView', 'records');
     var config = Config.findOne();
     var agencyProfile = config.agencyProfile;
 
-  
-
-        Session.set('logo', 'uploads/logo/' + config.agencyLogo);
-    
-
+    //Session.set('logo', 'uploads/logo/' + config.agencyLogo);
 
     var bounds = agencyProfile.bounds;
     var newBounds = boundsString2Array(bounds);

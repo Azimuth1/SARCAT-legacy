@@ -16,9 +16,27 @@ console.log(results)
 
 Template.appBody.onCreated(function () {
 
+    Tracker.autorun(function () {
+        /*var oldest = _.max(Monkeys.find().fetch(), function (monkey) {
+          return monkey.age;
+        });*/
+        var config = Config.findOne();
+        if (config) {
+            Session.set('config', config);
+            Session.set("logo", 'uploads/logo/' + config.agencyLogo);
+        }
+    });
+
 });
 Template.appBody.onRendered(function () {
-
+    /*var config = Config.findOne();
+    if (config && config.agencyLogo) {
+        console.log('!')
+        Session.set('logo', 'uploads/logo/' + config.agencyLogo);
+    } else{
+        Session.set('logo', 'uploads/logo/default_logo.png');
+        
+    }*/
 });
 
 Template.appBody.helpers({

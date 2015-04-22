@@ -220,23 +220,21 @@ Schemas.incident = new SimpleSchema({
         type: String,
         label: 'Response Country',
         optional: true,
-        autoValue: function () {
+        /*autoValue: function () {
             if (this.isInsert) {
-                return Config.findOne()
-                    .agencyProfile.country;
+                return Config.findOne().agencyProfile.country;
             }
-        }
+        }*/
     },
     stateregion: {
         type: String,
         optional: true,
         label: 'Response State/Region',
-        autoValue: function () {
+        /*autoValue: function () {
             if (this.isInsert) {
-                return Config.findOne()
-                    .agencyProfile['state-region'];
+                return Config.findOne().agencyProfile['state-region'];
             }
-        }
+        }*/
     },
     subjectcategory: {
         type: String,
@@ -1381,6 +1379,11 @@ Schemas.agencyProfile = new SimpleSchema({
         type: String,
         label: 'Phone Number',
 
+    },
+    googleAPI: {
+        type: String,
+        label:'Google API Key',
+        defaultValue: 'AIzaSyBTpVps4uKjBaH0cjoPVw6lKVVBI27E64s'
     },
     measureUnits: {
         type: String,

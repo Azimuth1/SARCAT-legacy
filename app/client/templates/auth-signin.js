@@ -6,10 +6,10 @@ Accounts.ui.config({
 Template.signin.created = function () {
     Session.set(ERRORS_KEY, {});
 
-    var config = Config.findOne();
+    /*var config = Config.findOne();
     if (config) {
         Session.set('logo', 'uploads/logo/default_logo.png')
-    }
+    }*/
 
 };
 Template.signin.helpers({

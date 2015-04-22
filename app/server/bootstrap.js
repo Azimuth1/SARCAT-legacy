@@ -4,8 +4,6 @@
 
 Meteor.startup(function () {
 
-
-    
     //console.log(__meteor_bootstrap__.serverDir);return
 
     //data = Assets.getBinary('uploads/main_logo');
@@ -45,5 +43,6 @@ Meteor.startup(function () {
         Roles.addUsersToRoles(admin, ['admin']);
 
     }
-
+    
 });
+

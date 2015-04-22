@@ -63,15 +63,19 @@ Meteor.methods({
         },function(d,e){console.log(d,e)});*/
         return Records.remove(id);
     },
-    updateRecord: function (id, name) {
+    updateRecord: function (id, name, val) {
+
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        return Records.update(id, {
-            $set: {
-                name: name
-            }
+
+        var obj = {};
+        obj[name] = val;
+        var update = Records.update(id, {
+            $set: obj
         });
+        console.log(update);
+        return [id, name, val];
     },
     toggleListPrivacy: function (list) {
         //console.log(list, list.userId);
@@ -166,32 +170,98 @@ Meteor.methods({
         var files = fs.readdirSync('../web.browser/app/uploads/records/' + id);
         return files;
     },
-    getEcoRegion: function (coord) {
+    setEcoRegion: function (id, oord) {
+        var record = Records.findOne(id);
+        var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
         var result = pip(coord);
-        if (!result.length) {
+        /*if (!result.length) {
             return;
-        }
-        return result[0].properties; //.DOM_DESC;
-        //DIV_NUM+'-'+d.properties.DIV_DESC
+        }*/
+
+        var val = result[0] ? result[0].properties : {};
+        var ecoregiondomain = val.DOM_DESC ? val.DOM_DESC : null;
+        var ecoregionDivision = (val.DIV_NUM && val.DIV_DESC) ? (val.DIV_NUM + '-' + val.DIV_DESC) : null;
+        Records.update(id, {
+            $set: {
+                'incident.ecoregiondomain': ecoregiondomain,
+                'incident.ecoregionDivision': ecoregionDivision
+            }
+        });
+        return val;
+
     },
 
-    getElevation: function (coord1, coord2) {
-
-        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=AIzaSyBTpVps4uKjBaH0cjoPVw6lKVVBI27E64s';
-        //console.log(url)
+    setElevation: function (id) {
+        var record = Records.findOne(id);
+        var coord1 = record.coords.ippCoordinates;
+        var coord2 = record.coords.findCoord;
+        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + Config.findOne()
+            .agencyProfile.googleAPI;
+        console.log(url)
 
         var result = HTTP.get(url);
-        result = JSON.parse(result.content).results;
+        result = JSON.parse(result.content)
+            .results;
 
         var _coord1 = result[0].elevation;
         var _coord2 = result[1].elevation;
-
-        return parseInt(_coord2 - _coord1);
-        if (!result.length) {
+        if (!_coord1 || !_coord2) {
             return;
         }
-        return result[0].properties;
+        var val = parseInt(_coord2 - _coord1);
+
+        if (record.measureUnits === 'US') {
+            val = parseInt(val * 3.2808399);
+        }
+
+        Records.update(id, {
+            $set: {
+                'incidentOutcome.elevationChange': val
+            }
+        });
+        return val;
+
+    },
+
+    setLocale: function (id) {
+        var record = Records.findOne(id);
+        var coord1 = record.coords.ippCoordinates;
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Config.findOne()
+            .agencyProfile.googleAPI;
+        console.log(url)
+
+        var result = HTTP.get(url);
+        console.log(JSON.parse(result.content));
+
+        result = JSON.parse(result.content)
+            .results;
+
+        var result0 = result[0] ? result[0].address_components : [];
+
+        var countryAr = _.find(result0, function (d) {
+            return _.contains(d.types, 'country')
+        })
+
+        var country = countryAr ? countryAr.long_name : null;
+
+        var admin1Ar = _.find(result0, function (d) {
+            return _.contains(d.types, 'administrative_area_level_1')
+        });
+
+        var admin1 = admin1Ar ? admin1Ar.long_name : null;
+
+        Records.update(id, {
+            $set: {
+                'incident.country': country,
+                'incident.stateregion': admin1
+            }
+        });
+
+        return {
+            country: country,
+            admin1: admin1
+        };
     },
 
 });
@@ -226,3 +296,4 @@ Meteor.users.allow({
         }
     }
 });
+
