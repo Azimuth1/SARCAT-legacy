@@ -33,20 +33,13 @@ Template.form.onCreated(function () {
     }
 
     if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
         Meteor.call('getElevation', record.coords.ippCoordinates, record.coords.findCoord, function (err, d) {
             if (err) {
                 return;
             }
             $('[name="incidentOutcome.elevationChange"]').val(d).trigger('change');
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> origin/master
         });
     }
 
@@ -193,13 +186,11 @@ Template.form.helpers({
         });
     },
 
-
     subjectKeysDesc: function () {
 
         return ["Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?"];
-      
-    },
 
+    },
 
     subjectKeys: function () {
 
@@ -237,9 +228,9 @@ Template.form.helpers({
         var self = this;
         self.myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
         return _.map(self.myArray, function (value, index) {
-console.log(value);
-value = _.pick(value,"Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?");
-console.log(value)
+            console.log(value);
+            value = _.pick(value, "Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?");
+            console.log(value)
             return {
                 value: value,
                 index: index,
