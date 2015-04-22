@@ -3,6 +3,7 @@ Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 var config;
+
 /*
 geojson.features=[geojson.features[99]]
 console.log(pip([132.0927,44.8397],geojson));
@@ -13,19 +14,16 @@ results = leafletPip.pointInLayer([132.0927,44.8397], gjLayer);
 console.log(results)
 */
 
-
-
 Template.appBody.onCreated(function () {
 
 });
-Template.appBody.onRendered(function () {});
+Template.appBody.onRendered(function () {
+
+});
 
 Template.appBody.helpers({
     logo: function (view) {
-        var config = Config.findOne();
-        if (config) {
-            return 'uploads/logo/' + config.agencyLogo;
-        } 
+        return Session.get('logo');
 
     },
     isUserView: function (view) {
@@ -106,3 +104,4 @@ Template.appBody.events({
     },
 
 });
+
