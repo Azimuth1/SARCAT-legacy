@@ -33,6 +33,30 @@
     </nav>
     <div id="formPage">
         <div class="pad2">
+
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Record Files</h3>
+                </div>
+                <div class="panel-body afBody">
+                    <div class="list-group">
+                        {{#if fileUploads.length}}
+                            <label class="control-label">Click File to View:</label>
+                        {{/if}}
+                        {{#each fileUploads}}
+                            <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a>
+                        {{/each}}
+                    </div>
+                    <label class="control-label">Upload Files</label>
+                    {{> upload_bootstrap formData=record multiple=true}} </div>
+            </div>
+
+
+
+
+        
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab">
                     <h3 class="panel-title">Incident Map</h3>
@@ -134,6 +158,13 @@
                                     </div>
 
 
+<<<<<<< HEAD
+                                <div class="travelDir text-center col-md-3" style="width:25%">
+                                    {{> afQuickField class="hideLabel hide" name="incidentOperations.initialDirectionofTravel"}}
+                                    <i class="fa fa-5x fa-arrow-circle-o-up travelDirection"></i> </div>
+                               
+=======
+>>>>>>> origin/master
 
 
 
@@ -161,18 +192,17 @@
                                         {{> afQuickField name="incidentOperations.PLS_HowDetermined" options="allowed"}}
                                     </div>
 
-                                    <!--<div class="{{hideCoord 'ippCoordinates'}} coordClass">
-                                        {{> afQuickField name='coords.ippCoordinates' }} 
-                                    </div>
-                                    <div class="{{hideCoord 'decisionPointCoord'}}">
-                                        {{> afQuickField name='coords.decisionPointCoord' }}
-                                    </div>-->
+        
+
+
                                     <div class="{{hideCoord 'destinationCoord'}}">
                                         {{> afQuickField name='coords.destinationCoord' }}
                                     </div>
                                     <div class="{{hideCoord 'findCoord'}}">
                                         {{> afQuickField name='coords.findCoord' }}
                                     </div>
+
+
                                    <!-- <div class="{{hideCoord 'revisedLKP_PLS'}}">
                                         {{> afQuickField name='coords.revisedLKP_PLS' }}
                                     </div>-->
@@ -228,8 +258,8 @@
 
 
 
-                <div class="panel-body afBody pad00">
-                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
+                <div class="panel-body afBody pad00" style="overflow-x: scroll;">
+<!--                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader _form-inline " }}
                         <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
                             <thead class='default-bg'>
                                 <tr>
@@ -253,7 +283,32 @@
                             </tbody>
                         </table>
                     {{/autoForm}}
+-->
 
+                    {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader w2x" }}
+                        <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
+                            <thead class='default-bg'>
+                                <tr>
+                                    {{#each subjectKeys}}
+                                        <th data-subjectTable= {{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
+                                    {{/each}}
+                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class='white-bg'>
+                                {{#each getSubjectsArray}}
+                                    <tr class="noBorder">
+                                        <td class="pad00 noBorder" colspan="15">
+                                            {{> afQuickField name=this.name}}
+                                        </td>
+                                        <td class="padsm">
+                                            <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    {{/autoForm}}
 
 
                     
@@ -293,22 +348,7 @@
                 </div>
             </div>
             {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Record Files</h3>
-                </div>
-                <div class="panel-body afBody">
-                    <div class="list-group">
-                        {{#if fileUploads.length}}
-                            <label class="control-label">Click File to View:</label>
-                        {{/if}}
-                        {{#each fileUploads}}
-                            <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a>
-                        {{/each}}
-                    </div>
-                    <label class="control-label">Upload Files</label>
-                    {{> upload_bootstrap formData=record multiple=true}} </div>
-            </div>
+
         </div>
     </div>
 </template>

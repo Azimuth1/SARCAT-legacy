@@ -8,7 +8,7 @@ labelUnits = function (currentUnit, type) {
             Metric: 'kg',
             US: 'lbs'
         },
-        distance: {
+        distanceSmall: {
             Metric: 'Meters',
             US: 'Feet'
         },
@@ -161,6 +161,7 @@ setMap = function (context, bounds, agencyMapComplete) {
     layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
+
 
     map.on('moveend', function () {
         Session.set('geolocate', false);

@@ -7,3 +7,10 @@ node_modules
 
 main_logo
 /uploads/records/**
+/uploads/logo/**
+
+app/public/uploads/logo/main_logo.png
+
+app/public/uploads/logo/pic.jpg
+
+app/public/uploads/logo/main_logo2.png

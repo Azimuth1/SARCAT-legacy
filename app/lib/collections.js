@@ -601,7 +601,7 @@ Schemas.incidentOperations = new SimpleSchema({
             }
         },
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
-        label: 'Determination Factor',
+        label: 'Determining Factor',
         optional: true
     },
     'typeofDecisionPoint': {
@@ -641,7 +641,7 @@ Schemas.incidentOperations = new SimpleSchema({
             }
         },
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
-        label: 'Determination Factor',
+        label: 'Determining Factor',
         optional: true
     },
 });
@@ -760,7 +760,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     },
     'elevationChange': {
-        type: String,
+        type: Number,
         label: 'Elevation Change',
         optional: true
     }
@@ -1166,7 +1166,7 @@ Schemas.weather = new SimpleSchema({
         optional: true,
         label: 'Brief Summary',
         autoform: {
-            rows: 2
+            rows: 3
         }
     },
     'precipType': {
@@ -1333,7 +1333,8 @@ Schemas.SARCAT = new SimpleSchema({
     incidentOutcome: {
         type: Schemas.incidentOutcome,
         label: 'Incident Outcome',
-        optional: true
+        optional: true,
+        defaultValue:{}
     },
     /*medical: {
         type: Schemas.medical,
