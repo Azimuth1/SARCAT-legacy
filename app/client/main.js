@@ -16,6 +16,10 @@ labelUnits = function (currentUnit, type) {
             Metric: 'Kilometers',
             US: 'Miles'
         },
+        distanceSmall: {
+            Metric: 'Meters',
+            US: 'Feet'
+        },
         temperature: {
             Metric: '°C',
             US: '°F'
@@ -269,7 +273,6 @@ formSetMap = function (context) {
     drawnPoints = new L.FeatureGroup()
         .addTo(map);
 
-
     map.scrollWheelZoom.disable();
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
@@ -286,54 +289,54 @@ formSetMap = function (context) {
             .val(bounds)
             .trigger("change");
     });
-
-    var drawControl = new L.Control.Draw({
-        draw: {
-            position: 'topleft',
-            polygon: false,
-            circle: false,
-            marker: false,
-            rectangle: false,
-            polyline: false
-        },
-        edit: {
-            featureGroup: drawnPaths,
-            selectedPathOptions: {
-                maintainColor: true,
-                opacity: 0.3,
-                remove: false
-            }
-        },
-
-    });
-    map.addControl(drawControl);
-
-    map.on('draw:edited', function (e) {
-        var layers = e.layers;
-        layers.eachLayer(function (layer) {
-            var name = layer.options.name;
-            if (layer._path) {
-                latlngs = layer.getLatLngs()
-                    .map(function (d) {
-                        return [d.lat, d.lng]
-                    });
-                var lineString = JSON.stringify(latlngs);
-                $('[name="' + name + '"]')
-                    .val(lineString)
-                    .trigger("change");
-                return;
-            }
-            var position = layer.getLatLng();
-            $('[name="' + name + '.lng"]')
-                .val(position.lng)
-                .trigger("change");
-            $('[name="' + name + '.lat"]')
-                .val(position.lat)
-                .trigger("change");
+    /*
+        var drawControl = new L.Control.Draw({
+            draw: {
+                position: 'topleft',
+                polygon: false,
+                circle: false,
+                marker: false,
+                rectangle: false,
+                polyline: false
+            },
+            edit: {
+                featureGroup: drawnPaths,
+                selectedPathOptions: {
+                    maintainColor: true,
+                    opacity: 0.3,
+                    remove: false
+                }
+            },
 
         });
-    });
+        map.addControl(drawControl);
 
+        map.on('draw:edited', function (e) {
+            var layers = e.layers;
+            layers.eachLayer(function (layer) {
+                var name = layer.options.name;
+                if (layer._path) {
+                    latlngs = layer.getLatLngs()
+                        .map(function (d) {
+                            return [d.lat, d.lng]
+                        });
+                    var lineString = JSON.stringify(latlngs);
+                    $('[name="' + name + '"]')
+                        .val(lineString)
+                        .trigger("change");
+                    return;
+                }
+                var position = layer.getLatLng();
+                $('[name="' + name + '.lng"]')
+                    .val(position.lng)
+                    .trigger("change");
+                $('[name="' + name + '.lat"]')
+                    .val(position.lat)
+                    .trigger("change");
+
+            });
+        });
+    */
     /* map.on('draw:created', function (e) {
          var type = e.layerType,
              layer = e.layer;
@@ -421,17 +424,38 @@ formSetMap = function (context) {
             opacity: 0.9,
             name: d.name,
             val: d.val,
-            //editable: true
+            editable: true
         });
         //polyline.addTo(map)
         drawnPaths.addLayer(polyline);
+        marker.setZIndexOffset(4);
         //paths[d.val] = polyline;
         coords[d.val].layer = polyline;
         var lineString = JSON.stringify(latlngs);
         $('[name="' + d.name + '"]')
             .val(lineString)
             .trigger("change");
-        //var lineString = JSON.stringify(layer.toGeoJSON());
+
+
+        $('#formMap').on('mouseup','.leaflet-editing-icon',function(d){
+                drawnPaths.eachLayer(function (layer) {
+                    var name = layer.options.name;
+                    if (layer._path) {
+                        latlngs = layer.getLatLngs()
+                            .map(function (d) {
+                                return [d.lat, d.lng]
+                            });
+                        var lineString = JSON.stringify(latlngs);
+                        $('[name="' + name + '"]')
+                            .val(lineString)
+                            .trigger("change");
+                        return;
+                    }
+
+                });
+
+            })
+            //var lineString = JSON.stringify(layer.toGeoJSON());
     };
     obj.removePoly = function (d) {
         var path = coords[d.val].layer;
@@ -453,7 +477,17 @@ formSetMap = function (context) {
         delete coords[d.val];
     };
     obj.addPoint = function (d) {
-        var _coords = d.coords || map.getCenter();
+        var _coords = d.coords; // || map.getCenter();
+        if (!d.coords) {
+            var ne = map.getBounds()._northEast;
+            var center = map.getCenter();
+            _coords = {
+                lat: center.lat,
+                lng: (center.lng + (ne.lng - center.lng) / 2)
+            }
+
+        }
+
         var myIcon = L.divIcon({
             // iconSize: [41, 39],
             iconSize: [50, 50],
@@ -962,4 +996,3 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
-
