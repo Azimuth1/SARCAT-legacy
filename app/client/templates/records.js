@@ -19,9 +19,18 @@ Template.records.onRendered(function () {
             .bootstrapTable();
     }
 
+
+
     Session.set('userView', 'records');
     var config = Config.findOne();
     var agencyProfile = config.agencyProfile;
+
+  
+
+        Session.set('logo', 'uploads/logo/' + config.agencyLogo);
+    
+
+
     var bounds = agencyProfile.bounds;
     var newBounds = boundsString2Array(bounds);
 
@@ -43,24 +52,48 @@ Template.records.onRendered(function () {
 
             if (lastRecord.length) {
                 var lastIncidentnum = _.find(lastRecord, function (d) {
-                    return d.recordInfo.incidentnum;
-                }).recordInfo.incidentnum;
+                        if (d.recordInfo && d.recordInfo.incidentnum) {
+                            return d.recordInfo.incidentnum;
+                        }
+                    })
+                    .recordInfo.incidentnum;
                 var lastMissionnum = _.find(lastRecord, function (d) {
-                    return d.recordInfo.missionnum;
-                }).recordInfo.missionnum;
+                        if (d.recordInfo && d.recordInfo.missionnum) {
+                            return d.recordInfo.missionnum;
+                        }
+                    })
+                    .recordInfo.missionnum;
+
+                var lastleadagency = _.find(lastRecord, function (d) {
+                    if (d.recordInfo && d.recordInfo.leadagency) {
+                        return d.recordInfo.leadagency;
+                    }
+                });
+
+                lastleadagency = (lastleadagency) ? lastleadagency.recordInfo.leadagency : null;
 
                 $('[name="recordInfo.incidentnum"]')
-                    .attr('placeholder', 'Last Assigned Incident #: ' + lastIncidentnum);
+                    .attr('placeholder', 'Last Assigned Incident: ' + lastIncidentnum);
 
                 $('[name="recordInfo.missionnum"]')
-                    .attr('placeholder', 'Last Assigned Mission #: ' + lastMissionnum);
+                    .attr('placeholder', 'Last Assigned Mission: ' + lastMissionnum);
+
+                $('[name="recordInfo.leadagency"]')
+                    .attr('value', lastleadagency)
+                    .trigger('change');
 
             } else {
                 $('[name="recordInfo.incidentnum"]')
-                    .attr('value', Records.defaultNum()).trigger('change');
+                    .attr('value', Records.defaultNum())
+                    .trigger('change');
 
                 $('[name="recordInfo.missionnum"]')
-                    .attr('value', Records.defaultNum()).trigger('change');
+                    .attr('value', Records.defaultNum())
+                    .trigger('change');
+
+                $('[name="recordInfo.leadagency"]')
+                    .attr('value', lastleadagency)
+                    .trigger('change');
             }
 
             mapDrawn.reset();
@@ -220,14 +253,37 @@ Template.records.events({
         });
     },
     'click .deleteRecord': function (event, template) {
-        var checked = $('.bs-checkbox [name="btSelectItem"]:checked')
+        var toDelete = $('.bs-checkbox [name="btSelectItem"]:checked')
             .parent()
             .parent()
-            .each(function (d) {
-                Meteor.call('removeRecord', this.id, function (error, d) {
-                    Meteor._reload.reload();
+            .map(function (d) {
+                return {
+                    id: this.id,
+                    name: Records.findOne(this.id)
+                        .recordInfo.name
+                };
+            });
+        if (!toDelete.length) {
+            return;
+        }
+        var message = 'Are you sure you want to delete the following records: ' + _.map(toDelete, function (d) {
+                return d.name;
+            })
+            .join(', ');
+
+        if (confirm(message)) {
+            toDelete.each(function (e, d) {
+                console.log(d)
+                Meteor.call('removeRecord', d.id, function (error, d) {
+
                 });
             });
+            Meteor._reload.reload();
+            return true;
+        } else {
+            return false;
+        }
+
     },
 
     'click .js-newRecord': function (event, template) {
@@ -244,3 +300,4 @@ Template.records.events({
 
     }
 });
+

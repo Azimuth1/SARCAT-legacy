@@ -18,14 +18,30 @@ Template.form.onCreated(function () {
         Session.set('fileUploads', d)
     });
 
-    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision)
+    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
         Meteor.call('getEcoRegion', record.coords.ippCoordinates, function (err, d) {
             if (err) {
                 return;
             }
-            $('[name="incident.ecoregiondomain"]').val(d.DOM_DESC).trigger('change');
-            $('[name="incident.ecoregionDivision"]').val(d.DIV_NUM + '-' + d.DIV_DESC).trigger('change');
+            $('[name="incident.ecoregiondomain"]')
+                .val(d.DOM_DESC)
+                .trigger('change');
+            $('[name="incident.ecoregionDivision"]')
+                .val(d.DIV_NUM + '-' + d.DIV_DESC)
+                .trigger('change');
         });
+    }
+
+    if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
+
+        Meteor.call('getElevation', record.coords.ippCoordinates, record.coords.findCoord, function (err, d) {
+            if (err) {
+                return;
+            }
+            $('[name="incidentOutcome.elevationChange"]').val(d).trigger('change');
+      
+        });
+    }
 
 });
 Template.form.onRendered(function () {
@@ -63,7 +79,7 @@ Template.form.onRendered(function () {
         .append(' (' + labelUnits(currentUnit, 'distance') + ')');
     $('[name="incidentOutcome.elevationChange"]')
         .prev()
-        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+        .append(' (' + labelUnits(currentUnit, 'distanceSmall') + ')');
 
     $('[name="rescueDetails.distanceTraveled"]')
         .prev()
@@ -330,7 +346,7 @@ Template.form.events({
             .trigger("change");
     },
     'mouseup .travelDirection': function (event, template) {
-
+        console.log(travelDirectionDegree)
         clicking = false;
         $('[name="incidentOperations.initialDirectionofTravel"]')
             .val(travelDirectionDegree)
@@ -338,7 +354,7 @@ Template.form.events({
 
     },
     'mousemove .travelDirection': function (evt, template) {
-
+        // console.log(mouse_x, mouse_y);
         var travelBearing = $(evt.target);
         if (clicking == false) return;
         var offset = travelBearing.offset();
@@ -446,7 +462,11 @@ Template.form.events({
         if (!active) {
             map.add(item);
         } else {
-            map.remove(item);
+            if (confirm('Are you sure you want to remove ' + item.text + ' from the map?')) {
+                map.remove(item);
+            } else {
+                event.stopPropagation();
+            }
         }
     },
     'click .fileUpload': function (event, template) {
@@ -463,6 +483,9 @@ Template.form.events({
 });
 
 AutoForm.hooks({
+
+
+
     updateSubjectForm: {
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
             $('#updateSubjectForm')
@@ -478,3 +501,4 @@ AutoForm.hooks({
         }
     }
 });
+

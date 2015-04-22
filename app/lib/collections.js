@@ -408,6 +408,58 @@ Schemas.coords = new SimpleSchema({
         }
 
     },
+    /*
+        revisedIPP: {
+            type: Array,
+            label: 'Subject Info',
+            optional: true,
+            autoValue: function (a,b) {
+                console.log(this,a,b);
+                t=this
+                lat = this.siblingField('ippCoordinates.lat');
+                lng = this.siblingField('ippCoordinates.lng');
+
+                console.log(lat,lng)
+            },
+        },
+
+
+
+
+
+        'revisedIPP.$': {
+            type: Object
+        },
+        'revisedIPP.$._key': {
+            type: String,
+            label: 'Name/Alias',
+            optional: true,
+            autoValue: function () {
+                if (!this.isSet) {
+                    return new Date()
+                        .toISOString();
+                }
+            },
+            autoform: {
+                omit: true
+            }
+        },
+        'revisedIPP.$.lat': {
+            type: Number,
+            label: 'Latitude',
+            decimal: true,
+            optional: true
+        },
+        'revisedIPP.$.lng': {
+            type: Number,
+            label: 'Latitude',
+            decimal: true,
+            optional: true
+        },
+
+
+    */
+
     ippCoordinates: {
         type: Object,
         label: 'IPP',
@@ -428,7 +480,7 @@ Schemas.coords = new SimpleSchema({
     'revisedLKP_PLS': {
         type: Object,
         optional: true,
-        label: 'Revised Point Last Seen'
+        label: 'Last Known Point/Point Last Seen'
     },
     'revisedLKP_PLS.lat': {
         type: Number,
@@ -549,7 +601,7 @@ Schemas.incidentOperations = new SimpleSchema({
             }
         },
         allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
-        label: 'Travel Direction Factor',
+        label: 'Determination Factor',
         optional: true
     },
     'typeofDecisionPoint': {
@@ -566,7 +618,7 @@ Schemas.incidentOperations = new SimpleSchema({
     'decisionPointFactor': {
 
         type: Boolean,
-        label: 'Decision Point A Factor?',
+        label: 'Decision Point A Find Factor?',
         autoform: {
             firstOption: function () {
                 return "--";
@@ -580,7 +632,18 @@ Schemas.incidentOperations = new SimpleSchema({
             }
         }
 
-    }
+    },
+    'PLS_HowDetermined': {
+        type: String,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Intended Destination', 'Physical Clue', 'Sighting', 'Tracks', 'Tracking/Trailing dog', 'Other'],
+        label: 'Determination Factor',
+        optional: true
+    },
 });
 Schemas.incidentOutcome = new SimpleSchema({
     'incidentOutcome': {
@@ -697,7 +760,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     },
     'elevationChange': {
-        type: String,
+        type: Number,
         label: 'Elevation Change',
         optional: true
     }
@@ -1147,6 +1210,7 @@ Schemas.weather = new SimpleSchema({
 })
 
 Schemas.xComments = new SimpleSchema({
+
     'summary': {
         type: String,
         optional: true,
@@ -1160,6 +1224,7 @@ Schemas.xComments = new SimpleSchema({
 })
 
 Schemas.SARCAT = new SimpleSchema({
+
     measureUnits: {
         type: String,
         optional: false,
@@ -1297,24 +1362,28 @@ Schemas.agencyProfile = new SimpleSchema({
         type: String,
         label: 'Agency/Organization',
     },
-    phoneNum: {
-        type: String,
-        label: 'Phone Number',
-        min: 10
-
-    },
-    country: {
+    Address: {
         type: String,
 
     },
     'state-region': {
         type: String,
-        label: 'State/Region'
+        label: 'State/Province'
+
+    },
+    country: {
+        type: String,
+        label: 'Country/Region'
+
+    },
+    phoneNum: {
+        type: String,
+        label: 'Phone Number',
 
     },
     measureUnits: {
         type: String,
-        label: 'Unit of Measurement',
+        label: 'Preferred Unit of Measurement',
         defaultValue: 'US',
         autoform: {
             firstOption: function () {
