@@ -18,7 +18,7 @@ Template.form.onCreated(function () {
         Session.set('fileUploads', d)
     });
 
-    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision)
+    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
         Meteor.call('getEcoRegion', record.coords.ippCoordinates, function (err, d) {
             if (err) {
                 return;
@@ -30,6 +30,25 @@ Template.form.onCreated(function () {
                 .val(d.DIV_NUM + '-' + d.DIV_DESC)
                 .trigger('change');
         });
+    }
+
+    if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
+        Meteor.call('getElevation', record.coords.ippCoordinates, record.coords.findCoord, function (err, d) {
+            if (err) {
+                return;
+            }
+            $('[name="incidentOutcome.elevationChange"]').val(d).trigger('change');
+<<<<<<< HEAD
+
+=======
+      
+>>>>>>> origin/master
+        });
+    }
 
 });
 Template.form.onRendered(function () {
@@ -67,7 +86,7 @@ Template.form.onRendered(function () {
         .append(' (' + labelUnits(currentUnit, 'distance') + ')');
     $('[name="incidentOutcome.elevationChange"]')
         .prev()
-        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+        .append(' (' + labelUnits(currentUnit, 'distanceSmall') + ')');
 
     $('[name="rescueDetails.distanceTraveled"]')
         .prev()
@@ -77,8 +96,8 @@ Template.form.onRendered(function () {
         .append(' (' + labelUnits(currentUnit, 'weight') + ')');
     $('[data-subjecttable="Height"]')
         .append(' (' + labelUnits(currentUnit, 'height') + ')');
-    $('.panel-title:contains("Weather")')
-        .append('- Autoset from forecast.io based on Incident Date & Location');
+
+    $('.panel-title:contains("Weather")').parent().next().prepend('<p class="small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
 
     var coords = record.coords;
 
@@ -173,7 +192,17 @@ Template.form.helpers({
             };
         });
     },
+
+
+    subjectKeysDesc: function () {
+
+        return ["Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?"];
+      
+    },
+
+
     subjectKeys: function () {
+
         return _.chain(Schemas.subjects._schema)
             .filter(function (e, d) {
                 return d.indexOf("$.") > -1;
@@ -208,7 +237,9 @@ Template.form.helpers({
         var self = this;
         self.myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
         return _.map(self.myArray, function (value, index) {
-
+console.log(value);
+value = _.pick(value,"Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?");
+console.log(value)
             return {
                 value: value,
                 index: index,
@@ -420,7 +451,7 @@ Template.form.events({
             console.log('MAX: ' + dailyData.temperatureMax)
             _.each(dailyData, function (d, name) {
                 $('[name="weather.' + name + '"]')
-                    .val(d);
+                    .val(d).trigger('change');
             });
             if (!dailyData.precipType) {
                 $('[name="weather.precipType"]')
@@ -472,8 +503,6 @@ Template.form.events({
 
 AutoForm.hooks({
 
-
-
     updateSubjectForm: {
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
             $('#updateSubjectForm')
@@ -489,4 +518,3 @@ AutoForm.hooks({
         }
     }
 });
-

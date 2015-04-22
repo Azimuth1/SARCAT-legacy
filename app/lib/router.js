@@ -4,8 +4,6 @@ Handlebars.registerHelper('json', function (context) {
 Handlebars.registerHelper('isEqual', function (a, b) {
     return a === b;
 });
-
-
 Router.configure({
     layoutTemplate: 'appBody',
     notFoundTemplate: 'appNotFound',
@@ -19,8 +17,6 @@ Router.configure({
         ];
     },
     onBeforeAction: function () {
-        Session.set('config',Config.findOne());
-        console.log(1)
         if (Config.findOne({
                 initSetup: true
             })) {
@@ -29,11 +25,7 @@ Router.configure({
         this.next();
     },
     action: function () {
-        console.log('???')
         if (this.ready()) {
-
-            A = Config.findOne();
-            console.log(a)
             this.render();
         } else {
             this.render('appLoading');
@@ -63,6 +55,8 @@ Tracker.autorun(function () {
 Router.route('home', {
     path: '/',
     action: function () {
+        //console.log('!')
+        console.log(Meteor.user())
         if (Meteor.user()) {
             
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
