@@ -174,7 +174,23 @@ Meteor.methods({
         }
         return result[0].properties;//.DOM_DESC;
         //DIV_NUM+'-'+d.properties.DIV_DESC
-    }
+    },
+    getElevation: function(coord1,coord2){
+
+        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations='+coord1.lat+','+coord1.lng+'|'+coord2.lat+','+coord2.lng+'&sensor=false&key=AIzaSyBTpVps4uKjBaH0cjoPVw6lKVVBI27E64s';
+        //console.log(url)
+        var result = HTTP.get(url);
+        result = JSON.parse(result.content).results;
+
+        var _coord1 = result[0].elevation;
+        var _coord2 = result[1].elevation;
+        return parseInt(_coord2-_coord1);
+        if (!result.length) {
+            return;
+        }
+        return result[0].properties;//.DOM_DESC;
+        //DIV_NUM+'-'+d.properties.DIV_DESC
+         },
 
 
 });

@@ -8,7 +8,7 @@ labelUnits = function (currentUnit, type) {
             Metric: 'kg',
             US: 'lbs'
         },
-        distance: {
+        distanceSmall: {
             Metric: 'Meters',
             US: 'Feet'
         },
@@ -123,15 +123,17 @@ setMap = function (context, bounds, agencyMapComplete) {
     map.fitBounds(bounds);
     var lc = L.control.locate({
             strings: {
-        
-                popup: "You are within {distance} {unit} from this point", 
-                outsideMapBoundsMsg: "You seem located outside the boundaries of the map" 
+
+                popup: "You are within {distance} {unit} from this point",
+                outsideMapBoundsMsg: "You seem located outside the boundaries of the map"
             },
             onLocationError: function (err) {
-                alert(err.message)
+                alert(err.message);
+                Session.set('geolocate', false);
             },
-            onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
+            onLocationOutsideMapBounds: function (context) {
                 alert(context.options.strings.outsideMapBoundsMsg);
+                Session.set('geolocate', false);
             },
             locateOptions: {
                 maxZoom: 13,
@@ -139,7 +141,12 @@ setMap = function (context, bounds, agencyMapComplete) {
         })
         .addTo(map);
     if (!agencyMapComplete) {
+        Session.set('geolocate', true);
         lc.start();
+        setTimeout(function () {
+            lc.stop();
+            Session.set('geolocate', false);
+        }, 8000);
     }
     map.scrollWheelZoom.disable();
     var layers = {
@@ -151,9 +158,9 @@ setMap = function (context, bounds, agencyMapComplete) {
     L.control.layers(layers)
         .addTo(map);
 
-        
 
     map.on('moveend', function () {
+        Session.set('geolocate', false);
         var bounds = map.getBounds()
             .toBBoxString();
         $('[name="agencyProfile.bounds"]')
@@ -173,7 +180,7 @@ newProjectSetMap = function (context, bounds, points) {
     var obj = {};
 
     var map = L.map(context);
-    m = map;
+
     var latLngBounds = L.latLngBounds(bounds);
     var center = latLngBounds.getCenter();
     obj.reset = function () {
@@ -256,8 +263,14 @@ formSetMap = function (context) {
     var obj = {};
     var map = L.map(context);
     //map.fitBounds(bounds);
+    mm = map;
     drawnPaths = new L.FeatureGroup()
         .addTo(map);
+
+    drawnPoints = new L.FeatureGroup()
+        .addTo(map);
+
+
     map.scrollWheelZoom.disable();
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
@@ -274,6 +287,74 @@ formSetMap = function (context) {
             .val(bounds)
             .trigger("change");
     });
+
+    var drawControl = new L.Control.Draw({
+        draw: {
+            position: 'topleft',
+            polygon: false,
+            circle: false,
+            marker: false,
+            rectangle: false,
+            polyline: false
+        },
+        edit: {
+            featureGroup: drawnPaths,
+            selectedPathOptions: {
+                maintainColor: true,
+                opacity: 0.3,
+                remove: false
+            }
+        },
+
+    });
+    map.addControl(drawControl);
+
+    map.on('draw:edited', function (e) {
+        var layers = e.layers;
+        layers.eachLayer(function (layer) {
+            var name = layer.options.name;
+            if (layer._path) {
+                latlngs = layer.getLatLngs()
+                    .map(function (d) {
+                        return [d.lat, d.lng]
+                    });
+                var lineString = JSON.stringify(latlngs);
+                $('[name="' + name + '"]')
+                    .val(lineString)
+                    .trigger("change");
+                return;
+            }
+            var position = layer.getLatLng();
+            $('[name="' + name + '.lng"]')
+                .val(position.lng)
+                .trigger("change");
+            $('[name="' + name + '.lat"]')
+                .val(position.lat)
+                .trigger("change");
+
+        });
+    });
+
+    /* map.on('draw:created', function (e) {
+         var type = e.layerType,
+             layer = e.layer;
+
+         if (type === 'marker') {
+             // Do marker specific actions
+         }
+
+         // Do whatever else you need to. (save to db, add to map etc)
+         drawnPaths.addLayer(layer);
+     });*/
+
+    /* map.on('draw:edited', function () {
+         // Update db to save latest changes.
+     });
+
+     map.on('draw:deleted', function () {
+         // Update db to save latest changes.
+     });*/
+
     obj.add = function (d) {
         var val = d.val;
         if (!d.path) {
@@ -282,6 +363,10 @@ formSetMap = function (context) {
         }
         if (val === 'intendedRoute') {
             coords[d.val] = d;
+            if (d.coords) {
+                obj.addPoly(d, JSON.parse(d.coords));
+                return;
+            }
             var start = coords.ippCoordinates.layer.getLatLng();
             var end = (coords.destinationCoord) ? coords.destinationCoord.layer.getLatLng() : map.getCenter();
             var latlngs = [
@@ -292,6 +377,11 @@ formSetMap = function (context) {
         }
         if (val === 'actualRoute') {
             coords[d.val] = d;
+            if (d.coords) {
+                obj.addPoly(d, JSON.parse(d.coords));
+                return;
+            }
+
             var start = coords.ippCoordinates.layer.getLatLng();
             var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : map.getCenter();
             var latlngs = [
@@ -314,21 +404,25 @@ formSetMap = function (context) {
         if (removePath) {
             obj.removePoly(coords[removePath]);
         }*/
+
         if (d.path) {
             obj.removePoly(d);
         } else {
             obj.removePoint(d);
             return;
         }
+
     };
     obj.addPoly = function (d, latlngs) {
+        //latlngs=JSON.parse(latlngs);
+        console.log(latlngs);
         color = d.path.stroke;
         polyline = L.polyline(latlngs, {
             color: color,
             opacity: 0.9,
             name: d.name,
             val: d.val,
-            editable: true
+            //editable: true
         });
         //polyline.addTo(map)
         drawnPaths.addLayer(polyline);
@@ -356,150 +450,122 @@ formSetMap = function (context) {
         $('[name="' + d.name + '.lat"]')
             .val('')
             .trigger("change");
-        drawnPaths.removeLayer(marker);
+        drawnPoints.removeLayer(marker);
         delete coords[d.val];
     };
     obj.addPoint = function (d) {
         var _coords = d.coords || map.getCenter();
         var myIcon = L.divIcon({
-            iconSize: [41, 39],
-            className: 'fa ' + d.icon + ' fa-4x fa-fw'
+            // iconSize: [41, 39],
+            iconSize: [50, 50],
+            iconAnchor: [25, 25],
+            className: 'fa ' + d.icon + ' fa-4x fa-fw _pad1'
         });
-        marker = L.rotatedMarker(_coords, {
+
+        //var draggable = (d.name === 'coords.ippCoordinates') ? false : true;
+        marker = L.marker(_coords, {
             draggable: true,
-            //editable: true,
+            //editable: false,//true,
             icon: myIcon,
             name: d.name,
             val: d.val,
         });
         var text = d.text;
+
+        //marker.dragging.disable()
+
         coords[d.val].layer = marker;
         //marker.addTo(map);
         //console.log(marker,drawnPaths)
-        drawnPaths.addLayer(marker);
+
         /* marker.bindPopup(d.text, {
                  //noHide: true,
                  //clickable: true
              })
              //
-         if (d.val === 'ippCoordinates') {
-             marker.openPopup();
-         }*/
-        marker.setZIndexOffset(4);
-        if (d.val === 'ippCoordinates') {
-            var travelDirection = $('.travelDirection');
-            var spin;
-            direction = 0;
-            /* 
-                       marker.on('mouseover', function (event) {
-                           console.log('!')
-                           spin = window.setInterval(function () {
-                               direction = direction + 1;
-                               if (direction > 360) {
-                                   direction = 0;
-                               }
-                               marker.options.angle = direction;
-                               marker.update();
+             */
+        /*if (d.val === 'ippCoordinates') {
+            //marker.openPopup();
+            marker.addTo(map);
+        } else {*/
+        drawnPoints.addLayer(marker);
+        // }
 
-                           }, 10);
-                       });
+        //marker.setZIndexOffset(4);
 
-                       marker.on('mouseout', function (event) {
-                           clearTimeout(spin);
-                           //marker.update();
-                           $('[name="coords.travelDirection"]')
-                               .val(direction)
-                               .trigger("change");
-                       });
-                                 $('#' + context)
-                                       .on('mouseover', '.travelDirection', function (event) {
-                                           console.log('!')
-                                           spin = window.setInterval(function () {
-                                               direction = direction + 1;
-                                               if (direction > 360) {
-                                                   direction = 0;
-                                               }
-                                               $(event.target)
-                                                   .css('transform', 'rotate(' + direction + 'deg)');
-                                           }, 10);
-                                       });
-
-                                   $('#' + context)
-                                       .on('mouseout', '.travelDirection', function (event) {
-                                           clearTimeout(spin);
-                                           $('[name="coords.travelDirection"]')
-                                               .val(direction)
-                                               .trigger("change");
-                                       });
-
-                       */
-        }
         $('[name="' + d.name + '.lng"]')
             .val(_coords.lng)
             .trigger("change");
         $('[name="' + d.name + '.lat"]')
             .val(_coords.lat)
             .trigger("change");
-        obj.editPoly
-        var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
-        if (_.contains(pathPoints, d.val)) {
-            function drag(layer, index, position) {
-                layer.spliceLatLngs(index, 1, position);
-            };
 
-            function routeEditing(val) {
-                if (val) {
-                    drawnPaths.getLayers()
-                        .forEach(function (layer) {
-                            if (layer.editing) {
-                                layer.editing.enable();
-                            }
-                        });
-                } else {
-                    drawnPaths.getLayers()
-                        .forEach(function (layer) {
-                            if (layer.editing) {
-                                layer.editing.disable();
-                            }
-                        });
+        /*  var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
+          if (_.contains(pathPoints, d.val)) {
+              function drag(layer, index, position) {
+                  layer.spliceLatLngs(index, 1, position);
+              };
+
+              function routeEditing(val) {
+                  if (val) {
+                      drawnPaths.getLayers()
+                          .forEach(function (layer) {
+                              if (layer.editing) {
+                                  layer.editing.enable();
+                              }
+                          });
+                  } else {
+                      drawnPaths.getLayers()
+                          .forEach(function (layer) {
+                              if (layer.editing) {
+                                  layer.editing.disable();
+                              }
+                          });
+                  }
+              };*/
+        /*marker.on('dragstart', function (event) {
+                console.log(d.name);
+                e = event;
+                var draggable = (d.name === 'coords.ippCoordinates') ? false : true;
+
+                if (!draggable) {
+                    //  event.preventDefault();
+                    return false;
                 }
-            };
-            /*marker.on('dragstart', function (event) {
-                routeEditing(false);
             })*/
-            /*marker.on('drag', function (event) {
-                var marker = event.target;
-                var position = marker.getLatLng();
-                var layer;
-                if (d.val === 'destinationCoord') {
-                    layer = coords.intendedRoute.layer;
-                    index = layer.getLatLngs()
-                        .length - 1;
-                    drag(layer, index, position);
+        /*marker.on('drag', function (event) {
+            var marker = event.target;
+            var position = marker.getLatLng();
+            var layer;
+            if (d.val === 'destinationCoord') {
+                layer = coords.intendedRoute.layer;
+                index = layer.getLatLngs()
+                    .length - 1;
+                drag(layer, index, position);
 
-                }
-                if (d.val === 'findCoord') {
-                    layer = coords.actualRoute.layer;
-                    index = layer.getLatLngs()
-                        .length - 1;
-                    drag(layer, index, position);
-                }
-                if (d.val === 'ippCoordinates') {
-                    index = 0;
+            }
+            if (d.val === 'findCoord') {
+                layer = coords.actualRoute.layer;
+                index = layer.getLatLngs()
+                    .length - 1;
+                drag(layer, index, position);
+            }
+            if (d.val === 'ippCoordinates') {
+                index = 0;
 
-                    drawnPaths.getLayers()
-                        .forEach(function (layer) {
-                            if (layer.editing) {
-                                drag(layer, index, position);
-                            }
-                        })
+                drawnPaths.getLayers()
+                    .forEach(function (layer) {
+                        if (layer.editing) {
+                            drag(layer, index, position);
+                        }
+                    })
 
-                }
+            }
 
-            });*/
-        }
+        });*/
+        //}
         marker.on('dragend', function (event) {
-            routeEditing(true);
+            console.log(d.name);
             var marker = event.target;
             var position = marker.getLatLng();
             $('[name="' + d.name + '.lng"]')
@@ -512,8 +578,8 @@ formSetMap = function (context) {
         return marker;
     }
     obj.fitBounds = function () {
-        map.fitBounds(drawnPaths.getBounds()
-            .pad(1));
+        map.fitBounds(drawnPoints.getBounds()
+            .pad(0));
     };
     return obj;
 }
@@ -646,253 +712,255 @@ recordStats = function (data) {
     return count;
 };
 statsSetMap = function (context, bounds, points) {
-    var markers = {};
-    var paths = {};
-    var coords = {};
-    var obj = {};
-    var map = L.map(context);
-    //map.fitBounds(bounds);
-    m = map;
-    drawnPaths = new L.FeatureGroup()
-        .addTo(map);
-    map.scrollWheelZoom.disable();
-    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            id: 'examples.map-i875mjb7'
-        })
-        .addTo(map);
-    map.on('moveend', function () {
-        var bounds = map.getBounds()
-            .toBBoxString();
-        $('[name="coords.bounds"]')
-            .val(bounds)
-            .trigger("change");
-    });
-    obj.add = function (d) {
-        z = coords;
-        var val = d.val;
-        if (!d.path) {
-            coords[val] = d;
-            obj.addPoint(d);
-        }
-        return;
-        if (!coords.ippCoordinates) {
-            return;
-        }
-        if (val === 'destinationCoord') {
-            d = {
-                "val": "intendedRoute",
-                "name": "coords.intendedRoute",
-                "text": "Intended Route",
-                path: {
-                    stroke: '#018996'
-                }
-            };
-            coords[d.val] = d;
-            //console.log(coords.ippCoordinates, coords.destinationCoord)
-            var start = coords.ippCoordinates.layer.getLatLng();
-            var end = coords.destinationCoord.layer.getLatLng();
-            var latlngs = [
-                [start.lat, start.lng],
-                [end.lat, end.lng]
-            ];
-            obj.addPoly(d, latlngs);
-        }
-        if (val === 'findCoord') {
-            d = {
-                "val": "actualRoute",
-                "name": "coords.actualRoute",
-                "text": "Actual Route",
-                path: {
-                    stroke: '#3C763D',
-                    weight: 8
-                }
-            }
-            coords[d.val] = d;
-            var start = coords.ippCoordinates.layer.getLatLng();
-            var end = coords.findCoord.layer.getLatLng();
-            //console.log(start, end);
-            var latlngs = [
-                [start.lat, start.lng],
-                [end.lat, end.lng]
-            ];
-            obj.addPoly(d, latlngs);
-        }
-    };
-    obj.remove = function (d) {
-        // console.log(d)
-        var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
-        if (removePath) {
-            // console.log(removePath)
-            obj.removePoly(coords[removePath]);
-        }
-        if (d.path) {
-            obj.removePoly(d);
-        } else {
-            obj.removePoint(d);
-            return;
-        }
-    };
-    obj.addPoly = function (d, latlngs) {
-        color = d.path.stroke;
-        polyline = L.polyline(latlngs, {
-            color: color,
-            opacity: 0.9,
-            name: d.name,
-            val: d.val,
-            editable: true
-        });
-        //polyline.addTo(map)
-        drawnPaths.addLayer(polyline);
-        //paths[d.val] = polyline;
-        coords[d.val].layer = polyline;
-        var lineString = JSON.stringify(latlngs);
-        $('[name="' + d.name + '"]')
-            .val(lineString)
-            .trigger("change");
-        //var lineString = JSON.stringify(layer.toGeoJSON());
-    };
-    obj.removePoly = function (d) {
-        var path = coords[d.val].layer;
-        $('[name="' + d.name + '"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(path);
-        delete coords[d.val];
-    };
-    obj.removePoint = function (d) {
-        var marker = coords[d.val].layer;
-        $('[name="' + d.name + '.lng"]')
-            .val('')
-            .trigger("change");
-        $('[name="' + d.name + '.lat"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(marker);
-        delete coords[d.val];
-    };
-    obj.addPoint = function (d) {
-        var _coords = d.coords || map.getCenter();
-        var myIcon = L.divIcon({
-            iconSize: [41, 39],
-            className: 'fa ' + d.icon + ' fa-4x fa-fw'
-        });
-        var marker = L.marker(_coords, {
-            draggable: true,
-            editable: true,
-            icon: myIcon,
-            name: d.name,
-            val: d.val,
-        });
-        var text = d.text;
-        coords[d.val].layer = marker;
-        //marker.addTo(map);
-        //console.log(marker,drawnPaths)
-        drawnPaths.addLayer(marker);
-        marker.bindPopup(d.text, {
-                //noHide: true,
-                //clickable: true
+        var markers = {};
+        var paths = {};
+        var coords = {};
+        var obj = {};
+        var map = L.map(context);
+        //map.fitBounds(bounds);
+        m = map;
+        drawnPaths = new L.FeatureGroup()
+            .addTo(map);
+        map.scrollWheelZoom.disable();
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                id: 'examples.map-i875mjb7'
             })
-            //
-        marker.setZIndexOffset(4);
-        $('[name="' + d.name + '.lng"]')
-            .val(_coords.lng)
-            .trigger("change");
-        $('[name="' + d.name + '.lat"]')
-            .val(_coords.lat)
-            .trigger("change");
-        obj.editPoly
-        var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
-        if (_.contains(pathPoints, d.val)) {
-            function drag(layer, index, position) {
-                layer.spliceLatLngs(index, 1, position);
-            };
+            .addTo(map);
+        map.on('moveend', function () {
+            var bounds = map.getBounds()
+                .toBBoxString();
+            $('[name="coords.bounds"]')
+                .val(bounds)
+                .trigger("change");
+        });
 
-            function routeEditing(val) {
-                if (val) {
-                    drawnPaths.getLayers()
-                        .forEach(function (layer) {
-                            if (layer.editing) {
-                                layer.editing.enable();
-                            }
-                        });
-                } else {
-                    drawnPaths.getLayers()
-                        .forEach(function (layer) {
-                            if (layer.editing) {
-                                layer.editing.disable();
-                            }
-                        });
+        obj.add = function (d) {
+            z = coords;
+            var val = d.val;
+            if (!d.path) {
+                coords[val] = d;
+                obj.addPoint(d);
+            }
+            return;
+            if (!coords.ippCoordinates) {
+                return;
+            }
+            if (val === 'destinationCoord') {
+                d = {
+                    "val": "intendedRoute",
+                    "name": "coords.intendedRoute",
+                    "text": "Intended Route",
+                    path: {
+                        stroke: '#018996'
+                    }
+                };
+                coords[d.val] = d;
+                //console.log(coords.ippCoordinates, coords.destinationCoord)
+                var start = coords.ippCoordinates.layer.getLatLng();
+                var end = coords.destinationCoord.layer.getLatLng();
+                var latlngs = [
+                    [start.lat, start.lng],
+                    [end.lat, end.lng]
+                ];
+                obj.addPoly(d, latlngs);
+            }
+            if (val === 'findCoord') {
+                d = {
+                    "val": "actualRoute",
+                    "name": "coords.actualRoute",
+                    "text": "Actual Route",
+                    path: {
+                        stroke: '#3C763D',
+                        weight: 8
+                    }
                 }
-            };
-            marker.on('dragstart', function (event) {
-                routeEditing(false);
-            })
-            marker.on('drag', function (event) {
-                var marker = event.target;
-                var position = marker.getLatLng();
-                var layer;
-                if (d.val === 'destinationCoord') {
-                    layer = coords.intendedRoute.layer;
-                    index = layer.getLatLngs()
-                        .length - 1;
-                    drag(layer, index, position);
-                }
-                if (d.val === 'findCoord') {
-                    layer = coords.actualRoute.layer;
-                    index = layer.getLatLngs()
-                        .length - 1;
-                    drag(layer, index, position);
-                }
-                if (d.val === 'ippCoordinates') {
-                    index = 0;
-                    drawnPaths.getLayers()
-                        .forEach(function (layer) {
-                            if (layer.editing) {
-                                drag(layer, index, position);
-                            }
-                        })
-                }
+                coords[d.val] = d;
+                var start = coords.ippCoordinates.layer.getLatLng();
+                var end = coords.findCoord.layer.getLatLng();
+                //console.log(start, end);
+                var latlngs = [
+                    [start.lat, start.lng],
+                    [end.lat, end.lng]
+                ];
+                obj.addPoly(d, latlngs);
+            }
+        };
+        obj.remove = function (d) {
+            // console.log(d)
+            var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
+            if (removePath) {
+                // console.log(removePath)
+                obj.removePoly(coords[removePath]);
+            }
+            if (d.path) {
+                obj.removePoly(d);
+            } else {
+                obj.removePoint(d);
+                return;
+            }
+        };
+        obj.addPoly = function (d, latlngs) {
+            color = d.path.stroke;
+            polyline = L.polyline(latlngs, {
+                color: color,
+                opacity: 0.9,
+                name: d.name,
+                val: d.val,
+                editable: true
             });
-        }
-        marker.on('dragend', function (event) {
-            routeEditing(true);
-            var marker = event.target;
-            var position = marker.getLatLng();
+            //polyline.addTo(map)
+            drawnPaths.addLayer(polyline);
+            //paths[d.val] = polyline;
+            coords[d.val].layer = polyline;
+            var lineString = JSON.stringify(latlngs);
+            $('[name="' + d.name + '"]')
+                .val(lineString)
+                .trigger("change");
+            //var lineString = JSON.stringify(layer.toGeoJSON());
+        };
+        obj.removePoly = function (d) {
+            var path = coords[d.val].layer;
+            $('[name="' + d.name + '"]')
+                .val('')
+                .trigger("change");
+            drawnPaths.removeLayer(path);
+            delete coords[d.val];
+        };
+        obj.removePoint = function (d) {
+            var marker = coords[d.val].layer;
             $('[name="' + d.name + '.lng"]')
-                .val(position.lng)
+                .val('')
                 .trigger("change");
             $('[name="' + d.name + '.lat"]')
-                .val(position.lat)
+                .val('')
                 .trigger("change");
-        });
-        return marker;
-    }
-    obj.fitBounds = function () {
-        map.fitBounds(drawnPaths.getBounds()
-            .pad(.3));
-    };
-    return obj;
-}
-L.RotatedMarker = L.Marker.extend({
-    options: {
-        angle: 0
-    },
-    _setPos: function (pos) {
-        L.Marker.prototype._setPos.call(this, pos);
-        if (L.DomUtil.TRANSFORM) {
-            // use the CSS transform rule if available
-            this._icon.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.angle + 'deg)';
-        } else if (L.Browser.ie) {
-            // fallback for IE6, IE7, IE8
-            var rad = this.options.angle * L.LatLng.DEG_TO_RAD,
-                costheta = Math.cos(rad),
-                sintheta = Math.sin(rad);
-            this._icon.style.filter += ' progid:DXImageTransform.Microsoft.Matrix(sizingMethod=\'auto expand\', M11=' +
-                costheta + ', M12=' + (-sintheta) + ', M21=' + sintheta + ', M22=' + costheta + ')';
+            drawnPaths.removeLayer(marker);
+            delete coords[d.val];
+        };
+        obj.addPoint = function (d) {
+            var _coords = d.coords || map.getCenter();
+            var myIcon = L.divIcon({
+                iconSize: [41, 39],
+                className: 'fa ' + d.icon + ' fa-4x fa-fw'
+            });
+            var marker = L.marker(_coords, {
+                draggable: true,
+                editable: true,
+                icon: myIcon,
+                name: d.name,
+                val: d.val,
+            });
+            var text = d.text;
+            coords[d.val].layer = marker;
+            //marker.addTo(map);
+            //console.log(marker,drawnPaths)
+            drawnPaths.addLayer(marker);
+            marker.bindPopup(d.text, {
+                    //noHide: true,
+                    //clickable: true
+                })
+                //
+            marker.setZIndexOffset(4);
+            $('[name="' + d.name + '.lng"]')
+                .val(_coords.lng)
+                .trigger("change");
+            $('[name="' + d.name + '.lat"]')
+                .val(_coords.lat)
+                .trigger("change");
+            obj.editPoly
+            var pathPoints = ['ippCoordinates', 'destinationCoord', 'findCoord'];
+            /*if (_.contains(pathPoints, d.val)) {
+                function drag(layer, index, position) {
+                    layer.spliceLatLngs(index, 1, position);
+                };
+
+                function routeEditing(val) {
+                    if (val) {
+                        drawnPaths.getLayers()
+                            .forEach(function (layer) {
+                                if (layer.editing) {
+                                    layer.editing.enable();
+                                }
+                            });
+                    } else {
+                        drawnPaths.getLayers()
+                            .forEach(function (layer) {
+                                if (layer.editing) {
+                                    layer.editing.disable();
+                                }
+                            });
+                    }
+                };
+                marker.on('dragstart', function (event) {
+                    routeEditing(false);
+                })
+                marker.on('drag', function (event) {
+                    var marker = event.target;
+                    var position = marker.getLatLng();
+                    var layer;
+                    if (d.val === 'destinationCoord') {
+                        layer = coords.intendedRoute.layer;
+                        index = layer.getLatLngs()
+                            .length - 1;
+                        drag(layer, index, position);
+                    }
+                    if (d.val === 'findCoord') {
+                        layer = coords.actualRoute.layer;
+                        index = layer.getLatLngs()
+                            .length - 1;
+                        drag(layer, index, position);
+                    }
+                    if (d.val === 'ippCoordinates') {
+                        index = 0;
+                        drawnPaths.getLayers()
+                            .forEach(function (layer) {
+                                if (layer.editing) {
+                                    drag(layer, index, position);
+                                }
+                            })
+                    }
+                });
+            }*/
+            marker.on('dragend', function (event) {
+                //routeEditing(true);
+                var marker = event.target;
+                var position = marker.getLatLng();
+                $('[name="' + d.name + '.lng"]')
+                    .val(position.lng)
+                    .trigger("change");
+                $('[name="' + d.name + '.lat"]')
+                    .val(position.lat)
+                    .trigger("change");
+            });
+            return marker;
         }
+        obj.fitBounds = function () {
+            map.fitBounds(drawnPaths.getBounds()
+                .pad(.3));
+        };
+        return obj;
     }
-});
-L.rotatedMarker = function (pos, options) {
-    return new L.RotatedMarker(pos, options);
-};
+    /*L.RotatedMarker = L.Marker.extend({
+        options: {
+            angle: 0
+        },
+        _setPos: function (pos) {
+            L.Marker.prototype._setPos.call(this, pos);
+            if (L.DomUtil.TRANSFORM) {
+                // use the CSS transform rule if available
+                this._icon.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.angle + 'deg)';
+            } else if (L.Browser.ie) {
+                // fallback for IE6, IE7, IE8
+                var rad = this.options.angle * L.LatLng.DEG_TO_RAD,
+                    costheta = Math.cos(rad),
+                    sintheta = Math.sin(rad);
+                this._icon.style.filter += ' progid:DXImageTransform.Microsoft.Matrix(sizingMethod=\'auto expand\', M11=' +
+                    costheta + ', M12=' + (-sintheta) + ', M21=' + sintheta + ', M22=' + costheta + ')';
+            }
+        }
+    });
+    L.rotatedMarker = function (pos, options) {
+        return new L.RotatedMarker(pos, options);
+    };*/
+

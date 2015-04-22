@@ -540,21 +540,16 @@ em {
     padding: 0px;
     margin: 1%;
     font-size: .7em;
-    min-width: 202px;
+    min-width: 210px;
+    /*max-height:143px;*/
 }
 
 #formIdMap .panel-heading {
     padding:1px;
+    text-align:center;
 }
-#formIdMap .form-group {
-    float: left;
-    width: 16.666%;
-    padding: 0px;
-    margin: 1%;
-    
-    min-width: 234px;
-}
-#formIdMap input {
+
+#formIdMap input[type=text],#formIdMap input[type=number]{
   height: 30px;
   padding: 5px 10px;
   font-size: 12px;
@@ -573,9 +568,11 @@ em {
     margin-bottom: 0px;
 }
 
-.travelDir {
-    width: 20%
+.travelDirection label{
+display:none;
 }
+
+
 
 .small {
     font-size: 85% !important;
