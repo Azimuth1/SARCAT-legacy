@@ -5,54 +5,26 @@ var config;
 var agencyProfile;
 var record;
 var map;
-
 Session.setDefault('subjectTableView', 'Description');
-
 Template.registerHelper("Schemas", Schemas);
-
 Template.form.onCreated(function () {
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
     agencyProfile = config.agencyProfile;
     record = this.data.record;
     Session.set('currentRecord', this.data.record);
-
     Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
         Session.set('fileUploads', d)
     });
-
     if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
         Meteor.call('setEcoRegion', record._id, function (err, d) {
             if (err) {
                 return;
             }
-            console.log(d.DIV_NUM + '-' + d.DIV_DESC, d.DOM_DESC)
-                /* $('[name="incident.ecoregiondomain"]')
-                     .val(d.DOM_DESC)
-                     .trigger('change');
-                 $('[name="incident.ecoregionDivision"]')
-                     .val(d.DIV_NUM + '-' + d.DIV_DESC)
-                     .trigger('change');*/
         });
     }
-    /*
-        Meteor.call('setLocale', record._id, function (err, d) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-        });
-
-        Meteor.call('setElevation', record._id, function (err, d) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-        });
-    */
 });
 Template.form.onRendered(function () {
-
     record = this.data.record;
     r = record;
     var degree = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
@@ -61,26 +33,31 @@ Template.form.onRendered(function () {
     travelBearing.css('-webkit-transform', 'rotate(' + degree + 'deg)');
     travelBearing.css('-o-transform', 'rotate(' + degree + 'deg)');
     travelBearing.css('-ms-transform', 'rotate(' + degree + 'deg)');
-
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
     agencyProfile = config.agencyProfile;
-
     Session.set('currentRecord', record);
-
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
-
     if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
         Meteor.call('setElevation', record._id, function (err, d) {
             if (err) {
-                console.log(err);
-                return;
+                return console.log(err);
             }
         });
     }
-
+    if (!record.incident.country && !record.incident.stateregion) {
+        Meteor.call('setLocale', record._id, function (err, d) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    }
+    if (!Object.keys(record.weather)
+        .length) {
+        getWeather(record);
+    }
     $('[name="weather.temperatureMax"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'temperature') + ')');
@@ -96,29 +73,22 @@ Template.form.onRendered(function () {
     $('[name="incidentOutcome.elevationChange"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distanceSmall') + ')');
-
     $('[name="rescueDetails.distanceTraveled"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distance') + ')');
-
     $('[data-subjecttable="Weight"]')
         .append(' (' + labelUnits(currentUnit, 'weight') + ')');
     $('[data-subjecttable="Height"]')
         .append(' (' + labelUnits(currentUnit, 'height') + ')');
-
     $('.panel-title:contains("Weather")')
         .parent()
         .next()
         .prepend('<p class="small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
-
     var coords = record.coords;
-
     var bounds = coords.bounds;
     var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
     mapBounds = boundsString2Array(mapBounds);
-
     map = formSetMap('formMap', record._id);
-
     var coords = getCoords(record);
     coords.forEach(function (d) {
         if (d.coords) {
@@ -126,18 +96,14 @@ Template.form.onRendered(function () {
                 .addClass('active');
             map.add(d);
         }
-
     });
     map.fitBounds();
-
     $('.collapse')
         .collapse({
             toggle: false
         });
-
 });
 Template.form.helpers({
-
     formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
@@ -170,9 +136,7 @@ Template.form.helpers({
     currentRecord: function () {
         return Session.get('currentRecord');
     },
-
     hasDecisionPoint: function () {
-
         var record = this.record;
         return record.coords && record.coords.decisionPointCoord;
     },
@@ -183,38 +147,37 @@ Template.form.helpers({
     autoSaveMode: function () {
         return true;
     },
-
     schemas: function () {
         var record = this.record;
         var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "coords", "updated", "created", "admin", "xComments", "incidentOperations");
-
-        return _.chain(schemas).map(function (d) {
-            if (!Schemas[d]) {
-                return;
-            }
-            //console.log(d)
-            var total = Schemas[d]._firstLevelSchemaKeys.length;
-            //console.log(total, record[d])
-            var objKeys = Object.keys(record[d]);
-            //console.log(objKeys)
-            var count = objKeys.length;
-            var sum;
-            if (total === 1) {
-                count = record[d][objKeys[0]].length;
-                sum = ' - ' + count;
-            } else {
-                sum = [count, total].join('/');
-            }
-
-            var label = Schemas.SARCAT._schema[d].label;
-            var klass = (count === Schemas[d]._firstLevelSchemaKeys.length) ? '' : 'primary-bg';
-
-            return {
-                klass: klass,
-                field: label,
-                sum: sum
-            };
-        }).compact().value();
+        return _.chain(schemas)
+            .map(function (d) {
+                if (!Schemas[d]) {
+                    return;
+                }
+                //console.log(d)
+                var total = Schemas[d]._firstLevelSchemaKeys.length;
+                //console.log(total, record[d])
+                var objKeys = Object.keys(record[d]);
+                //console.log(objKeys)
+                var count = objKeys.length;
+                var sum;
+                if (total === 1) {
+                    count = record[d][objKeys[0]].length;
+                    sum = ' - ' + count;
+                } else {
+                    sum = [count, total].join('/');
+                }
+                var label = Schemas.SARCAT._schema[d].label;
+                var klass = (count === Schemas[d]._firstLevelSchemaKeys.length) ? '' : 'primary-bg';
+                return {
+                    klass: klass,
+                    field: label,
+                    sum: sum
+                };
+            })
+            .compact()
+            .value();
     },
     subjectKeys: function () {
         return _.chain(Schemas.subjects._schema)
@@ -228,11 +191,9 @@ Template.form.helpers({
             .without('Name/Alias')
             .value();
     },
-
     subjectKeysDesc: function () {
         return ["Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?"];
     },
-
     subjectKeysRescue: function () {
         return ["Rescue Status", "Mechanism", "Injury Type", "Illness", "Treatment by"];
     },
@@ -251,7 +212,6 @@ Template.form.helpers({
         //coords = _.intersection(coords, activeCoords)
         return coords.map(function (d) {
             return 'coords.' + d
-
         }); //.join(',');
     },
     hideCoord: function (d) {
@@ -268,7 +228,6 @@ Template.form.helpers({
         });
     },
     getSubjectsArrayDesc: function () {
-
         var values = _.chain(Schemas.subjects._schema)
             .map(function (e, d) {
                 var field = d.split("$.")[1];
@@ -287,7 +246,6 @@ Template.form.helpers({
             })
             .without('_key')
             .value();
-
         var myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
         //console.log(myArray);
         return _.map(myArray, function (value, index) {
@@ -297,7 +255,6 @@ Template.form.helpers({
                 obj.options = d.options
                 return obj
             });
-
             return {
                 value: fields,
                 index: index,
@@ -307,7 +264,6 @@ Template.form.helpers({
         });
     },
     getSubjectsArrayRescue: function () {
-
         var values = _.chain(Schemas.subjects._schema)
             .map(function (e, d) {
                 var field = d.split("$.")[1];
@@ -326,7 +282,6 @@ Template.form.helpers({
             })
             .without('_key')
             .value();
-
         var myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
         return _.map(myArray, function (value, index) {
             var fields = values.map(function (d) {
@@ -335,7 +290,6 @@ Template.form.helpers({
                 obj.options = d.options
                 return obj
             });
-
             return {
                 value: fields,
                 index: index,
@@ -344,7 +298,6 @@ Template.form.helpers({
         });
     },
     getSubjectsArrayPersonal: function () {
-
         var values = _.chain(Schemas.subjects._schema)
             .map(function (e, d) {
                 var field = d.split("$.")[1];
@@ -363,7 +316,6 @@ Template.form.helpers({
             })
             .without('_key')
             .value();
-
         var myArray = (this.record && this.record.subjects) ? this.record.subjects.subject : [];
         return _.map(myArray, function (value, index) {
             var fields = values.map(function (d) {
@@ -372,7 +324,6 @@ Template.form.helpers({
                 obj.options = d.options
                 return obj
             });
-
             return {
                 value: fields,
                 index: index,
@@ -381,11 +332,9 @@ Template.form.helpers({
         });
     },
     getResourceArray: function () {
-
         var self = this;
         self.myArray = (this.record && this.record.resourcesUsed) ? this.record.resourcesUsed.resource : [];
         return _.map(self.myArray, function (value, index) {
-
             return {
                 value: value,
                 index: index,
@@ -393,7 +342,6 @@ Template.form.helpers({
             };
         });
     },
-
     subject: function () {
         return _.map(this, function (d) {
             return d;
@@ -420,7 +368,6 @@ Template.form.helpers({
             return d;
         });
     },
-
     medicalDetails: function () {
         var medical = this.record.medical;
         if (!medical) {
@@ -437,13 +384,10 @@ Template.form.helpers({
         var isView = Session.equals('subjectTableView', d);
         return isView ? '' : 'hide';
     },
-
 });
-
 var clicking = false;
 var travelDirectionDegree;
 Template.form.events({
-
     'mousedown .travelDirection': function (evt, template) {
         clicking = true;
     },
@@ -459,7 +403,6 @@ Template.form.events({
         $('[name="incidentOperations.initialDirectionofTravel"]')
             .val(travelDirectionDegree)
             .trigger("change");
-
     },
     'mousemove .travelDirection': function (evt, template) {
         // console.log(mouse_x, mouse_y);
@@ -478,9 +421,7 @@ Template.form.events({
         travelBearing.css('-webkit-transform', 'rotate(' + travelDirectionDegree + 'deg)');
         travelBearing.css('-o-transform', 'rotate(' + travelDirectionDegree + 'deg)');
         travelBearing.css('-ms-transform', 'rotate(' + travelDirectionDegree + 'deg)');
-
     },
-
     'click .formNav': function (event, template) {
         $('.collapse')
             .collapse('hide');
@@ -502,55 +443,47 @@ Template.form.events({
             console.log(err);
         });
     },
-
     'change .formNav': function (event, template) {
         $('.collapse')
             .collapse('hide');
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-
     'change [name="recordInfo.incidentdate"]': function (event, template) {
-
         //var weatherCoords = record.coords.ippCoordinates;
-
         getWeather(record);
         //getWeather(weatherCoords, event.target.value, function (data, err) {
-/*            z = data
-            Session.set('weather', data);
-            var dailyData = data.daily.data[0];
+        /*            z = data
+                    Session.set('weather', data);
+                    var dailyData = data.daily.data[0];
 
-            _.each(dailyData, function (d, name) {
-                Meteor.call('updateRecord', record._id, 'weather.' + name, d, function (err, res) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-            });
-            if (!dailyData.precipType) {
-                Meteor.call('updateRecord', record._id, 'weather.precipType', 'none', function (err, res) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-            }*/
-      //  });
+                    _.each(dailyData, function (d, name) {
+                        Meteor.call('updateRecord', record._id, 'weather.' + name, d, function (err, res) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                        });
+                    });
+                    if (!dailyData.precipType) {
+                        Meteor.call('updateRecord', record._id, 'weather.precipType', 'none', function (err, res) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                        });
+                    }*/
+        //  });
     },
     'click .mapPoints a': function (event, template) {
         var context = template.$(event.target);
         var pointType = context.attr('data');
         var active = context.hasClass('active')
-
         var coords = getCoords(this.record);
-
         var item = _.findWhere(coords, {
             val: pointType
         });
-
         if (!item) {
             return;
         };
-
         if (!active) {
             map.add(item);
         } else {
@@ -568,10 +501,8 @@ Template.form.events({
         url += '/' + file;
         window.open(url);
     },
-
     'click .subjectTableView label': function (event, template) {
         e = event;
-
         var dataAttr = event.target.children[0].getAttribute('data');
         Session.set('subjectTableView', dataAttr);
     },
@@ -586,13 +517,11 @@ Template.form.events({
             if (record[val[0]][val[1]][val[2]] === parseFloat(value)) {
                 return;
             }
-            map.editPoint(val[0] + '.' + val[1]);
+            map.editPoint(val[1]);
         }
     },
 });
-
 AutoForm.hooks({
-
     updateResourceForm: {
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
             $('#updateResourceForm')
@@ -601,3 +530,4 @@ AutoForm.hooks({
         }
     }
 });
+

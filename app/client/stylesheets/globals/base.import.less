@@ -611,9 +611,9 @@ em {
 }
 
 .primary-bg {
-    background-color: #2CC5D2;
-    color: #FFF;
-    border-color: #2CC5D2;
+    background-color: #2CC5D2 !important;
+    color: #FFF !important;
+    border-color: #2CC5D2 !important;
 }
 
 .default-bg {
@@ -1003,7 +1003,7 @@ a {
     z-index: 100;
     text-align: center;
     padding: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 1);
     border-radius: 3px;
     z-index: 3;
     font-size: initial;
@@ -1016,4 +1016,15 @@ a {
 
 .leaflet-control-locate {
     display: none;
+}
+
+
+.mapCrosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  font-size: 5em;
+  margin-left: -18px;
+  margin-top: -18px;
 }
