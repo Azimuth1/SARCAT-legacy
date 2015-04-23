@@ -69,12 +69,12 @@ getCoords = function (record) {
         "val": "destinationCoord",
         "name": "coords.destinationCoord",
         "text": "Intended Destination",
-        icon: 'fa-bullseye text-default'
+        icon: 'fa-male 4x text-danger'
     }, {
         "val": "revisedLKP_PLS",
         "name": "coords.revisedLKP_PLS",
         "text": "Revised IPP",
-        icon: 'fa-male 4x text-danger'
+        icon: 'fa-bullseye text-default'
     }, {
         "val": "findCoord",
         "name": "coords.findCoord",
@@ -85,7 +85,7 @@ getCoords = function (record) {
         "name": "coords.intendedRoute",
         "text": "Intended Route",
         path: {
-            stroke: '#018996'
+            stroke: '#A94442'
         }
     }, {
         "val": "actualRoute",
@@ -121,9 +121,34 @@ boundsString2Array = function (bounds) {
         [bounds[3], bounds[2]]
     ];
 };
-getWeather = function (coords, date, cb) {
-    if (!date) {
+getWeather = function (record) {
+
+    var coords = record.coords.ippCoordinates;
+    var date = record.recordInfo.incidentdate;
+    date = date.toLocaleDateString().replace(/\//g, '-');
+    if (!date || !coords) {
         return;
+    }
+
+    function done(data) {
+        console.log(data)
+        Session.set('weather', data);
+        var dailyData = data.daily.data[0];
+
+        _.each(dailyData, function (d, name) {
+            Meteor.call('updateRecord', record._id, 'weather.' + name, d, function (err, res) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        });
+        if (!dailyData.precipType) {
+            Meteor.call('updateRecord', record._id, 'weather.precipType', 'none', function (err, res) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        }
     }
     var latlng = [coords.lat, coords.lng].join(',');;
     var time = 'T12:00:00-0400';
@@ -138,7 +163,7 @@ getWeather = function (coords, date, cb) {
     console.log(url);
     $.getJSON(url + "&callback=?")
         .done(function (json) {
-            cb(json);
+            done(json);
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
@@ -402,7 +427,7 @@ newProjectSetMap = function (context, bounds, points) {
 formSetMap = function (context, recordId) {
     var markers = {};
     var paths = {};
-    var coords = {};
+    coords = {};
     var obj = {};
 
     L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
@@ -639,6 +664,17 @@ formSetMap = function (context, recordId) {
         drawnPoints.removeLayer(marker);
         delete coords[d.val];
     };
+    obj.editPoint = function (name) {
+        var coords = Records.findOne(recordId).coords.ippCoordinates;
+        var layer = drawnPoints.getLayers().filter(function (d) {
+            return d.options.name === name;
+        });
+        if (!layer.length) {
+            return;
+        }
+        layer[0].setLatLng([coords.lat, coords.lng]);
+        obj.fitBounds();
+    };
     obj.addPoint = function (d) {
         var _coords = d.coords; // || map.getCenter();
         if (!d.coords) {
@@ -807,7 +843,7 @@ formSetMap = function (context, recordId) {
                     console.log(err);
                     return;
                 }
-                //console.log(res);
+
                 newElev(d);
             });
 
@@ -1208,4 +1244,3 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
-

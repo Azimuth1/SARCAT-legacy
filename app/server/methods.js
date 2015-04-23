@@ -75,8 +75,20 @@ Meteor.methods({
             $set: obj
         });
         console.log(update);
-        return [id, name, val];
+        return update;
     },
+
+    pushArray: function (id, name) {
+        var obj = {};
+        obj[name] = {};
+        var update = Records.update(id, {
+            $push: obj
+        });
+        console.log(update);
+        return update;
+
+    },
+
     toggleListPrivacy: function (list) {
         //console.log(list, list.userId);
         a = Meteor.userId();
@@ -296,4 +308,3 @@ Meteor.users.allow({
         }
     }
 });
-

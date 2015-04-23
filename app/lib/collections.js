@@ -148,6 +148,11 @@ Schemas.recordInfo = new SimpleSchema({
             }
         }
     },
+    incidentdate: {
+        type: Date,
+        optional: true,
+        label: 'Incident Date',
+    },
     status: {
         type: String,
         autoform: {
@@ -188,13 +193,7 @@ Schemas.recordInfo = new SimpleSchema({
     }
 });
 Schemas.incident = new SimpleSchema({
-    'incidentdate': {
-        type: Date,
-        optional: true,
-        label: 'Incident Date',
-
-    },
-    'incidenttime': {
+    incidenttime: {
         type: String,
         optional: true,
         label: 'Incident Time',
@@ -205,36 +204,17 @@ Schemas.incident = new SimpleSchema({
         },
 
     },
-    /*'incidentDataTime': {
-        type: 'datetime',
-        autoform: {
-            afFieldInput: {
-                type: 'datetime-local'
-            }
-        },
-        label: 'Incident Date/Time',
-        optional: true
-    },*/
-
     country: {
         type: String,
         label: 'Response Country',
         optional: true,
-        /*autoValue: function () {
-            if (this.isInsert) {
-                return Config.findOne().agencyProfile.country;
-            }
-        }*/
+
     },
     stateregion: {
         type: String,
         optional: true,
         label: 'Response State/Region',
-        /*autoValue: function () {
-            if (this.isInsert) {
-                return Config.findOne().agencyProfile['state-region'];
-            }
-        }*/
+
     },
     subjectcategory: {
         type: String,
@@ -244,13 +224,13 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ["ATV", "Abandoned Vehicle", "Abduction", "Ages 1-3 (Toddler)", "Ages 10-12 (Pre-Teenager)", "Ages 13-15 (Adolescent)", "Ages 4-6 (PreSchool)", "Ages 7-9 (SchoolAge)", "Aircraft Incident", "Alpine Skier", "Angler", "Autism", "Car Camper", "Caver", "Day Climber", "Dementia", "Despondent", "Extreme Race", "Gatherer", "Hiker", "Horseback Rider", "Hunter", "Intellectual Disability", "Mental Illness", "Motorcycle", "Mountain Bike", "Mountaineer", "Non-Powered Boat", "Nordic Skier", "Person in Current Water", "Person in Flat Water", "Person in Flood Water", "Power Boat", "Runner", "Snowboarder", "Snowmobiler", "Snowshoer", "Substance Intoxication", "Unknown", "Vehicle (4WD)", "Vehicle (Road)", "Worker"],
+        allowedValues: ["ATV", "Abandoned Vehicle", "Abduction", "Ages 1-3 (Toddler)", "Ages 10-12 (Pre-Teenager)", "Ages 13-15 (Adolescent)", "Ages 4-6 (PreSchool)", "Ages 7-9 (SchoolAge)", "Aircraft Incident", "Alpine Skier", "Angler", "Autism", "Car Camper", "Caver", "Day Climber", "Dementia", "Despondent", "Extreme Race", "Gatherer", "Hiker", "Horseback Rider", "Hunter", "Intellectual Disability", "Mental Illness", "Motorcycle", "Mountain Bike", "Mountaineer", "Non-Powered Boat", "Nordic Skier", "Person in Current Water", "Person in Flat Water", "Person in Flood Water", "Power Boat", "Runner", "Snowboarder", "Snowmobiler", "Snowshoer", "Substance Intoxication", "Unknown", "Vehicle (4WD)", "Vehicle (Road)", "Worker", "Other"],
         label: 'Subject Category',
     },
     subjectSubCategory: {
         type: String,
         optional: true,
-        label: 'Subject Sub-Category',
+        label: 'Subject Category Description',
         //changeName???
     },
     contactmethod: {
@@ -777,7 +757,9 @@ Schemas.subjects = new SimpleSchema({
         type: String,
         label: 'Name/Alias',
         optional: true,
-        autoValue: function () {
+        autoValue: function (a, b) {
+            t = this;
+            console.log(this, a, b)
             if (!this.isSet) {
                 return new Date()
                     .toISOString();
@@ -790,7 +772,7 @@ Schemas.subjects = new SimpleSchema({
     'subject.$.age': {
         type: Number,
         label: 'Age',
-        optional: true
+        optional: true,
     },
     'subject.$.sex': {
         type: String,
@@ -934,6 +916,34 @@ Schemas.subjects = new SimpleSchema({
         allowedValues: ['Unknown', 'None', 'Self', 'Public', 'First-Aid', 'First-Responder', 'EMT', 'WEMT', 'ALS', 'RN', 'MD', 'N/A'],
         label: 'Treatment by',
         optional: true
+    },
+    'subject.$.name': {
+        type: String,
+        label: 'Full Name',
+        optional: true
+    },
+    'subject.$.adress': {
+        type: String,
+        label: 'Adress',
+        optional: true
+    },
+    'subject.$.homePhone': {
+        type: String,
+        label: 'Home Phone',
+        optional: true
+    },
+    'subject.$.cellPhone': {
+        type: String,
+        label: 'Cell Phone',
+        optional: true
+    },
+    'subject.$.other': {
+        type: String,
+        optional: true,
+        label: 'Comments',
+        autoform: {
+            rows: 1,
+        }
     },
 });
 /*
@@ -1308,31 +1318,37 @@ Schemas.SARCAT = new SimpleSchema({
         type: Schemas.incident,
         optional: true,
         label: 'Incident Details',
+        defaultValue: {}
     },
 
     subjects: {
         type: Schemas.subjects,
         label: 'Subject Information',
-        optional: true
+        optional: true,
+        defaultValue: {
+            subject: []
+        }
     },
 
     timeLog: {
         type: Schemas.timeLog,
         optional: true,
-        label: 'Time Log'
-            //optional: true
+        label: 'Time Log',
+        defaultValue: {}
+        //optional: true
     },
 
     weather: {
         type: Schemas.weather,
         label: 'Weather',
-        optional: true
+        optional: true,
+        defaultValue: {}
     },
     incidentOutcome: {
         type: Schemas.incidentOutcome,
         label: 'Incident Outcome',
         optional: true,
-        defaultValue:{}
+        defaultValue: {}
     },
     /*medical: {
         type: Schemas.medical,
@@ -1341,12 +1357,16 @@ Schemas.SARCAT = new SimpleSchema({
     rescueDetails: {
         type: Schemas.rescueDetails,
         label: 'Rescue Details',
-        optional: true
+        optional: true,
+        defaultValue: {}
     },
     resourcesUsed: {
         type: Schemas.resourcesUsed,
         optional: true,
         label: 'Resources Used',
+        defaultValue: {
+            resource: []
+        }
     },
     xComments: {
         type: Schemas.xComments,
@@ -1382,7 +1402,7 @@ Schemas.agencyProfile = new SimpleSchema({
     },
     googleAPI: {
         type: String,
-        label:'Google API Key',
+        label: 'Google API Key',
         defaultValue: 'AIzaSyBTpVps4uKjBaH0cjoPVw6lKVVBI27E64s'
     },
     measureUnits: {
@@ -1682,4 +1702,3 @@ allValues2 = _.object(_.map(allValues, function(x) {
 }));*/
 //console.log(allValues2)
 //timeLog
-
