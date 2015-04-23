@@ -34,6 +34,12 @@ Meteor.startup(function () {
         var customSettings = {
             'initSetup': true,
         };
+
+
+
+
+
+
         Config.insert(customSettings);
         var admin = Accounts.createUser({
             email: 'admin@sarcat',

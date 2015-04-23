@@ -52,19 +52,19 @@
                                         <a class="btn btn-default flex-item" data="revisedLKP_PLS">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Last Known Point/Last Point Seen
                                             <span class="fa-stack _pull-right">
-                                          <i class="fa fa-bullseye fa-2x fa-fw text-default"></i>
+                                          <i class="fa fa-male fa-2x fa-fw text-default"></i>
                                         </span>
                                         </a>
                                         <a class="btn btn-default flex-item" data="destinationCoord">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
                                             <span class="fa-stack _pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw text-danger"></i>
+                                          <i class="fa flag-checkered fa-2x fa-fw text-danger"></i>
                                         </span>
                                         </a>
                                         <a class="btn btn-default flex-item" data="findCoord">
                                             <input type="checkbox" autocomplete="off"> &nbsp; Find Location
                                             <span class="fa-stack _pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw text-success"></i>
+                                          <i class="fa flag-checkered fa-2x fa-fw text-success"></i>
                                         </span>
                                         </a>
                                         <a class="btn btn-default flex-item" data="decisionPointCoord">
@@ -270,7 +270,10 @@
                         <button type="submit" class="newSubject btn btn-primary mar0">New Subject</button>
                     </div>
                 </div>
-                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm4 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="timeLog" buttonContent= "Save"}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
+            
+
+
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Resources Used</h3>

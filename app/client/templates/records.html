@@ -7,48 +7,59 @@
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div id='recordMap' style="width:100%;height:400px"></div>
-                    {{#if newRecord}} {{> quickForm collection="Records" doc=newRecord class="hide" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}}
-                        {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo" }} 
+                 
 
-                        {{> afQuickField name='recordInfo'}} 
+             
+
+<!--
+{{#if newRecord}} 
+
+
+                    {{> quickForm collection="Records" doc=newRecord class="hide" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}}
+
+
+                        {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo" }}
+                            {{> afQuickField name='recordInfo'}}
+                        {{/autoForm}}
+
+   {{/if}}
+-->
+
+                        {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" fields="coords,recordInfo" class="hideHeader" resetOnSuccess=true validation="submit"}}
+                        {{> afQuickField name='coords.ippCoordinates'}}
+                        {{> afQuickField name='recordInfo'}}
+                        
+  <div class="form-group modal-footer">
+    <button type="reset" class="btn btn-default pull-left">Reset Form</button>
+    <button id="saveNewRecord" type="submit" class="btn btn-primary">Add Record</button>
+    <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+  </div>
 
                         {{/autoForm}}
-                    {{/if}}
+
+
+
+                 
                 </div>
-                <div class="modal-footer">
+                <!--<div class="modal-footer">
                     <button type="button" class="btn _btn-default js-deleteRecord" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-                </div>
+                    <button type="button" id="saveNewRecord" class="btn btn-primary" data-dismiss="modal">Save</button>
+                </div>-->
             </div>
         </div>
     </div>
     <nav class="navbar default-bg rad0 mar00">
         <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand white" href="#">SARCAT Records</a> </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse">
-                <!-- Nav tabs -->
                 <ul class="nav nav-tabs navbar-nav" role="tablist">
                     <li role="presentation" class="active"><a href="#records" aria-controls="home" role="tab" data-toggle="tab" class="white">All Records</a> </li>
                     <li role="presentation"><a href="#recordStats" aria-controls="profile" role="tab" data-toggle="tab" class="white recordStats">Record Stats</a> </li>
                 </ul>
-                <!--<form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search"> </div>
-                </form>-->
-                <!--{{#if createNewBtn}}
-                <ul class="nav navbar-nav navbar-right">
-                    <button type="button" class="btn btn-primary black js-newRecord mar0" data-target="#createRecordModal" data-toggle="modal">New Record</button>
-                </ul>
-                {{/if}}-->
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
     </nav>
-    <!-- Tab panes -->
     <div class="tab-content admin">
         <div role="tabpanel" class="tab-pane active pad0" id="records">
             <div class="afTablePane">
@@ -76,13 +87,12 @@
                 <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
                         <tr>
-                            <!--<th class='afTable'></th>-->
                             <th data-field="state" data-checkbox="true"></th>
                             <th data-field="incidentnum" data-sortable="true" class='afTable'>Incident #</th>
                             <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
                             <th data-field="name" data-sortable="true" class='afTable'>Record Name</th>
                             <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
-                            <th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>
+                            <!--<th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>-->
                             <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Created</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Incident Date</th>
@@ -102,7 +112,7 @@
                                     <td>{{recordInfo.missionnum}}</td>
                                     <td>{{recordInfo.name}}</td>
                                     <td>{{recordInfo.incidenttype}}</td>
-                                    <td>{{recordInfo.leadagency}}</td>
+                                   <!-- <td>{{recordInfo.leadagency}}</td>-->
                                     <td>{{admin.user}}</td>
                                     <td>{{created}}</td>
                                     <td>{{recordInfo.incidentdate}}</td>
@@ -128,3 +138,4 @@
         </div>
     </div>
 </template>
+

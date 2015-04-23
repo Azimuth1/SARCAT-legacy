@@ -137,20 +137,12 @@ Schemas.recordInfo = new SimpleSchema({
     name: {
         type: String,
         label: 'Record Name',
-        autoValue: function (d, e) {
-            if (this.isInsert) {
-                var value = this.value;
-                if (value) {
-                    return value;
-                } else {
-                    return Records.defaultName();
-                }
-            }
-        }
+        unique: true,
+        
     },
     incidentdate: {
         type: Date,
-        optional: true,
+       // optional: true,
         label: 'Incident Date',
     },
     status: {
@@ -162,22 +154,18 @@ Schemas.recordInfo = new SimpleSchema({
         },
         allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
         label: 'Incident Status',
-        defaultValue: 'Open',
+        //defaultValue: 'Open',
     },
     incidentnum: {
         type: String,
-        optional: true,
+        //optional: true,
         label: 'Incident #',
+        unique: true,
     },
     missionnum: {
         type: String,
         optional: true,
         label: 'Mission #',
-    },
-    leadagency: {
-        type: String,
-        optional: true,
-        label: 'Agency Having Jurisdiction',
     },
 
     incidenttype: {
@@ -193,6 +181,11 @@ Schemas.recordInfo = new SimpleSchema({
     }
 });
 Schemas.incident = new SimpleSchema({
+    leadagency: {
+        type: String,
+        optional: true,
+        label: 'Agency Having Jurisdiction',
+    },
     incidenttime: {
         type: String,
         optional: true,
@@ -203,6 +196,26 @@ Schemas.incident = new SimpleSchema({
             }
         },
 
+    },
+    'last seen date-time': {
+        type: 'datetime',
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        label: 'Last Seen Date/Time',
+        optional: true
+    },
+    'sar notified date-time': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        label: 'SAR Notified Date/Time',
+        optional: true
     },
     country: {
         type: String,
@@ -624,6 +637,26 @@ Schemas.incidentOperations = new SimpleSchema({
     },
 });
 Schemas.incidentOutcome = new SimpleSchema({
+    'subject located date-time': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        label: 'Subject Located Date/Time',
+        optional: true
+    },
+    'incident closed date-time': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        label: 'Incident Closed Date/Time',
+        optional: true
+    },
     'incidentOutcome': {
         type: String,
         autoform: {
@@ -1330,13 +1363,13 @@ Schemas.SARCAT = new SimpleSchema({
         }
     },
 
-    timeLog: {
+    /*timeLog: {
         type: Schemas.timeLog,
         optional: true,
         label: 'Time Log',
         defaultValue: {}
         //optional: true
-    },
+    },*/
 
     weather: {
         type: Schemas.weather,
@@ -1503,7 +1536,7 @@ Schemas.formEditions = new SimpleSchema({
     'subjects.$': {
         type: String
     },
-    timeLog: {
+    /*timeLog: {
         type: Array,
         autoform: {
             firstOption: function () {
@@ -1516,7 +1549,7 @@ Schemas.formEditions = new SimpleSchema({
     },
     'timeLog.$': {
         type: String
-    },
+    },*/
     incidentOperations: {
         type: Array,
         autoform: {

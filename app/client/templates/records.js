@@ -18,21 +18,16 @@ Template.records.onRendered(function () {
         $('.recordTable')
             .bootstrapTable();
     }
-
     Session.set('userView', 'records');
     var config = Config.findOne();
     var agencyProfile = config.agencyProfile;
-
     //Session.set('logo', 'uploads/logo/' + config.agencyLogo);
-
     var bounds = agencyProfile.bounds;
     var newBounds = boundsString2Array(bounds);
-
     mapDrawn = newProjectSetMap('recordMap', newBounds, {
         "name": "coords.ippCoordinates",
         "text": "Incident Location"
     });
-
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
             var lastRecord = Records.find({}, {
@@ -41,9 +36,7 @@ Template.records.onRendered(function () {
                     },
                 })
                 .fetch();
-            lastRecord.shift();
-            console.log(lastRecord);
-
+            $('[name="recordInfo.name"]').val('Record ' + (lastRecord.length+1));//.trigger('change');
             if (lastRecord.length) {
                 var lastIncidentnum = _.find(lastRecord, function (d) {
                         if (d.recordInfo && d.recordInfo.incidentnum) {
@@ -57,54 +50,37 @@ Template.records.onRendered(function () {
                         }
                     })
                     .recordInfo.missionnum;
-
                 var lastleadagency = _.find(lastRecord, function (d) {
                     if (d.recordInfo && d.recordInfo.leadagency) {
                         return d.recordInfo.leadagency;
                     }
                 });
-
                 lastleadagency = (lastleadagency) ? lastleadagency.recordInfo.leadagency : null;
-
                 $('[name="recordInfo.incidentnum"]')
-                    .attr('placeholder', 'Last Assigned Incident: ' + lastIncidentnum);
-
+                    .attr('placeholder', 'Previous Incident: ' + lastIncidentnum);
                 $('[name="recordInfo.missionnum"]')
-                    .attr('placeholder', 'Last Assigned Mission: ' + lastMissionnum);
-
+                    .attr('placeholder', 'Previous Mission: ' + lastMissionnum);
                 $('[name="recordInfo.leadagency"]')
                     .attr('value', lastleadagency)
                     .trigger('change');
-
             } else {
                 $('[name="recordInfo.incidentnum"]')
                     .attr('value', Records.defaultNum())
                     .trigger('change');
-
                 $('[name="recordInfo.missionnum"]')
                     .attr('value', Records.defaultNum())
                     .trigger('change');
-
                 $('[name="recordInfo.leadagency"]')
                     .attr('value', lastleadagency)
                     .trigger('change');
             }
-
             mapDrawn.reset();
         });
-
 });
 Template.records.helpers({
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    /*lists: function () {
-        return Records.find({}, {
-            sort: {
-                name: 1
-            }
-        });
-    },*/
     noRecords: function () {
         return !Records.find({}, {
                 sort: {
@@ -125,19 +101,12 @@ Template.records.helpers({
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile && agencyMapComplete && role;
     },
-
 });
 Template.records.events({
-    'click #createRecordModal button': function () {
-        // $('#createRecordModal').modal('hide')
-    },
     'click .js-deleteRecord': function () {
         var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function (error, d) {
-
-        });
+        Meteor.call('removeRecord', record, function (error, d) {});
     },
-
     'click .modal-backdrop': function () {
         var record = Records.findOne(Session.get('newRecord'));
         Meteor.call('removeRecord', record, function (error, d) {
@@ -145,19 +114,15 @@ Template.records.events({
         })
     },
     'click .recordStats': function (event, template) {
-        console.log(drawn)
         if (drawn) {
             return;
         }
         drawn = true;
         template.$('a[data-toggle="tab"][href="#recordStats"]')
             .on('shown.bs.tab', function (e) {
-
                 var records = Records.find()
                     .fetch();
-
                 data = recordStats(records);
-
                 var coords = records.map(function (d) {
                     return d.coords
                 });
@@ -167,9 +132,7 @@ Template.records.events({
                 }
                 var mapBounds = coords[0].bounds;
                 mapBounds = boundsString2Array(mapBounds);
-
                 map = statsSetMap('statsMap', mapBounds);
-
                 var mapPoints = {
                     "ippCoordinates": {
                         "val": "ippCoordinates",
@@ -231,12 +194,9 @@ Template.records.events({
                         d.coords = latlng;
                         map.add(d);
                     });
-
                 })
-
                 map.fitBounds();
             });
-
     },
     'click .openRecord': function (event, template) {
         if (event.target.className === 'bs-checkbox') {
@@ -264,23 +224,19 @@ Template.records.events({
                 return d.name;
             })
             .join(', ');
-
         if (confirm(message)) {
             toDelete.each(function (e, d) {
                 console.log(d)
-                Meteor.call('removeRecord', d.id, function (error, d) {
-
-                });
+                Meteor.call('removeRecord', d.id, function (error, d) {});
             });
             Meteor._reload.reload();
             return true;
         } else {
             return false;
         }
-
     },
-
     'click .js-newRecord': function (event, template) {
+        return;
         var list = {
             userId: Meteor.userId()
         };
@@ -288,10 +244,46 @@ Template.records.events({
             if (error) {
                 return console.log(error);
             }
-
             Session.set('newRecord', d);
         });
+    },
+    'click #saveNewRecord': function (event, template) {
+        // $('#createRecordModal').modal('hide');
+        /*$('#createRecordModal')
+            .on('hide.bs.modal', function (e) {
+                console.log('!');
+                //var record = Records.findOne(Session.get('newRecord'));
+                //x = record;
+                return false
+            });
 
+            return
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+        console.log(this)
+        a = event;
+        t = this;
+*/
+    },
+    'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {
+        var lat=template.$('[name="coords.ippCoordinates.lat"]').val();
+        var lng=template.$('[name="coords.ippCoordinates.lng"]').val();
+        if(!lat || !lng){return;}
+        console.log(lat,lng);
+        mapDrawn.editPoint(lat,lng);
+    },
+});
+AutoForm.hooks({
+    createRecordModalFormId: {
+        onSuccess: function (formType, result) {
+            $('#createRecordModal')
+                .modal('hide');
+        },
+        // Called when any submit operation fails
+        onError: function (formType, error) {
+            console.log(error);
+        },
     }
 });
 
