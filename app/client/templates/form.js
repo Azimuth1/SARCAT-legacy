@@ -40,6 +40,7 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
+
     if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
         Meteor.call('setElevation', record._id, function (err, d) {
             if (err) {
@@ -54,10 +55,29 @@ Template.form.onRendered(function () {
             }
         });
     }
-    if (!Object.keys(record.weather)
+    if (Object.keys(record.weather)
         .length) {
         getWeather(record);
     }
+
+    if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
+        Meteor.call('setDistance', record._id, function (err, d) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    }
+    $('.subjectRescueRow').each(function () {
+        var val = $(this).find('[name*="status"]').val();
+
+        if (val === "Injured" || val === 'DOA') {
+            $(this).find('select').not('[name*="status"]').attr('disabled', false);
+        } else {
+            $(this).find('select').not('[name*="status"]').attr('disabled', true);
+        }
+
+    });
+
     $('[name="weather.temperatureMax"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'temperature') + ')');
@@ -198,7 +218,7 @@ Template.form.helpers({
         return ["Rescue Status", "Mechanism", "Injury Type", "Illness", "Treatment by"];
     },
     subjectKeysPersonal: function () {
-        return ["Full Name", "Adress", "Home Phone", "Cell Phone", "Comments"];
+        return ["Full Name", "Address", "Home Phone", "Cell Phone", "Comments"];
     },
     subjects: function () {
         return this.data.record.subjects.subject;
@@ -311,7 +331,7 @@ Template.form.helpers({
             })
             .compact()
             .filter(function (d) {
-                var keep = ["name", "adress", "homePhone", "cellPhone", "other"];
+                var keep = ["name", "address", "homePhone", "cellPhone", "other"];
                 return _.contains(keep, d.field);
             })
             .without('_key')
@@ -368,15 +388,7 @@ Template.form.helpers({
             return d;
         });
     },
-    medicalDetails: function () {
-        var medical = this.record.medical;
-        if (!medical) {
-            return false;
-        }
-        var val = medical.status;
-        var detailsTrue = (val === 'Injured' || val === 'DOA') ? true : false;
-        return detailsTrue;
-    },
+
     fileUploads: function (d) {
         return Session.get('fileUploads');
     },
@@ -450,28 +462,7 @@ Template.form.events({
             .collapse('toggle');
     },
     'change [name="recordInfo.incidentdate"]': function (event, template) {
-        //var weatherCoords = record.coords.ippCoordinates;
         getWeather(record);
-        //getWeather(weatherCoords, event.target.value, function (data, err) {
-        /*            z = data
-                    Session.set('weather', data);
-                    var dailyData = data.daily.data[0];
-
-                    _.each(dailyData, function (d, name) {
-                        Meteor.call('updateRecord', record._id, 'weather.' + name, d, function (err, res) {
-                            if (err) {
-                                return console.log(err);
-                            }
-                        });
-                    });
-                    if (!dailyData.precipType) {
-                        Meteor.call('updateRecord', record._id, 'weather.precipType', 'none', function (err, res) {
-                            if (err) {
-                                return console.log(err);
-                            }
-                        });
-                    }*/
-        //  });
     },
     'click .mapPoints a': function (event, template) {
         var context = template.$(event.target);
@@ -520,6 +511,17 @@ Template.form.events({
             map.editPoint(val[1]);
         }
     },
+    'change [name*="subjects.subject"][name*="status"]': function (event) {
+        var val = event.target.value;
+        var ind = event.target.getAttribute('name').split('.')[2];
+        if (val === "Injured" || val === 'DOA') {
+
+            $('.subjectRescueRow[data-index="' + ind + '"] select').not('[name*="status"]').attr('disabled', false);
+        } else {
+            $('.subjectRescueRow[data-index="' + ind + '"] select').not('[name*="status"]').attr('disabled', true);
+        }
+
+    },
 });
 AutoForm.hooks({
     updateResourceForm: {
@@ -530,4 +532,3 @@ AutoForm.hooks({
         }
     }
 });
-

@@ -49,6 +49,8 @@ labelUnits = function (currentUnit, type) {
     return unitType[type][currentUnit]
 };
 boundsString2Array = function (bounds) {
+    console.log(bounds)
+    if(!bounds){return;}
     bounds = bounds.split(',')
         .map(function (d) {
             return +d;
@@ -58,31 +60,7 @@ boundsString2Array = function (bounds) {
         [bounds[3], bounds[2]]
     ];
 };
-_getWeather = function (coords, date, cb) {
-    if (!date) {
-        return;
-    }
-    var latlng = [coords.lat, coords.lng].join(',');;
-    var time = 'T12:00:00-0400';
-    var dateTime = [date, time].join('');
-    console.log(dateTime)
-    var latlngDate = [latlng, dateTime].join(',');
-    console.log(latlngDate)
-    var units = (Session.get('currentRecord')
-        .measureUnits == 'Metric') ? 'units=si' : 'units=us';
-    var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/';
-    url += latlngDate + '?';
-    url += units;
-    console.log(url);
-    $.getJSON(url + "&callback=?")
-        .done(function (json) {
-            cb(json);
-        })
-        .fail(function (jqxhr, textStatus, error) {
-            var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
-        });
-}
+
 getWeather = function (record) {
     if (!record) {
         return;
@@ -132,7 +110,9 @@ getWeather = function (record) {
         });
 }
 setMap = function (context, bounds, agencyMapComplete) {
-    var map = L.map(context);
+    var map = L.map(context, {
+
+    });
     /*L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
     var map = L.mapbox.map(context);
     L.control.scale().addTo(map);
@@ -362,7 +342,9 @@ formSetMap = function (context, recordId) {
     var paths = {};
     var coords = {};
     var obj = {};
-    var map = L.map(context);
+    var map = L.map(context, {
+        measureControl: true
+    });
     /*L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
     var map = L.mapbox.map(context);
     L.control.scale().addTo(map);
@@ -1057,4 +1039,3 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
-

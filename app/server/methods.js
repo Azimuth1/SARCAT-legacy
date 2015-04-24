@@ -199,7 +199,7 @@ Meteor.methods({
             return false;
         }
         var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + Config.findOne()
-            .agencyProfile.googleAPI;
+            .googleAPI;
         var result = HTTP.get(url);
         result = JSON.parse(result.content)
             .results;
@@ -219,11 +219,60 @@ Meteor.methods({
         });
         return val;
     },
+    setDistance: function (id) {
+
+        var haversine = function (start, end, options) {
+            var toRad = function (num) {
+                return num * Math.PI / 180
+            }
+
+            var km = 6371
+            var mile = 3960
+            options = options || {}
+
+            var R = options.unit === 'mile' ?
+                mile :
+                km
+
+            var dLat = toRad(end.lat - start.lat)
+            var dLon = toRad(end.lng - start.lng)
+            var lat1 = toRad(start.lat)
+            var lat2 = toRad(end.lat)
+
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+            if (options.threshold) {
+                return options.threshold > (R * c)
+            } else {
+                return parseInt(R * c);
+            }
+
+        }
+        var record = Records.findOne(id);
+        var coord1 = record.coords.ippCoordinates;
+        var coord2 = record.coords.findCoord;
+        if (!coord1 || !coord2) {
+            return false;
+        }
+
+        var unit = record.measureUnits ? 'mile' : 'km'
+        var val = haversine(coord1, coord2, {
+            unit: unit
+        });
+
+        Records.update(id, {
+            $set: {
+                'incidentOutcome.trackOffset': val
+            }
+        });
+        return val;
+    },
     setLocale: function (id) {
         var record = Records.findOne(id);
         var coord1 = record.coords.ippCoordinates;
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Config.findOne()
-            .agencyProfile.googleAPI;
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Config.findOne().googleAPI;
         console.log(url)
         var result = HTTP.get(url);
         console.log(JSON.parse(result.content));
@@ -281,4 +330,3 @@ Meteor.users.allow({
         }
     }
 });
-

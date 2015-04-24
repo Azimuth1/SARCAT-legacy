@@ -142,12 +142,23 @@
                     </div>
                 </div>
                 {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
-                <!--Subject Info-->
+                
+
+
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
+
+
+
+
+
+
+
+
+<!--Subject Info-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Subject Info
                     <div class="subjectTableView btn-group pull-right" data-toggle="buttons">
-  
    <label class="btn btn-primary active">
     <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
   </label>
@@ -160,12 +171,6 @@
     <input type="radio" data="Personal" name="subjectTableRadio" autocomplete="off"> Personal
   </label>
 </div>
-
-
-
-
-
-
                     </h3>
                     </div>
                     <div class="panel-body afBody pad00" style="overflow-x: scroll;">
@@ -176,7 +181,7 @@
                                     {{#each subjectKeysDesc}}
                                     <th data-subjectTable={{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
                                     {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Subject</th>
                                 </tr>
                             </thead>
                             <tbody class='white-bg'>
@@ -200,20 +205,18 @@
                                     {{#each subjectKeysRescue}}
                                     <th data-subjectTable={{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
                                     {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                  
                                 </tr>
                             </thead>
                             <tbody class='white-bg'>
                                 {{#each getSubjectsArrayRescue}}
-                                <tr>
+                                <tr class="subjectRescueRow" data-index="{{this.index}}">
                                     {{#each this.value}}
                                     <td class="pad00">
                                         {{> afQuickField name=this.name options=this.options }}
                                     </td>
                                     {{/each}}
-                                    <td class="padsm">
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-warning removeSubject btn-block btn-sm">Remove</button>
-                                    </td>
+                                
                                 </tr>
                                 {{/each}}
                             </tbody>
@@ -224,7 +227,7 @@
                                     {{#each subjectKeysPersonal}}
                                     <th data-subjectTable={{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
                                     {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
+                                 
                                 </tr>
                             </thead>
                             <tbody class='white-bg'>
@@ -235,45 +238,21 @@
                                         {{> afQuickField name=this.name options=this.options }}
                                     </td>
                                     {{/each}}
-                                    <td class="padsm">
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-warning removeSubject btn-block btn-sm">Remove</button>
-                                    </td>
+                          
                                 </tr>
                                 {{/each}}
                             </tbody>
                         </table>
-                        <!--
-
-                        <table class="mar1yb table _table-bordered table-condensed" style="table-layout: fixed;">
-                            <thead class='default-bg'>
-                                <tr>
-                                    {{#each subjectKeys}}
-                                    <th data-subjectTable={{this}} class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                    {{/each}}
-                                    <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class='white-bg'>
-                                {{#each getSubjectsArray}}
-                                <tr class="noBorder">
-                                    <td class="pad00 noBorder" colspan="15">
-                                        {{> afQuickField name=this.name}}
-                                    </td>
-                                    <td class="padsm">
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-xs _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
-                                    </td>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>-->
+                      
                         {{/autoForm}}
                         <button type="submit" class="newSubject btn btn-primary mar0">New Subject</button>
                     </div>
                 </div>
-            
 
 
-                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save"}}
+
+
+                
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Resources Used</h3>
