@@ -16,13 +16,7 @@ Template.form.onCreated(function () {
     Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
         Session.set('fileUploads', d)
     });
-    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
-        Meteor.call('setEcoRegion', record._id, function (err, d) {
-            if (err) {
-                return;
-            }
-        });
-    }
+
 });
 Template.form.onRendered(function () {
     record = this.data.record;
@@ -40,9 +34,26 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
+    if (!Object.keys(record.weather)
+        .length) {
+        Meteor.call('setWeather', record._id, function (err, d) {
+            console.log('weather: ' + d);
+            if (err) {
+                return console.log(err);
+            }
+        });
+    }
 
+    //if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
+        Meteor.call('setEcoRegion', record._id, function (err, d) {
+            if (err) {
+                return;
+            }
+        });
+    //}
     if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
         Meteor.call('setElevation', record._id, function (err, d) {
+            console.log('elevation: ' + d);
             if (err) {
                 return console.log(err);
             }
@@ -50,34 +61,47 @@ Template.form.onRendered(function () {
     }
     if (!record.incident.country && !record.incident.stateregion) {
         Meteor.call('setLocale', record._id, function (err, d) {
+            console.log('location: ' + d);
             if (err) {
                 return console.log(err);
             }
         });
     }
-    if (Object.keys(record.weather)
-        .length) {
-        getWeather(record);
-    }
-
     if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
         Meteor.call('setDistance', record._id, function (err, d) {
+            console.log('distance: ' + d);
             if (err) {
                 return console.log(err);
             }
         });
     }
-    $('.subjectRescueRow').each(function () {
-        var val = $(this).find('[name*="status"]').val();
-
-        if (val === "Injured" || val === 'DOA') {
-            $(this).find('select').not('[name*="status"]').attr('disabled', false);
-        } else {
-            $(this).find('select').not('[name*="status"]').attr('disabled', true);
-        }
-
-    });
-
+    if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
+        Meteor.call('setDistance', record._id, function (err, d) {
+            console.log('distance: ' + d);
+            if (err) {
+                return console.log(err);
+            }
+        });
+    }
+    $('.subjectRescueRow')
+        .each(function () {
+            var val = $(this)
+                .find('[name*="status"]')
+                .val();
+            if (val === "Injured" || val === 'DOA') {
+                $(this)
+                    .find('select')
+                    .not('[name*="status"]')
+                    .attr('disabled', false);
+            } else {
+                $(this)
+                    .find('select')
+                    .not('[name*="status"]')
+                    .attr('disabled', true);
+            }
+        });
+    $('label:contains("Subject Category")')
+        .append('<span class="small em mar0y text-default"><a class="em" href="/profiles" target="newwindow"}}">*See Descriptions</span>');
     $('[name="weather.temperatureMax"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'temperature') + ')');
@@ -175,11 +199,8 @@ Template.form.helpers({
                 if (!Schemas[d]) {
                     return;
                 }
-                //console.log(d)
                 var total = Schemas[d]._firstLevelSchemaKeys.length;
-                //console.log(total, record[d])
                 var objKeys = Object.keys(record[d]);
-                //console.log(objKeys)
                 var count = objKeys.length;
                 var sum;
                 if (total === 1) {
@@ -352,12 +373,47 @@ Template.form.helpers({
         });
     },
     getResourceArray: function () {
-        var self = this;
-        self.myArray = (this.record && this.record.resourcesUsed) ? this.record.resourcesUsed.resource : [];
-        return _.map(self.myArray, function (value, index) {
+        var myArray = (this.record && this.record.resourcesUsed) ? this.record.resourcesUsed.resource : [];
+        return _.map(myArray, function (value, index) {
             return {
                 value: value,
                 index: index,
+                name: "resourcesUsed.resource." + index
+            };
+        });
+    },
+    getResourceArray2: function () {
+        var values = _.chain(Schemas.resourcesUsed._schema)
+            .map(function (e, d) {
+                var field = d.split("$.")[1];
+                if (!field) {
+                    return;
+                }
+                return {
+                    options: e.allowedValues ? 'allowed' : null,
+                    field: d.split("$.")[1]
+                }
+            })
+            .compact()
+            .filter(function (d) {
+                var keep = ["type", "count", "hours", "findResource"];
+                return _.contains(keep, d.field);
+            })
+            .without('_key')
+            .value();
+        var myArray = (this.record && this.record.resourcesUsed) ? this.record.resourcesUsed.resource : [];
+        //console.log(myArray);
+        return _.map(myArray, function (value, index) {
+            var fields = values.map(function (d) {
+                var obj = {};
+                obj.name = "resourcesUsed.resource." + index + '.' + d.field;
+                obj.options = d.options
+                return obj
+            });
+            return {
+                value: fields,
+                index: index,
+                _key: value._key,
                 name: "resourcesUsed.resource." + index
             };
         });
@@ -388,7 +444,6 @@ Template.form.helpers({
             return d;
         });
     },
-
     fileUploads: function (d) {
         return Session.get('fileUploads');
     },
@@ -440,18 +495,23 @@ Template.form.events({
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'click .removeSubject': function (event, template) {
-        Meteor.call('removeSubject', record._id, event.target.getAttribute('data'), function (err) {
-            console.log(err);
-        });
-    },
     'click .newSubject': function (event, template) {
         Meteor.call('pushArray', record._id, 'subjects.subject', function (err, d) {
             console.log(d);
         });
     },
+    'click .removeSubject': function (event, template) {
+        Meteor.call('removeSubject', record._id, event.target.getAttribute('data'), function (err) {
+            console.log(err);
+        });
+    },
+    'click .newResource': function (event, template) {
+        Meteor.call('pushArray', record._id, 'resourcesUsed.resource', function (err, d) {
+            console.log(d);
+        });
+    },
     'click .removeResource': function (event, template) {
-        Meteor.call('removeResource', record._id, this.value._key, function (err) {
+        Meteor.call('removeResource', record._id, event.target.getAttribute('data'), function (err) {
             console.log(err);
         });
     },
@@ -462,7 +522,12 @@ Template.form.events({
             .collapse('toggle');
     },
     'change [name="recordInfo.incidentdate"]': function (event, template) {
-        getWeather(record);
+        Meteor.call('setWeather', record._id, function (err, d) {
+            console.log('weather: ' + d);
+            if (err) {
+                return console.log(err);
+            }
+        });
     },
     'click .mapPoints a': function (event, template) {
         var context = template.$(event.target);
@@ -513,14 +578,17 @@ Template.form.events({
     },
     'change [name*="subjects.subject"][name*="status"]': function (event) {
         var val = event.target.value;
-        var ind = event.target.getAttribute('name').split('.')[2];
+        var ind = event.target.getAttribute('name')
+            .split('.')[2];
         if (val === "Injured" || val === 'DOA') {
-
-            $('.subjectRescueRow[data-index="' + ind + '"] select').not('[name*="status"]').attr('disabled', false);
+            $('.subjectRescueRow[data-index="' + ind + '"] select')
+                .not('[name*="status"]')
+                .attr('disabled', false);
         } else {
-            $('.subjectRescueRow[data-index="' + ind + '"] select').not('[name*="status"]').attr('disabled', true);
+            $('.subjectRescueRow[data-index="' + ind + '"] select')
+                .not('[name*="status"]')
+                .attr('disabled', true);
         }
-
     },
 });
 AutoForm.hooks({
@@ -532,3 +600,4 @@ AutoForm.hooks({
         }
     }
 });
+

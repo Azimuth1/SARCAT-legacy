@@ -1,31 +1,28 @@
-/* .awesome-marker {
-  background: #F00;
+.btn-pad {
+    .font-s2;
+    line-height: 20px !important; //override line-height always so we can use em's to size
+    padding: 1em 1.25em; // 48px tall
 }
-
-.awesome-marker i{
-  background: yellow;
-}
-*/
-    .btn-pad {
-        .font-s2;
-        line-height: 20px !important; //override line-height always so we can use em's to size
-        padding: 1em 1.25em; // 48px tall
-    }
 
 [class*="btn-primary"] {
-            background-color: @color-primary;
-            color: @color-empty;
-            &:hover {
-                background-color: darken(@color-primary, 5%);
-            }
-            &:active {
-                box-shadow: rgba(0, 0, 0, .3) 0 1px 3px 0 inset;
-            }
-        }
-#menu {
+    background-color: @color-primary;
+    border-color: @color-primary;
+    color: @color-empty;
+    &:hover {
+        background-color: darken(@color-primary, 5%);
+    }
+    &:active {
+        box-shadow: rgba(0, 0, 0, .3) 0 1px 3px 0 inset;
+    }
+    &[class*="active"] {
+        background-color: #30BCC8;
+        border-color: #30BCC8;
+        
+    }
+}
 
-    [class^="btn-"],
-    [class*=" btn-"] {
+#menu {
+    [class^="btn-"], [class*=" btn-"] {
         // Style
         .title-caps;
         .transition( all 200ms ease-in);

@@ -20,7 +20,10 @@ Template.admin.rendered = function () {
     });
 };
 Template.admin.helpers({
+    logo: function (view) {
+        return Session.get('logo');
 
+    },
     UploadImgFormData: function () {
         return {
             type: 'logo'
@@ -77,6 +80,15 @@ Template.admin.helpers({
 
 Template.admin.events({
 
+    'click .deleteLogo': function (event, template) {
+                Meteor.call('updateConfig', {
+                    agencyLogo: 'default_logo.png'
+                }, function (err) {
+                    console.log(err);
+                });
+
+
+    },
     'click .removeUser': function (event, template) {
 
         if (Meteor.userId() === this._id) {

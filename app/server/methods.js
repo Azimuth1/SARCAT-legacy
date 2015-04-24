@@ -144,7 +144,7 @@ Meteor.methods({
         }
     },
     removeSubject: function (recordId, subjectId) {
-        newSubjects = Records.findOne(recordId)
+        var newSubjects = Records.findOne(recordId)
             .subjects.subject.filter(function (d) {
                 return d._key !== subjectId;
             });
@@ -155,7 +155,8 @@ Meteor.methods({
         })
     },
     removeResource: function (recordId, resourceId) {
-        newResource = Records.findOne(recordId)
+        console.log(recordId, resourceId);
+        var newResource = Records.findOne(recordId)
             .resourcesUsed.resource.filter(function (d) {
                 return d._key !== resourceId;
             });
@@ -191,8 +192,47 @@ Meteor.methods({
         });
         return val;
     },
+    setWeather: function (id) {
+        var record = Records.findOne(id);
+        Records.update(id, {
+            $set: {
+                'weather': {}
+            }
+        });
+        var coords = record.coords.ippCoordinates;
+        var date = record.recordInfo.incidentdate;
+        date = date.toISOString()
+            .split('T')[0];
+        if (!date || !coords) {
+            return;
+        }
+        var latlng = [coords.lat, coords.lng].join(',');;
+        var time = 'T12:00:00-0400';
+        var dateTime = [date, time].join('');
+        var latlngDate = [latlng, dateTime].join(',');
+        var units = (record.measureUnits === 'Metric') ? 'units=si' : 'units=us';
+        var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/';
+        url += latlngDate + '?';
+        url += units;
+        var result = HTTP.get(url);
+        var data = JSON.parse(result.content);
+        var dailyData = data.daily.data[0];
+        _.each(dailyData, function (d, name) {
+            var obj = {};
+            obj['weather.' + name] = d;
+            var update = Records.update(id, {
+                $set: obj
+            });
+        });
+        return dailyData;
+    },
     setElevation: function (id) {
         var record = Records.findOne(id);
+        Records.update(id, {
+            $unset: {
+                'incidentOutcome.elevationChange': ''
+            }
+        });
         var coord1 = record.coords.ippCoordinates;
         var coord2 = record.coords.findCoord;
         if (!coord1 || !coord2) {
@@ -220,59 +260,64 @@ Meteor.methods({
         return val;
     },
     setDistance: function (id) {
-
         var haversine = function (start, end, options) {
             var toRad = function (num) {
-                return num * Math.PI / 180
+                return num * Math.PI / 180;
             }
-
             var km = 6371
             var mile = 3960
             options = options || {}
-
             var R = options.unit === 'mile' ?
                 mile :
                 km
-
             var dLat = toRad(end.lat - start.lat)
             var dLon = toRad(end.lng - start.lng)
             var lat1 = toRad(start.lat)
             var lat2 = toRad(end.lat)
-
             var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
             if (options.threshold) {
                 return options.threshold > (R * c)
             } else {
-                return parseInt(R * c);
+                return +((R * c).toFixed(2));
             }
-
         }
         var record = Records.findOne(id);
+        Records.update(id, {
+            $unset: {
+                'incidentOutcome.distanceIPP': ''
+            }
+        });
         var coord1 = record.coords.ippCoordinates;
         var coord2 = record.coords.findCoord;
         if (!coord1 || !coord2) {
             return false;
         }
+        var unit = record.measureUnits ? 'mile' : 'km';
 
-        var unit = record.measureUnits ? 'mile' : 'km'
         var val = haversine(coord1, coord2, {
             unit: unit
         });
-
         Records.update(id, {
             $set: {
-                'incidentOutcome.trackOffset': val
+                'incidentOutcome.distanceIPP': val
             }
         });
+      //  return JSON.stringify([coord1, coord2, unit, val])
         return val;
     },
     setLocale: function (id) {
         var record = Records.findOne(id);
+        Records.update(id, {
+            $unset: {
+                'incident.country': '',
+                'incident.stateregion': ''
+            }
+        });
         var coord1 = record.coords.ippCoordinates;
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Config.findOne().googleAPI;
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Config.findOne()
+            .googleAPI;
         console.log(url)
         var result = HTTP.get(url);
         console.log(JSON.parse(result.content));
@@ -330,3 +375,4 @@ Meteor.users.allow({
         }
     }
 });
+

@@ -1,20 +1,3 @@
-getElevation = function () {
-    Meteor.call('getElevation', record.coords.ippCoordinates, record.coords.findCoord, function (err, d) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log(d);
-        if (currentUnit === 'US') {
-            d = parseInt(d * 3.2808399);
-        }
-        Records.update(record._id, {
-            $set: {
-                'incidentOutcome.elevationChange': d
-            }
-        });
-    });
-}
 labelUnits = function (currentUnit, type) {
     var unitType = {
         height: {
@@ -49,8 +32,9 @@ labelUnits = function (currentUnit, type) {
     return unitType[type][currentUnit]
 };
 boundsString2Array = function (bounds) {
-    console.log(bounds)
-    if(!bounds){return;}
+    if (!bounds) {
+        return;
+    }
     bounds = bounds.split(',')
         .map(function (d) {
             return +d;
@@ -60,59 +44,8 @@ boundsString2Array = function (bounds) {
         [bounds[3], bounds[2]]
     ];
 };
-
-getWeather = function (record) {
-    if (!record) {
-        return;
-    }
-    var coords = record.coords.ippCoordinates;
-    var date = record.recordInfo.incidentdate;
-    date = date.toISOString()
-        .split('T')[0];
-    if (!date || !coords) {
-        return;
-    }
-
-    function done(data) {
-        Session.set('weather', data);
-        var dailyData = data.daily.data[0];
-        _.each(dailyData, function (d, name) {
-            Meteor.call('updateRecord', record._id, 'weather.' + name, d, function (err, res) {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        });
-        if (!dailyData.precipType) {
-            Meteor.call('updateRecord', record._id, 'weather.precipType', 'none', function (err, res) {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        }
-    }
-    var latlng = [coords.lat, coords.lng].join(',');;
-    var time = 'T12:00:00-0400';
-    var dateTime = [date, time].join('');
-    var latlngDate = [latlng, dateTime].join(',');
-    var units = (Session.get('currentRecord')
-        .measureUnits == 'Metric') ? 'units=si' : 'units=us';
-    var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/';
-    url += latlngDate + '?';
-    url += units;
-    $.getJSON(url + "&callback=?")
-        .done(function (json) {
-            done(json);
-        })
-        .fail(function (jqxhr, textStatus, error) {
-            var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
-        });
-}
 setMap = function (context, bounds, agencyMapComplete) {
-    var map = L.map(context, {
-
-    });
+    var map = L.map(context, {});
     /*L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
     var map = L.mapbox.map(context);
     L.control.scale().addTo(map);
@@ -189,7 +122,6 @@ setMap = function (context, bounds, agencyMapComplete) {
             //}, 8000);
         };
     }
-    m = map
     map.on('locationfound', function (e) {
         $('#geolocate')
             .remove();
@@ -281,51 +213,50 @@ getCoords = function (record) {
         name: "coords.ippCoordinates",
         text: 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>', //"IPP Location",
         icon: 'fa-times-circle-o',
-        color: 'black'
+        color: 'red'
     }, {
         val: "decisionPointCoord",
         name: "coords.decisionPointCoord",
         text: "Decision Point",
         icon: 'fa-code-fork',
-        color: 'red'
+        color: 'orange'
     }, {
         val: "destinationCoord",
         name: "coords.destinationCoord",
         text: "Intended Destination",
-        icon: 'flag-checkered',
-        color: 'red;'
+        icon: 'fa-flag-checkered',
+        color: 'blue'
     }, {
         val: "revisedLKP_PLS",
         name: "coords.revisedLKP_PLS",
         text: "Revised IPP",
         icon: 'fa-male',
-        color: 'cadetblue'
+        color: 'red'
     }, {
         val: "findCoord",
         name: "coords.findCoord",
         text: "Find Location",
-        icon: 'flag-checkered',
+        icon: 'fa-flag-checkered',
         color: 'green'
     }, {
         val: "intendedRoute",
         name: "coords.intendedRoute",
         text: "Intended Route",
         path: {
-            stroke: '#A94442'
+            stroke: '#37A8DA'
         }
     }, {
         val: "actualRoute",
         name: "coords.actualRoute",
         text: "Actual Route",
         path: {
-            stroke: '#3C763D',
+            stroke: 'green',
             weight: 8
         }
     }];
     mapPoints = _.object(_.map(mapPoints, function (x) {
         return [x.val, x];
     }));
-    // record = Session.get('currentRecord');
     if (!record.coords) {
         return mapPoints;
     }
@@ -345,15 +276,6 @@ formSetMap = function (context, recordId) {
     var map = L.map(context, {
         measureControl: true
     });
-    /*L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
-    var map = L.mapbox.map(context);
-    L.control.scale().addTo(map);
-    var layers = {
-        Outdoors: L.mapbox.tileLayer('examples.ik7djhcc'),
-        Streets: L.mapbox.tileLayer('jasondalton.h4gh1idp'),
-        Satellite: L.mapbox.tileLayer('jasondalton.map-7z4qef6u')
-    };
-    */
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
@@ -367,7 +289,6 @@ formSetMap = function (context, recordId) {
     drawnPoints = new L.FeatureGroup()
         .addTo(map);
     map.scrollWheelZoom.disable();
-    /**/
     map.on('moveend', function () {
         var bounds = map.getBounds()
             .toBBoxString();
@@ -375,72 +296,6 @@ formSetMap = function (context, recordId) {
             .val(bounds)
             .trigger("change");
     });
-    /*
-        var drawControl = new L.Control.Draw({
-            draw: {
-                position: 'topleft',
-                polygon: false,
-                circle: false,
-                marker: false,
-                rectangle: false,
-                polyline: false
-            },
-            edit: {
-                featureGroup: drawnPaths,
-                selectedPathOptions: {
-                    maintainColor: true,
-                    opacity: 0.3,
-                    remove: false
-                }
-            },
-
-        });
-        map.addControl(drawControl);
-
-        map.on('draw:edited', function (e) {
-            var layers = e.layers;
-            layers.eachLayer(function (layer) {
-                var name = layer.options.name;
-                if (layer._path) {
-                    latlngs = layer.getLatLngs()
-                        .map(function (d) {
-                            return [d.lat, d.lng]
-                        });
-                    var lineString = JSON.stringify(latlngs);
-                    $('[name="' + name + '"]')
-                        .val(lineString)
-                        .trigger("change");
-                    return;
-                }
-                var position = layer.getLatLng();
-                $('[name="' + name + '.lng"]')
-                    .val(position.lng)
-                    .trigger("change");
-                $('[name="' + name + '.lat"]')
-                    .val(position.lat)
-                    .trigger("change");
-
-            });
-        });
-    */
-    /* map.on('draw:created', function (e) {
-         var type = e.layerType,
-             layer = e.layer;
-
-         if (type === 'marker') {
-             // Do marker specific actions
-         }
-
-         // Do whatever else you need to. (save to db, add to map etc)
-         drawnPaths.addLayer(layer);
-     });*/
-    /* map.on('draw:edited', function () {
-         // Update db to save latest changes.
-     });
-
-     map.on('draw:deleted', function () {
-         // Update db to save latest changes.
-     });*/
     obj.add = function (d) {
         var val = d.val;
         if (!d.path) {
@@ -475,17 +330,8 @@ formSetMap = function (context, recordId) {
             ];
             obj.addPoly(d, latlngs);
         }
-        if (val === 'findCoord') {
-            //var start = coords.ippCoordinates.layer.getLatLng();
-            //var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng();
-            //var distance = L.latLng(start).distanceTo(end);
-        }
     };
     obj.remove = function (d) {
-        /*var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
-        if (removePath) {
-            obj.removePoly(coords[removePath]);
-        }*/
         if (d.path) {
             obj.removePoly(d);
         } else {
@@ -494,8 +340,6 @@ formSetMap = function (context, recordId) {
         }
     };
     obj.addPoly = function (d, latlngs) {
-        //latlngs=JSON.parse(latlngs);
-        //console.log(latlngs);
         color = d.path.stroke;
         var polyline = L.polyline(latlngs, {
             color: color,
@@ -504,10 +348,8 @@ formSetMap = function (context, recordId) {
             val: d.val,
             //editable: true
         });
-        //polyline.addTo(map)
         drawnPaths.addLayer(polyline);
         marker.setZIndexOffset(4);
-        //paths[d.val] = polyline;
         coords[d.val].layer = polyline;
         var lineString = JSON.stringify(latlngs);
         $('[name="' + d.name + '"]')
@@ -591,7 +433,14 @@ formSetMap = function (context, recordId) {
             prefix: 'fa',
             markerColor: d.color,
             iconColor: '#fff',
-        })
+        });
+        if (d.name === "coords.ippCoordinates") {
+            var myIcon = L.divIcon({
+                iconSize: [50, 50],
+                iconAnchor: [25, 25],
+                className: 'fa ' + d.icon + ' fa-5x fa-fw _pad1 text-danger'
+            });
+        }
         var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
         marker = L.marker(_coords, {
             draggable: draggable,
@@ -618,19 +467,22 @@ formSetMap = function (context, recordId) {
                 return;
             }
             var record = Records.findOne(recordId);
-            if (!record.coords.ippCoordinates && !record.coords.findCoord) {
-                return;
-            }
-            Meteor.call('setLocale', recordId, function (err, d) {
+            Meteor.call('setElevation', record._id, function (err, d) {
+                console.log('elevation: ' + d);
                 if (err) {
-                    console.log(err);
-                    return;
+                    return console.log(err);
                 }
             });
-            Meteor.call('setElevation', recordId, function (err, d) {
+            Meteor.call('setLocale', record._id, function (err, d) {
+                console.log('location: ' + d);
                 if (err) {
-                    console.log('elevation err:  ' + err);
-                    return;
+                    return console.log(err);
+                }
+            });
+            Meteor.call('setDistance', record._id, function (err, d) {
+                console.log('distance: ' + d);
+                if (err) {
+                    return console.log(err);
                 }
             });
             Meteor.call('setEcoRegion', recordId, function (err, d) {
@@ -709,6 +561,7 @@ recordStats = function (data) {
         .compact()
         .value();
     var drawGraph = function (d) {
+        //console.log(d)
         var title = d.field;
         var data = d.count;
         var container = d3.select("#recordss")
@@ -718,7 +571,6 @@ recordStats = function (data) {
             .text(title);
         var width = parseInt(d3.select("#recordStats")
             .style('width')) / 4;
-        console.log(width)
         var margin = {
                 top: 10,
                 right: 20,
@@ -783,9 +635,15 @@ recordStats = function (data) {
         d.frequency = +d.frequency;
         return d;
     }
+    cc = count;
+    console.log(count);
+    var use1 = ['incident.subjectcategory', 'incident.landOwner', 'incidentOutcome.trackOffset', 'incident.ecoregiondomain', 'recordInfo.incidenttype', 'recordInfo.incidentdate'];
+    count = count.filter(function (d) {
+        return _.contains(use1, d.field);
+    })
     count.forEach(function (d) {
         drawGraph(d);
-    })
+    });
     return count;
 };
 statsSetMap = function (context, bounds, points) {
@@ -1039,3 +897,4 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
+
