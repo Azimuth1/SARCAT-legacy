@@ -36,7 +36,7 @@ Template.records.onRendered(function () {
                     },
                 })
                 .fetch();
-            $('[name="recordInfo.name"]').val('Record ' + (lastRecord.length+1));//.trigger('change');
+            $('[name="recordInfo.name"]').val('Record ' + (lastRecord.length + 1)); //.trigger('change');
             if (lastRecord.length) {
                 var lastIncidentnum = _.find(lastRecord, function (d) {
                         if (d.recordInfo && d.recordInfo.incidentnum) {
@@ -100,6 +100,9 @@ Template.records.helpers({
             .agencyMapComplete;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile && agencyMapComplete && role;
+    },
+    toDateString: function (date) {
+        return date.toISOString().split('T')[0];
     },
 });
 Template.records.events({
@@ -267,11 +270,13 @@ Template.records.events({
 */
     },
     'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {
-        var lat=template.$('[name="coords.ippCoordinates.lat"]').val();
-        var lng=template.$('[name="coords.ippCoordinates.lng"]').val();
-        if(!lat || !lng){return;}
-        console.log(lat,lng);
-        mapDrawn.editPoint(lat,lng);
+        var lat = template.$('[name="coords.ippCoordinates.lat"]').val();
+        var lng = template.$('[name="coords.ippCoordinates.lng"]').val();
+        if (!lat || !lng) {
+            return;
+        }
+        console.log(lat, lng);
+        mapDrawn.editPoint(lat, lng);
     },
 });
 AutoForm.hooks({
@@ -286,4 +291,3 @@ AutoForm.hooks({
         },
     }
 });
-

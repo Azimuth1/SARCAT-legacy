@@ -94,7 +94,7 @@
                             <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
                             <!--<th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>-->
                             <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
-                            <th data-field="date" data-sortable="true" class='afTable'>Created</th>
+                            <th data-field="date" data-sortable="true" class='afTable'>Created Date</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Incident Date</th>
                             <th data-field="status" data-sortable="true" class='afTable'>Status</th>
                         </tr>
@@ -114,8 +114,8 @@
                                     <td>{{recordInfo.incidenttype}}</td>
                                    <!-- <td>{{recordInfo.leadagency}}</td>-->
                                     <td>{{admin.user}}</td>
-                                    <td>{{created}}</td>
-                                    <td>{{recordInfo.incidentdate}}</td>
+                                    <td>{{toDateString created}}</td>
+                                    <td>{{toDateString recordInfo.incidentdate}}</td>
                                     <td>{{recordInfo.status}}</td>
                                 </tr>
                             {{/each}}
