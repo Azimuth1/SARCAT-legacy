@@ -8,6 +8,12 @@
 {{/if}}
 
 </div>
+
+
+                
+            {{#if currentUser}}
+
+
                 {{#if agencyProfileInComplete}}
                     <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a> </div>
                 {{/if}} 
@@ -16,9 +22,9 @@
                     <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency Response Area must be complete to begin adding records</a> </div>
                 {{/if}} 
 
-                
-            {{#if currentUser}}
-                <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> </div>
+                <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> 
+                <a class="btn-pad js-logout btn-secondary">Logout</a> 
+                </div>
 
 
 
@@ -31,7 +37,7 @@
                     <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
 
 
-                    <a class="btn-pad js-logout btn-secondary">Logout</a> 
+                    
 
                 </div>
 

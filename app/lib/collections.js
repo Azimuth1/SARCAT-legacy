@@ -1,6 +1,5 @@
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
-
 Records.defaultName = function () {
     var nextLetter = 'A',
         nextName = 'Incident ' + nextLetter;
@@ -21,7 +20,6 @@ Records.defaultNum = function () {
     }
     return nextLetter.toString();
 };
-
 /*
 function convertToC(fTempVal) {
     return cTempVal = (fTempVal - 32) * (5 / 9);
@@ -81,7 +79,6 @@ Schemas.User = new SimpleSchema({
         allowedValues: ['viewer', 'editor', 'admin'],
         defaultValue: ['viewer'],
         optional: true,
-
     },
     'roles.$': {
         type: String,
@@ -93,7 +90,6 @@ Schemas.User = new SimpleSchema({
     },
 });
 Meteor.users.attachSchema(Schemas.User);
-
 Schemas.admin = new SimpleSchema({
     user: {
         type: String,
@@ -138,7 +134,6 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Record Name',
         unique: true,
-
     },
     /*incidentdate: {
         type: Date,
@@ -153,6 +148,7 @@ Schemas.recordInfo = new SimpleSchema({
             }
         },
         label: 'Incident Date/Time',
+        defaultValue: new Date()
     },
     status: {
         type: String,
@@ -176,7 +172,6 @@ Schemas.recordInfo = new SimpleSchema({
         optional: true,
         label: 'Mission #',
     },
-
     incidenttype: {
         type: String,
         defaultValue: 'Search',
@@ -230,13 +225,11 @@ Schemas.incident = new SimpleSchema({
         type: String,
         label: 'Response Country',
         optional: true,
-
     },
     stateregion: {
         type: String,
         optional: true,
         label: 'Response State/Region',
-
     },
     subjectcategory: {
         type: String,
@@ -252,7 +245,7 @@ Schemas.incident = new SimpleSchema({
     subjectSubCategory: {
         type: String,
         optional: true,
-        label: 'Subject Category Description',
+        label: 'Subject Sub-Category',
         //changeName???
     },
     contactmethod: {
@@ -285,8 +278,9 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Choose', 'Land', 'Air', 'Water'],
+        allowedValues: ['Unknown','Land', 'Air', 'Water'],
         label: 'Incident Environment',
+        defaultValue: 'Land'
     },
     ecoregiondomain: {
         type: String,
@@ -296,7 +290,7 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ["POLAR DOMAIN", "HUMID TEMPERATE DOMAIN", "DRY DOMAIN", "HUMID TROPICAL DOMAIN"],
+        allowedValues: ["POLAR", "TEMPERATE", "DRY", "TROPICAL"],
         label: 'Ecoregion Domain',
     },
     ecoregionDivision: {
@@ -346,7 +340,6 @@ Schemas.incident = new SimpleSchema({
         label: 'Land Cover',
     },
 });
-
 Schemas.timeLog = new SimpleSchema({
     'last seen date-time': {
         type: 'datetime',
@@ -406,7 +399,6 @@ Schemas.coords = new SimpleSchema({
         autoform: {
             omit: true
         }
-
     },
     /*
         revisedIPP: {
@@ -459,7 +451,6 @@ Schemas.coords = new SimpleSchema({
 
 
     */
-
     ippCoordinates: {
         type: Object,
         label: 'IPP',
@@ -499,7 +490,6 @@ Schemas.coords = new SimpleSchema({
         label: 'Decision Point',
         optional: true
     },
-
     destinationCoord: {
         type: Object,
         label: 'Intended Destination',
@@ -616,7 +606,6 @@ Schemas.incidentOperations = new SimpleSchema({
         optional: true
     },
     'decisionPointFactor': {
-
         type: Boolean,
         label: 'Decision Point A Find Factor?',
         autoform: {
@@ -631,7 +620,6 @@ Schemas.incidentOperations = new SimpleSchema({
                 type: "boolean-checkbox"
             }
         }
-
     },
     'PLS_HowDetermined': {
         type: String,
@@ -704,11 +692,16 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Distance From IPP',
         optional: true
     },
-    /*'findBearing': {
+    'dispersion Angle': {
         type: String,
         label: 'Find Bearing',
         optional: true
-    },*/
+    },
+    'findBearing': {
+        type: String,
+        label: 'Dispersion Angle',
+        optional: true
+    },
     'findFeature': {
         type: String,
         autoform: {
@@ -780,12 +773,11 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     },
     'elevationChange': {
-        type: Number,
+        type: String,
         label: 'Elevation Change',
         optional: true
     }
 });
-
 Schemas.subjects = new SimpleSchema({
     subject: {
         type: Array,
@@ -914,7 +906,6 @@ Schemas.subjects = new SimpleSchema({
         label: 'Rescue Status',
         optional: true
     },
-
     'subject.$.mechanism': {
         type: String,
         autoform: {
@@ -1022,7 +1013,6 @@ Schemas.medical = new SimpleSchema({
     },
 
 });*/
-
 Schemas.rescueDetails = new SimpleSchema({
     /* 'resourcesUsed': {
          type: Array,
@@ -1087,7 +1077,6 @@ Schemas.rescueDetails = new SimpleSchema({
         label: 'Total # of Tasks',
         optional: true
     },
-
     'totalPersonnel': {
         type: Number,
         label: 'Total Personnel',
@@ -1144,12 +1133,122 @@ Schemas.rescueDetails = new SimpleSchema({
         }
     }
 });
-
 Schemas.resourcesUsed = new SimpleSchema({
+    /*typeTest: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select-checkbox",
+            options: function () {
+                [{
+                    "label": "ATV",
+                    "value": "ATV"
+                }, {
+                    "label": "Bike",
+                    "value": "Bike"
+                }, {
+                    "label": "Boat",
+                    "value": "Boat"
+                }, {
+                    "label": "Boats",
+                    "value": "Boats"
+                }, {
+                    "label": "CERT",
+                    "value": "CERT"
+                }, {
+                    "label": "Cave",
+                    "value": "Cave"
+                }, {
+                    "label": "Containment",
+                    "value": "Containment"
+                }, {
+                    "label": "Diver",
+                    "value": "Diver"
+                }, {
+                    "label": "Dog-Airscent",
+                    "value": "Dog-Airscent"
+                }, {
+                    "label": "Dog-Disaster",
+                    "value": "Dog-Disaster"
+                }, {
+                    "label": "Dog-Tracking",
+                    "value": "Dog-Tracking"
+                }, {
+                    "label": "Dog-Trailing",
+                    "value": "Dog-Trailing"
+                }, {
+                    "label": "Dogs",
+                    "value": "Dogs"
+                }, {
+                    "label": "EMS",
+                    "value": "EMS"
+                }, {
+                    "label": "Family/Friend",
+                    "value": "Family/Friend"
+                }, {
+                    "label": "Fire",
+                    "value": "Fire"
+                }, {
+                    "label": "Fixed Wing",
+                    "value": "Fixed Wing"
+                }, {
+                    "label": "GSAR",
+                    "value": "GSAR"
+                }, {
+                    "label": "Grid",
+                    "value": "Grid"
+                }, {
+                    "label": "Hasty",
+                    "value": "Hasty"
+                }, {
+                    "label": "Helicopter",
+                    "value": "Helicopter"
+                }, {
+                    "label": "Horseback rider",
+                    "value": "Horseback rider"
+                }, {
+                    "label": "Investigation",
+                    "value": "Investigation"
+                }, {
+                    "label": "Law",
+                    "value": "Law"
+                }, {
+                    "label": "Other",
+                    "value": "Other"
+                }, {
+                    "label": "Parks",
+                    "value": "Parks"
+                }, {
+                    "label": "Patrol",
+                    "value": "Patrol"
+                }, {
+                    "label": "Public",
+                    "value": "Public"
+                }, {
+                    "label": "Sweep",
+                    "value": "Sweep"
+                }, {
+                    "label": "Swiftwater",
+                    "value": "Swiftwater"
+                }, {
+                    "label": "Tracker",
+                    "value": "Tracker"
+                }, {
+                    "label": "USAR",
+                    "value": "USAR"
+                }, {
+                    "label": "Emergent Volunteers",
+                    "value": "Emergent Volunteers"
+                }, {
+                    "label": "Unknown",
+                    "value": "Unknown"
+                }];
+            }
+        }
+    },*/
     'resource': {
         type: Array,
         label: 'Resource',
-
         optional: true
     },
     'resource.$': {
@@ -1160,7 +1259,6 @@ Schemas.resourcesUsed = new SimpleSchema({
         label: 'Name/Alias',
         optional: true,
         autoValue: function () {
-
             if (!this.isSet) {
                 return new Date()
                     .toISOString();
@@ -1194,22 +1292,15 @@ Schemas.resourcesUsed = new SimpleSchema({
     'resource.$.findResource': {
         type: Boolean,
         label: 'Find Resource?',
+        allowedValues: [true, false],
+        optional: true,
         autoform: {
             firstOption: function () {
                 return "--";
             }
         },
-        allowedValues: [true, false],
-        optional: true,
-        autoform: {
-            afFieldInput: {
-                type: "boolean-checkbox"
-            }
-        }
-
     },
 });
-
 Schemas.weather = new SimpleSchema({
     'summary': {
         type: String,
@@ -1236,31 +1327,24 @@ Schemas.weather = new SimpleSchema({
         optional: true,
         label: 'Max Temperature',
     },
-
     'temperatureMin': {
         type: Number,
         optional: true,
         decimal: true,
         label: 'Min Temperature',
     },
-
     'windSpeed': {
         type: String,
         optional: true,
         label: 'Wind Speed',
-
     },
     'cloudCover': {
         type: String,
         optional: true,
         label: 'Cloud Cover (%)',
-
     },
-
 })
-
 Schemas.xComments = new SimpleSchema({
-
     'summary': {
         type: String,
         optional: true,
@@ -1270,9 +1354,7 @@ Schemas.xComments = new SimpleSchema({
             'label-class': 'hide'
         }
     },
-
 });
-
 Schemas.formEditions = new SimpleSchema({
     type: {
         type: String,
@@ -1423,7 +1505,6 @@ Schemas.formEditions = new SimpleSchema({
         type: String
     },
 });
-
 Schemas.formEditions = new SimpleSchema({
     type: {
         type: String,
@@ -1574,7 +1655,6 @@ Schemas.formEditions = new SimpleSchema({
         type: String
     },
 });
-
 Schemas.SARCAT = new SimpleSchema({
     measureUnits: {
         type: String,
@@ -1656,14 +1736,12 @@ Schemas.SARCAT = new SimpleSchema({
         label: 'Record Info',
         //optional: true
     },
-
     incident: {
         type: Schemas.incident,
         optional: true,
         label: 'Incident Details',
         defaultValue: {}
     },
-
     weather: {
         type: Schemas.weather,
         label: 'Weather',
@@ -1676,7 +1754,6 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true,
         defaultValue: {}
     },
-
     rescueDetails: {
         type: Schemas.rescueDetails,
         label: 'Rescue Details',
@@ -1706,7 +1783,6 @@ Schemas.SARCAT = new SimpleSchema({
     }
 });
 Records.attachSchema(Schemas.SARCAT);
-
 Schemas.agencyProfile = new SimpleSchema({
     agency: {
         type: String,
@@ -1714,22 +1790,18 @@ Schemas.agencyProfile = new SimpleSchema({
     },
     Address: {
         type: String,
-
     },
     'state-region': {
         type: String,
         label: 'State/Province'
-
     },
     country: {
         type: String,
         label: 'Country/Region'
-
     },
     phoneNum: {
         type: String,
         label: 'Phone Number',
-
     },
     measureUnits: {
         type: String,
@@ -1748,7 +1820,6 @@ Schemas.agencyProfile = new SimpleSchema({
         defaultValue: "-143.61328125,11.350796722383684,106.34765625,62.99515845212052"
     }
 });
-
 Schemas.config = new SimpleSchema({
     initSetup: {
         type: Boolean,
@@ -1773,7 +1844,8 @@ Schemas.config = new SimpleSchema({
     },
     agencyLogo: {
         type: String,
-        defaultValue: 'default_logo.png'
+        optional:true,
+        defaultValue: 'default_logo.png',
     },
     agencyProfile: {
         type: Schemas.agencyProfile,
@@ -1795,5 +1867,5 @@ Schemas.config = new SimpleSchema({
         type: Schemas.formEditions,
     },*/
 });
-
 Config.attachSchema(Schemas.config);
+

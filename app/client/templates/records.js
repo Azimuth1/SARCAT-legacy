@@ -1,18 +1,15 @@
 var mapDrawn;
 var drawn;
 Template.records.onCreated(function (a) {
-    aa = a;
-    b = this
+    Tracker.autorun(function () {
+        var count = Records.find()
+            .count()
+        Session.set('count', count);
+    });
 })
 Template.records.onRendered(function () {
-    a = this;
+    x = this
     drawn = false;
-    /*console.log(this.data.records.fetch().map(function(d){
-        return d.recordInfo;
-    }));
-    var tableData=this.data.records.fetch().map(function(d){
-        return d.recordInfo;
-    });*/
     if (Records.find()
         .count()) {
         $('.recordTable')
@@ -21,7 +18,6 @@ Template.records.onRendered(function () {
     Session.set('userView', 'records');
     var config = Config.findOne();
     var agencyProfile = config.agencyProfile;
-    //Session.set('logo', 'uploads/logo/' + config.agencyLogo);
     var bounds = agencyProfile.bounds;
     var newBounds = boundsString2Array(bounds);
     mapDrawn = newProjectSetMap('recordMap', newBounds, {
@@ -36,7 +32,8 @@ Template.records.onRendered(function () {
                     },
                 })
                 .fetch();
-            $('[name="recordInfo.name"]').val('Record ' + (lastRecord.length + 1)); //.trigger('change');
+            $('[name="recordInfo.name"]')
+                .val('Record ' + (lastRecord.length + 1));
             if (lastRecord.length) {
                 var lastIncidentnum = _.find(lastRecord, function (d) {
                         if (d.recordInfo && d.recordInfo.incidentnum) {
@@ -78,6 +75,9 @@ Template.records.onRendered(function () {
         });
 });
 Template.records.helpers({
+    allRecords: function () {
+        return this.records;
+    },
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
@@ -102,7 +102,11 @@ Template.records.helpers({
         return profile && agencyMapComplete && role;
     },
     toDateString: function (date) {
-        return date.toISOString().split('T')[0];
+        if (!date) {
+            return;
+        }
+        return date.toISOString()
+            .split('T')[0];
     },
 });
 Template.records.events({
@@ -129,7 +133,6 @@ Template.records.events({
                 var coords = records.map(function (d) {
                     return d.coords
                 });
-                console.log(records, coords);
                 if (!records.length) {
                     return;
                 }
@@ -143,7 +146,7 @@ Template.records.events({
                         "text": "IPP Location. <br>Direction of Travel (hover to edit): <div class=\"fa fa-arrow-circle-up fa-2x fa-fw travelDirection\"></div>",
                         "icon": "fa-times-circle-o text-black"
                     },
-                    "decisionPointCoord": {
+                   /* "decisionPointCoord": {
                         "val": "decisionPointCoord",
                         "name": "coords.decisionPointCoord",
                         "text": "Decision Point",
@@ -160,7 +163,7 @@ Template.records.events({
                         "name": "coords.revisedLKP-PLS",
                         "text": "Revised IPP",
                         "icon": "fa-times-circle-o 4x text-success"
-                    },
+                    },*/
                     "findCoord": {
                         "val": "findCoord",
                         "name": "coords.findCoord",
@@ -250,28 +253,11 @@ Template.records.events({
             Session.set('newRecord', d);
         });
     },
-    'click #saveNewRecord': function (event, template) {
-        // $('#createRecordModal').modal('hide');
-        /*$('#createRecordModal')
-            .on('hide.bs.modal', function (e) {
-                console.log('!');
-                //var record = Records.findOne(Session.get('newRecord'));
-                //x = record;
-                return false
-            });
-
-            return
-        event.preventDefault();
-        event.stopPropagation();
-        return;
-        console.log(this)
-        a = event;
-        t = this;
-*/
-    },
     'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {
-        var lat = template.$('[name="coords.ippCoordinates.lat"]').val();
-        var lng = template.$('[name="coords.ippCoordinates.lng"]').val();
+        var lat = template.$('[name="coords.ippCoordinates.lat"]')
+            .val();
+        var lng = template.$('[name="coords.ippCoordinates.lng"]')
+            .val();
         if (!lat || !lng) {
             return;
         }
@@ -281,9 +267,18 @@ Template.records.events({
 });
 AutoForm.hooks({
     createRecordModalFormId: {
+        beginSubmit: function () {
+           // $('.recordTable').bootstrapTable('destroy');
+        },
+        endSubmit: function () {
+            //$('.recordTable').bootstrapTable();
+        },
         onSuccess: function (formType, result) {
+            //Meteor._reload.reload();
             $('#createRecordModal')
                 .modal('hide');
+            //$('.recordTable')
+            //   .bootstrapTable('destroy');
         },
         // Called when any submit operation fails
         onError: function (formType, error) {
@@ -291,3 +286,4 @@ AutoForm.hooks({
         },
     }
 });
+

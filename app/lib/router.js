@@ -154,7 +154,7 @@ Router.route('admin', {
         }
     }
 });*/
-
+Router.route('profiles');
 Router.route('form', {
     path: '/form/:_id',
     waitOn: function () {

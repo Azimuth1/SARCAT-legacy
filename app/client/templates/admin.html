@@ -36,7 +36,18 @@
                     <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
                 </div>
                 <div class="panel-body afBody">
-                    {{> upload_bootstrap formData=UploadImgFormData callbacks=uploadLogo}}
+
+
+                    {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
+
+
+
+<a class="btn btn-warning deleteLogo pull-right" style="width:91px" href="#">
+  <i class="fa fa-trash-o fa-lg"></i> Delete</a>
+            
+
+
+
                 </div>
             </div>
 
