@@ -108,6 +108,9 @@ Template.records.helpers({
         return date.toISOString()
             .split('T')[0];
     },
+    selectedRecords: function () {
+        return Session.get('selectedRecords');
+    }
 });
 Template.records.events({
     'click .js-deleteRecord': function () {
@@ -146,24 +149,24 @@ Template.records.events({
                         "text": "IPP Location. <br>Direction of Travel (hover to edit): <div class=\"fa fa-arrow-circle-up fa-2x fa-fw travelDirection\"></div>",
                         "icon": "fa-times-circle-o text-black"
                     },
-                   /* "decisionPointCoord": {
-                        "val": "decisionPointCoord",
-                        "name": "coords.decisionPointCoord",
-                        "text": "Decision Point",
-                        "icon": "fa-code-fork text-danger"
-                    },
-                    "destinationCoord": {
-                        "val": "destinationCoord",
-                        "name": "coords.destinationCoord",
-                        "text": "Intended Destination",
-                        "icon": "fa-bullseye text-default"
-                    },
-                    "revisedLKP-PLS": {
-                        "val": "revisedLKP-PLS",
-                        "name": "coords.revisedLKP-PLS",
-                        "text": "Revised IPP",
-                        "icon": "fa-times-circle-o 4x text-success"
-                    },*/
+                    /* "decisionPointCoord": {
+                         "val": "decisionPointCoord",
+                         "name": "coords.decisionPointCoord",
+                         "text": "Decision Point",
+                         "icon": "fa-code-fork text-danger"
+                     },
+                     "destinationCoord": {
+                         "val": "destinationCoord",
+                         "name": "coords.destinationCoord",
+                         "text": "Intended Destination",
+                         "icon": "fa-bullseye text-default"
+                     },
+                     "revisedLKP-PLS": {
+                         "val": "revisedLKP-PLS",
+                         "name": "coords.revisedLKP-PLS",
+                         "text": "Revised IPP",
+                         "icon": "fa-times-circle-o 4x text-success"
+                     },*/
                     "findCoord": {
                         "val": "findCoord",
                         "name": "coords.findCoord",
@@ -264,11 +267,19 @@ Template.records.events({
         console.log(lat, lng);
         mapDrawn.editPoint(lat, lng);
     },
+    'change .bs-checkbox input': function (event, template) {
+        console.log('!')
+        var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
+        Session.set('selectedRecords',checked.length)
+    },
+
+
+    
 });
 AutoForm.hooks({
     createRecordModalFormId: {
         beginSubmit: function () {
-           // $('.recordTable').bootstrapTable('destroy');
+            // $('.recordTable').bootstrapTable('destroy');
         },
         endSubmit: function () {
             //$('.recordTable').bootstrapTable();
@@ -286,4 +297,3 @@ AutoForm.hooks({
         },
     }
 });
-
