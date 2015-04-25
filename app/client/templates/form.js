@@ -75,6 +75,18 @@ Template.form.onRendered(function () {
             }
         });
     }
+
+
+   // if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
+        Meteor.call('setFindBearing', record._id, function (err, d) {
+            console.log('bearing: ' + d);
+            if (err) {
+                return console.log(err);
+            }
+        });
+  //  }
+
+
     if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
         Meteor.call('setDistance', record._id, function (err, d) {
             console.log('distance: ' + d);
@@ -92,11 +104,14 @@ Template.form.onRendered(function () {
                 $(this)
                     .find('select')
                     .not('[name*="status"]')
+                    .not('[name*="evacuationMethod"]')
+                    
                     .attr('disabled', false);
             } else {
                 $(this)
                     .find('select')
                     .not('[name*="status"]')
+                    .not('[name*="evacuationMethod"]')
                     .attr('disabled', true);
             }
         });
@@ -236,7 +251,7 @@ Template.form.helpers({
         return ["Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?"];
     },
     subjectKeysRescue: function () {
-        return ["Rescue Status", "Mechanism", "Injury Type", "Illness", "Treatment by"];
+        return ["Rescue Status", "Evacuation Method","Mechanism", "Injury Type", "Illness", "Treatment by"];
     },
     subjectKeysPersonal: function () {
         return ["Full Name", "Address", "Home Phone", "Cell Phone", "Comments"];
@@ -318,7 +333,7 @@ Template.form.helpers({
             })
             .compact()
             .filter(function (d) {
-                var keep = ["status", "mechanism", "injuryType", "illness", "treatmentby"];
+                var keep = ["status", "evacuationMethod","mechanism", "injuryType", "illness", "treatmentby"];
                 return _.contains(keep, d.field);
             })
             .without('_key')

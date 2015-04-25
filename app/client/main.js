@@ -188,6 +188,7 @@ newProjectSetMap = function (context, bounds, points) {
     map.on('locationfound', function (e) {
         marker.setLatLng(e.latlng);
     });
+
     marker.on('dragend', function (event) {
         var marker = event.target;
         var position = marker.getLatLng();
@@ -485,12 +486,23 @@ formSetMap = function (context, recordId) {
                     return console.log(err);
                 }
             });
+        Meteor.call('setFindBearing', record._id, function (err, d) {
+            console.log('bearing: ' + d);
+            if (err) {
+                return console.log(err);
+            }
+        });
             Meteor.call('setEcoRegion', recordId, function (err, d) {
                 if (err) {
                     return;
                 }
             });
         }
+
+        /*marker.on('dragstart', function (event) {
+            confirm('Are you sure you want to update your IPP?')
+        });*/
+
         marker.on('dragend', function (event) {
             var marker = event.target;
             var position = marker.getLatLng();
@@ -897,4 +909,3 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
-

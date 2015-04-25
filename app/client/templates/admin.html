@@ -32,26 +32,29 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Upload Organization Logo (jpg/png)
-                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+                    <h3 class="panel-title">Organization Logo - jpg/png
+                    </h3>
                 </div>
                 <div class="panel-body afBody">
-
-
                     {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
-
-
-
-<a class="btn btn-warning deleteLogo pull-right" style="width:91px" href="#">
-  <i class="fa fa-trash-o fa-lg"></i> Delete</a>
-            
-
+                    
+{{#unless defaultLogo}}
+                    <a class="btn btn-warning deleteLogo pull-right" style="width:91px" href="#">
+                        <i class="fa fa-trash-o fa-lg"></i> Delete</a>
+{{/unless}}
 
 
                 </div>
             </div>
-
-
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Preferred Unit of Measure
+                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+                </div>
+                <div class="panel-body afBody">
+                    {{> quickForm collection='Config' doc=configs class="hideLabel hideSubmit" id='formdIdgoogle' autosave=true type='update' fields="measureUnits"}}
+                </div>
+            </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Google API Key
@@ -61,8 +64,6 @@
                     {{> quickForm collection='Config' doc=configs class="hideLabel hideSubmit" id='formdIdgoogle' autosave=true type='update' fields="googleAPI"}}
                 </div>
             </div>
-
-
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Forecast API Key
@@ -72,15 +73,9 @@
                     {{> quickForm collection='Config' doc=configs class="hideLabel hideSubmit" id='formdIdgoogle' autosave=true type='update' fields="forecastAPI"}}
                 </div>
             </div>
-
-
-
-            
-
-<!--
+            <!--
             {{#autoForm collection='Config' doc=configs class="_recordForm3 _hideSubmit" id='formdIdgoogle' autosave=true type='update'}} {{> afQuickField name="googleAPI"}} {{/autoForm}}
 -->
-
         </div>
         <div role="tabpanel" class="tab-pane full" id="adminMapTab">
             <div class="panel panel-default mar1">

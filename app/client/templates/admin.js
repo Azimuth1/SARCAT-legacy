@@ -22,7 +22,9 @@ Template.admin.rendered = function () {
 Template.admin.helpers({
     logo: function (view) {
         return Session.get('logo');
-
+    },
+    defaultLogo: function (view) {
+        return Session.equals('logo','uploads/logo/default_logo.png');
     },
     UploadImgFormData: function () {
         return {
@@ -65,13 +67,13 @@ Template.admin.helpers({
         return !users.length;
     },
     uploadLogo: function (a, b) {
-        //console.log(a,b,this)
         return {
             finished: function (index, fileInfo, context) {
                 Meteor.call('updateConfig', {
                     agencyLogo: fileInfo.name
                 }, function (err) {
                     console.log(err);
+                    //Meteor._reload.reload();
                 });
             }
         };

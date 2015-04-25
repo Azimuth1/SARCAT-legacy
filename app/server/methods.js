@@ -43,6 +43,7 @@ Meteor.methods({
                 $set: val
             }
         );
+        return true;
     },
     addRecord: function (list) {
         if (!Meteor.userId()) {
@@ -226,6 +227,57 @@ Meteor.methods({
         });
         return dailyData;
     },
+    setFindBearing: function (id) {
+
+        function radians(n) {
+            return n * (Math.PI / 180);
+        }
+
+        function degrees(n) {
+            return n * (180 / Math.PI);
+        }
+
+        function bearing(startLat, startLong, endLat, endLong) {
+            startLat = radians(startLat);
+            startLong = radians(startLong);
+            endLat = radians(endLat);
+            endLong = radians(endLong);
+
+            var dLong = endLong - startLong;
+
+            var dPhi = Math.log(Math.tan(endLat / 2.0 + Math.PI / 4.0) / Math.tan(startLat / 2.0 + Math.PI / 4.0));
+            if (Math.abs(dLong) > Math.PI) {
+                if (dLong > 0.0)
+                    dLong = -(2.0 * Math.PI - dLong);
+                else
+                    dLong = (2.0 * Math.PI + dLong);
+            }
+
+            return parseInt((degrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0);
+        }
+
+        var record = Records.findOne(id);
+        Records.update(id, {
+            $unset: {
+                'incidentOutcome.findBearing': ''
+            }
+        });
+        var coord1 = record.coords.ippCoordinates;
+        var coord2 = record.coords.findCoord;
+        if (!coord1 || !coord2) {
+            return false;
+        }
+
+        var val = bearing(coord1.lat, coord1.lng, coord2.lat, coord2.lng);
+
+        Records.update(id, {
+            $set: {
+                'incidentOutcome.findBearing': val
+            }
+        });
+        return val;
+
+    },
     setElevation: function (id) {
         var record = Records.findOne(id);
         Records.update(id, {
@@ -304,7 +356,7 @@ Meteor.methods({
                 'incidentOutcome.distanceIPP': val
             }
         });
-      //  return JSON.stringify([coord1, coord2, unit, val])
+        //  return JSON.stringify([coord1, coord2, unit, val])
         return val;
     },
     setLocale: function (id) {
@@ -375,4 +427,3 @@ Meteor.users.allow({
         }
     }
 });
-
