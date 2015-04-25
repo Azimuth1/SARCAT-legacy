@@ -64,19 +64,34 @@
                         <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
                             <i class="glyphicon glyphicon-plus"></i> New Record
                         </button>
+                        </div>
+                        
+
                         {{#if isAdmin}}
+                        <div id="toolbar" class="btn-group pull-right">
                             <button type="button" class="btn btn-default">
                                 <i class="glyphicon glyphicon-save-file"></i>
+                            Download
                             </button>
                             <button type="button" class="btn btn-default">
                                 <i class="glyphicon glyphicon-cloud-upload"></i>
+                                Export to ISRID
                             </button>
+                            </div>
+                            <div id="toolbar" class="btn-group pull-right">
+                            {{#if selectedRecords}}
                             <button type="button" class="btn btn-default deleteRecord">
                                 <i class="glyphicon glyphicon-trash"></i>
                             </button>
+                            {{/if}}
+                            </div>
                         {{/if}}
-                    </div>
+
+
+
+                    
                 {{/if}}
+
                 <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
                         <tr>
