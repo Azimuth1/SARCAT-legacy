@@ -148,7 +148,7 @@ Schemas.recordInfo = new SimpleSchema({
             }
         },
         label: 'Incident Date/Time',
-        defaultValue: new Date()
+        defaultValue: moment().format('YYYY-MM-DThh:mm')
     },
     status: {
         type: String,
@@ -190,27 +190,6 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         label: 'Agency Having Jurisdiction',
     },
-    /*incidenttime: {
-        type: String,
-        optional: true,
-        label: 'Incident Time',
-        autoform: {
-            afFieldInput: {
-                type: 'time'
-            }
-        },
-
-    },
-    'last seen date-time': {
-        type: 'datetime',
-        autoform: {
-            afFieldInput: {
-                type: 'datetime-local'
-            }
-        },
-        label: 'Last Seen Date/Time',
-        optional: true
-    },*/
     'sar notified date-time': {
         type: String,
         autoform: {
@@ -278,7 +257,7 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown','Land', 'Air', 'Water'],
+        allowedValues: ['Unknown', 'Land', 'Air', 'Water'],
         label: 'Incident Environment',
         defaultValue: 'Land'
     },
@@ -340,58 +319,7 @@ Schemas.incident = new SimpleSchema({
         label: 'Land Cover',
     },
 });
-Schemas.timeLog = new SimpleSchema({
-    'last seen date-time': {
-        type: 'datetime',
-        autoform: {
-            afFieldInput: {
-                type: 'datetime-local'
-            }
-        },
-        label: 'Last Seen Date/Time',
-        optional: true
-    },
-    'sar notified date-time': {
-        type: String,
-        autoform: {
-            afFieldInput: {
-                type: 'datetime-local'
-            }
-        },
-        label: 'SAR Notified Date/Time',
-        optional: true
-    },
-    'subject located date-time': {
-        type: String,
-        autoform: {
-            afFieldInput: {
-                type: 'datetime-local'
-            }
-        },
-        label: 'Subject Located Date/Time',
-        optional: true
-    },
-    'incident closed date-time': {
-        type: String,
-        autoform: {
-            afFieldInput: {
-                type: 'datetime-local'
-            }
-        },
-        label: 'Incident Closed Date/Time',
-        optional: true
-    },
-    /*'total hours': {
-        type: Number,
-        label: 'Total Missing Hours',
-        optional: true
-    },
-    'search hours': {
-        type: Number,
-        label: 'Total Search Hours',
-        optional: true
-    }*/
-});
+
 Schemas.coords = new SimpleSchema({
     bounds: {
         type: String,
@@ -400,57 +328,6 @@ Schemas.coords = new SimpleSchema({
             omit: true
         }
     },
-    /*
-        revisedIPP: {
-            type: Array,
-            label: 'Subject Info',
-            optional: true,
-            autoValue: function (a,b) {
-                console.log(this,a,b);
-                t=this
-                lat = this.siblingField('ippCoordinates.lat');
-                lng = this.siblingField('ippCoordinates.lng');
-
-                console.log(lat,lng)
-            },
-        },
-
-
-
-
-
-        'revisedIPP.$': {
-            type: Object
-        },
-        'revisedIPP.$._key': {
-            type: String,
-            label: 'Name/Alias',
-            optional: true,
-            autoValue: function () {
-                if (!this.isSet) {
-                    return new Date()
-                        .toISOString();
-                }
-            },
-            autoform: {
-                omit: true
-            }
-        },
-        'revisedIPP.$.lat': {
-            type: Number,
-            label: 'Latitude',
-            decimal: true,
-            optional: true
-        },
-        'revisedIPP.$.lng': {
-            type: Number,
-            label: 'Latitude',
-            decimal: true,
-            optional: true
-        },
-
-
-    */
     ippCoordinates: {
         type: Object,
         label: 'IPP',
@@ -632,8 +509,20 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Determining Factor',
         optional: true
     },
+
 });
 Schemas.incidentOutcome = new SimpleSchema({
+    'incidentOutcome': {
+        type: String,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
+        label: 'Incident Outcome',
+        optional: true
+    },
     'subject located date-time': {
         type: String,
         autoform: {
@@ -654,17 +543,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Incident Closed Date/Time',
         optional: true
     },
-    'incidentOutcome': {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
-        label: 'Incident Outcome',
-        optional: true
-    },
+
     'scenario': {
         type: String,
         autoform: {
@@ -692,14 +571,24 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Distance From IPP',
         optional: true
     },
-    'dispersion Angle': {
+    'dispersionAngle': {
         type: String,
-        label: 'Find Bearing',
+        label: 'Dispersion Angle (deg)',
         optional: true
     },
     'findBearing': {
         type: String,
-        label: 'Dispersion Angle',
+        label: 'Find Bearing (deg)',
+        optional: true
+    },
+    'trackOffset': {
+        type: String,
+        label: 'Track Offset',
+        optional: true
+    },
+    'elevationChange': {
+        type: String,
+        label: 'Elevation Change',
         optional: true
     },
     'findFeature': {
@@ -756,27 +645,6 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Mobility (hours)',
         optional: true
     },
-    'signalling': {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
-        label: 'Signalling',
-        optional: true
-    },
-    'trackOffset': {
-        type: String,
-        label: 'Track Offset',
-        optional: true
-    },
-    'elevationChange': {
-        type: String,
-        label: 'Elevation Change',
-        optional: true
-    }
 });
 Schemas.subjects = new SimpleSchema({
     subject: {
@@ -906,6 +774,17 @@ Schemas.subjects = new SimpleSchema({
         label: 'Rescue Status',
         optional: true
     },
+    'subject.$.evacuationMethod': {
+        type: String,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
+        label: 'Evacuation Methods',
+        optional: true
+    },
     'subject.$.mechanism': {
         type: String,
         autoform: {
@@ -979,133 +858,17 @@ Schemas.subjects = new SimpleSchema({
         }
     },
 });
-/*
-Schemas.medical = new SimpleSchema({
-    'rescue-EvacuationMethods': {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
-        label: 'Rescue/Evacuation Methods',
-        optional: true
-    },
-    'injuredSearcher': {
-        type: String,
-        label: 'Injured Searcher',
-        optional: true
-    },
-    'injuredSearcherDetails': {
-        type: String,
-        label: 'Injured Searcher Details',
-        optional: true
-    },
+
+Schemas.rescueDetails = new SimpleSchema({
     'signalling': {
         type: String,
         autoform: {
             firstOption: function () {
                 return "--";
             }
-        },allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
-        label: 'Signalling',
-        optional: true
-    },
-
-});*/
-Schemas.rescueDetails = new SimpleSchema({
-    /* 'resourcesUsed': {
-         type: Array,
-         autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },allowedValues: ['Unknown', 'GSAR', 'Dogs', 'EMS', 'Fire', 'Tracker', 'Law', 'Divers', 'Boats', 'Cave', 'Parks', 'USAR', 'Helicopter', 'Fixed Wing', 'Swiftwater', 'Other'],
-         label: 'Resources Used',
-         optional: true
-     },
-     'resourcesUsed.$': {
-         type: String,
-         optional: true
-     },
-     'findResource': {
-         type: Array,
-         autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },allowedValues: ['Unknown', 'Hasty', 'Sweep', 'Grid', 'Dog-Airscent', 'Dog-Tracking', 'Dog-Trailing', 'Dog-Disaster', 'Tracker', 'Cave', 'Helicopter', 'Fixed Wing', 'Family/Friend', 'Public', 'Investigation', 'Horseback rider', 'ATV', 'Boat', 'Diver', 'Containment', 'Patrol', 'Bike', 'CERT', 'USAR', 'Other'],
-         label: 'Find Resource',
-         optional: true
-     },
-     'findResource.$': {
-         type: String,
-         optional: true
-     },
-     '#Tasks': {
-         type: Number,
-         label: '# Tasks',
-         optional: true
-     },
-     '#Dogs': {
-         type: Number,
-         label: '# Dogs',
-         optional: true
-     },
-     '#AirTasks': {
-         type: Number,
-         label: '# Air Tasks',
-         optional: true
-     },
-     '#Aircraft': {
-         type: Number,
-         label: '# Aircraft',
-         optional: true
-     },
-     '#AirHours': {
-         type: Number,
-         label: '# Air Hours',
-         optional: true
-     },
-     'emergentVolunters': {
-         type: Number,
-         label: 'Emergent Volunters',
-         optional: true
-     },*/
-    '#Tasks': {
-        type: Number,
-        label: 'Total # of Tasks',
-        optional: true
-    },
-    'totalPersonnel': {
-        type: Number,
-        label: 'Total Personnel',
-        optional: true
-    },
-    'totalManHours': {
-        type: Number,
-        label: 'Total Man Hours',
-        optional: true
-    },
-    'distanceTraveled': {
-        type: String,
-        label: 'Total Distance Traveled',
-        optional: true
-    },
-    'totalCost': {
-        type: String,
-        label: 'Total Cost',
-        optional: true
-    },
-    'rescue-EvacuationMethods': {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
         },
-        allowedValues: ['Unknown', 'Walkout', 'Carryout', 'Semi-Tech', 'Technical', 'Vehicle', 'Boat', 'Swiftwater', 'Helicopter', 'AeromedicalOther'],
-        label: 'Rescue/Evacuation Methods',
+        allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
+        label: 'Signalling',
         optional: true
     },
     'injuredSearcher': {
@@ -1134,118 +897,33 @@ Schemas.rescueDetails = new SimpleSchema({
     }
 });
 Schemas.resourcesUsed = new SimpleSchema({
-    /*typeTest: {
+
+ 'numTasks': {
+        type: Number,
+        label: 'Total # of Tasks',
+        optional: true
+    },
+    'totalPersonnel': {
+        type: Number,
+        label: 'Total Personnel',
+        optional: true
+    },
+    'totalManHours': {
+        type: Number,
+        label: 'Total Man Hours',
+        optional: true
+    },
+    'distanceTraveled': {
         type: String,
-        optional: true,
-        autoform: {
-            type: "select-checkbox",
-            options: function () {
-                [{
-                    "label": "ATV",
-                    "value": "ATV"
-                }, {
-                    "label": "Bike",
-                    "value": "Bike"
-                }, {
-                    "label": "Boat",
-                    "value": "Boat"
-                }, {
-                    "label": "Boats",
-                    "value": "Boats"
-                }, {
-                    "label": "CERT",
-                    "value": "CERT"
-                }, {
-                    "label": "Cave",
-                    "value": "Cave"
-                }, {
-                    "label": "Containment",
-                    "value": "Containment"
-                }, {
-                    "label": "Diver",
-                    "value": "Diver"
-                }, {
-                    "label": "Dog-Airscent",
-                    "value": "Dog-Airscent"
-                }, {
-                    "label": "Dog-Disaster",
-                    "value": "Dog-Disaster"
-                }, {
-                    "label": "Dog-Tracking",
-                    "value": "Dog-Tracking"
-                }, {
-                    "label": "Dog-Trailing",
-                    "value": "Dog-Trailing"
-                }, {
-                    "label": "Dogs",
-                    "value": "Dogs"
-                }, {
-                    "label": "EMS",
-                    "value": "EMS"
-                }, {
-                    "label": "Family/Friend",
-                    "value": "Family/Friend"
-                }, {
-                    "label": "Fire",
-                    "value": "Fire"
-                }, {
-                    "label": "Fixed Wing",
-                    "value": "Fixed Wing"
-                }, {
-                    "label": "GSAR",
-                    "value": "GSAR"
-                }, {
-                    "label": "Grid",
-                    "value": "Grid"
-                }, {
-                    "label": "Hasty",
-                    "value": "Hasty"
-                }, {
-                    "label": "Helicopter",
-                    "value": "Helicopter"
-                }, {
-                    "label": "Horseback rider",
-                    "value": "Horseback rider"
-                }, {
-                    "label": "Investigation",
-                    "value": "Investigation"
-                }, {
-                    "label": "Law",
-                    "value": "Law"
-                }, {
-                    "label": "Other",
-                    "value": "Other"
-                }, {
-                    "label": "Parks",
-                    "value": "Parks"
-                }, {
-                    "label": "Patrol",
-                    "value": "Patrol"
-                }, {
-                    "label": "Public",
-                    "value": "Public"
-                }, {
-                    "label": "Sweep",
-                    "value": "Sweep"
-                }, {
-                    "label": "Swiftwater",
-                    "value": "Swiftwater"
-                }, {
-                    "label": "Tracker",
-                    "value": "Tracker"
-                }, {
-                    "label": "USAR",
-                    "value": "USAR"
-                }, {
-                    "label": "Emergent Volunteers",
-                    "value": "Emergent Volunteers"
-                }, {
-                    "label": "Unknown",
-                    "value": "Unknown"
-                }];
-            }
-        }
-    },*/
+        label: 'Total Distance Traveled',
+        optional: true
+    },
+    'totalCost': {
+        type: String,
+        label: 'Total Cost',
+        optional: true
+    },
+
     'resource': {
         type: Array,
         label: 'Resource',
@@ -1672,7 +1350,7 @@ Schemas.SARCAT = new SimpleSchema({
         autoValue: function () {
             if (this.isInsert) {
                 return Config.findOne()
-                    .agencyProfile.measureUnits;
+                    .measureUnits;
             } else {
                 this.unset();
             }
@@ -1803,17 +1481,6 @@ Schemas.agencyProfile = new SimpleSchema({
         type: String,
         label: 'Phone Number',
     },
-    measureUnits: {
-        type: String,
-        label: 'Preferred Unit of Measurement',
-        defaultValue: 'US',
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: ['Metric', 'US'],
-    },
     bounds: {
         type: String,
         optional: true,
@@ -1824,6 +1491,17 @@ Schemas.config = new SimpleSchema({
     initSetup: {
         type: Boolean,
         defaultValue: true
+    },
+    measureUnits: {
+        type: String,
+        label: 'Preferred Unit of Measurement',
+        defaultValue: 'US',
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Metric', 'US'],
     },
     agencyProfileComplete: {
         type: Boolean,
@@ -1844,7 +1522,7 @@ Schemas.config = new SimpleSchema({
     },
     agencyLogo: {
         type: String,
-        optional:true,
+        optional: true,
         defaultValue: 'default_logo.png',
     },
     agencyProfile: {
@@ -1868,4 +1546,3 @@ Schemas.config = new SimpleSchema({
     },*/
 });
 Config.attachSchema(Schemas.config);
-

@@ -5,7 +5,6 @@ Handlebars.registerHelper('isEqual', function (a, b) {
     return a === b;
 });
 
-
 Router.configure({
     layoutTemplate: 'appBody',
     notFoundTemplate: 'appNotFound',
@@ -34,32 +33,13 @@ Router.configure({
         }
     }
 });
-if (Meteor.isClient) {
 
-Tracker.autorun(function () {
-//  Meteor.subscribe("config", Config.findOne());
-//Session.set('config', Config.findOne());
-//Session.set('profileComplete',agencyProfileComplete());
-
-
-
-});
-
-    /*Tracker.autorun(function () {
-        var count = Session.get('adminUser');
-        //console.log('autorun2:' + count);
-    });*/
-
-    //Roles.userIsInRole(Meteor.userId(), ['admin']);
-    //L.Icon.Default.imagePath = '/img';
-    //L.Icon.Default.imagePath = '/packages/leaflet/images';
-}
 Router.route('home', {
     path: '/',
     action: function () {
 
         if (Meteor.user()) {
-            
+
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
 
                 Router.go('admin');

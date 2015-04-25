@@ -17,15 +17,12 @@ Meteor.startup(function () {
                 return '/records/' + formData._id;
             }
             if (formData.type === 'logo') {
-                //fileInfo.name = 'main_logo'
                 return '/logo';
             }
 
-            //return formData.contentType;
-            //return formData.userName;
         },
-        checkCreateDirectories: true //create the directories for you
-    })
+        checkCreateDirectories: true
+    });
     if (!Config.find()
         .count() && !Meteor.users.find()
         .count()) {
@@ -34,11 +31,6 @@ Meteor.startup(function () {
         var customSettings = {
             'initSetup': true,
         };
-
-
-
-
-
 
         Config.insert(customSettings);
         var admin = Accounts.createUser({
@@ -49,6 +41,5 @@ Meteor.startup(function () {
         Roles.addUsersToRoles(admin, ['admin']);
 
     }
-    
-});
 
+});
