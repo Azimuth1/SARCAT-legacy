@@ -21,7 +21,7 @@ Meteor.startup(function () {
             }
 
         },
-        checkCreateDirectories: true
+        //checkCreateDirectories: true
     });
     if (!Config.find()
         .count() && !Meteor.users.find()

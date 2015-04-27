@@ -7,7 +7,6 @@
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div id='recordMap' style="width:100%;height:400px"></div>
-
                     <!--
 {{#if newRecord}} 
 
@@ -21,23 +20,15 @@
 
    {{/if}}
 -->
-
-                    {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" fields="coords,recordInfo" class="hideHeader" resetOnSuccess=true validation="submit" }}
-                        {{> afQuickField name='coords.ippCoordinates'}} {{> afQuickField name='recordInfo'}}
-
-                        <div class="form-group modal-footer">
-                            <button type="reset" class="btn btn-default pull-left">Reset Form</button>
-                            <button id="saveNewRecord" type="submit" class="btn btn-primary">Add Record</button>
-                            <button data-dismiss="modal" class="btn btn-default">Cancel</button>
-                        </div>
-
+                    {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" fields="coords,recordInfo" class="hideHeader" resetOnSuccess=true validation="submit" }} {{> afQuickField name='coords.ippCoordinates'}} {{> afQuickField name='recordInfo'}}
+                    <div class="form-group modal-footer">
+                        <button type="reset" class="btn btn-default pull-left">Reset Form</button>
+                        <button id="saveNewRecord" type="submit" class="btn btn-primary">Add Record</button>
+                        <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                    </div>
                     {{/autoForm}}
-
                 </div>
-                <!--<div class="modal-footer">
-                    <button type="button" class="btn _btn-default js-deleteRecord" data-dismiss="modal">Close</button>
-                    <button type="button" id="saveNewRecord" class="btn btn-primary" data-dismiss="modal">Save</button>
-                </div>-->
+ 
             </div>
         </div>
     </div>
@@ -60,38 +51,28 @@
                     <p class="small"><em>*Click column header to sort</em></p>
                 </div>
                 {{#if createNewBtn}}
-                    <div id="toolbar" class="btn-group">
-                        <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
-                            <i class="glyphicon glyphicon-plus"></i> New Record
-                        </button>
-                        </div>
-                        
-
-                        {{#if isAdmin}}
-                        <div id="toolbar" class="btn-group pull-right">
-                            <button type="button" class="btn btn-default">
-                                <i class="glyphicon glyphicon-save-file"></i>
-                            Download
-                            </button>
-                            <button type="button" class="btn btn-default">
-                                <i class="glyphicon glyphicon-cloud-upload"></i>
-                                Export to ISRID
-                            </button>
-                            </div>
-                            <div id="toolbar" class="btn-group pull-right">
-                            {{#if selectedRecords}}
-                            <button type="button" class="btn btn-default deleteRecord">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
-                            {{/if}}
-                            </div>
-                        {{/if}}
-
-
-
-                    
-                {{/if}}
-
+                <div id="toolbar" class="btn-group">
+                    <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
+                        <i class="glyphicon glyphicon-plus"></i> New Record
+                    </button>
+                </div>
+                {{#if isAdmin}}
+                <div id="toolbar" class="btn-group pull-right">
+                    <button id="downloadRecords" type="button" class="btn btn-default">
+                        <i class="glyphicon glyphicon-save-file"></i> Download
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <i class="glyphicon glyphicon-cloud-upload"></i> Export to ISRID
+                    </button>
+                </div>
+                <div id="toolbar" class="btn-group pull-right">
+                    {{#if selectedRecords}}
+                    <button type="button" class="btn btn-default deleteRecord">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                    {{/if}}
+                </div>
+                {{/if}} {{/if}}
                 <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
                         <tr>
@@ -100,7 +81,7 @@
                             <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
                             <th data-field="name" data-sortable="true" class='afTable'>Record Name</th>
                             <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
-                            <!--<th data-field="leadagency" data-sortable="true" class='afTable'>Lead Agency</th>-->
+                     
                             <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Created Date</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Incident Date</th>
@@ -109,25 +90,44 @@
                     </thead>
                     <tbody class='white-bg'>
                         {{#if noRecords}}
-                            <tr>
-                                <td colspan="9" class="text-center text-default">Create a new Record to Begin!</td>
-                            </tr>
-                        {{else}}
-                            {{#each allRecords}}
-                                <tr class="openRecord text-center" id="{{this._id}}">
-                                    <td></td>
-                                   
-                                    <td>{{recordInfo.incidentnum}}</td>
-                                    <td>{{recordInfo.missionnum}}</td>
-                                    <td>{{recordInfo.name}}</td>
-                                    <td>{{recordInfo.incidenttype}}</td>
-                                    <td>{{admin.user}}</td>
-                                    <td>{{toDateString created}}</td>
-                                    <td>{{toDateString recordInfo.incidentdate}}</td>
-                                    <td>{{recordInfo.status}}</td>
-                                </tr>
-                            {{/each}}
-                        {{/if}}
+                        <tr>
+                            <td colspan="9" class="text-center text-default">Create a new Record to Begin!</td>
+                        </tr>
+                        {{else}} {{#each allRecords}}
+                        <tr class="openRecord text-center" id="{{this._id}}">
+                            <td></td>
+
+
+<!--
+                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
+
+                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
+
+                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="recordInfo.name"}}</td>
+
+                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="recordInfo.incidenttype"}}</td>
+                           <td>{{admin.user}}</td>
+                        <td>{{toDateString created}}</td>
+
+
+                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="recordInfo.incidentdate"}}</td>
+
+                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="recordInfo.status"}}</td>
+-->
+                   
+
+                         
+                            <td>{{recordInfo.missionnum}}</td>
+                            <td>{{recordInfo.name}}</td>
+                            <td>{{recordInfo.incidenttype}}</td>
+                            <td>{{admin.user}}</td>
+                            <td>{{toDateString created}}</td>
+                            <td>{{toDateString recordInfo.incidentdate}}</td>
+                            <td>{{recordInfo.status}}</td>
+
+
+                        </tr>
+                        {{/each}} {{/if}}
                     </tbody>
                 </table>
             </div>
@@ -146,4 +146,3 @@
         </div>
     </div>
 </template>
-

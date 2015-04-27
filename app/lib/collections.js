@@ -321,13 +321,13 @@ Schemas.incident = new SimpleSchema({
 });
 
 Schemas.coords = new SimpleSchema({
-    bounds: {
+    /*bounds: {
         type: String,
         optional: true,
         autoform: {
             omit: true
         }
-    },
+    },*/
     ippCoordinates: {
         type: Object,
         label: 'IPP',
@@ -429,10 +429,6 @@ Schemas.coords = new SimpleSchema({
     },
 });
 Schemas.incidentOperations = new SimpleSchema({
-    travelDirection: {
-        type: String,
-        optional: true,
-    },
     ipptype: {
         type: String,
         optional: true,
@@ -457,7 +453,7 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'initialDirectionofTravel': {
         type: Number,
-        label: 'Initial Travel Direction',
+        label: ' ',
         optional: true
     },
     'DOTHowdetermined': {
@@ -898,7 +894,7 @@ Schemas.rescueDetails = new SimpleSchema({
 });
 Schemas.resourcesUsed = new SimpleSchema({
 
- 'numTasks': {
+    'numTasks': {
         type: Number,
         label: 'Total # of Tasks',
         optional: true
@@ -1394,7 +1390,8 @@ Schemas.SARCAT = new SimpleSchema({
     },
     coords: {
         type: Schemas.coords,
-        optional: true
+        optional: true,
+        label:'Map Data'
             //optional: true
     },
     admin: {
