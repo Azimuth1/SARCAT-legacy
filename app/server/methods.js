@@ -221,10 +221,16 @@ Meteor.methods({
         _.each(dailyData, function (d, name) {
             var obj = {};
             obj['weather.' + name] = d;
-            var update = Records.update(id, {
+            Records.update(id, {
                 $set: obj
             });
         });
+
+        if(!dailyData.precipType){
+            Records.update(id, {
+                $set: {'weather.precipType':'none'}
+            });
+        }
         return dailyData;
     },
     setFindBearing: function (id) {

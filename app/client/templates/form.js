@@ -16,9 +16,9 @@ Template.form.onCreated(function () {
     Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
         Session.set('fileUploads', d)
     });
-
 });
 Template.form.onRendered(function () {
+    t = this
     record = this.data.record;
     r = record;
     var degree = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
@@ -34,23 +34,21 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
-    if (!Object.keys(record.weather)
-        .length) {
+    if (!Object.keys(record.weather).length) {
         Meteor.call('setWeather', record._id, function (err, d) {
-            console.log('weather: ' + d);
+            console.log(d);
             if (err) {
                 return console.log(err);
             }
         });
     }
-
-    //if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
+    if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
         Meteor.call('setEcoRegion', record._id, function (err, d) {
             if (err) {
                 return;
             }
         });
-    //}
+    }
     if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
         Meteor.call('setElevation', record._id, function (err, d) {
             console.log('elevation: ' + d);
@@ -75,18 +73,14 @@ Template.form.onRendered(function () {
             }
         });
     }
-
-
-   // if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
+    if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
         Meteor.call('setFindBearing', record._id, function (err, d) {
             console.log('bearing: ' + d);
             if (err) {
                 return console.log(err);
             }
         });
-  //  }
-
-
+    }
     if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
         Meteor.call('setDistance', record._id, function (err, d) {
             console.log('distance: ' + d);
@@ -105,7 +99,6 @@ Template.form.onRendered(function () {
                     .find('select')
                     .not('[name*="status"]')
                     .not('[name*="evacuationMethod"]')
-                    
                     .attr('disabled', false);
             } else {
                 $(this)
@@ -163,6 +156,13 @@ Template.form.onRendered(function () {
         });
 });
 Template.form.helpers({
+    toDateString: function (date) {
+        if (!date) {
+            return;
+        }
+        return date.toISOString()
+            .split('T')[0];
+    },
     formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
@@ -208,22 +208,33 @@ Template.form.helpers({
     },
     schemas: function () {
         var record = this.record;
-        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "coords", "updated", "created", "admin", "xComments", "incidentOperations");
-        return _.chain(schemas)
+        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "_coords", "updated", "created", "admin", "_xComments", "incidentOperations");
+        var summary = _.chain(schemas)
             .map(function (d) {
                 if (!Schemas[d]) {
                     return;
                 }
                 var total = Schemas[d]._firstLevelSchemaKeys.length;
                 var objKeys = Object.keys(record[d]);
+                console.log(objKeys);
+                console.log(Schemas[d]._firstLevelSchemaKeys)
                 var count = objKeys.length;
                 var sum;
-                if (total === 1) {
+                /*if (typeof(record[d][objKeys[0]]) === 'String') {
                     count = record[d][objKeys[0]].length;
-                    sum = ' - ' + count;
-                } else {
-                    sum = [count, total].join('/');
+                    sum = 'Total' + count;
                 }
+                else if (typeof(record[d][objKeys[0]]) === 'Object') {
+                    count = record[d][objKeys[0]].length;
+                    sum = 'Total' + count;
+                }*/
+                /*if (total === 1) {
+                    count = record[d][objKeys[0]].length;
+                    sum = 'Total' + count;
+                } */
+                //else {
+                var sum = [count, total].join('/');
+                //}
                 var label = Schemas.SARCAT._schema[d].label;
                 var klass = (count === Schemas[d]._firstLevelSchemaKeys.length) ? '' : 'primary-bg';
                 return {
@@ -234,6 +245,8 @@ Template.form.helpers({
             })
             .compact()
             .value();
+        console.log(summary);
+        return summary;
     },
     subjectKeys: function () {
         return _.chain(Schemas.subjects._schema)
@@ -251,7 +264,7 @@ Template.form.helpers({
         return ["Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?"];
     },
     subjectKeysRescue: function () {
-        return ["Rescue Status", "Evacuation Method","Mechanism", "Injury Type", "Illness", "Treatment by"];
+        return ["Rescue Status", "Evacuation Method", "Mechanism", "Injury Type", "Illness", "Treatment by"];
     },
     subjectKeysPersonal: function () {
         return ["Full Name", "Address", "Home Phone", "Cell Phone", "Comments"];
@@ -333,7 +346,7 @@ Template.form.helpers({
             })
             .compact()
             .filter(function (d) {
-                var keep = ["status", "evacuationMethod","mechanism", "injuryType", "illness", "treatmentby"];
+                var keep = ["status", "evacuationMethod", "mechanism", "injuryType", "illness", "treatmentby"];
                 return _.contains(keep, d.field);
             })
             .without('_key')
@@ -548,6 +561,7 @@ Template.form.events({
         var context = template.$(event.target);
         var pointType = context.attr('data');
         var active = context.hasClass('active')
+        console.log(context, pointType, active)
         var coords = getCoords(this.record);
         var item = _.findWhere(coords, {
             val: pointType
@@ -557,9 +571,11 @@ Template.form.events({
         };
         if (!active) {
             map.add(item);
+            context.addClass('active');
         } else {
             if (confirm('Are you sure you want to remove ' + item.text + ' from the map?')) {
                 map.remove(item);
+                context.removeClass('active');
             } else {
                 event.stopPropagation();
             }
@@ -615,4 +631,3 @@ AutoForm.hooks({
         }
     }
 });
-
