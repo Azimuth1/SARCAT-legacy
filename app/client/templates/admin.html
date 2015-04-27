@@ -1,148 +1,192 @@
 <template name="admin">
     {{#if isInRole 'admin'}}
-    <nav class="navbar default-bg rad0 mar00">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                <a class="navbar-brand white" href="#"></a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs navbar-nav" role="tablist">
-                    <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Profile</a> </li>
-                    <li role="presentation"><a href="#adminMapTab" aria-controls="profile" role="tab" data-toggle="tab" class="white adminMap">Response Area</a> </li>
-                    <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-                    <li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="tab-content admin">
-        <div role="tabpanel" class="tab-pane active pad0" id="profile">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Agency Profile
-                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+        <nav class="navbar default-bg rad0 mar00">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    <a class="navbar-brand white" href="#"></a>
                 </div>
-                <div class="panel-body afBody">
-                    {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="hideHeader hideSubmit" type='update' autosave=true fields="agencyProfile" omitFields="agencyProfile.bounds" buttonContent= "Save" validation='keyup'}}
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs navbar-nav" role="tablist">
+                        <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Profile</a> </li>
+
+                        <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
+                        <li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>
+                    </ul>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Organization Logo - jpg/png
-                    </h3>
-                </div>
-                <div class="panel-body afBody">
-                    {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
-                    
-{{#unless defaultLogo}}
-                    <a class="btn btn-warning deleteLogo pull-right" style="width:91px" href="#">
-                        <i class="fa fa-trash-o fa-lg"></i> Delete</a>
-{{/unless}}
+        </nav>
+        <div class="tab-content admin">
+            <div role="tabpanel" class="tab-pane active pad0" id="profile">
+
+                <!--
+ {{> quickForm collection='Config' doc=configs id='formIdAgencyProfile' class="_hideHeader " type='update' fields="agencyProfile" buttonContent= "Save" validation='submit' template="plain-fieldset" class="form-inline" label-class="sr-only" afFieldInput-placeholder="schemaLabel" button-class="pull-right"}}
 
 
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Preferred Unit of Measure
-                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
-                </div>
-                <div class="panel-body afBody">
-                    {{> quickForm collection='Config' doc=configs class="hideLabel hideSubmit" id='formdIdgoogle' autosave=true type='update' fields="measureUnits"}}
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Google API Key
-                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
-                </div>
-                <div class="panel-body afBody">
-                    {{> quickForm collection='Config' doc=configs class="hideLabel hideSubmit" id='formdIdgoogle' autosave=true type='update' fields="googleAPI"}}
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Forecast API Key
-                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
-                </div>
-                <div class="panel-body afBody">
-                    {{> quickForm collection='Config' doc=configs class="hideLabel hideSubmit" id='formdIdgoogle' autosave=true type='update' fields="forecastAPI"}}
-                </div>
-            </div>
-            <!--
-            {{#autoForm collection='Config' doc=configs class="_recordForm3 _hideSubmit" id='formdIdgoogle' autosave=true type='update'}} {{> afQuickField name="googleAPI"}} {{/autoForm}}
+
+
+
+  {{#autoForm collection='Config' doc=configs fields="agencyProfile" id='formIdAgencyProfile' type='update' buttonContent= "Save" validation='submit' label-class="sr-only" afFieldInput-placeholder="schemaLabel"}}
+  <fieldset>
+
+{{> afQuickFields}}
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="reset" class="btn btn-default">Reset</button>
+ 
+  </fieldset>
+  {{/autoForm}}
+
+
+
+
 -->
-        </div>
-        <div role="tabpanel" class="tab-pane full" id="adminMapTab">
-            <div class="panel panel-default mar1">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Set Map Extent on Default SAR Response Area
-                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+
+                <div class="panel panel-default afSarcat {{profileIncomplete}}">
+
+                    {{#autoForm collection='Config' doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}}
+
+                        {{> afQuickFields }}
+
+                        <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
+
+                    {{/autoForm}}
+
                 </div>
-                <div class="panel-body afBody pad00">
-                    {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true type='update' fields="agencyProfile.bounds" buttonContent= "Save Response Area"}}
-                    <div id='adminMap' style="width:100%;height:500px">
-                        <a href='#' id='geolocate' class='map-ui-button primary-bg'>Find me!</a>
-                        <div class="mapCrosshair">+</div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Config
+                    </h3>
+                    </div>
+                    <div class="panel-body afBody">
+                        <div class="form-group">
+                            <label for="syNWDsq4rJiyL5WrZ" class="control-label">Organization Logo - jpg/png
+
+                            </label>
+                            {{#unless defaultLogo}}
+                                <a class="btn btn-warning deleteLogo pull-right btn-xs" style="width:91px" href="#">
+                                    <i class="fa fa-trash-o fa-lg"></i> Reset</a>
+                            {{/unless}}
+                            {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
+
+                        </div>
+
+
+
+                        {{#autoForm id="dsds" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}}
+
+                        {{> afQuickField name="measureUnits" options="allowed"}}
+                        {{> afQuickField name="googleAPI" }}
+                        {{> afQuickField name="forecastAPI" }}
+
+                            <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
+
+                        {{/autoForm}}
+
+                    </div>
+                </div>
+
+                <div class="panel panel-default mar1">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Default SAR Response Area
+                  </h3>
+                    </div>
+                    <div class="panel-body afBody pad00">
+                        {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true type='update' fields="bounds" buttonContent= "Save Response Area"}}
+                        <div id='adminMap' style="width:100%;height:500px">
+                            <a href='#' id='geolocate' class='map-ui-button'>Find me!</a>
+                            <div class="mapCrosshair">+</div>
+                        </div>
+
+                        <div class="col-md-12 mar1y">
+
+                            <button type="submit" class="saveBounds btn btn-primary"><i class="glyphicon glyphicon-check"></i> Save Bounds</button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!--<div role="tabpanel" class="tab-pane full" id="adminMapTab">
+                <div class="panel panel-default mar1">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Set Map Extent on Default SAR Response Area
+                    <p class = "pull-right text-primary">AutoSave Enabled</p></h3>
+                    </div>
+                    <div class="panel-body afBody pad00">
+                        {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true type='update' fields="agencyProfile.bounds" buttonContent= "Save Response Area"}}
+                        <div id='adminMap' style="width:100%;height:500px">
+                            <a href='#' id='geolocate' class='map-ui-button primary-bg'>Find me!</a>
+                            <div class="mapCrosshair">+</div>
+                        </div>
+
+                        <div class="col-md-12 mar1y">
+                            <a href="{{pathFor 'records'}}" class="btn btn-primary btn-lg btn-block">
+                                <i class="glyphicon glyphicon-check"></i> SaveBounds as Default SAR Response Area
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>-->
+            <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
+                <div class="afTablePane">
+                    <table class="table table-hover table-bordered table-condensed">
+                        <thead class='default-bg'>
+                            <tr>
+                                <td class='afTable'>User</td>
+                                <td class='afTable'>Roles</td>
+                                <td class='afTable'>Email</td>
+                                <td class='afTable'>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody class='white-bg'>
+                            {{#if noUsers}}
+                                <tr>
+                                    <td colspan="4" class="text-center text-default">You have no users</td>
+                                </tr>
+                            {{/if}}
+                            {{#each userRoleList}}
+                                <tr>
+                                    <td>{{this.username}}</td>
+                                    <td>
+                                        <div class="admin_ChangeRole">
+                                            <label class="radio-inline">
+                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsCkhecked}}">Editor
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="admin" checked="{{roleIsCkhecked}}"> Admin
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>{{userEmail}}</td>
+                                    <td>
+                                        <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane pad0 scroll" id="options">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Data Form Type</h3> </div>
+                    <div class="panel-body">
+                        <!-- {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}-->
                     </div>
                 </div>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
-            <div class="afTablePane">
-                <table class="table table-hover table-bordered table-condensed">
-                    <thead class='default-bg'>
-                        <tr>
-                            <td class='afTable'>User</td>
-                            <td class='afTable'>Roles</td>
-                            <td class='afTable'>Email</td>
-                            <td class='afTable'>Action</td>
-                        </tr>
-                    </thead>
-                    <tbody class='white-bg'>
-                        {{#if noUsers}}
-                        <tr>
-                            <td colspan="4" class="text-center text-default">You have no users</td>
-                        </tr>
-                        {{/if}} {{#each userRoleList}}
-                        <tr>
-                            <td>{{this.username}}</td>
-                            <td>
-                                <div class="admin_ChangeRole">
-                                    <label class="radio-inline">
-                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsCkhecked}}">Editor
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="admin" checked="{{roleIsCkhecked}}"> Admin
-                                    </label>
-                                </div>
-                            </td>
-                            <td>{{userEmail}}</td>
-                            <td>
-                                <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane pad0 scroll" id="options">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Data Form Type</h3> </div>
-                <div class="panel-body">
-                    <!-- {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}-->
-                </div>
-            </div>
-        </div>
-    </div>
     {{/if}}
 </template>
+

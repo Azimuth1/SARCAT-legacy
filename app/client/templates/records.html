@@ -7,19 +7,7 @@
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div id='recordMap' style="width:100%;height:400px"></div>
-                    <!--
-{{#if newRecord}} 
 
-
-                    {{> quickForm collection="Records" doc=newRecord class="hide" collection="Records" id="createRecordModalFormCoord" autosave=true type="update" fields="coords.ippCoordinates, coords.bounds"}}
-
-
-                        {{#autoForm collection="Records" doc=newRecord class="_hideSubmit hideHeader" collection="Records" id="createRecordModalForm" autosave=true type="update" removeEmptyStrings=true fields="recordInfo" }}
-                            {{> afQuickField name='recordInfo'}}
-                        {{/autoForm}}
-
-   {{/if}}
--->
                     {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" fields="coords,recordInfo" class="hideHeader" resetOnSuccess=true validation="submit" }} {{> afQuickField name='coords.ippCoordinates'}} {{> afQuickField name='recordInfo'}}
                     <div class="form-group modal-footer">
                         <button type="reset" class="btn btn-default pull-left">Reset Form</button>
@@ -117,6 +105,7 @@
                    
 
                          
+                            <td>{{recordInfo.incidentnum}}</td>
                             <td>{{recordInfo.missionnum}}</td>
                             <td>{{recordInfo.name}}</td>
                             <td>{{recordInfo.incidenttype}}</td>

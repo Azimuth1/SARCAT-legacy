@@ -29,7 +29,7 @@ Meteor.startup(function () {
         //Config.insert(Meteor.settings.production.public);
 
         var customSettings = {
-            'initSetup': true,
+            'initSetup': false,
         };
 
         Config.insert(customSettings);

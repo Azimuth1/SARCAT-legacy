@@ -1109,20 +1109,6 @@ Schemas.formEditions = new SimpleSchema({
     'subjects.$': {
         type: String
     },
-    /*timeLog: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.timeLog._firstLevelSchemaKeys,
-        defaultValue: Schemas.timeLog._firstLevelSchemaKeys,
-        label: 'timeLog',
-    },
-    'timeLog.$': {
-        type: String
-    },*/
     incidentOperations: {
         type: Array,
         autoform: {
@@ -1426,7 +1412,7 @@ Schemas.SARCAT = new SimpleSchema({
     incidentOutcome: {
         type: Schemas.incidentOutcome,
         label: 'Incident Outcome',
-        optional: true,
+        //optional: true,
         defaultValue: {}
     },
     rescueDetails: {
@@ -1461,33 +1447,40 @@ Records.attachSchema(Schemas.SARCAT);
 Schemas.agencyProfile = new SimpleSchema({
     agency: {
         type: String,
-        label: 'Agency/Organization',
+        label: 'Organization Name',
+        defaultValue:''
     },
-    Address: {
+    address: {
         type: String,
+        label:'Address',
+        defaultValue:''
+        
     },
     'state-region': {
         type: String,
-        label: 'State/Province'
+        label: 'State/Province',
+        defaultValue:''
     },
     country: {
         type: String,
-        label: 'Country/Region'
+        label: 'Country/Region',
+        defaultValue:''
     },
     phoneNum: {
         type: String,
-        label: 'Phone Number',
-    },
-    bounds: {
-        type: String,
-        optional: true,
-        defaultValue: "-143.61328125,11.350796722383684,106.34765625,62.99515845212052"
+        label: 'Contact Phone',
+        defaultValue:''
     }
 });
 Schemas.config = new SimpleSchema({
     initSetup: {
         type: Boolean,
         defaultValue: true
+    },
+    bounds: {
+        type: String,
+        optional: true,
+        defaultValue: "-143.61328125,11.350796722383684,106.34765625,62.99515845212052"
     },
     measureUnits: {
         type: String,
@@ -1513,10 +1506,6 @@ Schemas.config = new SimpleSchema({
             return complete;
         }
     },
-    agencyMapComplete: {
-        type: Boolean,
-        defaultValue: false
-    },
     agencyLogo: {
         type: String,
         optional: true,
@@ -1525,8 +1514,9 @@ Schemas.config = new SimpleSchema({
     agencyProfile: {
         type: Schemas.agencyProfile,
         defaultValue: {},
-        optional: true,
-        blackbox: true
+        label: 'Organization Profile'
+        //optional: true,
+        //blackbox: true
     },
     googleAPI: {
         type: String,

@@ -1,3 +1,8 @@
+.afSarcat .btn {
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
 .recordRecordInfoTable thead {
     border-color: #018996 !important;
 }
@@ -11,9 +16,8 @@
 }
 
 .recordRecordInfoTable td {
-    padding:2px !important;
+    padding: 2px !important;
 }
-
 
 .findCoord label {
     font-size: 75%
@@ -211,40 +215,17 @@ em {
     border-color: #018996;
 }
 
-.afPanel.warning-bg {
-    border-color: #FF7B6F;
+.afPanel.warning,
+.afPanel.warning div {
+    border-color: #EEA236;
 }
 
-.afPanel.warning-bg > .panel-heading {
-    background: #FF7B6F;
-    border-color: #FF7B6F;
-}
-
-.btn.warning-bg,
-.warning-bg {
-    border-color: #FF7B6F;
-    background: #FF7B6F;
-}
-/*
-.btn-primary {
-    border-color: #32B6C2;
-}
-
-.btn.btn-default {
-    color: #32B6C2;
-}
-
-.btn-default:hover,
-.btn-default:focus,
-.btn-default.focus,
-.btn-default:active,
-.btn-default.active,
-.open > .dropdown-toggle.btn-default {
-    background-color: #2CC5D2;
+.afPanel.warning .panel-heading,
+.afPanel.warning .btn {
     color: #FFF;
-    border-color: #2CC5D2;
+    background-color: #F0AD4E;
+    border-color: #EEA236;
 }
-*/
 
 .hideHeader .panel .panel-heading {
     display: none;
@@ -648,6 +629,12 @@ em {
     border-color: #2CC5D2 !important;
 }
 
+.warning-bg {
+    color: #FFF;
+    background-color: #F0AD4E;
+    border-color: #EEA236;
+}
+
 .default-bg {
     background-color: #018996;
     color: #FFF;
@@ -670,6 +657,13 @@ em {
     opacity: .5;
 }
 
+.mapTools {
+    padding: 10px;
+    background-color: #FFF;
+    color: #FFF;
+    border-color: #018996;
+}
+
 .mapLeft {
     z-index: 1;
     top: 70px;
@@ -682,16 +676,27 @@ em {
 
 .mapBtns .btn {
     font-size: 12px;
-   
-    color: #F7F7F7;
+    border: 1px solid #E2E2E2;
     text-transform: uppercase;
     height: 36px;
-    min-width:223px;
+    min-width: 223px;
+    color:#000;
+    outline: none !important;
 }
 
-._mapBtns .btn.active {
+.mapBtns .btn.active i {
+    color: #fff !important;
+    -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.mapBtns .btn:not(.active) {
+    background-color: #fff !important;
+}
+
+.mapBtns .btn.active {
     font-weight: bold;
-    color: #4C4B4B;
+    color: #FFF;
 }
 
 .z2 {
@@ -1037,7 +1042,7 @@ a {
 }
 
 .leaflet-container a.map-ui-button {
-    background: #3887BE;
+    background: #445F81;
     color: #FFF;
     display: block;
     position: absolute;

@@ -46,15 +46,6 @@ boundsString2Array = function (bounds) {
 };
 setMap = function (context, bounds, agencyMapComplete) {
     var map = L.map(context, {});
-    /*L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
-    var map = L.mapbox.map(context);
-    L.control.scale().addTo(map);
-    var layers = {
-        Outdoors: L.mapbox.tileLayer('examples.ik7djhcc'),
-        Streets: L.mapbox.tileLayer('jasondalton.h4gh1idp'),
-        Satellite: L.mapbox.tileLayer('jasondalton.map-7z4qef6u')
-    };
-    */
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
@@ -82,25 +73,10 @@ setMap = function (context, bounds, agencyMapComplete) {
             }
         })
         .addTo(map);
-    map.on('moveend', function () {
-        Session.set('geolocate', false);
-        var bounds = map.getBounds()
-            .toBBoxString();
-        $('[name="agencyProfile.bounds"]')
-            .val(bounds)
-            .trigger("change");
-        Meteor.call('updateConfig', {
-            agencyMapComplete: true
-        }, function (error, d) {
-            if (error) {
-                console.log(error);
-            }
-        });
-    });
-    if (agencyMapComplete) {
-        //$('#geolocate').addClass('hide');
-        // return;
-    }
+    /*if (agencyMapComplete) {
+        $('#geolocate').addClass('hide');
+         return;
+    }*/
     var searching;
     if (!navigator.geolocation) {
         $('#geolocate')
@@ -153,17 +129,19 @@ newProjectSetMap = function (context, bounds, points) {
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
     };
     layers.Outdoors.addTo(map);
-    L.control.layers(layers)
-        .addTo(map);
+    L.control.layers(layers).addTo(map);
+
+
     var latLngBounds = L.latLngBounds(bounds);
+
+
+
     var center = latLngBounds.getCenter();
     obj.editPoint = function (lat, lng) {
         marker.setLatLng([lat, lng]);
-        map.panTo(marker.getLatLng())
-            //map.fitBounds(marker.getLatLng());//.pad(1);
     };
     obj.reset = function () {
-        map.fitBounds(latLngBounds);
+        map.fitBounds(bounds);
         marker.setLatLng(center);
         $('[name="' + points.name + '.lng"]')
             .val(center.lng)
@@ -176,18 +154,31 @@ newProjectSetMap = function (context, bounds, points) {
             .trigger("change");
     };
     map.scrollWheelZoom.disable();
-    var myIcon = L.divIcon({
-        iconSize: [31, 37],
-        className: 'fa fa-times-circle-o fa-3x fa-fw'
+
+
+
+
+    var ipp = {
+        val: "ippCoordinates",
+        name: "coords.ippCoordinates",
+        text: 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>', //"IPP Location",
+        icon: 'fa-times-circle-o',
+        color: 'red'
+    };
+    var myIcon = L.AwesomeMarkers.icon({
+        icon: ipp.icon,
+        prefix: 'fa',
+        markerColor: ipp.color,
+        iconColor: '#fff',
     });
-    marker = L.marker(center, {
+    var marker = L.marker(center, {
         draggable: true,
+        //editable: false,//true,
         icon: myIcon,
+        name: ipp.name,
+        val: ipp.val,
     });
     marker.addTo(map);
-    map.on('locationfound', function (e) {
-        marker.setLatLng(e.latlng);
-    });
 
     marker.on('dragend', function (event) {
         var marker = event.target;
@@ -199,15 +190,8 @@ newProjectSetMap = function (context, bounds, points) {
             .val(position.lat)
             .trigger("change");
     });
-    map.on('moveend', function () {
-        var bounds = map.getBounds()
-            .toBBoxString();
-        $('[name="coords.bounds"]')
-            .val(bounds)
-            .trigger("change");;
-    });
     return obj;
-}
+};
 getCoords = function (record) {
     var mapPoints = [{
         val: "ippCoordinates",
@@ -464,45 +448,43 @@ formSetMap = function (context, recordId) {
             .trigger("change");
 
         function newElev(d) {
-            if (d.name !== 'coords.ippCoordinates' && d.name !== 'coords.findCoord') {
-                return;
-            }
-            var record = Records.findOne(recordId);
-            Meteor.call('setElevation', record._id, function (err, d) {
-                console.log('elevation: ' + d);
-                if (err) {
-                    return console.log(err);
-                }
-            });
-            Meteor.call('setLocale', record._id, function (err, d) {
-                console.log('location: ' + d);
-                if (err) {
-                    return console.log(err);
-                }
-            });
-            Meteor.call('setDistance', record._id, function (err, d) {
-                console.log('distance: ' + d);
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        Meteor.call('setFindBearing', record._id, function (err, d) {
-            console.log('bearing: ' + d);
-            if (err) {
-                return console.log(err);
-            }
-        });
-            Meteor.call('setEcoRegion', recordId, function (err, d) {
-                if (err) {
+                if (d.name !== 'coords.ippCoordinates' && d.name !== 'coords.findCoord') {
                     return;
                 }
-            });
-        }
-
-        /*marker.on('dragstart', function (event) {
-            confirm('Are you sure you want to update your IPP?')
-        });*/
-
+                var record = Records.findOne(recordId);
+                Meteor.call('setElevation', record._id, function (err, d) {
+                    console.log('elevation: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+                Meteor.call('setLocale', record._id, function (err, d) {
+                    console.log('location: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+                Meteor.call('setDistance', record._id, function (err, d) {
+                    console.log('distance: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+                Meteor.call('setFindBearing', record._id, function (err, d) {
+                    console.log('bearing: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+                Meteor.call('setEcoRegion', recordId, function (err, d) {
+                    if (err) {
+                        return;
+                    }
+                });
+            }
+            /*marker.on('dragstart', function (event) {
+                confirm('Are you sure you want to update your IPP?')
+            });*/
         marker.on('dragend', function (event) {
             var marker = event.target;
             var position = marker.getLatLng();
@@ -909,3 +891,4 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
+
