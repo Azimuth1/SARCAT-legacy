@@ -77,142 +77,204 @@
                 <br><small>{{this.sum}} </small></button>
             {{/each}}
         </div>
-        <div class="pad2">
+        <div class="pad00">
+         
             <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab">
-                        <h3 class="panel-title">Incident Map</h3>
-                    </div>
-                    <div class="panel-body afBody">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="btn-group mapBtns mapPoints" data-toggle="buttons">
-                                        <div class="btn-group col-md-3" data-toggle="buttons">
-                                            <a class="btn btn-danger active btn-block" data="_ippCoordinates">
+
+
+
+
+
+<div id="mapTools" class="panel">
+
+                <div class="mapBtns mapPoints">
+                    <div class="col-md-4 pad00">
+                        <div class="btn-group-vertical btn-group btn-block" data-toggle="buttons">
+                            <a class="btn btn-danger active btn-block" data="_ippCoordinates">
                                             Incident Location / IPP
                                             <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw"></i></span> </a>
-                                            <label class="btn btn-danger btn-block" data="revisedLKP_PLS" style="font-size:10px">
-                                                <input type="checkbox" autocomplete="off"> &nbsp; Last Known Point/Last Point Seen
-                                                <span class="fa-stack _pull-right">
+                            <label class="btn btn-danger btn-block" data="revisedLKP_PLS" style="font-size:10px">
+                                <input type="checkbox" autocomplete="off"> &nbsp; Last Known Point/Last Point Seen
+                                <span class="fa-stack _pull-right">
                                           <i class="fa fa-male fa-2x fa-fw"></i>
                                         </span>
-                                            </label>
-                                        </div>
-                                        <div class="btn-group col-md-3" data-toggle="buttons">
-                                            <a class="btn btn-primary btn-block" data="destinationCoord">
-                                                <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
-                                                <span class="fa-stack _pull-right">
+                            </label>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-4 pad00">
+
+
+
+                        <div class="btn-group-vertical btn-vertical btn-block" data-toggle="buttons">
+                            <btn type="button" class="btn btn-primary btn-block" data="destinationCoord">
+                                <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
+                                <span class="fa-stack _pull-right">
                                           <i class="fa fa-flag-checkered fa-2x fa-fw"></i>
                                         </span>
-                                            </a>
-                                            <a class="btn btn-primary  btn-block" data="intendedRoute">
-                                                <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
-                                                <span class="fa-stack pull-right">
+                            </btn>
+                            <btn type="button" class="btn btn-primary  _btn-block" data="intendedRoute">
+                                <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
+                                <span class="fa-stack">
                                           <i class="fa fa-long-arrow-right fa-2x fa-fw"></i>
                                         </span>
-                                            </a>
-                                        </div>
-                                        <div class="btn-group col-md-3" data-toggle="buttons">
-                                            <a class="btn btn-success btn-block" data="findCoord">
-                                                <input type="checkbox" autocomplete="off"> &nbsp; Find Location
-                                                <span class="fa-stack _pull-right">
+                            </btn>
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="col-md-4 pad00">
+
+
+                        <div class="btn-group-vertical btn-group btn-block" data-toggle="buttons">
+                            <a class="btn btn-success btn-block" data="findCoord">
+                                <input type="checkbox" autocomplete="off"> &nbsp; Find Location
+                                <span class="fa-stack">
                                           <i class="fa fa-flag-checkered fa-2x fa-fw"></i>
                                         </span>
-                                            </a>
-                                            <a class="btn btn-success btn-block" data="actualRoute">
-                                                <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
-                                                <span class="fa-stack pull-right">
+                            </a>
+                            <a class="btn btn-success btn-block" data="actualRoute">
+                                <input type="checkbox" autocomplete="off"> &nbsp; Actual Route
+                                <span class="fa-stack">
                                           <i class="fa fa-long-arrow-right fa-2x fa-fw"></i>
                                         </span>
-                                            </a>
-                                        </div>
-                                        <div class="btn-group col-md-3" data-toggle="buttons">
-                                            <a class="btn btn-warning btn-block" data="decisionPointCoord">
-                                                <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
-                                                <span class="fa-stack _pull-right">
+                            </a>
+                        </div>
+
+
+
+                    </div>
+                   
+                   <!--<div class="col-md-3 pad00">
+
+
+                        <div class="btn-group-vertical btn-block" data-toggle="buttons">
+                            <a class="btn btn-warning btn-block" data="decisionPointCoord">
+                                <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
+                                <span class="fa-stack _pull-right">
                                           <i class="fa fa-code-fork fa-2x fa-fw"></i>
-                                        </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div id='formMap' style="width:100%; height:400px"></div>
-                                </div>
-                                <div class="row">
-                                    {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
-                                    <div class="panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Incident Location/IPP</h3>
-                                        </div>
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
-                                    </div>
-                                    <div class="panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Initial Direction of Travel</h3>
-                                        </div>
-                                        <div class="panel-body pad00">
-                                            <p class="small"><em>*Drag arrow towards direction of travel</em></p>
-                                            {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}}
-                                            <div class="col-md-6 col-md-offset-3">
-                                                <!--<img href="/" class="travelDirection">-->
-                                                <img src="/images/compass.png" class="travelDirection ">
-                                            </div>
-                                        </div>
-                                        {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
-                                    </div>
-                                    <div class="{{hideCoord 'decisionPointCoord'}} panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Decision Point</h3>
-                                        </div>
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.decisionPointCoord.lat,coords.decisionPointCoord.lng"}} {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
-                                    </div>
-                                    <div class="{{hideCoord 'revisedLKP_PLS'}} panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Last Known Point/Point Last Seen</h3>
-                                        </div>
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.revisedLKP_PLS.lat,coords.revisedLKP_PLS.lng"}} {{> afQuickField name="incidentOperations.PLS_HowDetermined" options="allowed"}}
-                                    </div>
-                                    <div class="{{hideCoord 'destinationCoord'}}">
-                                        {{> afQuickField name='coords.destinationCoord' }}
-                                    </div>
-                                    <div class="{{hideCoord 'findCoord'}} panel panel-default text-center" style="max-width:170px;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Find Location</h3>
-                                        </div>
-                                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.findCoord.lat,coords.findCoord.lng"}}
-                                    </div>
-                                    <div class="hide">
-                                        {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
-                                    </div>
-                                    {{/autoForm}}
-                                </div>
-                                {{#autoForm collection='Records' doc=record id='_formIdMap' class="form-inline hideSubmit" type=formType autosave=true}}
-                                <div class="{{hideCoord 'findCoord'}} panel panel-default text-center">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Find Location</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                    {{> quickForm collection='Records' validation="submit" doc=current class="text-center" id='formdId' autosave=true type=formType fields="coords.findCoord.lat,coords.findCoord.lng"}} 
-
-                                    {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit recordForm5 findCoord" id='formdIdfindCoord' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
-                                    </div>
+                                </span>
+                            </a>
+                        </div>
+                    </div>-->
+                </div>
 
 
 
-                                </div>
-                                {{/autoForm}}
-                                <!--
 
-                                <div class="row {{hideCoord 'findCoord'}}">
-                                    {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideSubmit hideHeader recordForm5" id='formdId' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
-                                </div>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div id='formMap' style="width:100%; height:400px"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="row">
+                    {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
+                    <div class="panel panel-default text-center" style="max-width:170px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Incident Location/IPP</h3>
+                        </div>
+                        {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
+                    </div>
+                    <div class="panel panel-default text-center" style="max-width:170px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Initial Direction of Travel</h3>
+                        </div>
+                        <div class="panel-body pad00">
+                            <p class="small"><em>*Drag arrow towards direction of travel</em></p>
+                            {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}}
+                            <div class="col-md-6 col-md-offset-3">
+                                <img src="/images/compass.png" class="travelDirection ">
                             </div>
                         </div>
+                        {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
+                    </div>
+                    <div class="{{hideCoord 'decisionPointCoord'}} panel panel-default text-center" style="max-width:170px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Decision Point</h3>
+                        </div>
+                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.decisionPointCoord.lat,coords.decisionPointCoord.lng"}} {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
+                    </div>
+                    <div class="{{hideCoord 'revisedLKP_PLS'}} panel panel-default text-center" style="max-width:170px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Last Known Point/Point Last Seen</h3>
+                        </div>
+                        {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.revisedLKP_PLS.lat,coords.revisedLKP_PLS.lng"}} {{> afQuickField name="incidentOperations.PLS_HowDetermined" options="allowed"}}
+                    </div>
+                    <div class="{{hideCoord 'destinationCoord'}}">
+                        {{> afQuickField name='coords.destinationCoord' }}
+                    </div>
+                    <div class="hide">
+                        {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
+                    </div>
+                    {{/autoForm}}
+                </div>
+                {{#autoForm collection='Records' doc=record id='_formIdMap' class="form-inline hideSubmit" type=formType autosave=true}}
+                <div class="{{hideCoord 'findCoord'}} panel panel-default text-center">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Find Location</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{> quickForm collection='Records' validation="submit" doc=current class="text-center" id='formdId' autosave=true type=formType fields="coords.findCoord.lat,coords.findCoord.lng"}} {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit recolrdForm5 findCoord" id='formdIdfindCoord' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
                     </div>
                 </div>
+                {{/autoForm}} 
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!--END MAP-->
+
+
+
+
                 {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
                 <!--Subject Info-->
                 <div class="panel panel-default">
