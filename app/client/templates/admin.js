@@ -1,17 +1,13 @@
-var mapDrawn;
-
 var config;
+var map;
 Template.admin.created = function () {
     Session.set('userView', 'admin');
-    //config = Session.get('config');
-    mapDrawn = false;
-
 };
-
 Template.admin.rendered = function () {
-
-    //Session.set('logo', 'uploads/logo/' + Config.findOne().agencyLogo)
-  
+    var config = Session.get('config');
+    var bounds = config.bounds;
+    var newBounds = boundsString2Array(bounds);
+    map = setMap('adminMap', newBounds);
     this.data.users.forEach(function (d) {
         var role = d.roles[0];
         var id = d._id;
@@ -24,22 +20,24 @@ Template.admin.helpers({
         return Session.get('logo');
     },
     defaultLogo: function (view) {
-        return Session.equals('logo','uploads/logo/default_logo.png');
+        return Session.equals('logo', 'uploads/logo/default_logo.png');
     },
     UploadImgFormData: function () {
         return {
             type: 'logo'
         };
     },
-
     agencyCoordinates: function () {
         return agencyCoordinates;
     },
     profileIncomplete: function () {
-        var complete = completeProfile();
-        Session.set('profileComplete', complete);
-        return !complete;
+        var config = Config.findOne();
+        var done =  _.compact(_.map(config.agencyProfile, function (d) {
+            return d;
+        })).length;
+    return done ? '' : 'afPanel warning';
     },
+    
     configs: function () {
         return Config.findOne();
     },
@@ -51,7 +49,6 @@ Template.admin.helpers({
             console.log(err);
         });
     },
-
     userRoleList: function () {
         var users = this.users.fetch()
             .filter(function (d) {
@@ -79,25 +76,31 @@ Template.admin.helpers({
         };
     },
 });
-
 Template.admin.events({
-
     'click .deleteLogo': function (event, template) {
-                Meteor.call('updateConfig', {
-                    agencyLogo: 'default_logo.png'
-                }, function (err) {
-                    console.log(err);
-                });
-
-
+        Meteor.call('updateConfig', {
+            agencyLogo: 'default_logo.png'
+        }, function (err) {
+            console.log(err);
+        });
+    },
+    'click .saveBounds': function (event, template) {
+        m = map;
+        var bounds = map.getBounds()
+            .toBBoxString();
+        Meteor.call('updateConfig', {
+            'bounds': bounds
+        }, function (error, d) {
+            if (error) {
+                console.log(error);
+            }
+        });
     },
     'click .removeUser': function (event, template) {
-
         if (Meteor.userId() === this._id) {
             alert('You cannot remove your own account!');
             return;
         }
-
         var r = confirm("Are you sure you want to delete user: " + this.username);
         if (r == true) {
             Meteor.call('removeUser', this._id, function (err) {
@@ -106,9 +109,8 @@ Template.admin.events({
         } else {
             return;
         }
-
     },
-    'click .adminMap': function (event, template) {
+    /*'click .adminMap': function (event, template) {
         template.$('a[data-toggle="tab"][href="#adminMapTab"]')
             .on('shown.bs.tab', function (e) {
                 if (mapDrawn) {
@@ -122,8 +124,7 @@ Template.admin.events({
                 mapDrawn = setMap('adminMap', newBounds, agencyMapComplete);
 
             });
-
-    },
+    },*/
     'change .adminUserRoles': function (event) {
         var user = this._id;
         var val = $('input[name="role_' + user + '"]:checked')
@@ -133,13 +134,11 @@ Template.admin.events({
                 console.log(err);
             }
         });
-
     }
 });
-
+/*
 AutoForm.hooks({
     formIdAgencyProfile: {
-
         onSuccess: function (insertDoc, updateDoc, currentDoc) {
             var config = Config.findOne();
             if (!config) {
@@ -155,10 +154,9 @@ AutoForm.hooks({
                     if (error) {
                         console.log(error);
                     }
-
                 });
             }
         }
     }
-});
+});*/
 

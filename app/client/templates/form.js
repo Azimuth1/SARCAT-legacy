@@ -34,7 +34,8 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
-    if (!Object.keys(record.weather).length) {
+    if (!Object.keys(record.weather)
+        .length) {
         Meteor.call('setWeather', record._id, function (err, d) {
             console.log(d);
             if (err) {
@@ -138,7 +139,7 @@ Template.form.onRendered(function () {
         .prepend('<p class="small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
     var coords = record.coords;
     var bounds = coords.bounds;
-    var mapBounds = coords.bounds ? coords.bounds : agencyProfile.bounds;
+    var mapBounds = coords.bounds ? coords.bounds : config.bounds;
     mapBounds = boundsString2Array(mapBounds);
     map = formSetMap('formMap', record._id);
     var coords = getCoords(record);
@@ -211,30 +212,13 @@ Template.form.helpers({
         var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "_coords", "updated", "created", "admin", "_xComments", "incidentOperations");
         var summary = _.chain(schemas)
             .map(function (d) {
-                if (!Schemas[d]) {
+                if (!Schemas[d] || !record[d]) {
                     return;
                 }
                 var total = Schemas[d]._firstLevelSchemaKeys.length;
                 var objKeys = Object.keys(record[d]);
-                console.log(objKeys);
-                console.log(Schemas[d]._firstLevelSchemaKeys)
                 var count = objKeys.length;
-                var sum;
-                /*if (typeof(record[d][objKeys[0]]) === 'String') {
-                    count = record[d][objKeys[0]].length;
-                    sum = 'Total' + count;
-                }
-                else if (typeof(record[d][objKeys[0]]) === 'Object') {
-                    count = record[d][objKeys[0]].length;
-                    sum = 'Total' + count;
-                }*/
-                /*if (total === 1) {
-                    count = record[d][objKeys[0]].length;
-                    sum = 'Total' + count;
-                } */
-                //else {
                 var sum = [count, total].join('/');
-                //}
                 var label = Schemas.SARCAT._schema[d].label;
                 var klass = (count === Schemas[d]._firstLevelSchemaKeys.length) ? '' : 'primary-bg';
                 return {
@@ -245,7 +229,6 @@ Template.form.helpers({
             })
             .compact()
             .value();
-        console.log(summary);
         return summary;
     },
     subjectKeys: function () {
@@ -557,11 +540,10 @@ Template.form.events({
             }
         });
     },
-    'click .mapPoints a': function (event, template) {
+    'click .mapPoints .btn': function (event, template) {
         var context = template.$(event.target);
         var pointType = context.attr('data');
         var active = context.hasClass('active')
-        console.log(context, pointType, active)
         var coords = getCoords(this.record);
         var item = _.findWhere(coords, {
             val: pointType
@@ -571,11 +553,9 @@ Template.form.events({
         };
         if (!active) {
             map.add(item);
-            context.addClass('active');
         } else {
             if (confirm('Are you sure you want to remove ' + item.text + ' from the map?')) {
                 map.remove(item);
-                context.removeClass('active');
             } else {
                 event.stopPropagation();
             }
@@ -631,3 +611,4 @@ AutoForm.hooks({
         }
     }
 });
+

@@ -52,22 +52,7 @@ Template.appBody.helpers({
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    agencyProfileInComplete: function () {
-        var config = Config.findOne();
-        if (!config) {
-            return;
-        }
-        return !config.agencyProfileComplete;
 
-    },
-    agencyMapInComplete: function () {
-        var config = Config.findOne();
-        if (!config) {
-            return;
-        }
-        return !config.agencyMapComplete;
-
-    },
     thisArray: function () {
         return [this];
     },

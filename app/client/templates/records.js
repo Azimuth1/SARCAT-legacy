@@ -12,12 +12,12 @@ Template.records.onRendered(function () {
     drawn = false;
     if (Records.find()
         .count()) {
-        //$('.recordTable').bootstrapTable();
+        $('.recordTable').bootstrapTable();
     }
     Session.set('userView', 'records');
     var config = Config.findOne();
     var agencyProfile = config.agencyProfile;
-    var bounds = agencyProfile.bounds;
+    var bounds = config.bounds;
     var newBounds = boundsString2Array(bounds);
     mapDrawn = newProjectSetMap('recordMap', newBounds, {
         "name": "coords.ippCoordinates",
@@ -77,7 +77,6 @@ Template.records.helpers({
     allRecords: function () {
         return this.records;
     },
-
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
@@ -94,21 +93,23 @@ Template.records.helpers({
         return Records.findOne(Session.get('newRecord'));
     },
     createNewBtn: function () {
-        var profile = Config.findOne()
-            .agencyProfileComplete;
-        var agencyMapComplete = Config.findOne()
-            .agencyMapComplete;
+        var config = Session.get('config');
+        var profile = _.compact(_.map(config.agencyProfile, function (d) {
+                return d;
+            }))
+            .length;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
-        return profile && agencyMapComplete && role;
+        return profile && role;
     },
     toDateString: function (date) {
-        if (!date) {
+        if (!date || typeof (date) !== 'object') {
             return;
         }
         return date.toISOString()
             .split('T')[0];
     },
     selectedRecords: function () {
+        //console.log(checked = $('.bs-checkbox [name="btSelectItem"]:checked')[0])
         return Session.get('selectedRecords');
     }
 });
@@ -267,10 +268,15 @@ Template.records.events({
         console.log(lat, lng);
         mapDrawn.editPoint(lat, lng);
     },
-    'change .bs-checkbox input': function (event, template) {
-        console.log('!')
+    'change .bs-checkbox input,[name="btSelectAll"]': function (event, template) {
         var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
         Session.set('selectedRecords', checked.length)
+    },
+    'change [name="btSelectAll"]': function (event, template) {
+        setTimeout(function () {
+            var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
+            Session.set('selectedRecords', checked.length)
+        }, 100)
     },
     'click #downloadRecords': function (event, template) {
         var flatten = function (x, result, prefix) {
@@ -322,7 +328,8 @@ Template.records.events({
                 link.click();
                 document.body.removeChild(link);
             }
-            JSONToCSVConvertor(allRecordsFlat, "SARCAT EXPORT-" + new Date().toLocaleString(), true);
+            JSONToCSVConvertor(allRecordsFlat, "SARCAT EXPORT-" + new Date()
+                .toLocaleString(), true);
             /*
             //var str = JSON.stringify(flattenedData);
             //window.open('data:application/json;charset=utf-8,' + escape(str));
@@ -365,3 +372,4 @@ AutoForm.hooks({
         },
     }
 });
+

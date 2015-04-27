@@ -13,14 +13,6 @@
             {{#if currentUser}}
 
 
-                {{#if agencyProfileInComplete}}
-                    <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency profile must be complete to begin adding records</a> </div>
-                {{/if}} 
-
-                {{#if agencyMapInComplete}}
-                    <div class="btns-group-vertical"> <a class="btn-pad btn-warning btn-secondary">Agency Response Area must be complete to begin adding records</a> </div>
-                {{/if}} 
-
                 <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> 
                 <a class="btn-pad js-logout btn-secondary">Logout</a> 
                 </div>
