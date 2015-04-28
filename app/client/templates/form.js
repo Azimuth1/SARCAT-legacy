@@ -34,11 +34,13 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
-    if (!Object.keys(record.weather)
+    if (!record.weather || !Object.keys(record.weather)
         .length) {
         Meteor.call('setWeather', record._id, function (err, d) {
             console.log(d);
             if (err) {
+                $('.forecastio')
+                    .after('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
                 return console.log(err);
             }
         });
@@ -126,7 +128,7 @@ Template.form.onRendered(function () {
     $('[name="incidentOutcome.elevationChange"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distanceSmall') + ')');
-    $('[name="rescueDetails.distanceTraveled"]')
+    $('[name="resourcesUsed.distanceTraveled"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distance') + ')');
     $('[data-subjecttable="Weight"]')
@@ -136,7 +138,7 @@ Template.form.onRendered(function () {
     $('.panel-title:contains("Weather")')
         .parent()
         .next()
-        .prepend('<p class="small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
+        .prepend('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
     var coords = record.coords;
     var bounds = coords.bounds;
     var mapBounds = coords.bounds ? coords.bounds : config.bounds;
@@ -209,7 +211,7 @@ Template.form.helpers({
     },
     schemas: function () {
         var record = this.record;
-        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", "_coords", "updated", "created", "admin", "_xComments", "incidentOperations");
+        var schemas = _.without(Schemas.SARCAT._firstLevelSchemaKeys, 'measureUnits', "userId", 'recordInfo', "_coords", "updated", "created", "admin", "_xComments", "incidentOperations");
         var summary = _.chain(schemas)
             .map(function (d) {
                 if (!Schemas[d] || !record[d]) {
@@ -536,6 +538,10 @@ Template.form.events({
         Meteor.call('setWeather', record._id, function (err, d) {
             console.log('weather: ' + d);
             if (err) {
+                $('.panel-title:contains("Weather")')
+                    .parent()
+                    .next()
+                    .prepend('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
                 return console.log(err);
             }
         });
@@ -611,4 +617,3 @@ AutoForm.hooks({
         }
     }
 });
-
