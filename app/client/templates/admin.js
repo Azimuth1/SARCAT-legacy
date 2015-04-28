@@ -32,12 +32,11 @@ Template.admin.helpers({
     },
     profileIncomplete: function () {
         var config = Config.findOne();
-        var done =  _.compact(_.map(config.agencyProfile, function (d) {
+        var done = _.compact(_.map(config.agencyProfile, function (d) {
             return d;
         })).length;
-    return done ? '' : 'afPanel warning';
+        return done ? '' : 'afPanel warning';
     },
-    
     configs: function () {
         return Config.findOne();
     },
@@ -84,18 +83,6 @@ Template.admin.events({
             console.log(err);
         });
     },
-    'click .saveBounds': function (event, template) {
-        m = map;
-        var bounds = map.getBounds()
-            .toBBoxString();
-        Meteor.call('updateConfig', {
-            'bounds': bounds
-        }, function (error, d) {
-            if (error) {
-                console.log(error);
-            }
-        });
-    },
     'click .removeUser': function (event, template) {
         if (Meteor.userId() === this._id) {
             alert('You cannot remove your own account!');
@@ -109,6 +96,10 @@ Template.admin.events({
         } else {
             return;
         }
+    },
+    'click button[type="submit"]': function (event, template) {
+        //  e=event;return
+        //$(event.target).after('<span class="btn text-success">Saved</span>')
     },
     /*'click .adminMap': function (event, template) {
         template.$('a[data-toggle="tab"][href="#adminMapTab"]')
@@ -136,27 +127,20 @@ Template.admin.events({
         });
     }
 });
-/*
-AutoForm.hooks({
-    formIdAgencyProfile: {
-        onSuccess: function (insertDoc, updateDoc, currentDoc) {
-            var config = Config.findOne();
-            if (!config) {
-                return;
-            }
-            var agencyProfile = config.agencyProfile;
-            var apKeys = Object.keys(agencyProfile);
-            var complete = apKeys.length === Schemas.agencyProfile._schemaKeys.length;
-            if (complete) {
-                Meteor.call('updateConfig', {
-                    agencyProfileComplete: true
-                }, function (error, d) {
-                    if (error) {
-                        console.log(error);
-                    }
+var hooksObject = {
+    onSuccess: function (insertDoc, updateDoc, currentDoc) {
+        d=this
+        context = $(this.event.target).find('[type="submit"]');
+        text = context.html();
+        context.text('Saved....');
+        context.delay(1000).animate({
+            opacity: 0
+        }, function () {
+            context.html(text)
+                .animate({
+                    opacity: 1
                 });
-            }
-        }
+        });
     }
-});*/
-
+}
+AutoForm.addHooks(['formIdAgencyProfile', 'formIdAgencyMap', 'formIdConfig'], hooksObject);

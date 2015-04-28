@@ -868,20 +868,20 @@ Schemas.rescueDetails = new SimpleSchema({
         optional: true
     },
     'injuredSearcher': {
-        type: Boolean,
+        type: String,
         label: 'Injured Searcher',
         autoform: {
             firstOption: function () {
                 return "--";
             }
         },
-        allowedValues: [true, false],
+        allowedValues: ['Yes','No'],
         optional: true,
-        autoform: {
+        /*autoform: {
             afFieldInput: {
                 type: "boolean-checkbox"
             }
-        }
+        }*/
     },
     'injuredSearcherDetails': {
         type: String,
@@ -1418,7 +1418,7 @@ Schemas.SARCAT = new SimpleSchema({
     rescueDetails: {
         type: Schemas.rescueDetails,
         label: 'Rescue Details',
-        optional: true,
+        //optional: true,
         defaultValue: {}
     },
     subjects: {

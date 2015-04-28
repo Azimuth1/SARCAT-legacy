@@ -108,6 +108,12 @@ setMap = function (context, bounds, agencyMapComplete) {
         $('#geolocate')
             .html('Position could not be found - Drag map to set extent');
     });
+    map.on('moveend', function () {
+        var bnds = map.getBounds().toBBoxString();
+        $('[name="bounds"]')
+            .val(bnds)
+            .trigger("change");
+    });
     return map;
 }
 newProjectSetMap = function (context, bounds, points) {
@@ -130,12 +136,7 @@ newProjectSetMap = function (context, bounds, points) {
     };
     layers.Outdoors.addTo(map);
     L.control.layers(layers).addTo(map);
-
-
     var latLngBounds = L.latLngBounds(bounds);
-
-
-
     var center = latLngBounds.getCenter();
     obj.editPoint = function (lat, lng) {
         marker.setLatLng([lat, lng]);
@@ -154,10 +155,6 @@ newProjectSetMap = function (context, bounds, points) {
             .trigger("change");
     };
     map.scrollWheelZoom.disable();
-
-
-
-
     var ipp = {
         val: "ippCoordinates",
         name: "coords.ippCoordinates",
@@ -179,7 +176,6 @@ newProjectSetMap = function (context, bounds, points) {
         val: ipp.val,
     });
     marker.addTo(map);
-
     marker.on('dragend', function (event) {
         var marker = event.target;
         var position = marker.getLatLng();
@@ -891,4 +887,3 @@ statsSetMap = function (context, bounds, points) {
     L.rotatedMarker = function (pos, options) {
         return new L.RotatedMarker(pos, options);
     };*/
-

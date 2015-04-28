@@ -40,7 +40,7 @@
                     </tr>
                 </thead>
                 <tbody class="_white-bg">
-                    <tr class="text-center">
+                    <tr class="text-left">
                         <!--
                            <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.incidentnum"}}</td>
 
@@ -181,7 +181,14 @@
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Incident Location/IPP</h3>
                                 </div>
-                                {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
+
+
+                                {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} 
+
+
+                                {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} 
+
+                                {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
                             </div>
                             <div class="panel panel-default text-center" style="max-width:170px;">
                                 <div class="panel-heading">
@@ -189,6 +196,8 @@
                                 </div>
                                 <div class="panel-body pad00">
                                     <p class="small"><em>*Drag arrow towards direction of travel</em></p>
+                                    
+
                                     {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}}
                                     <div class="col-md-6 col-md-offset-3">
                                         <img src="/images/compass.png" class="travelDirection ">
@@ -217,12 +226,15 @@
                         {{/autoForm}}
                     </div>
                     {{#autoForm collection='Records' doc=record id='_formIdMap' class="form-inline hideSubmit" type=formType autosave=true}}
-                        <div class="{{hideCoord 'findCoord'}} panel panel-default text-center">
+                        <div class="{{hideCoord 'findCoord'}} panel panel-default _text-center">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Find Location</h3>
                             </div>
                             <div class="panel-body">
-                                {{> quickForm collection='Records' validation="submit" doc=current class="text-center" id='formdId' autosave=true type=formType fields="coords.findCoord.lat,coords.findCoord.lng"}} {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit recolrdForm5 findCoord" id='formdIdfindCoord' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
+                                {{> quickForm collection='Records' validation="submit" doc=current class="text-center" id='formdId' autosave=true type=formType fields="coords.findCoord.lat,coords.findCoord.lng"}} 
+
+
+                                {{> quickForm collection='Records' validation="submit" doc=current class="input-sm"  id='formdIdfindCoord' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
                             </div>
                         </div>
                     {{/autoForm}}
@@ -231,7 +243,22 @@
 
                 <!--END MAP-->
 
-                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} 
+
+
+
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }} 
+
+
+
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
+
+
+
+
+
+
+
                 <!--Subject Info-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -356,7 +383,7 @@
                         {{/autoForm}}
                         <button type="submit" class="newResource btn btn-primary mar0">New Resource</button>
                         <div class="col-md-12">
-                            <hr> {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideSubmit hideHeader recordForm5" id='formdId' autosave=true type=formType fields="resourcesUsed.numTasks,resourcesUsed.totalPersonnel,resourcesUsed.totalManHours,resourcesUsed.distanceTraveled,resourcesUsed.totalCost"}}
+                            <hr> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideHeader recordForm2" id='formdId' autosave=true type=formType fields="resourcesUsed.numTasks,resourcesUsed.totalPersonnel,resourcesUsed.totalManHours,resourcesUsed.distanceTraveled,resourcesUsed.totalCost"}}
                         </div>
                     </div>
                 </div>
