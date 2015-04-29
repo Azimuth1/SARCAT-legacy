@@ -8,6 +8,7 @@ var map;
 Session.setDefault('subjectTableView', 'Description');
 Template.registerHelper("Schemas", Schemas);
 Template.form.onCreated(function () {
+    Session.set('editRecordInfo', 'list');
     Session.set('userView', this.data.record._id);
     config = Config.findOne();
     agencyProfile = config.agencyProfile;
@@ -34,7 +35,7 @@ Template.form.onRendered(function () {
     var record = this.data.record;
     var currentUnit = record.measureUnits;
     var units = labelUnits(currentUnit, 'temperature');
-    if (!record.weather || !Object.keys(record.weather)
+    /*if (!record.weather || !Object.keys(record.weather)
         .length) {
         Meteor.call('setWeather', record._id, function (err, d) {
             console.log(d);
@@ -44,14 +45,16 @@ Template.form.onRendered(function () {
                 return console.log(err);
             }
         });
-    }
+    }*/
     if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
+        console.log('!!!!')
         Meteor.call('setEcoRegion', record._id, function (err, d) {
             if (err) {
                 return;
             }
         });
     }
+    console.log(record.incidentOutcome)
     if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
         Meteor.call('setElevation', record._id, function (err, d) {
             console.log('elevation: ' + d);
@@ -60,9 +63,9 @@ Template.form.onRendered(function () {
             }
         });
     }
-    if (!record.incident.country && !record.incident.stateregion) {
+    if (!record.incident.country && !record.incident.administrative1) {
         Meteor.call('setLocale', record._id, function (err, d) {
-            console.log('location: ' + d);
+            console.log(d);
             if (err) {
                 return console.log(err);
             }
@@ -79,14 +82,6 @@ Template.form.onRendered(function () {
     if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
         Meteor.call('setFindBearing', record._id, function (err, d) {
             console.log('bearing: ' + d);
-            if (err) {
-                return console.log(err);
-            }
-        });
-    }
-    if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
-        Meteor.call('setDistance', record._id, function (err, d) {
-            console.log('distance: ' + d);
             if (err) {
                 return console.log(err);
             }
@@ -124,21 +119,25 @@ Template.form.onRendered(function () {
         .append(' (' + labelUnits(currentUnit, 'speed') + ')');
     $('[name="incidentOutcome.trackOffset"]')
         .prev()
-        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+        .append(' (' + labelUnits(currentUnit, 'distanceMed') + ')');
     $('[name="incidentOutcome.elevationChange"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distanceSmall') + ')');
     $('[name="resourcesUsed.distanceTraveled"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'distance') + ')');
+    $('[name="incidentOutcome.distanceIPP"]')
+        .prev()
+        .append(' (' + labelUnits(currentUnit, 'distance') + ')');
     $('[data-subjecttable="Weight"]')
         .append(' (' + labelUnits(currentUnit, 'weight') + ')');
     $('[data-subjecttable="Height"]')
         .append(' (' + labelUnits(currentUnit, 'height') + ')');
-    $('.panel-title:contains("Weather")')
+    /*$('.panel-title:contains("Weather")')
         .parent()
         .next()
         .prepend('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
+    */
     var coords = record.coords;
     var bounds = coords.bounds;
     var mapBounds = coords.bounds ? coords.bounds : config.bounds;
@@ -165,6 +164,9 @@ Template.form.helpers({
         }
         return date.toISOString()
             .split('T')[0];
+    },
+    config: function () {
+        return Session.get('config')
     },
     formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
@@ -222,7 +224,8 @@ Template.form.helpers({
                 var count = objKeys.length;
                 var sum = [count, total].join('/');
                 var label = Schemas.SARCAT._schema[d].label;
-                var klass = (count === Schemas[d]._firstLevelSchemaKeys.length) ? '' : 'primary-bg';
+                var klass = (count !== Schemas[d]._firstLevelSchemaKeys.length) ? '' : 'primary-bg';
+                //console.log(d,count,Schemas[d]._firstLevelSchemaKeys.length,klass)
                 return {
                     klass: klass,
                     field: label,
@@ -316,6 +319,9 @@ Template.form.helpers({
                 name: "subjects.subject." + index
             };
         });
+    },
+    editRecordInfo: function (item) {
+        return Session.equals('editRecordInfo', item);
     },
     getSubjectsArrayRescue: function () {
         var values = _.chain(Schemas.subjects._schema)
@@ -468,6 +474,10 @@ Template.form.helpers({
 var clicking = false;
 var travelDirectionDegree;
 Template.form.events({
+    'click .editRecordInfo': function (event) {
+        var item = event.target.getAttribute('data');
+        return Session.set('editRecordInfo', item);
+    },
     'mousedown .travelDirection': function (evt, template) {
         clicking = true;
     },
@@ -534,7 +544,7 @@ Template.form.events({
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'change [name="recordInfo.incidentdate"]': function (event, template) {
+    /*'change [name="recordInfo.incidentdate"]': function (event, template) {
         Meteor.call('setWeather', record._id, function (err, d) {
             console.log('weather: ' + d);
             if (err) {
@@ -545,7 +555,7 @@ Template.form.events({
                 return console.log(err);
             }
         });
-    },
+    },*/
     'click .mapPoints .btn': function (event, template) {
         var context = template.$(event.target);
         var pointType = context.attr('data');
@@ -607,6 +617,42 @@ Template.form.events({
                 .attr('disabled', true);
         }
     },
+    'click #weatherBtn': function (event, template) {
+        Meteor.call('setWeather', record._id, function (err, d) {
+            console.log('weather: ' + d);
+            if (err) {
+                Meteor.call('updateConfig', {
+                    weatherAPI: false
+                }, function (err, d) {})
+                $(event.target)
+                    .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
+                return console.log(err);
+            } else {
+                //$(event.target).replaceWith('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>');
+            }
+        });
+    },
+    'change [name="incidentOutcome.lkp_pls_Boolean"]': function (event) {
+        console.log(this)
+        var val = event.target.value;
+        console.log(val);
+        var item = {
+            val: "revisedLKP_PLS",
+            name: "coords.revisedLKP_PLS",
+            text: "Revised IPP",
+            icon: 'fa-male',
+            color: 'red'
+        }
+        if (val === 'Yes') {
+            map.add(item);
+        } else {
+            if (confirm('Are you sure you want to remove ' + item.text + ' from the map?')) {
+                map.remove(item);
+            } else {
+                event.stopPropagation();
+            }
+        }
+    },
 });
 AutoForm.hooks({
     updateResourceForm: {
@@ -617,3 +663,4 @@ AutoForm.hooks({
         }
     }
 });
+

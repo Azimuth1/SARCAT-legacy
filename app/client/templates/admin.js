@@ -16,27 +16,15 @@ Template.admin.rendered = function () {
     });
 };
 Template.admin.helpers({
-    logo: function (view) {
-        return Session.get('logo');
-    },
-    defaultLogo: function (view) {
-        return Session.equals('logo', 'uploads/logo/default_logo.png');
-    },
-    UploadImgFormData: function () {
-        return {
-            type: 'logo'
-        };
-    },
-    agencyCoordinates: function () {
-        return agencyCoordinates;
-    },
     profileIncomplete: function () {
         var config = Config.findOne();
         var done = _.compact(_.map(config.agencyProfile, function (d) {
-            return d;
-        })).length;
+                return d;
+            }))
+            .length;
         return done ? '' : 'afPanel warning';
     },
+
     configs: function () {
         return Config.findOne();
     },
@@ -62,6 +50,11 @@ Template.admin.helpers({
             });
         return !users.length;
     },
+    UploadImgFormData: function (a, b) {
+        return {
+            type: 'logo'
+        };
+    },
     uploadLogo: function (a, b) {
         return {
             finished: function (index, fileInfo, context) {
@@ -77,8 +70,15 @@ Template.admin.helpers({
 });
 Template.admin.events({
     'click .deleteLogo': function (event, template) {
+        var r = confirm("Are you sure you want to delete your custom logo?");
+        if (!r) {
+            return;
+        }
+        Meteor.call('removeLogo', function (err) {
+                console.log(err);
+            });
         Meteor.call('updateConfig', {
-            agencyLogo: 'default_logo.png'
+            agencyLogo: ''
         }, function (err) {
             console.log(err);
         });
@@ -129,18 +129,21 @@ Template.admin.events({
 });
 var hooksObject = {
     onSuccess: function (insertDoc, updateDoc, currentDoc) {
-        d=this
-        context = $(this.event.target).find('[type="submit"]');
+        d = this
+        context = $(this.event.target)
+            .find('[type="submit"]');
         text = context.html();
         context.text('Saved....');
-        context.delay(1000).animate({
-            opacity: 0
-        }, function () {
-            context.html(text)
-                .animate({
-                    opacity: 1
-                });
-        });
+        context.delay(1000)
+            .animate({
+                opacity: 0
+            }, function () {
+                context.html(text)
+                    .animate({
+                        opacity: 1
+                    });
+            });
     }
 }
 AutoForm.addHooks(['formIdAgencyProfile', 'formIdAgencyMap', 'formIdConfig'], hooksObject);
+

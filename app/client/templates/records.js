@@ -1,5 +1,7 @@
 var mapDrawn;
 var drawn;
+Session.setDefault('modal', false);
+Session.setDefault('tableHide', false);
 Template.records.onCreated(function (a) {
     Tracker.autorun(function () {
         var count = Records.find()
@@ -8,11 +10,11 @@ Template.records.onCreated(function (a) {
     });
 })
 Template.records.onRendered(function () {
-    x = this
     drawn = false;
     if (Records.find()
         .count()) {
-        $('.recordTable').bootstrapTable();
+        $('.recordTable')
+            .bootstrapTable();
     }
     Session.set('userView', 'records');
     var config = Config.findOne();
@@ -24,58 +26,34 @@ Template.records.onRendered(function () {
         "text": "Incident Location"
     });
     $('#createRecordModal')
+
+        .on('hidden.bs.modal', function (e) {
+            Session.set('modal', false);
+            $('.recordTable')
+                .bootstrapTable();
+        })
+        .on('show.bs.modal', function (e) {
+            Session.set('modal', true);
+            $('.recordTable')
+                .bootstrapTable('destroy');
+        })
         .on('shown.bs.modal', function (e) {
-            var lastRecord = Records.find({}, {
-                    sort: {
-                        created: -1
-                    },
-                })
-                .fetch();
-            $('[name="recordInfo.name"]')
-                .val('Record ' + (lastRecord.length + 1));
-            if (lastRecord.length) {
-                var lastIncidentnum = _.find(lastRecord, function (d) {
-                        if (d.recordInfo && d.recordInfo.incidentnum) {
-                            return d.recordInfo.incidentnum;
-                        }
-                    })
-                    .recordInfo.incidentnum;
-                var lastMissionnum = _.find(lastRecord, function (d) {
-                        if (d.recordInfo && d.recordInfo.missionnum) {
-                            return d.recordInfo.missionnum;
-                        }
-                    })
-                    .recordInfo.missionnum;
-                var lastleadagency = _.find(lastRecord, function (d) {
-                    if (d.recordInfo && d.recordInfo.leadagency) {
-                        return d.recordInfo.leadagency;
-                    }
-                });
-                lastleadagency = (lastleadagency) ? lastleadagency.recordInfo.leadagency : null;
-                $('[name="recordInfo.incidentnum"]')
-                    .attr('placeholder', 'Previous Incident: ' + lastIncidentnum);
-                $('[name="recordInfo.missionnum"]')
-                    .attr('placeholder', 'Previous Mission: ' + lastMissionnum);
-                $('[name="recordInfo.leadagency"]')
-                    .attr('value', lastleadagency)
-                    .trigger('change');
-            } else {
-                $('[name="recordInfo.incidentnum"]')
-                    .attr('value', Records.defaultNum())
-                    .trigger('change');
-                $('[name="recordInfo.missionnum"]')
-                    .attr('value', Records.defaultNum())
-                    .trigger('change');
-                $('[name="recordInfo.leadagency"]')
-                    .attr('value', lastleadagency)
-                    .trigger('change');
-            }
+            $('[name="recordInfo.incidentdate"]')
+                .attr('value', moment()
+                    .format('YYYY-MM-DThh:mm'))
+                .trigger('change');
             mapDrawn.reset();
         });
 });
 Template.records.helpers({
+    modal: function () {
+        return Session.get('modal');
+    },
     allRecords: function () {
         return this.records;
+    },
+    config: function () {
+        return Config.findOne();
     },
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
@@ -93,7 +71,7 @@ Template.records.helpers({
         return Records.findOne(Session.get('newRecord'));
     },
     createNewBtn: function () {
-        var config = Session.get('config');
+        var config = Config.findOne();
         var profile = _.compact(_.map(config.agencyProfile, function (d) {
                 return d;
             }))
@@ -111,13 +89,12 @@ Template.records.helpers({
     selectedRecords: function () {
         //console.log(checked = $('.bs-checkbox [name="btSelectItem"]:checked')[0])
         return Session.get('selectedRecords');
+    },
+    tableHide: function () {
+        return Session.get('tableHide');
     }
 });
 Template.records.events({
-    'click .js-deleteRecord': function () {
-        var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function (error, d) {});
-    },
     'click .modal-backdrop': function () {
         var record = Records.findOne(Session.get('newRecord'));
         Meteor.call('removeRecord', record, function (error, d) {
@@ -131,81 +108,7 @@ Template.records.events({
         drawn = true;
         template.$('a[data-toggle="tab"][href="#recordStats"]')
             .on('shown.bs.tab', function (e) {
-                var records = Records.find()
-                    .fetch();
-                data = recordStats(records);
-                var coords = records.map(function (d) {
-                    return d.coords
-                });
-                if (!records.length) {
-                    return;
-                }
-                var mapBounds = coords[0].bounds;
-                mapBounds = boundsString2Array(mapBounds);
-                map = statsSetMap('statsMap', mapBounds);
-                var mapPoints = {
-                    "ippCoordinates": {
-                        "val": "ippCoordinates",
-                        "name": "coords.ippCoordinates",
-                        "text": "IPP Location. <br>Direction of Travel (hover to edit): <div class=\"fa fa-arrow-circle-up fa-2x fa-fw travelDirection\"></div>",
-                        "icon": "fa-times-circle-o text-black"
-                    },
-                    /* "decisionPointCoord": {
-                         "val": "decisionPointCoord",
-                         "name": "coords.decisionPointCoord",
-                         "text": "Decision Point",
-                         "icon": "fa-code-fork text-danger"
-                     },
-                     "destinationCoord": {
-                         "val": "destinationCoord",
-                         "name": "coords.destinationCoord",
-                         "text": "Intended Destination",
-                         "icon": "fa-bullseye text-default"
-                     },
-                     "revisedLKP-PLS": {
-                         "val": "revisedLKP-PLS",
-                         "name": "coords.revisedLKP-PLS",
-                         "text": "Revised IPP",
-                         "icon": "fa-times-circle-o 4x text-success"
-                     },*/
-                    "findCoord": {
-                        "val": "findCoord",
-                        "name": "coords.findCoord",
-                        "text": "Find Location",
-                        "icon": "fa-male text-success"
-                    },
-                    "intendedRoute": {
-                        "val": "intendedRoute",
-                        "name": "coords.intendedRoute",
-                        "text": "Intended Route",
-                        "path": {
-                            "stroke": "#018996"
-                        }
-                    },
-                    "actualRoute": {
-                        "val": "actualRoute",
-                        "name": "coords.actualRoute",
-                        "text": "Actual Route",
-                        "path": {
-                            "stroke": "#3C763D",
-                            "weight": 8
-                        }
-                    }
-                };
-                _.each(mapPoints, function (d) {
-                    coords.forEach(function (e) {
-                        if (!e) {
-                            return;
-                        }
-                        var latlng = e[d.val];
-                        if (!latlng) {
-                            return
-                        };
-                        d.coords = latlng;
-                        map.add(d);
-                    });
-                })
-                map.fitBounds();
+                stats();
             });
     },
     'click .openRecord': function (event, template) {
@@ -237,25 +140,16 @@ Template.records.events({
         if (confirm(message)) {
             toDelete.each(function (e, d) {
                 console.log(d)
-                Meteor.call('removeRecord', d.id, function (error, d) {});
+                Meteor.call('removeRecord', d.id, function (error, d) {
+                    var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
+                    Session.set('selectedRecords', checked.length);
+                });
             });
-            Meteor._reload.reload();
+            //Meteor._reload.reload();
             return true;
         } else {
             return false;
         }
-    },
-    'click .js-newRecord': function (event, template) {
-        return;
-        var list = {
-            userId: Meteor.userId()
-        };
-        Meteor.call('addRecord', list, function (error, d) {
-            if (error) {
-                return console.log(error);
-            }
-            Session.set('newRecord', d);
-        });
     },
     'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {
         var lat = template.$('[name="coords.ippCoordinates.lat"]')
@@ -270,7 +164,7 @@ Template.records.events({
     },
     'change .bs-checkbox input,[name="btSelectAll"]': function (event, template) {
         var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
-        Session.set('selectedRecords', checked.length)
+        Session.set('selectedRecords', checked.length);
     },
     'change [name="btSelectAll"]': function (event, template) {
         setTimeout(function () {
@@ -354,17 +248,19 @@ Template.records.events({
 AutoForm.hooks({
     createRecordModalFormId: {
         beginSubmit: function () {
+            Session.set('tableHide', true);
             // $('.recordTable').bootstrapTable('destroy');
         },
         endSubmit: function () {
-            //$('.recordTable').bootstrapTable();
+            Session.set('tableHide', false);
         },
         onSuccess: function (formType, result) {
+
+            /*$('.recordTable')
+                .bootstrapTable('destroy');*/
             //Meteor._reload.reload();
             $('#createRecordModal')
                 .modal('hide');
-            //$('.recordTable')
-            //   .bootstrapTable('destroy');
         },
         // Called when any submit operation fails
         onError: function (formType, error) {

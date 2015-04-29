@@ -33,38 +33,51 @@
                         <th>Mission #</th>
                         <th>Record Name</th>
                         <th>Incident Type</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
                         <th>Incident Date</th>
                         <th>Status</th>
+
                     </tr>
                 </thead>
-                <tbody class="_white-bg">
-                    <tr class="text-left">
-                        <!--
-                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.incidentnum"}}</td>
+                <tbody class="white-bg">
+                    <tr class="text-left text-default">
 
-                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.missionnum"}}</td>
+                        {{#if editRecordInfo 'edit'}}
 
-                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.name"}}</td>
+                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
 
-                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.incidenttype"}}</td>
-                           <td>{{admin.user}}</td>
-                        <td>{{toDateString created}}</td>
+                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
 
+                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
 
-                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.incidentdate"}}</td>
+                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidenttype"}}</td>
 
-                           <td> {{> quickForm collection='Records' validation="submit" doc=this class="hideSubmit hideLabel" id='zformdId' autosave=true type='update' fields="record.recordInfo.status"}}</td>
--->
-                        <td>{{record.recordInfo.incidentnum}}</td>
-                        <td>{{record.recordInfo.missionnum}}</td>
-                        <td>{{record.recordInfo.name}}</td>
-                        <td>{{record.recordInfo.incidenttype}}</td>
-                        <td>{{record.admin.user}}</td>
-                        <td>{{toDateString record.created}}</td>
-                        <td>{{toDateString record.recordInfo.incidentdate}}</td>
-                        <td>{{record.recordInfo.status}}</td>
+                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId5' autosave=true type='update' fields="recordInfo.incidentdate"}}</td>
+
+                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
+
+                            <td class="default-border default-bg text-center">
+                                <button type="button" class="btn btn-success editRecordInfo" data="list">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Done
+                                </button>
+                            </td>
+
+                        {{else}}
+                            <td>{{record.recordInfo.incidentnum}}</td>
+                            <td>{{record.recordInfo.missionnum}}</td>
+                            <td>{{record.recordInfo.name}}</td>
+                            <td>{{record.recordInfo.incidenttype}}</td>
+
+                            <td>{{toDateString record.recordInfo.incidentdate}}</td>
+                            <td>{{record.recordInfo.status}}</td>
+                            <td class="default-border default-bg text-center">
+
+                                <button type="button" class="btn btn-warning editRecordInfo" data="edit">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Edit
+                                </button>
+
+                            </td>
+                        {{/if}}
+
                     </tr>
                 </tbody>
             </table>
@@ -82,31 +95,37 @@
             <div class="col-md-12">
 
                 <div id="mapTools" class="panel" style="background:#E8E8E8">
-
-             
-                     
-
-                                 <div class="_label" >
-                                Incident Location / IPP
-                                <span class="fa-stack">
+<!--
+                    <div class="_label">
+                        Incident Location / IPP
+                        <span class="fa-stack">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-danger"></i>
                                         </span>
-                            </div>
-
-
-
+                    </div>
+-->
                     <div class="mapBtns mapPoints">
-
 
                         <div class="col-md-4 pad00">
                             <div class="btn-group-vertical btn-group btn-block" data-toggle="buttons">
 
-                                <button type="button" class="btn btn-danger" data="revisedLKP_PLS">
-                                    <input type="checkbox" autocomplete="off"> &nbsp; Last Known Point/Last Point Seen
+
+
+
+
+                           <button type="button" class="btn btn-danger" data="ippCoordinates">
+                                    <input type="checkbox" autocomplete="off"> &nbsp; Incident Location/IPP
                                     <span class="fa-stack _pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw text-danger"></i>
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-danger"></i>
                                         </span>
                                 </button>
+
+
+
+
+
+
+
+
 
                                 <button type="button" class="btn btn-warning" data="decisionPointCoord">
                                     <input type="checkbox" autocomplete="off"> &nbsp; Decision Point
@@ -173,58 +192,311 @@
                     </div>-->
                     </div>
 
-                    <div id='formMap' style="width:100%; height:400px"></div>
+                    <div id='formMap' style="width:100%; height:400px;"></div>
 
                     <div class="row">
-                        {{#autoForm collection='Records' doc=record id='formIdMap' class="form-inline hideSubmit _hideHeader" type=formType autosave=true}}
-                            <div class="panel panel-default text-center" style="max-width:170px;">
+                        {{#autoForm collection='Records' doc=record id='_formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
+
+
+
+<div class="col-md-6" style="font-size: .8em;">
+                            <div class="panel panel-default" >
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Incident Location/IPP</h3>
                                 </div>
-
-
-                                {{> quickForm collection='Records' validation="submit" doc=current class="text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.ippCoordinates.lat,coords.ippCoordinates.lng"}} 
-
-
-                                {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} 
-
-                                {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
-                            </div>
-                            <div class="panel panel-default text-center" style="max-width:170px;">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Initial Direction of Travel</h3>
+                                <div class="panel-body">
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Initial Planning Point</span>
+                                 
                                 </div>
-                                <div class="panel-body pad00">
-                                    <p class="small"><em>*Drag arrow towards direction of travel</em></p>
-                                    
+                                {{> afQuickField name="coords.ippCoordinates.lat"}} 
+                                {{> afQuickField name="coords.ippCoordinates.lng"}}
+                                
+                                {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} 
+                                {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}} 
+
+                                <hr>
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Initial Direction of Travel</span>
+                                     <span class="small"><em> - Drag arrow towards direction of travel</em></span>
+                                </div>
+
+
 
                                     {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}}
-                                    <div class="col-md-6 col-md-offset-3">
+                                    <div class="form-group mar2x">
                                         <img src="/images/compass.png" class="travelDirection ">
                                     </div>
+                                    {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
+                                <hr>
+
+
+
+
+
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Last Known Point/Point Last Seen</span>
                                 </div>
-                                {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
+
+                                {{> afQuickField name="incidentOutcome.lkp_pls_Boolean"}} 
+
+
+
+
+{{#if afFieldValueIs name="incidentOutcome.lkp_pls_Boolean" value="Yes"}}
+<br>
+
+                                {{> afQuickField name="coords.revisedLKP_PLS.lat"}} 
+                                {{> afQuickField name="coords.revisedLKP_PLS.lng"}}
+
+
+
+
+                                <button type="button" class="btn btn-danger" data="revisedLKP_PLS" style="display:block">
+                                    <input type="checkbox" autocomplete="off" class="hide"> &nbsp; Revised LKP/PLS
+                                    <span class="fa-stack _pull-right">
+                                          <i class="fa fa-male fa-2x fa-fw white"></i>
+                                        </span>
+                                </button>
+  {{/if}}
+
+
+
+
+
+
+
+
+
+
+                                </div>
+                                <!--{{> quickForm collection='Records' validation="submit" doc=record id='zformdId5dd' autosave=true type='update' fields="incidentOutcome.lpb_pls_Boolean"}}-->
                             </div>
-                            <div class="{{hideCoord 'decisionPointCoord'}} panel panel-default text-center" style="max-width:170px;">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-md-6" style="font-size: .8em;">
+                            <div class="panel panel-default" >
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Spatial Data</h3>
+                                </div>
+                                <div class="panel-body">
+
+
+                              
+
+
+<div class="{{hideCoord 'decisionPointCoord'}}">
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Decision Point</span>
+                                </div>
+                                {{> afQuickField name="coords.decisionPointCoord.lat"}} 
+                                {{> afQuickField name="coords.decisionPointCoord.lng"}} 
+                                {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} 
+                                <br>
+                                {{> afQuickField name="incidentOperations.decisionPointFactor"}}
+</div>
+                                <hr>
+
+
+
+
+
+
+<div class="{{hideCoord 'destinationCoord'}}">
+
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Intended Destination</span>
+                                </div>
+                                {{> afQuickField name="coords.destinationCoord.lat"}}
+                                {{> afQuickField name="coords.destinationCoord.lng"}} 
+
+                                <hr>
+</div>
+
+
+
+
+
+
+<div class="{{hideCoord 'findCoord'}}">
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Find Coordinates</span>
+                                </div>
+                                {{> afQuickField name="coords.findCoord.lat"}} 
+                                {{> afQuickField name="coords.findCoord.lng"}} 
+                                <hr>
+                                <button type="button" class="btn btn-primary" id="mapCalcBtn" style="display:block">
+                                    <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate
+                                </button>
+                                {{> afQuickField name="incidentOutcome.distanceIPP"}} 
+                                {{> afQuickField name="incidentOutcome.dispersionAngle"}} 
+                                {{> afQuickField name="incidentOutcome.findBearing"}} 
+                                {{> afQuickField name="incidentOutcome.trackOffset"}} 
+                                {{> afQuickField name="incidentOutcome.elevationChange"}} 
+                                </div>
+ </div>
+
+
+
+
+
+
+
+                            </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!--
+
+
+
+
+
+<div class="col-md-3">
+                            <div class="{{hideCoord 'decisionPointCoord'}} panel panel-default" >
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Decision Point</h3>
                                 </div>
-                                {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.decisionPointCoord.lat,coords.decisionPointCoord.lng"}} {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
-                            </div>
-                            <div class="{{hideCoord 'revisedLKP_PLS'}} panel panel-default text-center" style="max-width:170px;">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Last Known Point/Point Last Seen</h3>
+                                <div class="panel-body">
+                                {{> afQuickField name="coords.decisionPointCoord.lat"}} 
+                                {{> afQuickField name="coords.decisionPointCoord.lng"}} 
+                                <hr>
+                                {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}} 
+                                {{> afQuickField name="incidentOperations.decisionPointFactor" options="allowed"}}
                                 </div>
-                                {{> quickForm collection='Records' validation="submit" doc=current class="_text-center hideHeader" id='formdId' autosave=true type=formType fields="coords.revisedLKP_PLS.lat,coords.revisedLKP_PLS.lng"}} {{> afQuickField name="incidentOperations.PLS_HowDetermined" options="allowed"}}
                             </div>
-                            <div class="{{hideCoord 'destinationCoord'}}">
-                                {{> afQuickField name='coords.destinationCoord' }}
+
+
+              
+
+
+
+
+</div>
+<div class="col-md-3">
+                            <div class="{{hideCoord 'destinationCoord'}} panel panel-default" >
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Destination Point</h3>
+                                </div>
+                                <div class="panel-body">
+                                {{> afQuickField name="coords.destinationCoord.lat"}}
+                                {{> afQuickField name="coords.destinationCoord.lng"}} 
+                          
+                         
+                                </div>
                             </div>
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+
+
+                            <div class="panel panel-default" >
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Find Location</h3>
+                                </div>
+                                <div class="panel-body">
+                                {{> afQuickField name="coords.findCoord.lat"}} 
+                                {{> afQuickField name="coords.findCoord.lng"}} 
+                                <hr>
+                                {{> afQuickField name="incidentOutcome.distanceIPP"}} 
+                                {{> afQuickField name="incidentOutcome.dispersionAngle"}} 
+                                {{> afQuickField name="incidentOutcome.findBearing"}} 
+                                {{> afQuickField name="incidentOutcome.trackOffset"}} 
+                                {{> afQuickField name="incidentOutcome.elevationChange"}} 
+                                </div>
+</div>
+
+
+
+
+
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             <div class="hide">
                                 {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
                             </div>
+
+
+
+                         
+
+
+
+
                         {{/autoForm}}
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
                     {{#autoForm collection='Records' doc=record id='_formIdMap' class="form-inline hideSubmit" type=formType autosave=true}}
                         <div class="{{hideCoord 'findCoord'}} panel panel-default _text-center">
                             <div class="panel-heading">
@@ -234,30 +506,59 @@
                                 {{> quickForm collection='Records' validation="submit" doc=current class="text-center" id='formdId' autosave=true type=formType fields="coords.findCoord.lat,coords.findCoord.lng"}} 
 
 
-                                {{> quickForm collection='Records' validation="submit" doc=current class="input-sm"  id='formdIdfindCoord' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
+                                {{> quickForm collection='Records' validation="submit" doc=current class="input-sm" id='formdIdfindCoord' autosave=true type=formType fields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
                             </div>
                         </div>
                     {{/autoForm}}
-
+-->
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <!--END MAP-->
 
-                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="recordInfo" buttonContent= "Save" resetOnSuccess='false' }} 
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }}
 
 
 
-                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incident" buttonContent= "Save" resetOnSuccess='false' }} 
+                <div class="panel panel-default _text-center">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Weather</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <button type="button" class="btn btn-primary mar0y" id="weatherBtn">
+                            <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via Web
+                        </button>
+
+                        <span class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span>
 
 
 
-                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="weather,incidentOutcome, rescueDetails" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange"}}
+                        {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}}
+                            {{> afQuickField name="weather" options=this.options }}
+                        {{/autoForm}}
+                    </div>
+                </div>
 
-
-
-
-
-
+                {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incidentOutcome, rescueDetails" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange,incidentOutcome.lpb_pls_Boolean"}}
 
                 <!--Subject Info-->
                 <div class="panel panel-default">
