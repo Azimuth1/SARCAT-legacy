@@ -67,21 +67,17 @@
                             <label for="syNWDsq4rJiyL5WrZ" class="control-label">Organization Logo - jpg/png
 
                             </label>
-                            {{#unless defaultLogo}}
-                                <a class="btn btn-warning deleteLogo pull-right btn-xs" style="width:91px" href="#">
-                                    <i class="fa fa-trash-o fa-lg"></i> Reset</a>
-                            {{/unless}}
+                            {{#if configs.agencyLogo}}
+                                <span class="btn text-danger deleteLogo btn-xs">
+                                    <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span>
+                            {{/if}}
                             {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
 
                         </div>
 
-
-
                         {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}}
 
-                        {{> afQuickField name="measureUnits" options="allowed"}}
-                        {{> afQuickField name="googleAPI" }}
-                        {{> afQuickField name="forecastAPI" }}
+                            {{> afQuickField name="measureUnits" options="allowed"}} {{> afQuickField name="googleAPI" }} {{> afQuickField name="forecastAPI" }}
 
                             <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
 
@@ -96,32 +92,24 @@
                   </h3>
                     </div>
                     <div class="panel-body afBody pad00">
-                       
+
                         <div id='adminMap' style="width:100%;height:500px">
                             <a href='#' id='geolocate' class='map-ui-button'>Find me!</a>
                             <div class="mapCrosshair">+</div>
                         </div>
 
                         <div class="col-md-12 mar1y">
-<!--
+                            <!--
  {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true type='update' fields="bounds" buttonContent= "Save Response Area"}}
 -->
 
+                            {{#autoForm id='formIdAgencyMap' collection='Config' doc=configs type='update' afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}}
 
+                                {{> afQuickField name="bounds" label-class="hide" class="hide"}}
 
-                        {{#autoForm id='formIdAgencyMap' collection='Config' doc=configs type='update' afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}}
+                                <button type="submit" class="saveBounds btn btn-primary"><i class="glyphicon glyphicon-check"></i> Save Bounds</button>
 
-                        {{> afQuickField name="bounds" label-class="hide" class="hide"}}
-                   
-
-                             <button type="submit" class="saveBounds btn btn-primary"><i class="glyphicon glyphicon-check"></i> Save Bounds</button>
-
-                        {{/autoForm}}
-
-
-
-
-                           
+                            {{/autoForm}}
 
                         </div>
 
@@ -195,7 +183,7 @@
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane pad0 scroll" id="options">
-                <div class="panel panel-default">
+                <div class="panel panel-default"> 
                     <div class="panel-heading">
                         <h3 class="panel-title">Data Form Type</h3> </div>
                     <div class="panel-body">

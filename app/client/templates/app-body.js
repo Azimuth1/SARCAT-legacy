@@ -3,7 +3,6 @@ Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 var config;
-
 /*
 geojson.features=[geojson.features[99]]
 console.log(pip([132.0927,44.8397],geojson));
@@ -13,46 +12,40 @@ var gjLayer = L.geoJson(geojson);
 results = leafletPip.pointInLayer([132.0927,44.8397], gjLayer);
 console.log(results)
 */
-
-Template.appBody.onCreated(function () {
-
+$("img")
+    .error(function () {
+        $(this)
+            .hide();
+        // or $(this).css({visibility:"hidden"}); 
+    });
+Template.appBody.onCreated(function () {});
+Template.appBody.onRendered(function () {
     Tracker.autorun(function () {
-        /*var oldest = _.max(Monkeys.find().fetch(), function (monkey) {
-          return monkey.age;
-        });*/
         var config = Config.findOne();
         if (config) {
+            c = config;
             Session.set('config', config);
-            Session.set("logo", 'uploads/logo/' + config.agencyLogo);
+            document.getElementById('agencyLogo')
+                .src = 'uploads/logo/' + config.agencyLogo;
         }
     });
-
 });
-Template.appBody.onRendered(function () {
-    /*var config = Config.findOne();
-    if (config && config.agencyLogo) {
-        console.log('!')
-        Session.set('logo', 'uploads/logo/' + config.agencyLogo);
-    } else{
-        Session.set('logo', 'uploads/logo/default_logo.png');
-        
-    }*/
-});
-
 Template.appBody.helpers({
+    email: function (view) {
+        return Meteor.user()
+            .emails[0].address;
+    },
     logo: function (view) {
         return Session.get('logo');
-
     },
     isUserView: function (view) {
         view = view || this._id;
-        var active = Session.get('userView') === view;
+        var active = Session.equals('userView', view);
         return active ? 'primary-bg' : '';
     },
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-
     thisArray: function () {
         return [this];
     },
@@ -62,7 +55,6 @@ Template.appBody.helpers({
     cordova: function () {
         return Meteor.isCordova && 'cordova';
     },
-
     lists: function () {
         return Records.find();
     },
@@ -85,26 +77,15 @@ Template.appBody.helpers({
     }
 });
 Template.appBody.events({
-    'click .userView': function (event) {
-        var target = $(event.target)
-            .attr('data');
-        Session.set('userView', target);
-    },
-    'click .js-menu': function () {
-        Session.set(MENU_KEY, !Session.get(MENU_KEY));
-    },
+
     'click .content-overlay': function (event) {
         Session.set(MENU_KEY, false);
         event.preventDefault();
-    },
-    'click #menu a': function () {
-        Session.set(MENU_KEY, false);
     },
     'click .js-logout': function () {
         Session.set('adminRole', false);
         Meteor.logout();
         Router.go('signin');
     },
-
 });
 

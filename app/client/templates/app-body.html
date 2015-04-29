@@ -1,41 +1,37 @@
 <template name="appBody">
     <div id="container" class="container-fixed {{menuOpen}} {{cordova}}">
         <section id="menu">
-<div class="mar1">
-{{#if logo}}
-<img src="/{{logo}}" style="width: 100%;">
-{{/if}}
+            <div class="mar1">
+                <img src="/icon.png" style="width: 100%;">
+            </div>
 
-</div>
+            <div class="mar1">
 
+                <img id="agencyLogo" style="width: 100%;" onerror='this.style.display = "none"'>
 
-                
+            </div>
+
             {{#if currentUser}}
 
+                <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong default-bg js-userProfile _userView" data='userProfile'>{{email}}</a>
 
-                <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong primary-bg js-userProfile _userView" data='userProfile'>{{currentUser.username}}</a> 
-                <a class="btn-pad js-logout btn-secondary">Logout</a> 
+                    <a class="btn-pad js-logout btn-secondary">Logout</a>
                 </div>
-
-
 
                 <div class="btns-group-vertical btns-userHome">
-                    {{#if isAdmin}} 
-                    <a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> 
+                    <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a>
+
+                    {{#if isAdmin}}
+                        <a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a>
                     {{/if}}
-                    
 
-                    <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
+                    <a href="{{pathFor 'about'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'about'}}" data='about'>About</a>
 
 
-                    
 
                 </div>
 
-
-
-
-                {{else}}
+            {{else}}
                 <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
             {{/if}}
             <div class="list-todos">
@@ -60,3 +56,4 @@
         </div>
     </div>
 </template>
+

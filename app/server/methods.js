@@ -177,6 +177,25 @@ Meteor.methods({
         var files = fs.readdirSync('../web.browser/app/uploads/records/' + id);
         return files;
     },
+    removeLogo: function () {
+        var fs = Npm.require('fs');
+        //var filePath = process.env.PWD + '/public/uploads/logo/' + name;
+        //fs.unlinkSync(filePath);
+        var dirPath = process.env.PWD + '/public/uploads/logo';
+        try {
+            var files = fs.readdirSync(dirPath);
+        } catch (e) {
+            return;
+        }
+        if (files.length > 0)
+            for (var i = 0; i < files.length; i++) {
+                var filePath = dirPath + '/' + files[i];
+                if (fs.statSync(filePath)
+                    .isFile()) {
+                    fs.unlinkSync(filePath);
+                }
+            }
+    },
     setEcoRegion: function (id) {
         var record = Records.findOne(id);
         var coord = record.coords.ippCoordinates;
@@ -225,16 +244,23 @@ Meteor.methods({
                 $set: obj
             });
         });
-
-        if(!dailyData.precipType){
+        if (!dailyData.precipType) {
             Records.update(id, {
-                $set: {'weather.precipType':'none'}
+                $set: {
+                    'weather.precipType': 'none'
+                }
             });
         }
+        Config.update(Config.findOne()
+            ._id, {
+                $set: {
+                    weatherAPI: true
+                }
+            }
+        );
         return dailyData;
     },
     setFindBearing: function (id) {
-
         function radians(n) {
             return n * (Math.PI / 180);
         }
@@ -248,9 +274,7 @@ Meteor.methods({
             startLong = radians(startLong);
             endLat = radians(endLat);
             endLong = radians(endLong);
-
             var dLong = endLong - startLong;
-
             var dPhi = Math.log(Math.tan(endLat / 2.0 + Math.PI / 4.0) / Math.tan(startLat / 2.0 + Math.PI / 4.0));
             if (Math.abs(dLong) > Math.PI) {
                 if (dLong > 0.0)
@@ -258,10 +282,8 @@ Meteor.methods({
                 else
                     dLong = (2.0 * Math.PI + dLong);
             }
-
             return parseInt((degrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0);
         }
-
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
@@ -273,16 +295,13 @@ Meteor.methods({
         if (!coord1 || !coord2) {
             return false;
         }
-
         var val = bearing(coord1.lat, coord1.lng, coord2.lat, coord2.lng);
-
         Records.update(id, {
             $set: {
                 'incidentOutcome.findBearing': val
             }
         });
         return val;
-
     },
     setElevation: function (id) {
         var record = Records.findOne(id);
@@ -338,7 +357,8 @@ Meteor.methods({
             if (options.threshold) {
                 return options.threshold > (R * c)
             } else {
-                return +((R * c).toFixed(2));
+                return +((R * c)
+                    .toFixed(2));
             }
         }
         var record = Records.findOne(id);
@@ -353,7 +373,6 @@ Meteor.methods({
             return false;
         }
         var unit = record.measureUnits ? 'mile' : 'km';
-
         var val = haversine(coord1, coord2, {
             unit: unit
         });
@@ -370,7 +389,8 @@ Meteor.methods({
         Records.update(id, {
             $unset: {
                 'incident.country': '',
-                'incident.stateregion': ''
+                'incident.administrative1': '',
+                'incident.administrative2': ''
             }
         });
         var coord1 = record.coords.ippCoordinates;
@@ -390,15 +410,21 @@ Meteor.methods({
             return _.contains(d.types, 'administrative_area_level_1')
         });
         var admin1 = admin1Ar ? admin1Ar.long_name : null;
+        var admin2Ar = _.find(result0, function (d) {
+            return _.contains(d.types, 'administrative_area_level_2')
+        });
+        var admin2 = admin2Ar ? admin2Ar.long_name : null;
         Records.update(id, {
             $set: {
                 'incident.country': country,
-                'incident.stateregion': admin1
+                'incident.administrative1': admin1,
+                'incident.administrative2': admin2
             }
         });
         return {
             country: country,
-            admin1: admin1
+            admin1: admin1,
+            county: admin2
         };
     },
 });
@@ -433,3 +459,4 @@ Meteor.users.allow({
         }
     }
 });
+

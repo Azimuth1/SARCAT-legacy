@@ -139,6 +139,7 @@ Router.route('admin', {
     }
 });*/
 Router.route('profiles');
+Router.route('about');
 Router.route('form', {
     path: '/form/:_id',
     waitOn: function () {

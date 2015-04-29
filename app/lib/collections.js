@@ -1,5 +1,22 @@
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
+Records.lastRecord = function (type) {
+    var lastRecords = Records.find({}, {
+            sort: {
+                created: -1
+            },
+        })
+        .fetch();
+    if (!lastRecords.length) {
+        return '1';
+    }
+    var last = _.find(lastRecords, function (d) {
+        if (d.recordInfo && d.recordInfo[type]) {
+            return d.recordInfo[type];
+        }
+    });
+    return last ? 'Previous:  ' + last.recordInfo[type] : '1';
+};
 Records.defaultName = function () {
     var nextLetter = 'A',
         nextName = 'Incident ' + nextLetter;
@@ -134,12 +151,32 @@ Schemas.recordInfo = new SimpleSchema({
         type: String,
         label: 'Record Name',
         unique: true,
+        autoform: {
+            placeholder: function (d) {
+                return Records.lastRecord('name');
+            }
+        },
     },
-    /*incidentdate: {
-        type: Date,
-        // optional: true,
-        label: 'Incident Date',
-    },*/
+    incidentnum: {
+        type: String,
+        label: 'Incident #',
+        unique: true,
+        autoform: {
+            placeholder: function (d) {
+                return Records.lastRecord('incidentnum');
+            }
+        },
+    },
+    missionnum: {
+        type: String,
+        optional: true,
+        label: 'Mission #',
+        autoform: {
+            placeholder: function (d) {
+                return Records.lastRecord('missionnum');
+            }
+        },
+    },
     incidentdate: {
         type: 'datetime',
         autoform: {
@@ -148,41 +185,37 @@ Schemas.recordInfo = new SimpleSchema({
             }
         },
         label: 'Incident Date/Time',
-        defaultValue: moment().format('YYYY-MM-DThh:mm')
-    },
-    status: {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
-        label: 'Incident Status',
-        //defaultValue: 'Open',
-    },
-    incidentnum: {
-        type: String,
-        //optional: true,
-        label: 'Incident #',
-        unique: true,
-    },
-    missionnum: {
-        type: String,
-        optional: true,
-        label: 'Mission #',
+        //defaultValue: moment().format('YYYY-MM-DThh:mm')
     },
     incidenttype: {
         type: String,
-        defaultValue: 'Search',
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
         allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
         label: 'Incident Type',
-    }
+        defaultValue: 'Search'
+    },
+    status: {
+        type: String,
+        allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
+        label: 'Incident Status',
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return [{
+                    "label": "Active",
+                    "value": "Active"
+                }, {
+                    "label": "Open",
+                    "value": "Open"
+                }, {
+                    "label": "Closed",
+                    "value": "Closed"
+                }, {
+                    "label": "Unknown",
+                    "value": "Unknown"
+                }, ];
+            }
+        }
+    },
 });
 Schemas.incident = new SimpleSchema({
     leadagency: {
@@ -202,13 +235,18 @@ Schemas.incident = new SimpleSchema({
     },
     country: {
         type: String,
-        label: 'Response Country',
+        label: 'Incident Response Country',
         optional: true,
     },
-    stateregion: {
+    administrative1: {
         type: String,
         optional: true,
-        label: 'Response State/Region',
+        label: 'Incident State/Region',
+    },
+    administrative2: {
+        type: String,
+        label: 'Incident County/Region',
+        optional: true,
     },
     subjectcategory: {
         type: String,
@@ -319,7 +357,6 @@ Schemas.incident = new SimpleSchema({
         label: 'Land Cover',
     },
 });
-
 Schemas.coords = new SimpleSchema({
     /*bounds: {
         type: String,
@@ -330,7 +367,7 @@ Schemas.coords = new SimpleSchema({
     },*/
     ippCoordinates: {
         type: Object,
-        label: 'IPP',
+        label: 'Incident Location/IPP',
         optional: true
     },
     'ippCoordinates.lat': {
@@ -479,20 +516,21 @@ Schemas.incidentOperations = new SimpleSchema({
         optional: true
     },
     'decisionPointFactor': {
-        type: Boolean,
+        type: String,
         label: 'Decision Point A Find Factor?',
         autoform: {
-            firstOption: function () {
-                return "--";
-            }
+            type: "select-radio-inline",
+            options: function () {
+                return [{
+                    label: "Yes",
+                    value: "Yes"
+                }, {
+                    label: "No",
+                    value: "No"
+                }];
+            },
         },
-        allowedValues: [true, false],
-        optional: true,
-        autoform: {
-            afFieldInput: {
-                type: "boolean-checkbox"
-            }
-        }
+        optional: true
     },
     'PLS_HowDetermined': {
         type: String,
@@ -505,7 +543,6 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Determining Factor',
         optional: true
     },
-
 });
 Schemas.incidentOutcome = new SimpleSchema({
     'incidentOutcome': {
@@ -539,7 +576,6 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Incident Closed Date/Time',
         optional: true
     },
-
     'scenario': {
         type: String,
         autoform: {
@@ -561,6 +597,24 @@ Schemas.incidentOutcome = new SimpleSchema({
         allowedValues: ['Unknown', 'Lack of clues', 'Lack of resources', 'Weather', 'Hazards', 'Lack of Survivability', 'Investigative information'],
         label: 'Suspension Reasons',
         optional: true
+    },
+    'lkp_pls_Boolean': {
+        type: String,
+        label: 'Is LKP/PLS Different from IPP?',
+        optional: true,
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return [{
+                    label: "Yes",
+                    value: "Yes"
+                }, {
+                    label: "No",
+                    value: "No"
+                }];
+            },
+            value: 'No'
+        }
     },
     'distanceIPP': {
         type: String,
@@ -656,8 +710,6 @@ Schemas.subjects = new SimpleSchema({
         label: 'Name/Alias',
         optional: true,
         autoValue: function (a, b) {
-            t = this;
-            console.log(this, a, b)
             if (!this.isSet) {
                 return new Date()
                     .toISOString();
@@ -854,7 +906,6 @@ Schemas.subjects = new SimpleSchema({
         }
     },
 });
-
 Schemas.rescueDetails = new SimpleSchema({
     'signalling': {
         type: String,
@@ -875,7 +926,7 @@ Schemas.rescueDetails = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Yes','No'],
+        allowedValues: ['Yes', 'No'],
         optional: true,
         /*autoform: {
             afFieldInput: {
@@ -893,7 +944,6 @@ Schemas.rescueDetails = new SimpleSchema({
     }
 });
 Schemas.resourcesUsed = new SimpleSchema({
-
     'numTasks': {
         type: Number,
         label: 'Total # of Tasks',
@@ -919,7 +969,6 @@ Schemas.resourcesUsed = new SimpleSchema({
         label: 'Total Cost',
         optional: true
     },
-
     'resource': {
         type: Array,
         label: 'Resource',
@@ -1377,7 +1426,7 @@ Schemas.SARCAT = new SimpleSchema({
     coords: {
         type: Schemas.coords,
         optional: true,
-        label:'Map Data'
+        label: 'Map Data'
             //optional: true
     },
     admin: {
@@ -1412,13 +1461,13 @@ Schemas.SARCAT = new SimpleSchema({
     incidentOutcome: {
         type: Schemas.incidentOutcome,
         label: 'Incident Outcome',
-        //optional: true,
+        optional: true,
         defaultValue: {}
     },
     rescueDetails: {
         type: Schemas.rescueDetails,
         label: 'Rescue Details',
-        //optional: true,
+        optional: true,
         defaultValue: {}
     },
     subjects: {
@@ -1445,31 +1494,35 @@ Schemas.SARCAT = new SimpleSchema({
 });
 Records.attachSchema(Schemas.SARCAT);
 Schemas.agencyProfile = new SimpleSchema({
-    agency: {
+    organization: {
         type: String,
         label: 'Organization Name',
-        defaultValue:''
+        defaultValue: ''
     },
     address: {
         type: String,
-        label:'Address',
-        defaultValue:''
-        
+        label: 'Address',
+        defaultValue: ''
+    },
+    'city': {
+        type: String,
+        label: 'City',
+        defaultValue: ''
     },
     'state-region': {
         type: String,
-        label: 'State/Province',
-        defaultValue:''
+        label: 'State/Province/Region',
+        defaultValue: ''
     },
     country: {
         type: String,
         label: 'Country/Region',
-        defaultValue:''
+        defaultValue: ''
     },
     phoneNum: {
         type: String,
         label: 'Contact Phone',
-        defaultValue:''
+        defaultValue: ''
     }
 });
 Schemas.config = new SimpleSchema({
@@ -1509,14 +1562,18 @@ Schemas.config = new SimpleSchema({
     agencyLogo: {
         type: String,
         optional: true,
-        defaultValue: 'default_logo.png',
+        //defaultValue: 'default_logo.png',
+    },
+    weatherAPI: {
+        type: Boolean,
+        optional: true,
     },
     agencyProfile: {
         type: Schemas.agencyProfile,
         defaultValue: {},
         label: 'Organization Profile'
-        //optional: true,
-        //blackbox: true
+            //optional: true,
+            //blackbox: true
     },
     googleAPI: {
         type: String,
@@ -1533,3 +1590,4 @@ Schemas.config = new SimpleSchema({
     },*/
 });
 Config.attachSchema(Schemas.config);
+
