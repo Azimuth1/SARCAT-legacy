@@ -19,13 +19,21 @@
 
   <div class="row">
       <div class="col-md-12 pad2">
--->
+
     <nav class="navbar default-bg rad0 mar1yb">
         <div class="container-fluid pad0">
-            <!--
+           
             <h4 class="white nav-title "><strong class="text-uppercase">{{record.recordInfo.name}}</strong> <small><span class="white">Prepared By: <strong> <em>{{record.admin.user}} </em></strong></span> | <span class="white">Created: <strong> <em>{{record.created}}</em></strong></span></small>
             </h4>
--->
+
+
+        </div>
+    </nav>
+    -->
+    <div id="formPage">
+
+
+
             <table class="recordRecordInfoTable table table-bordered mar00">
                 <thead>
                     <tr>
@@ -81,9 +89,10 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-    </nav>
-    <div id="formPage">
+
+
+
+
         <div class="text-center mar0">
             {{#each schemas}}
                 <button type="button" data="{{this.field}}" class="formNav btn-default btn mar1yb pad0 {{this.klass}}">{{this.field}}
