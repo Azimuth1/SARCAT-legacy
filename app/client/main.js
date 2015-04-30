@@ -54,10 +54,17 @@ boundsString2Array = function (bounds) {
 setMap = function (context, bounds, agencyMapComplete) {
     var map = L.map(context, {});
     var layers = {
+        OSM: L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+        Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
+        Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
+    };
+    /*var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
-    };
+    };*/
+
+
     layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
@@ -482,7 +489,7 @@ formSetMap = function (context, recordId) {
                     }
                 });
                 Meteor.call('setElevation', record._id, function (err, d) {
-                    console.log('elevation: ' + d);
+                    console.log('weather: '+err.message);
                     if (err) {
                         return console.log(err);
                     }

@@ -201,7 +201,10 @@ Meteor.methods({
         var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
         var result = pip(coord);
-        var val = result[0] ? result[0].properties : {};
+        if (!result || !result.length) {
+            return result;
+        }
+        var val = result[0].properties;
         var ecoregiondomain = val.DOM_DESC ? val.DOM_DESC : null;
         var ecoregionDivision = (val.DIV_NUM && val.DIV_DESC) ? (val.DIV_NUM + '-' + val.DIV_DESC) : null;
         Records.update(id, {
@@ -210,7 +213,7 @@ Meteor.methods({
                 'incident.ecoregionDivision': ecoregionDivision
             }
         });
-        return val;
+        return result;
     },
     setWeather: function (id) {
         var record = Records.findOne(id);
@@ -231,11 +234,17 @@ Meteor.methods({
         var dateTime = [date, time].join('');
         var latlngDate = [latlng, dateTime].join(',');
         var units = (record.measureUnits === 'Metric') ? 'units=si' : 'units=us';
-        var url = 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/';
+        var url = 'http://api.forecast.io/forecast/'+Meteor.settings.private.forecastAPI+'/';
         url += latlngDate + '?';
         url += units;
         var result = HTTP.get(url);
-        var data = JSON.parse(result.content);
+        if (!result.data) {
+            return;
+        }
+        var data = result.data;
+        if (!data.daily || !data.daily.data.length) {
+            return;
+        }
         var dailyData = data.daily.data[0];
         _.each(dailyData, function (d, name) {
             var obj = {};
@@ -315,13 +324,18 @@ Meteor.methods({
         if (!coord1 || !coord2) {
             return false;
         }
-        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + Config.findOne()
-            .googleAPI;
+        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + Meteor.settings.private.googleAPI;
         var result = HTTP.get(url);
-        result = JSON.parse(result.content)
-            .results;
-        var _coord1 = result[0].elevation;
-        var _coord2 = result[1].elevation;
+        var data = result.data;
+        if (!data) {
+            return;
+        }
+        var results = data.results;
+        if (!results || !results.length) {
+            return;
+        }
+        var _coord1 = results[0].elevation;
+        var _coord2 = results[1].elevation;
         if (!_coord1 || !_coord2) {
             return;
         }
@@ -334,7 +348,7 @@ Meteor.methods({
                 'incidentOutcome.elevationChange': val
             }
         });
-        return val;
+        return result;
     },
     setDistance: function (id) {
         var haversine = function (start, end, options) {
@@ -394,8 +408,7 @@ Meteor.methods({
             }
         });
         var coord1 = record.coords.ippCoordinates;
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Config.findOne()
-            .googleAPI;
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Meteor.settings.private.googleAPI;
         console.log(url)
         var result = HTTP.get(url);
         console.log(JSON.parse(result.content));

@@ -2,28 +2,16 @@ var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
-var config;
-/*
-geojson.features=[geojson.features[99]]
-console.log(pip([132.0927,44.8397],geojson));
-
-
-var gjLayer = L.geoJson(geojson);
-results = leafletPip.pointInLayer([132.0927,44.8397], gjLayer);
-console.log(results)
-*/
-$("img")
-    .error(function () {
-        $(this)
-            .hide();
-        // or $(this).css({visibility:"hidden"}); 
-    });
-Template.appBody.onCreated(function () {});
+settings = Meteor.settings.public;
+Template.appBody.onCreated(function () {
+    // console.log(Meteor.settings.public)
+    //settings = Meteor.settings.public;
+    //config = Meteor.settings.public.config
+});
 Template.appBody.onRendered(function () {
     Tracker.autorun(function () {
         var config = Config.findOne();
         if (config) {
-            c = config;
             Session.set('config', config);
             document.getElementById('agencyLogo')
                 .src = 'uploads/logo/' + config.agencyLogo;
@@ -77,7 +65,6 @@ Template.appBody.helpers({
     }
 });
 Template.appBody.events({
-
     'click .content-overlay': function (event) {
         Session.set(MENU_KEY, false);
         event.preventDefault();

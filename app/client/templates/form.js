@@ -619,8 +619,9 @@ Template.form.events({
     },
     'click #weatherBtn': function (event, template) {
         Meteor.call('setWeather', record._id, function (err, d) {
-            console.log('weather: ' + d);
+            console.log(d);
             if (err) {
+                console.log(err);
                 Meteor.call('updateConfig', {
                     weatherAPI: false
                 }, function (err, d) {})
@@ -633,7 +634,6 @@ Template.form.events({
         });
     },
     'change [name="incidentOutcome.lkp_pls_Boolean"]': function (event) {
-        console.log(this)
         var val = event.target.value;
         console.log(val);
         var item = {

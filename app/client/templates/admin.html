@@ -14,7 +14,7 @@
                     </h3>
                     </div>
                     <div class="panel-body afBody">
-                        {{#autoForm collection='Config' doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2"}} {{> afQuickField name="agencyProfile.organization"}} {{> afQuickField name="agencyProfile.phoneNum"}} {{> afQuickField name="agencyProfile.country"}} {{> afQuickField name="agencyProfile.address"}} {{> afQuickField name="agencyProfile.city"}} {{> afQuickField name="agencyProfile.state-region"}}
+                        {{#autoForm collection='Config' resetOnSuccess=false doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2"}} {{> afQuickField name="agencyProfile.organization"}} {{> afQuickField name="agencyProfile.phoneNum"}} {{> afQuickField name="agencyProfile.country"}} {{> afQuickField name="agencyProfile.address"}} {{> afQuickField name="agencyProfile.city"}} {{> afQuickField name="agencyProfile.state-region"}}
                         <div class="col-md-12 pad00">
                             <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
                         </div>
@@ -35,7 +35,13 @@
                         <span class="btn text-danger deleteLogo btn-xs">
                                     <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span> {{/if}} {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
                     </div>
-                    {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="recordForm2"}} {{> afQuickField name="googleAPI" }} {{> afQuickField name="forecastAPI" }} {{> afQuickField name="measureUnits"}}
+                    {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="recordForm2"}} 
+
+
+                    {{> afQuickField name="googleAPI" }} 
+                    {{> afQuickField name="forecastAPI" }} 
+
+                    {{> afQuickField name="measureUnits"}}
                     <div class="col-md-12 pad00">
                         <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
                     </div>
