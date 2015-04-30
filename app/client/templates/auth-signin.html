@@ -6,24 +6,24 @@
             </div>
         </nav>
         <div class="content-scrollable">
+            <!--<img src="/icon.png" style="width:100%">-->
             <div class="wrapper-auth">
-                    <h1 class="title-auth">SARCAT</h1>
-                    <p class="subtitle-auth">Search & Rescue Incident Database & Analysis</p>
-              
+                <h1 class="title-auth">SARCAT</h1>
+                <p class="subtitle-auth">Search & Rescue Incident Database & Analysis</p>
                 <form>
                     {{#if errorMessages}}
-                        <div class="list-errors">
-                            {{#each errorMessages}}
-                                <div class="list-item">{{this}}</div>
-                            {{/each}}
-                        </div>
+                    <div class="list-errors">
+                        {{#each errorMessages}}
+                        <div class="list-item">{{this}}</div>
+                        {{/each}}
+                    </div>
                     {{/if}}
                     <div class="input-symbol {{errorClass 'email'}}">
-                        <input type="email" name="email" placeholder="Your Email" value="admin@sarcat"/>
+                        <input type="email" name="email" placeholder="Your Email" value="admin@sarcat" />
                         <span class="tmp icon-email" title="Your Email"></span>
                     </div>
                     <div class="input-symbol {{errorClass 'password'}}">
-                        <input type="password" name="password" placeholder="Password" value="admin"/>
+                        <input type="password" name="password" placeholder="Password" value="admin" />
                         <span class="tmp icon-lock" title="Password"></span>
                     </div>
                     <button type="submit" class="btn-primary btn-pad">Sign in</button>
@@ -31,5 +31,20 @@
             </div>
             <a href="{{pathFor 'join'}}" class="link-auth-alt">Need an account? Join Now.</a>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     </div>
 </template>

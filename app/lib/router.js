@@ -138,6 +138,7 @@ Router.route('admin', {
         }
     }
 });*/
+Router.route('appLoading');
 Router.route('profiles');
 Router.route('about');
 Router.route('form', {

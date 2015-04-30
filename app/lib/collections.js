@@ -1499,9 +1499,14 @@ Schemas.agencyProfile = new SimpleSchema({
         label: 'Organization Name',
         defaultValue: ''
     },
+    country: {
+        type: String,
+        label: 'Country/Region',
+        defaultValue: ''
+    },
     address: {
         type: String,
-        label: 'Address',
+        label: 'Street',
         defaultValue: ''
     },
     'city': {
@@ -1514,14 +1519,9 @@ Schemas.agencyProfile = new SimpleSchema({
         label: 'State/Province/Region',
         defaultValue: ''
     },
-    country: {
-        type: String,
-        label: 'Country/Region',
-        defaultValue: ''
-    },
     phoneNum: {
         type: String,
-        label: 'Contact Phone',
+        label: 'Phone Number',
         defaultValue: ''
     }
 });
@@ -1540,11 +1540,17 @@ Schemas.config = new SimpleSchema({
         label: 'Preferred Unit of Measurement',
         defaultValue: 'US',
         autoform: {
-            firstOption: function () {
-                return "--";
-            }
+            type: "select-radio-inline",
+            options: function () {
+                return [{
+                    label: "US",
+                    value: "US"
+                }, {
+                    label: "Metric",
+                    value: "Metric"
+                }];
+            },
         },
-        allowedValues: ['Metric', 'US'],
     },
     agencyProfileComplete: {
         type: Boolean,

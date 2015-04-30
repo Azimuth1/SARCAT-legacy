@@ -10,86 +10,69 @@
                         <p class="small"><em>*Drag Icon to Incident Location/IPP or enter coordinates below</em></p>
                     </div>
                     <div id='recordMap' style="width:100%;height:400px"></div>
-
-                    {{#if modal}}
-                        {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" }}
-                            {{> afQuickField name='coords.ippCoordinates' }} {{> afQuickField name='recordInfo'}}
-
-                            <div class="form-group modal-footer">
-                                <button type="reset" class="btn btn-default pull-left">Reset Form</button>
-                                <button data-dismiss="modal" class="btn btn-default pull-left">Cancel</button>
-
-                                <button id="saveNewRecord" type="submit" class="btn btn-primary">Add Record</button>
-
-                            </div>
-                        {{/autoForm}}
-                    {{/if}}
+                    {{#if modal}} {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" }} {{> afQuickField name='coords.ippCoordinates' }} {{> afQuickField name='recordInfo'}}
+                    <div class="form-group modal-footer">
+                        <button type="reset" class="btn btn-default pull-left">Reset Form</button>
+                        <button data-dismiss="modal" class="btn btn-default pull-left">Cancel</button>
+                        <button id="saveNewRecord" type="submit" class="btn btn-primary">Add Record</button>
+                    </div>
+                    {{/autoForm}} {{/if}}
                 </div>
-
             </div>
         </div>
     </div>
-    <nav class="navbar default-bg rad0 mar00">
-        <div class="container-fluid">
-
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand white" href="#">SARCAT Records</a> </div>
-
-            <div class="collapse navbar-collapse">
-                <ul class="nav nav-tabs navbar-nav" role="tablist">
-                    <li role="presentation" class="active"><a href="#records" aria-controls="home" role="tab" data-toggle="tab" class="white">All Records</a> </li>
-                    <li role="presentation"><a href="#recordStats" aria-controls="profile" role="tab" data-toggle="tab" class="white recordStats">Record Stats</a> </li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <div class="mar1y h3">{{config.agencyProfile.organization}} </div>
-                </ul>
-            </div>
-
-        </div>
-    </nav>
+    <ul class="nav nav-tabs bg-grey" role="tablist">
+        <li role="presentation" class="active"><a href="#records" aria-controls="home" role="tab" data-toggle="tab" class="white">List</a> </li>
+        <li role="presentation"><a href="#recordStats" aria-controls="profile" role="tab" data-toggle="tab" class="white recordStats">Map</a> </li>
+    </ul>
     <div class="tab-content admin">
         <div role="tabpanel" class="tab-pane active pad0" id="records">
             <div class="afTablePane">
-                <div class="col-md-12 text-left">
-                    <p class="small"><em>*Click column header to sort</em></p>
-                </div>
+               
                 {{#if createNewBtn}}
-                    <div id="toolbar" class="btn-group">
-                        <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
-                            <i class="glyphicon glyphicon-plus"></i> New Record
-                        </button>
-                    </div>
-                    {{#if isAdmin}}
-                        <div id="toolbar" class="btn-group pull-right">
-                            <button id="downloadRecords" type="button" class="btn btn-default">
-                                <i class="glyphicon glyphicon-save-file"></i> Download
-                            </button>
-                            <button type="button" class="btn btn-default" style="margin-y=-12px">
-                                <!--<i class="glyphicon glyphicon-cloud-upload"></i>-->
-                             <img src="images/isridSmall.jpg" height="32px" onerror='this.style.display = "none"'> Export
-                            </button>
-                        </div>
-                        <div id="toolbar" class="btn-group pull-right">
-                            {{#if selectedRecords}}
-                                <button type="button" class="btn btn-default deleteRecord">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                </button>
-                            {{/if}}
-                        </div>
+                <div id="toolbar" class="btn-group">
+                    <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
+                        <i class="glyphicon glyphicon-plus"></i> New Record
+                    </button>
+                </div>
+                {{#if isAdmin}}
+
+
+
+
+                <div id="toolbar" class="btn-group pull-right">
+                    <button id="downloadRecords" type="button" class="btn btn-default">
+                        <i class="glyphicon glyphicon-save-file"></i> Download
+                    </button>
+                    <button type="button" class="btn btn-default" style="margin-y=-12px">
+                    
+                        Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
+                    </button>
+                </div>
+
+
+
+                <div id="toolbar" class="btn-group pull-right">
+
+
+                    {{#if selectedRecords}}
+                    <button type="button" class="btn btn-default deleteRecord">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
                     {{/if}}
-                {{/if}}
+                </div>
 
 
 
 
+                {{/if}} 
 
-
+                {{/if}} 
 
 
 
                 {{#unless tableHide}}
-
+               
                 <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
                         <tr>
@@ -98,7 +81,6 @@
                             <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
                             <th data-field="name" data-sortable="true" class='afTable'>Record Name</th>
                             <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
-
                             <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Created Date</th>
                             <th data-field="date" data-sortable="true" class='afTable'>Incident Date</th>
@@ -107,37 +89,27 @@
                     </thead>
                     <tbody class='white-bg'>
                         {{#if noRecords}}
-                            <tr>
-                                <td colspan="9" class="text-center text-default">Create a new Record to Begin!</td>
-                            </tr>
-                        {{/if}}
-                        {{#each allRecords}}
-                            <tr class="openRecord text-center" id="{{this._id}}">
-                                <td></td>
-                                <td>{{recordInfo.incidentnum}}</td>
-                                <td>{{recordInfo.missionnum}}</td>
-                                <td>{{recordInfo.name}}</td>
-                                <td>{{recordInfo.incidenttype}}</td>
-                                <td>{{admin.user}}</td>
-                                <td>{{toDateString created}}</td>
-                                <td>{{toDateString recordInfo.incidentdate}}</td>
-                                <td>{{recordInfo.status}}</td>
-
-                            </tr>
+                        <tr>
+                            <td colspan="9" class="text-center text-default">Create a new Record to Begin!</td>
+                        </tr>
+                        {{/if}} {{#each allRecords}}
+                        <tr class="openRecord text-center" id="{{this._id}}">
+                            <td></td>
+                            <td>{{recordInfo.incidentnum}}</td>
+                            <td>{{recordInfo.missionnum}}</td>
+                            <td>{{recordInfo.name}}</td>
+                            <td>{{recordInfo.incidenttype}}</td>
+                            <td>{{admin.user}}</td>
+                            <td>{{toDateString created}}</td>
+                            <td>{{toDateString recordInfo.incidentdate}}</td>
+                            <td>{{recordInfo.status}}</td>
+                        </tr>
                         {{/each}}
                     </tbody>
                 </table>
+                 <span class="small pull-right"><em>*Click column header to sort</em></span>
+                 
                 {{/unless}}
-
-
-
-
-
-
-
-
-
-
             </div>
         </div>
         <div role="tabpanel" class="tab-pane pad0 scroll" id="recordStats">
@@ -154,4 +126,3 @@
         </div>
     </div>
 </template>
-

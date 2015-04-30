@@ -22,7 +22,7 @@ Template.admin.helpers({
                 return d;
             }))
             .length;
-        return done ? '' : 'afPanel warning';
+        return done ? '' : 'afPanel warning mar00 noBorder';
     },
 
     configs: function () {
