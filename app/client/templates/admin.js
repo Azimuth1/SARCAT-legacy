@@ -1,4 +1,3 @@
-var config;
 var map;
 Template.admin.created = function () {
     Session.set('userView', 'admin');
@@ -17,14 +16,13 @@ Template.admin.rendered = function () {
 };
 Template.admin.helpers({
     profileIncomplete: function () {
-        var config = Config.findOne();
+        var config = Session.get('config');
         var done = _.compact(_.map(config.agencyProfile, function (d) {
                 return d;
             }))
             .length;
         return done ? '' : 'afPanel warning mar00 noBorder';
     },
-
     configs: function () {
         return Config.findOne();
     },
@@ -75,8 +73,8 @@ Template.admin.events({
             return;
         }
         Meteor.call('removeLogo', function (err) {
-                console.log(err);
-            });
+            console.log(err);
+        });
         Meteor.call('updateConfig', {
             agencyLogo: ''
         }, function (err) {
@@ -97,25 +95,6 @@ Template.admin.events({
             return;
         }
     },
-    'click button[type="submit"]': function (event, template) {
-        //  e=event;return
-        //$(event.target).after('<span class="btn text-success">Saved</span>')
-    },
-    /*'click .adminMap': function (event, template) {
-        template.$('a[data-toggle="tab"][href="#adminMapTab"]')
-            .on('shown.bs.tab', function (e) {
-                if (mapDrawn) {
-                    return;
-                }
-                var config = Config.findOne();
-                var agencyMapComplete = config.agencyMapComplete;
-                var agencyProfile = config.agencyProfile;
-                var bounds = agencyProfile.bounds;
-                var newBounds = boundsString2Array(bounds);
-                mapDrawn = setMap('adminMap', newBounds, agencyMapComplete);
-
-            });
-    },*/
     'change .adminUserRoles': function (event) {
         var user = this._id;
         var val = $('input[name="role_' + user + '"]:checked')

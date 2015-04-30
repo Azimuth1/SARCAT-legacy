@@ -1336,19 +1336,6 @@ Schemas.formEditions = new SimpleSchema({
     'incidentOutcome.$': {
         type: String
     },
-    /*medical: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },allowedValues: Schemas.medical._firstLevelSchemaKeys,
-        defaultValue: Schemas.medical._firstLevelSchemaKeys,
-        label: 'medical',
-    },
-    'medical.$': {
-        type: String
-    },*/
     rescueDetails: {
         type: Array,
         autoform: {
@@ -1543,10 +1530,10 @@ Schemas.config = new SimpleSchema({
             type: "select-radio-inline",
             options: function () {
                 return [{
-                    label: "US",
+                    label: "Imperial (miles,feet,°F)",
                     value: "US"
                 }, {
-                    label: "Metric",
+                    label: "Metric (kilometers,meters,°C)",
                     value: "Metric"
                 }];
             },
@@ -1568,7 +1555,6 @@ Schemas.config = new SimpleSchema({
     agencyLogo: {
         type: String,
         optional: true,
-        //defaultValue: 'default_logo.png',
     },
     weatherAPI: {
         type: Boolean,
@@ -1578,22 +1564,17 @@ Schemas.config = new SimpleSchema({
         type: Schemas.agencyProfile,
         defaultValue: {},
         label: 'Organization Profile'
-            //optional: true,
-            //blackbox: true
     },
     googleAPI: {
         type: String,
         label: 'Google API Key',
-        defaultValue: 'AIzaSyDNWoPzOFwqV3F0Z7AFCuFUvENFbwjkaVs'
+        optional: true
     },
     forecastAPI: {
         type: String,
         label: 'Forecast API Key',
-        defaultValue: 'f3da6c91250a43b747f7ace5266fd1a4'
+        optional: true
     },
-    /*formEditions: {
-        type: Schemas.formEditions,
-    },*/
 });
 Config.attachSchema(Schemas.config);
 

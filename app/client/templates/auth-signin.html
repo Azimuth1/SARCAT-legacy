@@ -30,6 +30,14 @@
                 </form>
             </div>
             <a href="{{pathFor 'join'}}" class="link-auth-alt">Need an account? Join Now.</a>
+
+            {{#if production}}
+  {{Meteor.settings.public.productionStripePublishableKey}}
+{{else}}
+  {{Meteor.settings.public.stagingStripePublishableKey}}
+{{/if}}
+
+
         </div>
 
 

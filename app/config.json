@@ -1,0 +1,9 @@
+{
+    "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "MapQuest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
+    "MapQuest Arial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg",
+    "MapBox Streets": "https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png",
+    "MapBox Outdoors": "https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png",
+    "MapBox Satellite": "https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png"
+}
+
