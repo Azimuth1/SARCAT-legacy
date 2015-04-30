@@ -10,6 +10,7 @@ Template.records.onCreated(function (a) {
     });
 })
 Template.records.onRendered(function () {
+
     drawn = false;
     if (Records.find()
         .count()) {
@@ -18,6 +19,8 @@ Template.records.onRendered(function () {
     }
     Session.set('userView', 'records');
     var config = Config.findOne();
+
+  
     var agencyProfile = config.agencyProfile;
     var bounds = config.bounds;
     var newBounds = boundsString2Array(bounds);
@@ -26,8 +29,7 @@ Template.records.onRendered(function () {
         "text": "Incident Location"
     });
     $('#createRecordModal')
-
-        .on('hidden.bs.modal', function (e) {
+    .on('hidden.bs.modal', function (e) {
             Session.set('modal', false);
             $('.recordTable')
                 .bootstrapTable();
@@ -255,7 +257,6 @@ AutoForm.hooks({
             Session.set('tableHide', false);
         },
         onSuccess: function (formType, result) {
-
             /*$('.recordTable')
                 .bootstrapTable('destroy');*/
             //Meteor._reload.reload();
@@ -268,4 +269,3 @@ AutoForm.hooks({
         },
     }
 });
-
