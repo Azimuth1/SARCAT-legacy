@@ -24,7 +24,7 @@ Router.configure({
             Router.go('adminSetup');
         } else{
             if(! Meteor.user()){
-                Router.go('signin');
+                //Router.go('signin');
             }
         }
         this.next();
