@@ -1,3 +1,4 @@
+console.log('collections.js');
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
 Records.lastRecord = function (type) {
@@ -1488,7 +1489,7 @@ Schemas.agencyProfile = new SimpleSchema({
     },
     country: {
         type: String,
-        label: 'Country/Region',
+        label: 'Country',
         defaultValue: ''
     },
     address: {
@@ -1503,7 +1504,7 @@ Schemas.agencyProfile = new SimpleSchema({
     },
     'state-region': {
         type: String,
-        label: 'State/Province/Region',
+        label: 'State/Region',
         defaultValue: ''
     },
     phoneNum: {
@@ -1530,10 +1531,12 @@ Schemas.config = new SimpleSchema({
             type: "select-radio-inline",
             options: function () {
                 return [{
-                    label: "Imperial (miles,feet,°F)",
+                    //label: "Imperial (miles,feet,°F)",
+                    label: "US/Imperial",
                     value: "US"
                 }, {
-                    label: "Metric (kilometers,meters,°C)",
+                    //label: "Metric (kilometers,meters,°C)",
+                    label:'Metric',
                     value: "Metric"
                 }];
             },

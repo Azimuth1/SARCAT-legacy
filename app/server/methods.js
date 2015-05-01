@@ -216,6 +216,10 @@ Meteor.methods({
         return result;
     },
     setWeather: function (id) {
+        var forecastAPI = Meteor.settings.private.forecastAPI;
+        if (!forecastAPI) {
+            return;
+        }
         var record = Records.findOne(id);
         Records.update(id, {
             $set: {
@@ -234,7 +238,7 @@ Meteor.methods({
         var dateTime = [date, time].join('');
         var latlngDate = [latlng, dateTime].join(',');
         var units = (record.measureUnits === 'Metric') ? 'units=si' : 'units=us';
-        var url = 'http://api.forecast.io/forecast/'+Meteor.settings.private.forecastAPI+'/';
+        var url = 'http://api.forecast.io/forecast/' + forecastAPI + '/';
         url += latlngDate + '?';
         url += units;
         var result = HTTP.get(url);
@@ -313,6 +317,10 @@ Meteor.methods({
         return val;
     },
     setElevation: function (id) {
+        var googleAPI = Meteor.settings.private.googleAPI;
+        if (!googleAPI) {
+            return;
+        }
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
@@ -324,7 +332,7 @@ Meteor.methods({
         if (!coord1 || !coord2) {
             return false;
         }
-        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + Meteor.settings.private.googleAPI;
+        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + googleAPI;
         var result = HTTP.get(url);
         var data = result.data;
         if (!data) {
@@ -399,6 +407,10 @@ Meteor.methods({
         return val;
     },
     setLocale: function (id) {
+        var googleAPI = Meteor.settings.private.googleAPI;
+        if (!googleAPI) {
+            return;
+        }
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
@@ -408,7 +420,7 @@ Meteor.methods({
             }
         });
         var coord1 = record.coords.ippCoordinates;
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + Meteor.settings.private.googleAPI;
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord1.lat + ',' + coord1.lng + '&sensor=false&key=' + googleAPI;
         console.log(url)
         var result = HTTP.get(url);
         console.log(JSON.parse(result.content));
@@ -472,4 +484,3 @@ Meteor.users.allow({
         }
     }
 });
-

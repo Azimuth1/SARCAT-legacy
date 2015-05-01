@@ -21,59 +21,36 @@
             </div>
         </div>
     </div>
-    <ul class="nav nav-tabs bg-grey" role="tablist">
+    <ul class="nav nav-tabs navyBLue-bg" role="tablist">
         <li role="presentation" class="active"><a href="#records" aria-controls="home" role="tab" data-toggle="tab" class="white">List</a> </li>
         <li role="presentation"><a href="#recordStats" aria-controls="profile" role="tab" data-toggle="tab" class="white recordStats">Map</a> </li>
+        <div id="toolbar" class="btn-group pull-right mar0y">
+            <button id="downloadRecords" type="button" class="btn btn-default">
+                <i class="glyphicon glyphicon-save-file"></i> Download
+            </button>
+            <button type="button" class="btn btn-default" style="margin-y=-12px">
+                Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
+            </button>
+        </div>
+        {{#if createNewBtn}}
+        <button type="button" class="btn btn-primary pull-right mar0" data-target="#createRecordModal" data-toggle="modal">
+            <i class="glyphicon glyphicon-plus"></i> New Record
+        </button>
+        {{/if}}
     </ul>
     <div class="tab-content admin">
         <div role="tabpanel" class="tab-pane active pad0" id="records">
             <div class="afTablePane">
-               
-                {{#if createNewBtn}}
-                <div id="toolbar" class="btn-group">
-                    <button type="button" class="js-newRecord btn btn-default" data-target="#createRecordModal" data-toggle="modal">
-                        <i class="glyphicon glyphicon-plus"></i> New Record
-                    </button>
-                </div>
                 {{#if isAdmin}}
-
-
-
-
                 <div id="toolbar" class="btn-group pull-right">
-                    <button id="downloadRecords" type="button" class="btn btn-default">
-                        <i class="glyphicon glyphicon-save-file"></i> Download
-                    </button>
-                    <button type="button" class="btn btn-default" style="margin-y=-12px">
-                    
-                        Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
-                    </button>
-                </div>
-
-
-
-                <div id="toolbar" class="btn-group pull-right">
-
-
                     {{#if selectedRecords}}
                     <button type="button" class="btn btn-default deleteRecord">
                         <i class="glyphicon glyphicon-trash"></i>
                     </button>
                     {{/if}}
                 </div>
-
-
-
-
-                {{/if}} 
-
-                {{/if}} 
-
-
-
-                {{#unless tableHide}}
-               
-                <table class="recordTable pointer table table-hover table-bordered table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
+                {{/if}}{{#unless tableHide}}
+                <table class="recordTable pointer table table-hover table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
                     <thead class='default-bg'>
                         <tr>
                             <th data-field="state" data-checkbox="true"></th>
@@ -107,9 +84,7 @@
                         {{/each}}
                     </tbody>
                 </table>
-                 <span class="small pull-right"><em>*Click column header to sort</em></span>
-                 
-                {{/unless}}
+                <span class="small pull-right"><em>*Click column header to sort</em></span> {{/unless}}
             </div>
         </div>
         <div role="tabpanel" class="tab-pane pad0 scroll" id="recordStats">

@@ -1,6 +1,4 @@
-//State/Province/Region
-//COunty/District
-
+console.log('main.js');
 labelUnits = function (currentUnit, type) {
     var unitType = {
         height: {
@@ -63,8 +61,6 @@ setMap = function (context, bounds, agencyMapComplete) {
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
     };*/
-
-
     layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
@@ -299,28 +295,25 @@ formSetMap = function (context, recordId) {
             coords[val] = d;
             obj.addPoint(d);
         }
-        if (val === 'intendedRoute') {
+        if (val === 'intendedRoute' || val === 'actualRoute') {
             coords[d.val] = d;
             if (d.coords) {
                 obj.addPoly(d, JSON.parse(d.coords));
                 return;
             }
             var start = coords.ippCoordinates.layer.getLatLng();
-            var end = (coords.destinationCoord) ? coords.destinationCoord.layer.getLatLng() : map.getCenter();
-            var latlngs = [
-                [start.lat, start.lng],
-                [end.lat, end.lng]
-            ];
-            obj.addPoly(d, latlngs);
-        }
-        if (val === 'actualRoute') {
-            coords[d.val] = d;
-            if (d.coords) {
-                obj.addPoly(d, JSON.parse(d.coords));
-                return;
+            var end;
+            if (coords.destinationCoord) {
+                end = coords.destinationCoord.layer.getLatLng()
+            } else {
+                var ne = map.getBounds()
+                    ._northEast;
+                var center = map.getCenter();
+                end = {
+                    lat: center.lat,
+                    lng: (center.lng + (ne.lng - center.lng) / 2)
+                }
             }
-            var start = coords.ippCoordinates.layer.getLatLng();
-            var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : map.getCenter();
             var latlngs = [
                 [start.lat, start.lng],
                 [end.lat, end.lng]
@@ -431,13 +424,13 @@ formSetMap = function (context, recordId) {
             markerColor: d.color,
             iconColor: '#fff',
         });
-       /* if (d.name === "coords.ippCoordinates") {
-            var myIcon = L.divIcon({
-                iconSize: [50, 50],
-                iconAnchor: [25, 25],
-                className: 'fa ' + d.icon + ' fa-5x fa-fw _pad1 text-danger'
-            });
-        }*/
+        /* if (d.name === "coords.ippCoordinates") {
+             var myIcon = L.divIcon({
+                 iconSize: [50, 50],
+                 iconAnchor: [25, 25],
+                 className: 'fa ' + d.icon + ' fa-5x fa-fw _pad1 text-danger'
+             });
+         }*/
         var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
         marker = L.marker(_coords, {
             draggable: draggable,
@@ -472,13 +465,13 @@ formSetMap = function (context, recordId) {
                     }
                 });
                 Meteor.call('setDistance', record._id, function (err, d) {
-                    console.log('distance: ' + d);
+                    console.log(d);
                     if (err) {
                         return console.log(err);
                     }
                 });
                 Meteor.call('setFindBearing', record._id, function (err, d) {
-                    console.log('bearing: ' + d);
+                    console.log(d);
                     if (err) {
                         return console.log(err);
                     }
@@ -489,7 +482,7 @@ formSetMap = function (context, recordId) {
                     }
                 });
                 Meteor.call('setElevation', record._id, function (err, d) {
-                    console.log('weather: '+err.message);
+                    console.log(d);
                     if (err) {
                         return console.log(err);
                     }

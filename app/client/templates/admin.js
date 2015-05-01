@@ -3,8 +3,7 @@ Template.admin.created = function () {
     Session.set('userView', 'admin');
 };
 Template.admin.rendered = function () {
-    var config = Session.get('config');
-    var bounds = config.bounds;
+    var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
     map = setMap('adminMap', newBounds);
     this.data.users.forEach(function (d) {
@@ -16,15 +15,15 @@ Template.admin.rendered = function () {
 };
 Template.admin.helpers({
     profileIncomplete: function () {
-        var config = Session.get('config');
-        var done = _.compact(_.map(config.agencyProfile, function (d) {
+        var agencyProfile = Session.get('agencyProfile');
+        var done = _.compact(_.map(agencyProfile, function (d) {
                 return d;
             }))
             .length;
         return done ? '' : 'afPanel warning mar00 noBorder';
     },
     configs: function () {
-        return Config.findOne();
+        return Session.get('config');
     },
     userEmail: function () {
         return this.emails[0].address;
@@ -60,6 +59,11 @@ Template.admin.helpers({
                     agencyLogo: fileInfo.name
                 }, function (err) {
                     console.log(err);
+                    var config = Session.get('config');
+                    document.getElementById('agencyLogo')
+                        .src = 'uploads/logo/' + config.agencyLogo;
+                    document.getElementById('agencyLogo')
+                        .style.display = 'inline';
                     //Meteor._reload.reload();
                 });
             }
@@ -125,4 +129,3 @@ var hooksObject = {
     }
 }
 AutoForm.addHooks(['formIdAgencyProfile', 'formIdAgencyMap', 'formIdConfig'], hooksObject);
-

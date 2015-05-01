@@ -1,7 +1,24 @@
+console.log('bootstrap.js');
 Meteor.startup(function () {
-    console.log('boot')
+    console.log('bootstrap-startup');
     var settings = JSON.parse(process.env.METEOR_SETTINGS);
     var environment = process.env.METEOR_ENV || "development";
+    var config = Config.findOne();
+    if (!Meteor.users.find()
+        .count()) {
+        console.log('Creating default admin user.');
+        var admin = Accounts.createUser({
+            email: 'admin@sarcat',
+            password: 'admin',
+            username: 'default'
+        });
+        Roles.addUsersToRoles(admin, ['admin']);
+    }
+    if (!config) {
+        console.log('saving settings.config to mongodb')
+        Config.insert(settings.config);
+    }
+    Meteor.settings.public.config = config || settings.config;
     UploadServer.init({
         tmpDir: process.env.PWD + '/public/uploads/tmp',
         uploadDir: process.env.PWD + '/public/uploads/',
@@ -14,24 +31,8 @@ Meteor.startup(function () {
             }
         },
     });
-    var config = Config.findOne();
-    if (!Meteor.users.find()
-        .count()) {
-        var admin = Accounts.createUser({
-            email: 'admin@sarcat',
-            password: 'admin',
-            username: 'default'
-        });
-        Roles.addUsersToRoles(admin, ['admin']);
-    }
-    if (!config) {
-        Config.insert(settings.config);
-    }
-
-    Meteor.settings.public.config = config || settings.config;
 });
 /*
-
 var _r = Records.find()
     .fetch()
     .map(function (d, i) {
@@ -49,4 +50,3 @@ var _r = Records.find()
     r=_r.map(function(d){  delete d._id;delete d.created;delete d.updated; return d   })
     Records.insert(_r)r.forEach(function(d){   Records.insert(d);})
     */
-
