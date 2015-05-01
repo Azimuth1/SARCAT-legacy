@@ -3,6 +3,12 @@ Template.admin.created = function () {
     Session.set('userView', 'admin');
 };
 Template.admin.rendered = function () {
+    
+    $('label:contains("Forecast API Key")')
+        .append('<span class="forecastio small em mar0y text-default">*Auto calculate weather by getting a key from <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a></span>');
+    var logo = document.getElementById('agencyLogo');
+    logo.src = 'uploads/logo/' + Session.get('logo');
+    logo.style.display = 'inline';
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
     map = setMap('adminMap', newBounds);
@@ -58,13 +64,10 @@ Template.admin.helpers({
                 Meteor.call('updateConfig', {
                     agencyLogo: fileInfo.name
                 }, function (err) {
-                    console.log(err);
-                    var config = Session.get('config');
-                    document.getElementById('agencyLogo')
-                        .src = 'uploads/logo/' + config.agencyLogo;
-                    document.getElementById('agencyLogo')
-                        .style.display = 'inline';
-                    //Meteor._reload.reload();
+                    if (err) {
+                        console.log(err);
+                    }
+                    Meteor._reload.reload();
                 });
             }
         };
@@ -129,3 +132,4 @@ var hooksObject = {
     }
 }
 AutoForm.addHooks(['formIdAgencyProfile', 'formIdAgencyMap', 'formIdConfig'], hooksObject);
+

@@ -5,9 +5,10 @@
         "agencyProfile": {
             "organization": "",
             "country": "",
-            "address": "",
+            "street": "",
             "city": "",
-            "state-region": "",
+            "state-province": "",
+            "county":"",
             "phoneNum": ""
         }
     },

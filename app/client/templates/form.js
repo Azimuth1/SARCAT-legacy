@@ -8,18 +8,31 @@ var map;
 Session.setDefault('subjectTableView', 'Description');
 Template.registerHelper("Schemas", Schemas);
 Template.form.onCreated(function () {
-    Session.set('editRecordInfo', 'list');
+    Session.equals('editRecordInfo', false);
     Session.set('userView', this.data.record._id);
-    config = Config.findOne();
-    agencyProfile = config.agencyProfile;
-    record = this.data.record;
-    Session.set('currentRecord', this.data.record);
-    Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
+    Session.set('record', this.data.record);
+    /*
+  $('body').click(function(e) {
+    var offset = $(this).offset();
+    console.log(e.pageX - offset.left);
+    console.log(e.pageY - offset.top);
+  });
+    */
+    Meteor.call('getFilesInPublicFolder', this.data.record._id, function (err, d) {
         Session.set('fileUploads', d)
     });
 });
 Template.form.onRendered(function () {
-    t = this
+    var record = this.data.record;
+    r = record;
+    var currentUnit = Session.get('measureUnits');
+    var degree = record.incidentOperations.initialDirectionofTravel || 0;
+    var travelBearing = $('.travelDirection');
+    travelBearing.css('-moz-transform', 'rotate(' + degree + 'deg)');
+    travelBearing.css('-webkit-transform', 'rotate(' + degree + 'deg)');
+    travelBearing.css('-o-transform', 'rotate(' + degree + 'deg)');
+    travelBearing.css('-ms-transform', 'rotate(' + degree + 'deg)');
+    /*t = this
     record = this.data.record;
     r = record;
     var degree = (record.incidentOperations && record.incidentOperations.initialDirectionofTravel) ? record.incidentOperations.initialDirectionofTravel : 0;
@@ -34,7 +47,7 @@ Template.form.onRendered(function () {
     Session.set('currentRecord', record);
     var record = this.data.record;
     var currentUnit = record.measureUnits;
-    var units = labelUnits(currentUnit, 'temperature');
+    var units = labelUnits(currentUnit, 'temperature');*/
     /*if (!record.weather || !Object.keys(record.weather)
         .length) {
         Meteor.call('setWeather', record._id, function (err, d) {
@@ -54,39 +67,40 @@ Template.form.onRendered(function () {
             }
         });
     }
-    console.log(record.incidentOutcome)
-    if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
-        Meteor.call('setElevation', record._id, function (err, d) {
-            console.log('elevation: ' + d);
-            if (err) {
-                return console.log(err);
+    /*
+            if (!record.incidentOutcome.elevationChange && record.coords.findCoord) {
+                Meteor.call('setElevation', record._id, function (err, d) {
+                    console.log('elevation: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
             }
-        });
-    }
-    if (!record.incident.country && !record.incident.administrative1) {
-        Meteor.call('setLocale', record._id, function (err, d) {
-            console.log(d);
-            if (err) {
-                return console.log(err);
+            if (!record.incident.country && !record.incident.administrative1) {
+                Meteor.call('setLocale', record._id, function (err, d) {
+                    console.log(d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
             }
-        });
-    }
-    if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
-        Meteor.call('setDistance', record._id, function (err, d) {
-            console.log('distance: ' + d);
-            if (err) {
-                return console.log(err);
+            if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
+                Meteor.call('setDistance', record._id, function (err, d) {
+                    console.log('distance: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
             }
-        });
-    }
-    if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
-        Meteor.call('setFindBearing', record._id, function (err, d) {
-            console.log('bearing: ' + d);
-            if (err) {
-                return console.log(err);
+            if (!record.incidentOutcome.distanceIPP && record.coords.findCoord) {
+                Meteor.call('setFindBearing', record._id, function (err, d) {
+                    console.log('bearing: ' + d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
             }
-        });
-    }
+        */
     $('.subjectRescueRow')
         .each(function () {
             var val = $(this)
@@ -107,7 +121,7 @@ Template.form.onRendered(function () {
             }
         });
     $('label:contains("Subject Category")')
-        .append('<span class="small em mar0y text-default"><a class="em" href="/profiles" target="newwindow"}}">*See Descriptions</span>');
+        .append('<span class="small em mar0y text-default"><a class="em" href="/profiles" target="_blank"}}">*See Descriptions</span>');
     $('[name="weather.temperatureMax"]')
         .prev()
         .append(' (' + labelUnits(currentUnit, 'temperature') + ')');
@@ -138,10 +152,10 @@ Template.form.onRendered(function () {
         .next()
         .prepend('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
     */
-    var coords = record.coords;
-    var bounds = coords.bounds;
-    var mapBounds = coords.bounds ? coords.bounds : config.bounds;
-    mapBounds = boundsString2Array(mapBounds);
+    var coords = this.data.record.coords;
+    // var bounds = Session.get('bounds')
+    // var mapBounds = coords.bounds ? coords.bounds : config.bounds;
+    // mapBounds = boundsString2Array(mapBounds);
     map = formSetMap('formMap', record._id);
     var coords = getCoords(record);
     coords.forEach(function (d) {
@@ -159,6 +173,8 @@ Template.form.onRendered(function () {
 });
 Template.form.helpers({
     toDateString: function (date) {
+        return;
+        console.log(date)
         if (!date) {
             return;
         }
@@ -200,10 +216,10 @@ Template.form.helpers({
     currentRecord: function () {
         return Session.get('currentRecord');
     },
-    hasDecisionPoint: function () {
+    /*hasDecisionPoint: function () {
         var record = this.record;
         return record.coords && record.coords.decisionPointCoord;
-    },
+    },*/
     hasRevisedPLS: function () {
         var record = this.record;
         return record.coords && record.coords['revisedLKP_PLS'];
@@ -263,14 +279,14 @@ Template.form.helpers({
     test: function () {
         return this.record.coords;
     },
-    coordKeys: function () {
+    /*coordKeys: function () {
         var coords = ["ippCoordinates", "decisionPointCoord", "destinationCoord", "findCoord", "revisedLKP_PLS"];
         //var activeCoords = Object.keys(this.record.coords);
         //coords = _.intersection(coords, activeCoords)
         return coords.map(function (d) {
             return 'coords.' + d
         }); //.join(',');
-    },
+    },*/
     hideCoord: function (d) {
         return this.record.coords[d] ? '' : 'hide';
     },
@@ -618,18 +634,52 @@ Template.form.events({
         }
     },
     'click #weatherBtn': function (event, template) {
-        Meteor.call('setWeather', record._id, function (err, d) {
+        Meteor.call('setWeather', Session.get('record')
+            ._id,
+            function (err, d) {
+                console.log(d);
+                if (err) {
+                    console.log(err);
+                    Meteor.call('updateConfig', {
+                        weatherAPI: false
+                    }, function (err, d) {})
+                    $(event.target)
+                        .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
+                    return console.log(err);
+                } else {
+                    //$(event.target).replaceWith('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>');
+                }
+            });
+    },
+    'click #mapCalcBtn': function (event, template) {
+        var record = Session.get('record');
+        Meteor.call('setDistance', record._id, function (err, d) {
             console.log(d);
             if (err) {
-                console.log(err);
-                Meteor.call('updateConfig', {
-                    weatherAPI: false
-                }, function (err, d) {})
-                $(event.target)
-                    .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
                 return console.log(err);
-            } else {
-                //$(event.target).replaceWith('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>');
+            }
+        });
+        Meteor.call('setBearing', record._id, 'incidentOutcome.findBearing', function (err, d) {
+            console.log(d);
+            if (err) {
+                return console.log(err);
+            }
+        });
+        Meteor.call('setEcoRegion', record._id, function (err, d) {
+            if (err) {
+                return;
+            }
+        });
+        Meteor.call('setElevation', record._id, function (err, d) {
+            console.log(d);
+            if (err) {
+                return console.log(err);
+            }
+        });
+        Meteor.call('setLocale', record._id, function (err, d) {
+            console.log(d);
+            if (err) {
+                return console.log(err);
             }
         });
     },
@@ -651,6 +701,34 @@ Template.form.events({
             } else {
                 event.stopPropagation();
             }
+        }
+    },
+    'change [name="incidentOperations.initialDirectionofTravel_Boolean"]': function (event) {
+        console.log(this)
+        var val = event.target.value;
+        var record = Session.get('record');
+        console.log(val);
+        if (val === 'Yes') {
+            Meteor.call('setBearing', record._id, 'incidentOperations.initialDirectionofTravel', function (err, degree) {
+                console.log(degree)
+                if (degree) {
+                    var travelBearing = $('.travelDirection');
+                    travelBearing.css('-moz-transform', 'rotate(' + degree + 'deg)');
+                    travelBearing.css('-webkit-transform', 'rotate(' + degree + 'deg)');
+                    travelBearing.css('-o-transform', 'rotate(' + degree + 'deg)');
+                    travelBearing.css('-ms-transform', 'rotate(' + degree + 'deg)');
+                }
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        } else {
+            Meteor.call('updateRecord', record._id, 'incidentOperations.initialDirectionofTravel', null, function (err, d) {
+                console.log(d);
+                if (err) {
+                    return console.log(err);
+                }
+            });
         }
     },
 });

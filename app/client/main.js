@@ -1,4 +1,9 @@
 console.log('main.js');
+dialogBoxOptions = function (callbackFunctionName) {
+    return {
+        callBack: callbackFunctionName
+    };
+}
 labelUnits = function (currentUnit, type) {
     var unitType = {
         height: {
@@ -266,9 +271,12 @@ formSetMap = function (context, recordId) {
     var paths = {};
     var coords = {};
     var obj = {};
-    var map = L.map(context, {
-        measureControl: true
-    });
+    var map = L.map(context);
+    var units = (Session.get('measureUnits') === 'Metric') ? true : false;
+    L.Control.measureControl({
+            metric: units
+        })
+        .addTo(map);
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
@@ -303,8 +311,9 @@ formSetMap = function (context, recordId) {
             }
             var start = coords.ippCoordinates.layer.getLatLng();
             var end;
-            if (coords.destinationCoord) {
-                end = coords.destinationCoord.layer.getLatLng()
+            var dest = (val === 'intendedRoute') ? 'destinationCoord' : 'findCoord';
+            if (coords[dest]) {
+                end = coords[dest].layer.getLatLng()
             } else {
                 var ne = map.getBounds()
                     ._northEast;
@@ -452,7 +461,7 @@ formSetMap = function (context, recordId) {
             .val(_coords.lat)
             .trigger("change");
 
-        function newElev(d) {
+        /*function newElev(d) {
                 console.log(d)
                 if (d.name !== 'coords.ippCoordinates' && d.name !== 'coords.findCoord') {
                     return;
@@ -470,7 +479,7 @@ formSetMap = function (context, recordId) {
                         return console.log(err);
                     }
                 });
-                Meteor.call('setFindBearing', record._id, function (err, d) {
+                Meteor.call('setBearing', record._id, 'incidentOutcome.findBearing', function (err, d) {
                     console.log(d);
                     if (err) {
                         return console.log(err);
@@ -487,7 +496,7 @@ formSetMap = function (context, recordId) {
                         return console.log(err);
                     }
                 });
-            }
+            }*/
             /*marker.on('dragstart', function (event) {
                 confirm('Are you sure you want to update your IPP?')
             });*/
@@ -500,9 +509,9 @@ formSetMap = function (context, recordId) {
                     console.log(err);
                     return;
                 }
-                if (d.name === 'coords.ippCoordinates' || d.name === 'coords.findCoord') {
+                /*if (d.name === 'coords.ippCoordinates' || d.name === 'coords.findCoord') {
                     newElev(d);
-                }
+                }*/
             });
         });
         return marker;
@@ -510,7 +519,12 @@ formSetMap = function (context, recordId) {
     obj.fitBounds = function () {
         map.fitBounds(drawnPoints.getBounds()
             .extend(drawnPaths.getBounds())
-            .pad(0));
+            .pad(.3));
+        if (Object.keys(coords)
+            .length < 2) {
+            map.setZoom(9)
+        }
     };
     return obj;
 }
+

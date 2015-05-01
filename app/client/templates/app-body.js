@@ -10,6 +10,8 @@ Template.appBody.onCreated(function () {
  //   config = Meteor.settings.public.config
 });
 Template.appBody.onRendered(function () {
+
+
     //Tracker.autorun(function () {
         //var config = Config.findOne();
         /*if (config) {

@@ -24,3 +24,6 @@ meteorhacks:npm
 
 
 npm-container
+tsega:bootstrap3-datetimepicker@=3.1.3_3
+aldeed:autoform-bs-datetimepicker
+mrt:moment-timezone

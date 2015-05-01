@@ -1,26 +1,24 @@
 //var initSetup;
 console.log('router.js');
-
 Meteor.startup(function () {
     console.log('router-startup')
     if (!Meteor.isServer) {
+        Tracker.autorun(function () {
+            var config = Config.findOne();
+            if (config) {
+                console.log('config')
+                Session.set('config', config);
+                Session.set('agencyProfile', config.agencyProfile);
+                Session.set('bounds', config.bounds);
+                Session.set('bounds', config.bounds);
+                Session.set('logo', config.agencyLogo);
+                Session.set('measureUnits', config.measureUnits);
 
-
-Tracker.autorun(function () {
-    var config = Config.findOne();
-    if (config) {
-        Session.set('config', config);
-        Session.set('agencyProfile', config.agencyProfile);
-        Session.set('bounds', config.bounds);
-        Session.set('bounds', config.bounds);
-    }
-});
-
-
-
+            }
+        });
         settings = Meteor.settings.public;
         config = Meteor.settings.public.config;
-        console.log(config)
+
             //console.log(Meteor.settings)
             //initSetup = Meteor.settings.public.config.initSetup;
     }
@@ -44,7 +42,8 @@ Router.configure({
         ];
     },
     onBeforeAction: function () {
-        if (Config.findOne().initSetup) {
+        if (Config.findOne()
+            .initSetup) {
             Router.go('adminSetup');
         }
         this.next();
@@ -75,7 +74,8 @@ Router.route('adminSetup', {
     path: '/adminSetup',
     //layoutTemplate: null,
     onBeforeAction: function () {
-        if (!Config.findOne().initSetup) {
+        if (!Config.findOne()
+            .initSetup) {
             Router.go('signin');
         }
         this.next();
@@ -142,3 +142,4 @@ meteor add autopublish
 meteor remove insecure
 meteor remove autopublish
 */
+

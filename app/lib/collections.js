@@ -179,15 +179,20 @@ Schemas.recordInfo = new SimpleSchema({
         },
     },
     incidentdate: {
-        type: 'datetime',
+        type: Date,
+        label: 'Incident Date/Time',
         autoform: {
             afFieldInput: {
-                type: 'datetime-local'
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm'
+                }
             }
-        },
-        label: 'Incident Date/Time',
-        //defaultValue: moment().format('YYYY-MM-DThh:mm')
+        }
     },
+    ////defaultValue: moment().format('YYYY-MM-DThh:mm')
     incidenttype: {
         type: String,
         allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
@@ -224,27 +229,34 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         label: 'Agency Having Jurisdiction',
     },
-    'sar notified date-time': {
-        type: String,
+
+
+    'SARNotifiedFateTime': {
+        type: Date,
+        label: 'SAR Notified Date/Time',
+        optional: true,
         autoform: {
             afFieldInput: {
-                type: 'datetime-local'
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm'
+                }
             }
-        },
-        label: 'SAR Notified Date/Time',
-        optional: true
+        }
     },
     country: {
         type: String,
         label: 'Incident Response Country',
         optional: true,
     },
-    administrative1: {
+    'state-province': {
         type: String,
+        label: 'State/Province',
         optional: true,
-        label: 'Incident State/Region',
     },
-    administrative2: {
+    'county-region': {
         type: String,
         label: 'Incident County/Region',
         optional: true,
@@ -489,6 +501,24 @@ Schemas.incidentOperations = new SimpleSchema({
         allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
     },
+    'initialDirectionofTravel_Boolean': {
+        type: String,
+        label: 'Is Initial DIrection of Travel Known?',
+        optional: true,
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return [{
+                    label: "Yes",
+                    value: "Yes"
+                }, {
+                    label: "No",
+                    value: "No"
+                }];
+            },
+            defaultValue: 'No'
+        }
+    },
     'initialDirectionofTravel': {
         type: Number,
         label: ' ',
@@ -557,26 +587,36 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Incident Outcome',
         optional: true
     },
-    'subject located date-time': {
-        type: String,
+   /* 'subject located date-time': {
+        type: Date,
+        label: 'Subject Located Date/Time',
+        optional: true,
         autoform: {
             afFieldInput: {
-                type: 'datetime-local'
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm'
+                }
             }
-        },
-        label: 'Subject Located Date/Time',
-        optional: true
+        }
     },
     'incident closed date-time': {
-        type: String,
+        type: Date,
+        label: 'Incident CLosed Date/Time',
+        optional: true,
         autoform: {
             afFieldInput: {
-                type: 'datetime-local'
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm'
+                }
             }
-        },
-        label: 'Incident Closed Date/Time',
-        optional: true
-    },
+        }
+    },*/
     'scenario': {
         type: String,
         autoform: {
@@ -614,7 +654,7 @@ Schemas.incidentOutcome = new SimpleSchema({
                     value: "No"
                 }];
             },
-            value: 'No'
+            defaultValue: 'No'
         }
     },
     'distanceIPP': {
@@ -1215,143 +1255,14 @@ Schemas.formEditions = new SimpleSchema({
         type: String
     },
 });
-Schemas.formEditions = new SimpleSchema({
-    type: {
-        type: String,
-        label: 'Choose SARCAT form level of detail',
-        defaultValue: 'Platinum Edition',
-        autoform: {
-            type: 'select-radio-inline',
-            options: function () {
-                return [{
-                    label: 'Platinum Edition',
-                    'value': 'Platinum Edition'
-                }, {
-                    label: 'Gold Edition',
-                    'value': 'Gold Edition'
-                }, {
-                    label: 'Silver Edition',
-                    'value': 'Silver Edition'
-                }, {
-                    label: 'Basic Edition',
-                    'value': 'Basic Edition'
-                }];
-            }
-        }
-    },
-    recordInfo: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.recordInfo._firstLevelSchemaKeys,
-        defaultValue: Schemas.recordInfo._firstLevelSchemaKeys,
-        label: 'Record Info',
-    },
-    'recordInfo.$': {
-        type: String
-    },
-    incident: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.incident._firstLevelSchemaKeys,
-        defaultValue: Schemas.incident._firstLevelSchemaKeys,
-        label: 'incident',
-    },
-    'incident.$': {
-        type: String
-    },
-    weather: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.weather._firstLevelSchemaKeys,
-        defaultValue: Schemas.weather._firstLevelSchemaKeys,
-        label: 'weather',
-    },
-    'weather.$': {
-        type: String
-    },
-    subjects: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.subjects._firstLevelSchemaKeys,
-        defaultValue: Schemas.subjects._firstLevelSchemaKeys,
-        label: 'subjects',
-    },
-    'subjects.$': {
-        type: String
-    },
-    /*timeLog: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.timeLog._firstLevelSchemaKeys,
-        defaultValue: Schemas.timeLog._firstLevelSchemaKeys,
-        label: 'timeLog',
-    },
-    'timeLog.$': {
-        type: String
-    },*/
-    incidentOperations: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.incidentOperations._firstLevelSchemaKeys,
-        defaultValue: Schemas.incidentOperations._firstLevelSchemaKeys,
-        label: 'incidentOperations',
-    },
-    'incidentOperations.$': {
-        type: String
-    },
-    incidentOutcome: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.incidentOutcome._firstLevelSchemaKeys,
-        defaultValue: Schemas.incidentOutcome._firstLevelSchemaKeys,
-        label: 'incidentOutcome',
-    },
-    'incidentOutcome.$': {
-        type: String
-    },
-    rescueDetails: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.rescueDetails._firstLevelSchemaKeys,
-        defaultValue: Schemas.rescueDetails._firstLevelSchemaKeys,
-        label: 'resources',
-    },
-    'rescueDetails.$': {
-        type: String
-    },
-});
+
+
+
+
+
+
+
+
 Schemas.SARCAT = new SimpleSchema({
     measureUnits: {
         type: String,
@@ -1414,6 +1325,7 @@ Schemas.SARCAT = new SimpleSchema({
     coords: {
         type: Schemas.coords,
         optional: true,
+        defaultValue: {},
         label: 'Map Data'
             //optional: true
     },
@@ -1427,6 +1339,7 @@ Schemas.SARCAT = new SimpleSchema({
         type: Schemas.incidentOperations,
         optional: true,
         label: 'Incident Map Operations',
+        defaultValue: {}
     },
     recordInfo: {
         type: Schemas.recordInfo,
@@ -1492,7 +1405,7 @@ Schemas.agencyProfile = new SimpleSchema({
         label: 'Country',
         defaultValue: ''
     },
-    address: {
+    street: {
         type: String,
         label: 'Street',
         defaultValue: ''
@@ -1502,11 +1415,16 @@ Schemas.agencyProfile = new SimpleSchema({
         label: 'City',
         defaultValue: ''
     },
-    'state-region': {
+    'state-province': {
         type: String,
-        label: 'State/Region',
+        label: 'State/Province',
         defaultValue: ''
     },
+    /*'county-region': {
+        type: String,
+        label: 'County/Region',
+        optional: true,
+    },*/
     phoneNum: {
         type: String,
         label: 'Phone Number',
@@ -1536,7 +1454,7 @@ Schemas.config = new SimpleSchema({
                     value: "US"
                 }, {
                     //label: "Metric (kilometers,meters,°C)",
-                    label:'Metric',
+                    label: 'Metric',
                     value: "Metric"
                 }];
             },
@@ -1562,6 +1480,7 @@ Schemas.config = new SimpleSchema({
     weatherAPI: {
         type: Boolean,
         optional: true,
+        defaultValue: false
     },
     agencyProfile: {
         type: Schemas.agencyProfile,
