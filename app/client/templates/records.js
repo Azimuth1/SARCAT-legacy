@@ -1,3 +1,4 @@
+//Template.dpReplacement.replaces("afBootstrapDateTimePicker");
 var mapDrawn;
 var drawn;
 Session.setDefault('modal', false);
@@ -17,8 +18,7 @@ Template.records.onRendered(function () {
             .bootstrapTable();
     }
     Session.set('userView', 'records');
-    var config = Config.findOne();
-    var bounds = config.bounds;
+    var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
     mapDrawn = newProjectSetMap('recordMap', newBounds, {
         "name": "coords.ippCoordinates",
@@ -36,10 +36,24 @@ Template.records.onRendered(function () {
                 .bootstrapTable('destroy');
         })
         .on('shown.bs.modal', function (e) {
-            $('[name="recordInfo.incidentdate"]')
-                .attr('value', moment()
-                    .format('YYYY-MM-DThh:mm'))
-                .trigger('change');
+            /* 
+            //http://ipinfo.io/developers
+
+            $('.datetimepicker')
+                 .datetimepicker({
+                     use24hours: true,
+                     format: 'HH:mm'
+                 });
+
+             $('.datetimepicker')
+                 .datetimepicker({
+                     locale: moment.locale(),
+                     maxDate: new Date()
+                 });
+             $('.datetimepicker input')
+                 .val(new Date()
+                     .toLocaleString())
+                 .trigger('change')*/
             mapDrawn.reset();
         });
 });
@@ -51,7 +65,7 @@ Template.records.helpers({
         return this.records;
     },
     config: function () {
-        return Config.findOne();
+        return Session.get('config');
     },
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
@@ -69,8 +83,8 @@ Template.records.helpers({
         return Records.findOne(Session.get('newRecord'));
     },
     createNewBtn: function () {
-        var config = Config.findOne();
-        var profile = _.compact(_.map(config.agencyProfile, function (d) {
+        var agencyProfile = Session.get('agencyProfile');
+        var profile = _.compact(_.map(agencyProfile, function (d) {
                 return d;
             }))
             .length;
@@ -78,11 +92,11 @@ Template.records.helpers({
         return profile && role;
     },
     toDateString: function (date) {
-        if (!date || typeof (date) !== 'object') {
+        if (!date) {
             return;
         }
-        return date.toISOString()
-            .split('T')[0];
+        return moment(date)
+            .format('MM/DD/YYYY HH:mm')
     },
     selectedRecords: function () {
         //console.log(checked = $('.bs-checkbox [name="btSelectItem"]:checked')[0])

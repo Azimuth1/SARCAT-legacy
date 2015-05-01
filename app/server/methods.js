@@ -216,7 +216,8 @@ Meteor.methods({
         return result;
     },
     setWeather: function (id) {
-        var forecastAPI = Meteor.settings.private.forecastAPI;
+        var forecastAPI = Config.findOne()
+            .forecastAPI;
         if (!forecastAPI) {
             return;
         }
@@ -238,9 +239,10 @@ Meteor.methods({
         var dateTime = [date, time].join('');
         var latlngDate = [latlng, dateTime].join(',');
         var units = (record.measureUnits === 'Metric') ? 'units=si' : 'units=us';
-        var url = 'http://api.forecast.io/forecast/' + forecastAPI + '/';
+        var url = 'http://api.forecast.io/forecast/'; // + forecastAPI + '/';
         url += latlngDate + '?';
         url += units;
+        console.log(url)
         var result = HTTP.get(url);
         if (!result.data) {
             return;
@@ -273,7 +275,7 @@ Meteor.methods({
         );
         return dailyData;
     },
-    setFindBearing: function (id) {
+    setBearing: function (id, field) {
         function radians(n) {
             return n * (Math.PI / 180);
         }
@@ -298,10 +300,10 @@ Meteor.methods({
             return parseInt((degrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0);
         }
         var record = Records.findOne(id);
+        var obj = {};
+        obj[field] = '';
         Records.update(id, {
-            $unset: {
-                'incidentOutcome.findBearing': ''
-            }
+            $unset: obj
         });
         var coord1 = record.coords.ippCoordinates;
         var coord2 = record.coords.findCoord;
@@ -309,15 +311,16 @@ Meteor.methods({
             return false;
         }
         var val = bearing(coord1.lat, coord1.lng, coord2.lat, coord2.lng);
+        var obj = {};
+        obj[field] = val;
         Records.update(id, {
-            $set: {
-                'incidentOutcome.findBearing': val
-            }
+            $set: obj
         });
         return val;
     },
     setElevation: function (id) {
-        var googleAPI = Meteor.settings.private.googleAPI;
+        var googleAPI = Config.findOne()
+            .googleAPI;
         if (!googleAPI) {
             return;
         }
@@ -407,7 +410,8 @@ Meteor.methods({
         return val;
     },
     setLocale: function (id) {
-        var googleAPI = Meteor.settings.private.googleAPI;
+        var googleAPI = Config.findOne()
+            .googleAPI;
         if (!googleAPI) {
             return;
         }
@@ -484,3 +488,4 @@ Meteor.users.allow({
         }
     }
 });
+

@@ -1,4 +1,4 @@
-.leaflet-control-measure {
+/*.leaflet-control-measure {
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 21px;
@@ -38,3 +38,12 @@
 .leaflet-measure-tooltip-difference {
 	color: #777;
 	}
+
+
+
+
+*/
+
+.leaflet-control-draw-measure {
+    background-image: url(images/measure-control.png);
+}
