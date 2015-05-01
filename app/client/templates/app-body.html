@@ -17,18 +17,10 @@
             <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
             {{/if}}
         </section>
-        {{#unless connected}}
-        <div class="notifications">
-            <div class="notification"> <span class="icon-sync"></span>
-                <div class="meta">
-                    <div class="title-notification">Trying to connect</div>
-                    <div class="description">There seems to be a connection issue</div>
-                </div>
-            </div>
-        </div>
-        {{/unless}}
         <div class="content-overlay"></div>
         <div id="content-container">
+            
+        <!--
             <nav class="navbar default-bg rad0 mar00 z99">
                 <div class="container-fluid">
                     <div class="navbar-header white">
@@ -85,13 +77,15 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <a class="navbar-brand pad00" rel="home" href="#" title="Buy Sell Rent Everyting">
+                            <a class="navbar-brand pad00" rel="home" href="#">
                                 <img style="max-height:48px" id="agencyLogo" onerror='this.style.display = "none"'>
                             </a>
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav>-->
+
+
             {{#each thisArray}} {{> yield}} {{/each}}
         </div>
     </div>

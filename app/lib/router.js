@@ -1,8 +1,28 @@
 //var initSetup;
+console.log('router.js');
+
 Meteor.startup(function () {
+    console.log('router-startup')
     if (!Meteor.isServer) {
-        //console.log(Meteor.settings)
-        //initSetup = Meteor.settings.public.config.initSetup;
+
+
+Tracker.autorun(function () {
+    var config = Config.findOne();
+    if (config) {
+        Session.set('config', config);
+        Session.set('agencyProfile', config.agencyProfile);
+        Session.set('bounds', config.bounds);
+        Session.set('bounds', config.bounds);
+    }
+});
+
+
+
+        settings = Meteor.settings.public;
+        config = Meteor.settings.public.config;
+        console.log(config)
+            //console.log(Meteor.settings)
+            //initSetup = Meteor.settings.public.config.initSetup;
     }
 });
 Handlebars.registerHelper('json', function (context) {
@@ -52,8 +72,8 @@ Router.route('home', {
     }
 });
 Router.route('adminSetup', {
-    path: '/adminSetup/',
-    layoutTemplate: null,
+    path: '/adminSetup',
+    //layoutTemplate: null,
     onBeforeAction: function () {
         if (!Config.findOne().initSetup) {
             Router.go('signin');
@@ -70,7 +90,6 @@ Router.route('records', {
     },
     data: function () {
         var obj = {};
-        //obj.user = Meteor.user();
         obj.users = Meteor.users.find();
         obj.records = Records.find();
         return obj;
@@ -117,11 +136,9 @@ Router.route('form', {
         }
     }
 });
-//});
 /*
 meteor add insecure
 meteor add autopublish
 meteor remove insecure
 meteor remove autopublish
 */
-

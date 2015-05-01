@@ -1,57 +1,52 @@
 <template name="adminSetup">
-    <div id="container" class="{{menuOpen}} {{cordova}}">
-        <section id="menu">
-            <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary">Join</a> </div>
-        </section>
-        <div class="content-overlay"></div>
-        <div id="content-container">
-            <div class="page auth">
-                <div class="content-scrollable">
-                    <div class="wrapper-auth">
-                        <h2 class="title-auth">Welcome to SARCAT</h2>
+    <div class="page auth">
+
+        <div class="content-scrollable">
+        
+            <div class="wrapper-auth">
+                        <h2 class="title-auth">SARCAT</h2>
                         <p class="subtitle-audth">Search and Rescue Data Collection & Analysis Tool</p>
                         {{#if currentUser}}
-                            <p class="text-danger em"> Create a new admin account! </p>
-                            <form>
-                                {{#if errorMessages}}
-                                    <div class="list-errors">
-                                        {{#each errorMessages}}
-                                            <div class="list-item">{{this}}</div>
-                                        {{/each}}
-                                    </div>
-                                {{/if}}
-                                <div class="input-symbol  {{errorClass 'firstname'}}">
-                                    <input type="username" name="firstname" placeholder="First Name" /> <span class="customfa fa-user" title="First Name"></span> </div>
-                                <div class="input-symbol  {{errorClass 'lastname'}}">
-                                    <input type="username" name="lastname" placeholder="Last Name" /> <span class="customfa fa-user" title="FLast Name"></span> </div>
-                                <div class="mar0"></div>
-                                <div class="input-symbol  {{errorClass 'email'}}">
-                                    <input type="email" name="email" placeholder="Email" /> <span class="tmp icon-email" title="Email"></span> </div>
-                                <div class="input-symbol  {{errorClass 'password'}}">
-                                    <input type="password" name="password" placeholder="Password" /> <span class="tmp icon-lock" title="Password"></span> </div>
-                                <div class="input-symbol {{errorClass 'confirm'}}">
-                                    <input type="password" name="confirm" placeholder="Confirm Password" /> <span class="tmp icon-lock" title="Confirm Password"></span> </div>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block"> <span class="tmp icon-user-add" aria-hidden="true"></span>Join Now</button>
-                            </form> {{else}}
-                            <p class="text-danger em"> Please login with default admin account </p>
-                            <form>
-                                {{#if errorMessages}}
-                                    <div class="list-errors">
-                                        {{#each errorMessages}}
-                                            <div class="list-item">{{this}}</div>
-                                        {{/each}}
-                                    </div>
-                                {{/if}}
-                                <div class="input-symbol {{errorClass 'email'}}">
-                                    <input type="email" name="email" placeholder="Email" /> <span class="tmp icon-email" title="Email"></span> </div>
-                                <div class="input-symbol {{errorClass 'password'}}">
-                                    <input type="password" name="password" placeholder="Password" /> <span class="tmp icon-lock" title="Password"></span> </div>
-                                <button type="submit" class="btn-primary admin1 btn-pad">Sign in</button>
-                            </form>
+                        <p class="white em"> Create a new admin account! </p>
+                        <form>
+                            {{#if errorMessages}}
+                            <div class="list-errors">
+                                {{#each errorMessages}}
+                                <div class="list-item">{{this}}</div>
+                                {{/each}}
+                            </div>
+                            {{/if}}
+                            <div class="input-symbol  {{errorClass 'firstname'}}">
+                                <input type="username" name="firstname" placeholder="First Name" /> <span class="customfa fa-user" title="First Name"></span> </div>
+                            <div class="input-symbol  {{errorClass 'lastname'}}">
+                                <input type="username" name="lastname" placeholder="Last Name" /> <span class="customfa fa-user" title="FLast Name"></span> </div>
+                            <div class="mar0"></div>
+                            <div class="input-symbol  {{errorClass 'email'}}">
+                                <input type="email" name="email" placeholder="Email" /> <span class="tmp icon-email" title="Email"></span> </div>
+                            <div class="input-symbol  {{errorClass 'password'}}">
+                                <input type="password" name="password" placeholder="Password" /> <span class="tmp icon-lock" title="Password"></span> </div>
+                            <div class="input-symbol {{errorClass 'confirm'}}">
+                                <input type="password" name="confirm" placeholder="Confirm Password" /> <span class="tmp icon-lock" title="Confirm Password"></span> </div>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block"> <span class="tmp icon-user-add" aria-hidden="true"></span>Join Now</button>
+                        </form> {{else}}
+                        <p class="white em"> Please login with default admin account </p>
+                        <form>
+                            {{#if errorMessages}}
+                            <div class="list-errors">
+                                {{#each errorMessages}}
+                                <div class="list-item">{{this}}</div>
+                                {{/each}}
+                            </div>
+                            {{/if}}
+                            <div class="input-symbol {{errorClass 'email'}}">
+                                <input type="email" name="email" placeholder="Email" value="admin@sarcat"/> <span class="tmp icon-email" title="Email"></span> </div>
+                            <div class="input-symbol {{errorClass 'password'}}">
+                                <input type="password" name="password" placeholder="Password" value="admin"/> <span class="tmp icon-lock" title="Password"></span> </div>
+                            <button type="submit" class="btn-primary admin1 btn-pad">Sign in</button>
+                        </form>
                         {{/if}}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
 </template>
