@@ -8,3 +8,4 @@ node_modules
 main_logo
 /uploads/records/**
 /uploads/logo/**
+settings.dev.json
