@@ -52,7 +52,7 @@ Meteor.methods({
         return Records.insert(list);
     },
     removeRecord: function (id) {
-        console.log(id)
+console.log(id)
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -61,7 +61,7 @@ Meteor.methods({
                 remove: "true"
             }
         },function(d,e){console.log(d,e)});*/
-        return Records.remove(id);
+        return Records.remove({_id:{$in:id}})
     },
     pushArray: function (id, name) {
         var obj = {};

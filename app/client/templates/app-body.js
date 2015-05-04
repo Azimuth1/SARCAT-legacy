@@ -5,21 +5,10 @@ var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 settings = Meteor.settings.public;
 Template.appBody.onCreated(function () {
-    // console.log(Meteor.settings.public)
-//    settings = Meteor.settings.public;
- //   config = Meteor.settings.public.config
+
 });
 Template.appBody.onRendered(function () {
 
-
-    //Tracker.autorun(function () {
-        //var config = Config.findOne();
-        /*if (config) {
-            Session.set('config', config);
-            document.getElementById('agencyLogo')
-                .src = 'uploads/logo/' + config.agencyLogo;
-        }*/
-    //});
 });
 Template.appBody.helpers({
     email: function (view) {
@@ -78,3 +67,4 @@ Template.appBody.events({
         Router.go('signin');
     },
 });
+

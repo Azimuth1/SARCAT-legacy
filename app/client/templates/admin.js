@@ -3,7 +3,6 @@ Template.admin.created = function () {
     Session.set('userView', 'admin');
 };
 Template.admin.rendered = function () {
-    
     $('label:contains("Forecast API Key")')
         .append('<span class="forecastio small em mar0y text-default">*Auto calculate weather by getting a key from <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a></span>');
     var logo = document.getElementById('agencyLogo');
@@ -65,9 +64,9 @@ Template.admin.helpers({
                     agencyLogo: fileInfo.name
                 }, function (err) {
                     if (err) {
-                        console.log(err);
+                        return console.log(err);
                     }
-                    Meteor._reload.reload();
+                    // Meteor._reload.reload();
                 });
             }
         };
@@ -85,7 +84,10 @@ Template.admin.events({
         Meteor.call('updateConfig', {
             agencyLogo: ''
         }, function (err) {
-            console.log(err);
+            if (err) {
+                return console.log(err);
+            }
+            //Meteor._reload.reload();
         });
     },
     'click .removeUser': function (event, template) {

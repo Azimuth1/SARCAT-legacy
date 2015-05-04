@@ -1,4 +1,3 @@
-
 <template name="records">
     <div class="modal fade" id="createRecordModal" tabindex="91" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -12,16 +11,12 @@
                     </div>
                     <div id='recordMap' style="width:100%;height:400px"></div>
                     {{#if modal}}
-                        {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" }}
+                        {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" validation="submit" }}
                             {{> afQuickField name='coords.ippCoordinates' }}
 
 
 
-
-
-
-
-                            {{> afQuickField name='recordInfo'}}
+                             {{> afQuickField name='recordInfo'}}
                             <div class="form-group modal-footer">
 
                                 <button type="reset" class="btn btn-default pull-left">Reset Form</button>
@@ -45,26 +40,30 @@
                 Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
             </a>
         </div>
-        {{#if createNewBtn}}
-            <a type="button" class="btn btn-primary pull-right mar0" data-target="#createRecordModal" data-toggle="modal">
-                <i class="glyphicon glyphicon-plus"></i> New Record
-            </a>
-        {{/if}}
+
     </ul>
     <div class="tab-content admin">
         <div role="tabpanel" class="tab-pane active pad0" id="records">
             <div class="afTablePane">
                 {{#if isAdmin}}
-                    <div id="toolbar" class="btn-group pull-right">
-                        {{#if selectedRecords}}
-                            <button type="button" class="btn btn-default deleteRecord">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
-                        {{/if}}
-                    </div>
+                 
+                        
+                    {{#if createNewBtn}}
+                        <a type="button" class="btn btn-primary" data-target="#createRecordModal" data-toggle="modal">
+                            <i class="glyphicon glyphicon-plus"></i> New Record
+                        </a>
+                    {{/if}}
+                    {{#if selectedRecords}}
+                    <button type="button" class="btn btn-default deleteRecord">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                       {{/if}}
+                  
                 {{/if}}
                 {{#unless tableHide}}
-                    <table class="recordTable pointer table table-hover table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true">
+
+                {{> recordStats}}
+                   <table class="recordTable pointer table table-hover table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true" >
                         <thead class='default-bg'>
                             <tr>
                                 <th data-field="state" data-checkbox="true"></th>
@@ -87,18 +86,53 @@
                             {{#each allRecords}}
                                 <tr class="openRecord text-center" id="{{this._id}}">
                                     <td></td>
-                                    <td>{{recordInfo.incidentnum}}</td>
-                                    <td>{{recordInfo.missionnum}}</td>
-                                    <td>{{recordInfo.name}}</td>
-                                    <td>{{recordInfo.incidenttype}}</td>
-                                    <td>{{admin.user}}</td>
-                                    <td>{{toDateString created}}</td>
-                                    <td>{{toDateString recordInfo.incidentdate}}</td>
-                                    <td>{{recordInfo.status}}</td>
+                                    <td>{{this.recordInfo.incidentnum}}</td>
+                                    <td>{{this.recordInfo.missionnum}}</td>
+                                    <td>{{this.recordInfo.name}}</td>
+                                    <td>{{this.recordInfo.incidenttype}}</td>
+                                    <td>{{this.admin.user}}</td>
+                                    <td>{{this.created}}</td>
+                                    <td>{{this.recordInfo.incidentdate}}</td>
+                                    <td>{{this.recordInfo.status}}</td>
                                 </tr>
                             {{/each}}
                         </tbody>
                     </table>
+                   <!-- <table class="recordTable pointer table table-hover table-condensed mar00" data-search="true" data-show-columns="true" data-click-to-select="true" data-card-view="true">
+                        <thead class='default-bg'>
+                            <tr>
+                                <th data-field="state" data-checkbox="true"></th>
+                                <th data-field="incidentnum" data-sortable="true" class='afTable'>Incident #</th>
+                                <th data-field="missionnum" data-sortable="true" class='afTable'>Mission #</th>
+                                <th data-field="name" data-sortable="true" class='afTable'>Record Name</th>
+                                <th data-field="incidenttype" data-sortable="true" class='afTable'>Incident Type</th>
+                                <th data-field="user" data-sortable="true" class='afTable' data-align="center">Created By</th>
+                                <th data-field="date" data-sortable="true" class='afTable'>Created Date</th>
+                                <th data-field="date" data-sortable="true" class='afTable'>Incident Date</th>
+                                <th data-field="status" data-sortable="true" class='afTable'>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class='white-bg'>
+                            {{#if noRecords}}
+                                <tr>
+                                    <td colspan="9" class="_text-center text-default">Create a new Record to Begin!</td>
+                                </tr>
+                            {{/if}}
+                            {{#each allRecords}}
+                                <tr class="openRecord _text-center" id="{{this._id}}">
+                                    <td></td>
+                                    <td>{{this.recordInfo.incidentnum}}</td>
+                                    <td>{{this.recordInfo.missionnum}}</td>
+                                    <td>{{this.recordInfo.name}}</td>
+                                    <td>{{this.recordInfo.incidenttype}}</td>
+                                    <td>{{this.admin.user}}</td>
+                                    <td>{{this.created}}</td>
+                                    <td>{{this.recordInfo.incidentdate}}</td>
+                                    <td>{{this.recordInfo.status}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>-->
                     <span class="small pull-right"><em>*Click column header to sort</em></span> {{/unless}}
             </div>
         </div>

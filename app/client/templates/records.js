@@ -91,13 +91,13 @@ Template.records.helpers({
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile && role;
     },
-    toDateString: function (date) {
+    /*toDateString: function (date) {
+        return date;
         if (!date) {
             return;
         }
-        return moment(date)
-            .format('MM/DD/YYYY HH:mm')
-    },
+        return moment(date).format('MM/DD/YYYY HH:mm')
+    },*/
     selectedRecords: function () {
         //console.log(checked = $('.bs-checkbox [name="btSelectItem"]:checked')[0])
         return Session.get('selectedRecords');
@@ -136,31 +136,38 @@ Template.records.events({
             .parent()
             .parent()
             .map(function (d) {
-                return {
-                    id: this.id,
-                    name: Records.findOne(this.id)
-                        .recordInfo.name
-                };
-            });
+                return this.id
+            }).toArray();
         if (!toDelete.length) {
             return;
         }
-        var message = 'Are you sure you want to delete the following records: ' + _.map(toDelete, function (d) {
-                return d.name;
-            })
-            .join(', ');
+        var all = Records.find().fetch();
+        var names = _.map(toDelete, function (d) {
+            return _.findWhere(all, {
+                    _id: d
+                })
+                .recordInfo.name;
+        })
+    
+        var message = 'Are you sure you want to delete the following records: ' + names.join(',')
         if (confirm(message)) {
-            toDelete.each(function (e, d) {
-                console.log(d)
-                Meteor.call('removeRecord', d.id, function (error, d) {
-                    var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
-                    Session.set('selectedRecords', checked.length);
-                });
+            console.log(toDelete);
+            $('.recordTable')
+                .bootstrapTable('destroy');
+            Session.set('tableHide', true);
+            Meteor.call('removeRecord', toDelete, function (error, d) {
+                var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
+                Session.set('selectedRecords', checked.length);
+                if (error) {
+                    return console.log(error);
+                }
+                Session.set('tableHide', false);
+                setTimeout(function () {
+                    $('.recordTable')
+                        .bootstrapTable();
+                }, 300);
             });
             //Meteor._reload.reload();
-            return true;
-        } else {
-            return false;
         }
     },
     'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {

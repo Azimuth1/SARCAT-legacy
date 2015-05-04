@@ -15,25 +15,38 @@
                 </tr>
             </thead>
             <tbody class="white-bg">
+                {{#if editRecordInfo 'edit'}}
                 <tr class="text-left text-default">
-                    {{#if editRecordInfo 'edit'}}
                     <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
                     <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
                     <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
                     <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidenttype"}}</td>
                     <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId5' autosave=true type='update' fields="recordInfo.incidentdate"}}</td>
-                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
-                    {{else}}
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>   
+                 
+            </tr>
+
+{{else}}
+ <tr class="text-left text-default">
                     <td>{{record.recordInfo.incidentnum}}</td>
                     <td>{{record.recordInfo.missionnum}}</td>
                     <td>{{record.recordInfo.name}}</td>
                     <td>{{record.recordInfo.incidenttype}}</td>
                     <td>{{record.recordInfo.incidentdate}}</td>
                     <td>{{record.recordInfo.status}}</td>
-                    {{/if}}
-                </tr>
+
+</tr>
+{{/if}}
+
+
+
+
+
             </tbody>
         </table>
+
+
+
         {{#if editRecordInfo 'edit'}}
         <button type="button" class="btn btn-success editRecordInfo pull-right mar0" data="list">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Done
@@ -43,6 +56,10 @@
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Edit
         </button>
         {{/if}}
+
+
+
+
         <div class="text-center mar0">
             {{#each schemas}}
             <button type="button" data="{{this.field}}" class="formNav btn-default btn mar1yb pad0 {{this.klass}}">{{this.field}}
@@ -123,7 +140,11 @@
                                 <span class="text-uppercase strong text-default">Initial Direction of Travel</span>
                                 <span class="small"><em> - Drag arrow towards initial direction of travel</em></span>
                             </div>
-                            {{> afQuickField name="incidentOperations.initialDirectionofTravel_Boolean"}} {{#if afFieldValueIs name="incidentOperations.initialDirectionofTravel_Boolean" value="Yes" }} {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}}
+                            {{> afQuickField name="incidentOperations.initialDirectionofTravel_Boolean"}} 
+
+                            {{#if afFieldValueIs name="incidentOperations.initialDirectionofTravel_Boolean" value="Yes" }} 
+
+                            {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}}
                             <div class="form-group mar2x">
                                 <img src="/images/compass.png" class="travelDirection ">
                             </div>
@@ -208,7 +229,30 @@
                 <span class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span> {{/if}} {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}} {{> afQuickField name="weather" options=this.options }} {{/autoForm}}
             </div>
         </div>
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incidentOutcome, rescueDetails" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange,incidentOutcome.lkp_pls_Boolean"}}
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incidentOutcome" buttonContent= "Save" omitFields="incidentOutcome.distanceIPP, incidentOutcome.dispersionAngle, incidentOutcome.findBearing, incidentOutcome.trackOffset,incidentOutcome.elevationChange,incidentOutcome.lkp_pls_Boolean"}}
+
+
+
+
+
+
+        <div class="panel panel-default _text-center">
+            <div class="panel-heading">
+                <h3 class="panel-title">Rescue Details</h3>
+            </div>
+            <div class="panel-body">
+{{#autoForm collection='Records' validation="submit" doc=current id='formdId' autosave=true type=formType fields="rescueDetails" buttonContent= "Save"}}
+
+
+{{> afQuickField name="rescueDetails.signalling" options="allowed"}}
+{{> afQuickField name="rescueDetails.injuredSearcher" options="allowed"}}
+{{#if afFieldValueIs name="rescueDetails.injuredSearcher" value="Yes" }} 
+{{> afQuickField name="rescueDetails.injuredSearcherDetails"}}
+{{/if}}
+
+{{/autoForm}}
+</div></div>
+
 
 
 

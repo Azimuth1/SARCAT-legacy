@@ -91,7 +91,11 @@ Router.route('records', {
     data: function () {
         var obj = {};
         obj.users = Meteor.users.find();
-        obj.records = Records.find();
+        obj.records = Records.find({},{
+            sort: {
+                    'recordInfo.incidentnum': -1
+                }
+        });
         return obj;
     },
     action: function () {

@@ -38,17 +38,12 @@ Records.defaultNum = function () {
     }
     return nextLetter.toString();
 };
-/*
-function convertToC(fTempVal) {
-    return cTempVal = (fTempVal - 32) * (5 / 9);
-}
-
-function convertToF(cTempVal) {
-    return (cTempVal * (9 / 5)) + 32;
-}
-
-convertDeg = function (val) {
-
+Records.isDate = function (date) {
+        var isDate = (new Date(date) !== "Invalid Date" && !isNaN(new Date(date))) ? true : false;
+        return isDate ? moment(new Date(date))
+            .format('MM/DD/YYYY HH:mm') : date;
+    }
+    /*
     function convertToC(fTempVal) {
         return cTempVal = (fTempVal - 32) * (5 / 9);
     }
@@ -57,16 +52,26 @@ convertDeg = function (val) {
         return (cTempVal * (9 / 5)) + 32;
     }
 
-    var config = Config.findOne();
-    var agencyProfile = config.agencyProfile;
-    var currentUnit = agencyProfile.measureUnits;
-    if (currentUnit === 'Metric') {
-        return val;
-    }
-    return convertToC(val);
+    convertDeg = function (val) {
 
-};
-*/
+        function convertToC(fTempVal) {
+            return cTempVal = (fTempVal - 32) * (5 / 9);
+        }
+
+        function convertToF(cTempVal) {
+            return (cTempVal * (9 / 5)) + 32;
+        }
+
+        var config = Config.findOne();
+        var agencyProfile = config.agencyProfile;
+        var currentUnit = agencyProfile.measureUnits;
+        if (currentUnit === 'Metric') {
+            return val;
+        }
+        return convertToC(val);
+
+    };
+    */
 Schemas = {};
 Schemas = {};
 Schemas.User = new SimpleSchema({
@@ -179,7 +184,7 @@ Schemas.recordInfo = new SimpleSchema({
         },
     },
     incidentdate: {
-        type: Date,
+        type: String,
         label: 'Incident Date/Time',
         autoform: {
             afFieldInput: {
@@ -191,12 +196,15 @@ Schemas.recordInfo = new SimpleSchema({
                     format: 'MM/DD/YYYY HH:mm'
                 }
             }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
         }
     },
     ////defaultValue: moment().format('YYYY-MM-DThh:mm')
     incidenttype: {
         type: String,
-        allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', ' Evidence'],
+        allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', 'Evidence'],
         label: 'Incident Type',
         defaultValue: 'Search'
     },
@@ -231,7 +239,7 @@ Schemas.incident = new SimpleSchema({
         label: 'Agency Having Jurisdiction',
     },
     'SARNotifiedDateTime': {
-        type: Date,
+        type: String,
         label: 'SAR Notified Date/Time',
         optional: true,
         autoform: {
@@ -242,9 +250,11 @@ Schemas.incident = new SimpleSchema({
                 dateTimePickerOptions: {
                     use24hours: true,
                     format: 'MM/DD/YYYY HH:mm',
-                    focusOnShow: false
                 }
             }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
         }
     },
     country: {
@@ -589,7 +599,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         optional: true
     },
     'subjectLocatedDateTime': {
-        type: Date,
+        type: String,
         label: 'Subject Located Date/Time',
         optional: true,
         autoform: {
@@ -602,10 +612,13 @@ Schemas.incidentOutcome = new SimpleSchema({
                     format: 'MM/DD/YYYY HH:mm'
                 }
             }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
         }
     },
     'incidentClosedDateTime': {
-        type: Date,
+        type: String,
         label: 'Incident Closed Date/Time',
         optional: true,
         autoform: {
@@ -617,6 +630,9 @@ Schemas.incidentOutcome = new SimpleSchema({
                     format: 'MM/DD/YYYY HH:mm'
                 }
             }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
         }
     },
     'scenario': {
@@ -1121,6 +1137,17 @@ Schemas.xComments = new SimpleSchema({
         }
     },
 });
+
+
+
+
+
+
+
+
+
+
+
 Schemas.formEditions = new SimpleSchema({
     type: {
         type: String,
@@ -1229,19 +1256,6 @@ Schemas.formEditions = new SimpleSchema({
     'incidentOutcome.$': {
         type: String
     },
-    /*medical: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },allowedValues: Schemas.medical._firstLevelSchemaKeys,
-        defaultValue: Schemas.medical._firstLevelSchemaKeys,
-        label: 'medical',
-    },
-    'medical.$': {
-        type: String
-    },*/
     rescueDetails: {
         type: Array,
         autoform: {
@@ -1293,23 +1307,23 @@ Schemas.SARCAT = new SimpleSchema({
         }
     },
     updated: {
-        type: Date,
+        type: String,
         autoValue: function () {
             if (this.isUpdate) {
-                return new Date();
+                return Records.isDate(this.value);
             }
         },
         denyInsert: true,
         optional: true
     },
     created: {
-        type: Date,
+        type: String,
         autoValue: function () {
             if (this.isInsert) {
-                return new Date;
+                return Records.isDate(new Date());
             } else if (this.isUpsert) {
                 return {
-                    $setOnInsert: new Date
+                    $setOnInsert: Records.isDate(new Date())
                 };
             } else {
                 this.unset();
@@ -1493,3 +1507,4 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
+
