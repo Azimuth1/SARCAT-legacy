@@ -8,7 +8,7 @@ var map;
 Session.setDefault('subjectTableView', 'Description');
 Template.registerHelper("Schemas", Schemas);
 Template.form.onCreated(function () {
-    Session.equals('editRecordInfo', false);
+    Session.set('editRecordInfo', 'list');
     Session.set('userView', this.data.record._id);
     Session.set('record', this.data.record);
     /*
@@ -54,7 +54,6 @@ Template.form.onRendered(function () {
         }
     });
     map.fitBounds();
-    return
     var currentUnit = Session.get('measureUnits');
     var degree = record.incidentOperations.initialDirectionofTravel || 0;
     var travelBearing = $('.travelDirection');
@@ -90,7 +89,6 @@ Template.form.onRendered(function () {
         });
     }*/
     if (!record.incident.ecoregiondomain || !record.incident.ecoregionDivision) {
-        console.log('!!!!')
         Meteor.call('setEcoRegion', record._id, function (err, d) {
             if (err) {
                 return;
@@ -353,6 +351,7 @@ Template.form.helpers({
         });
     },
     editRecordInfo: function (item) {
+        //console.log(Session.get('editRecordInfo'),item)
         return Session.equals('editRecordInfo', item);
     },
     getSubjectsArrayRescue: function () {
@@ -761,3 +760,4 @@ AutoForm.hooks({
         }
     }
 });
+

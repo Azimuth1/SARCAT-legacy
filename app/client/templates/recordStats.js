@@ -1,6 +1,9 @@
+Template.recordStats.onCreated(function () {})
+Template.recordStats.onRendered(function () {
+    stats()
+})
 var drawGraph = function (d) {
-    //  console.log(d);
-    colors = d3.scale.category20();
+    colors = d3.scale.category20c();
     var title = d.label;
     var data = d.count;
     var container = d3.select("#recordss")
@@ -8,8 +11,7 @@ var drawGraph = function (d) {
         .attr('class', 'col-md-4');
     container.append('h3')
         .text(title);
-    var width = parseInt(d3.select("#recordStats")
-        .style('width')) / 4;
+    var width = parseInt(container.style('width')); // / 1;
     var margin = {
             top: 10,
             right: 20,
@@ -125,6 +127,8 @@ recordStats = function (data) {
                         letter: e
                     }
                 })
+                .sortBy('frequency')
+                .reverse()
                 .value();
             var schema = Schemas.SARCAT._schema[e];
             //console.log(schema)
@@ -152,17 +156,22 @@ recordStats = function (data) {
         })
         .value();
     var omit = ['Incident Status', 'Incident Type', 'Incident Environment', 'Ecoregion Domain', 'Response State/Region', 'Agency Having Jurisdiction', 'Subject Category', 'Land Owner', 'Terrrain', 'Land Cover',
-            'Precipitation Type', 'Distance From IPP', "Elevation Change", "Track Offset", "Incident Outcome", "Scenario", "Lost Strategy", "Mobility (hours)", "IPP Type", "IPP Classification", "Determining Factor", "Type of Decision Point", "Subject-Age", "Subject-Sex", "Subject-Weight,Resource-Type", "Subject-Status"
-        ]
-        // var use1 = ['incident.subjectcategory', 'incident.landOwner', 'incidentOutcome.trackOffset', 'incident.ecoregiondomain', 'recordInfo.incidenttype', 'recordInfo.incidentdate'];
-    filteredCount = count.filter(function (d) {
-            return _.contains(omit, d.label);
-        })
-        /*var use1 = ['incident.subjectcategory', 'incident.landOwner', 'incidentOutcome.trackOffset', 'incident.ecoregiondomain', 'recordInfo.incidenttype', 'recordInfo.incidentdate'];
+        'Precipitation Type', 'Distance From IPP', "Elevation Change", "Track Offset", "Incident Outcome", "Scenario", "Lost Strategy", "Mobility (hours)", "IPP Type", "IPP Classification", "Determining Factor", "Type of Decision Point", "Subject-Age", "Subject-Sex", "Subject-Weight,Resource-Type", "Subject-Status"
+    ]
+    omit = ['_id', 'Latitude', 'Longitude', 'Record Name', 'Incident #', 'Mission #', 'Incident Date/Time'];
+    count = count.filter(function (d) {
+        return !_.contains(omit, d.label);
+    });
+    /*
+        var use1  = ["Subject-Age", "Subject Category", "Ecoregion Division", "Subject-Illness", "Subject-InjuryType", "Subject-Mechanism", "Incident Type", "Land Owner", "Subject-Treatmentby", "Subject-EvacuationMethod", "Contact Method", "Population Density", "Land Cover", "Terrrain", "Subject-Physical_fitness", "Subject-Experience", "Subject-Equipment", "Subject-Clothing", "Subject-Survival_training", "Incident Status", "Incident Environment", "Ecoregion Domain", "Subject-Status", "Subject-Local", "Subject-Sex", "IPP Classification", "Incident Response Country", "State/Province", "Incident County/Region", "Signalling", "Injured Searcher", "Total # of Tasks", "Total Man Hours", "Total Cost", "Total Personnel", "Total Distance Traveled", "Distance From IPP", "Find Bearing (deg)", "Incident Outcome", "Subject Located Date/Time", "Incident Closed Date/Time", "Scenario", "Suspension Reasons", "Find Feature", "Detectability", "Mobility/Responsiveness", "Lost Strategy", "Mobility (hours)", "", "Subject-Weight", "Subject-Height", "Resource-_key", "Resource-Type", "Resource-Count", "Resource-Hours", "Resource-FindResource"]
         filteredCount = count.filter(function (d) {
-            return d_.contains(use1, d.field);
-        })*/
-    filteredCount.forEach(function (d) {
+            return _.contains(use1, d.field);
+        })
+    */
+    count = _.sortBy(count, function (d) {
+        return -d.count.length
+    })
+    count.forEach(function (d) {
         drawGraph(d);
     });
     return count;
@@ -184,39 +193,28 @@ statsSetMap = function (context, bounds, points) {
         })
         .addTo(map);
     obj.add = function (d) {
-        console.log(d)
+        //console.log(d)
         z = coords;
         var val = d.val;
         if (!d.path) {
             coords[val] = d;
             obj.addPoint(d);
         }
-
-
-
-
-
-            if (d.path) {
-                coords[d.val] = d;
-                if (d.coords) {
-                    obj.addPoly(d, JSON.parse(d.coords));
-                    return;
-                }
-                var start = coords.ippCoordinates.layer.getLatLng();
-                var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : map.getCenter();
-                var latlngs = [
-                    [start.lat, start.lng],
-                    [end.lat, end.lng]
-                ];
-                console.log(d,latlngs)
-                obj.addPoly(d, latlngs);
+        if (d.path) {
+            coords[d.val] = d;
+            if (d.coords) {
+                obj.addPoly(d, JSON.parse(d.coords));
+                return;
             }
-
-
-
-
-
-
+            var start = coords.ippCoordinates.layer.getLatLng();
+            var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : map.getCenter();
+            var latlngs = [
+                [start.lat, start.lng],
+                [end.lat, end.lng]
+            ];
+            console.log(d, latlngs)
+            obj.addPoly(d, latlngs);
+        }
     };
     obj.addPoint = function (d) {
         var _coords = d.coords || map.getCenter();
@@ -259,13 +257,12 @@ statsSetMap = function (context, bounds, points) {
             name: d.name,
             val: d.val,
             editable: false,
-            weight:4
+            weight: 4
         });
         //polyline.addTo(map)
         drawnPaths.addLayer(polyline);
         //paths[d.val] = polyline;
         coords[d.val].layer = polyline;
-      
         //var lineString = JSON.stringify(layer.toGeoJSON());
     };
     obj.removePoly = function (d) {
@@ -297,6 +294,7 @@ stats = function () {
     var records = Records.find()
         .fetch();
     data = recordStats(records);
+    //return
     var coords = records.map(function (d) {
         return d.coords
     });
@@ -371,32 +369,28 @@ stats = function () {
         });
     })
     map.fitBounds();
-    $('#recordStats .panel-heading').html('<h3 class="panel-title"><span class="text-danger">Red Circles = IPP</span>, <span class="text-primary"n>Blue Circles = Find Coordinates</span></div>');
+    $('#recordStats .panel-heading')
+        .html('<h3 class="panel-title"><span class="text-danger">Red Circles = IPP</span>, <span class="text-primary"n>Blue Circles = Find Coordinates</span></div>');
+    /*
+        var legend = L.control({position: 'bottomright'});
 
-/*
-    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
 
-legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+            labels = [];
 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-        labels = [];
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:#ff0000"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
 
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:#ff0000"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
+        return div;
+    };
 
-    return div;
-};
-
-legend.addTo(map);
-*/
-
-
-
-
+    legend.addTo(map);
+    */
 };
 
