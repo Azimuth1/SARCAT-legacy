@@ -18,6 +18,7 @@ Template.form.onCreated(function () {
     console.log(e.pageY - offset.top);
   });
     */
+    //Template.dpReplacement.replaces("afBootstrapDateTimePicker");
     Meteor.call('getFilesInPublicFolder', this.data.record._id, function (err, d) {
         Session.set('fileUploads', d)
     });
@@ -25,6 +26,35 @@ Template.form.onCreated(function () {
 Template.form.onRendered(function () {
     var record = this.data.record;
     r = record;
+    /*
+    $('.bsDateInput').on('change', function (event) {
+        //return;
+        console.log('!')
+            // console.log(event)
+        t = this;
+        // e=event;
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        console.log(t.value);
+        //if(this.value===''){return}
+        Meteor.call('updateRecord', record._id, this.name, this.value, function (err, d) {
+            console.log(err, d);
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            //Session.set('fileUploads', d)
+        });
+    });*/
+    var coords = this.data.record.coords;
+    map = formSetMap('formMap', record._id);
+    var coords = getCoords(record);
+    coords.forEach(function (d) {
+        if (d.coords) {
+            //$('[data="' + d.val + '"]').addClass('active');
+            map.add(d);
+        }
+    });
+    map.fitBounds();
+    return
     var currentUnit = Session.get('measureUnits');
     var degree = record.incidentOperations.initialDirectionofTravel || 0;
     var travelBearing = $('.travelDirection');
@@ -152,26 +182,12 @@ Template.form.onRendered(function () {
         .next()
         .prepend('<p class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</p>')
     */
-    var coords = this.data.record.coords;
-    // var bounds = Session.get('bounds')
-    // var mapBounds = coords.bounds ? coords.bounds : config.bounds;
-    // mapBounds = boundsString2Array(mapBounds);
-    map = formSetMap('formMap', record._id);
-    var coords = getCoords(record);
-    coords.forEach(function (d) {
-        if (d.coords) {
-            $('[data="' + d.val + '"]')
-                .addClass('active');
-            map.add(d);
-        }
-    });
-    map.fitBounds();
-    $('.collapse')
-        .collapse({
-            toggle: false
-        });
 });
 Template.form.helpers({
+    activeLayer: function (name) {
+        var coords = this.record.coords;
+        return coords[name] ? 'active' : '';
+    },
     toDateString: function (date) {
         return;
         console.log(date)
@@ -535,21 +551,25 @@ Template.form.events({
             .collapse('toggle');
     },
     'click .newSubject': function (event, template) {
+        var record = Session.get('record');
         Meteor.call('pushArray', record._id, 'subjects.subject', function (err, d) {
             console.log(d);
         });
     },
     'click .removeSubject': function (event, template) {
+        var record = Session.get('record');
         Meteor.call('removeSubject', record._id, event.target.getAttribute('data'), function (err) {
             console.log(err);
         });
     },
     'click .newResource': function (event, template) {
+        var record = Session.get('record');
         Meteor.call('pushArray', record._id, 'resourcesUsed.resource', function (err, d) {
             console.log(d);
         });
     },
     'click .removeResource': function (event, template) {
+        var record = Session.get('record');
         Meteor.call('removeResource', record._id, event.target.getAttribute('data'), function (err) {
             console.log(err);
         });
@@ -741,4 +761,3 @@ AutoForm.hooks({
         }
     }
 });
-

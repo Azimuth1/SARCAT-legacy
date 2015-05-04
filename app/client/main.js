@@ -282,7 +282,13 @@ formSetMap = function (context, recordId) {
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
         Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
     };
-    layers.Outdoors.addTo(map);
+    var layers = Meteor.settings.public.layers;
+    _.each(layers, function (d, e) {
+        layers[e] = L.tileLayer(d);
+    })
+    var firstLayer = Object.keys(layers)[0];
+    layers[firstLayer].addTo(map);
+    //layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
     drawnPaths = new L.FeatureGroup()
@@ -460,7 +466,6 @@ formSetMap = function (context, recordId) {
         $('[name="' + d.name + '.lat"]')
             .val(_coords.lat)
             .trigger("change");
-
         /*function newElev(d) {
                 console.log(d)
                 if (d.name !== 'coords.ippCoordinates' && d.name !== 'coords.findCoord') {
@@ -497,9 +502,9 @@ formSetMap = function (context, recordId) {
                     }
                 });
             }*/
-            /*marker.on('dragstart', function (event) {
-                confirm('Are you sure you want to update your IPP?')
-            });*/
+        /*marker.on('dragstart', function (event) {
+            confirm('Are you sure you want to update your IPP?')
+        });*/
         marker.on('dragend', function (event) {
             var marker = event.target;
             var position = marker.getLatLng();
@@ -527,4 +532,3 @@ formSetMap = function (context, recordId) {
     };
     return obj;
 }
-
