@@ -183,6 +183,7 @@ Schemas.recordInfo = new SimpleSchema({
         label: 'Incident Date/Time',
         autoform: {
             afFieldInput: {
+                'class': 'bsDateInput',
                 placeholder: 'MM/DD/YYYY HH:MM',
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
@@ -229,19 +230,19 @@ Schemas.incident = new SimpleSchema({
         optional: true,
         label: 'Agency Having Jurisdiction',
     },
-
-
-    'SARNotifiedFateTime': {
+    'SARNotifiedDateTime': {
         type: Date,
         label: 'SAR Notified Date/Time',
         optional: true,
         autoform: {
             afFieldInput: {
+                'class': 'bsDateInput',
                 placeholder: 'MM/DD/YYYY HH:MM',
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
                     use24hours: true,
-                    format: 'MM/DD/YYYY HH:mm'
+                    format: 'MM/DD/YYYY HH:mm',
+                    focusOnShow: false
                 }
             }
         }
@@ -587,9 +588,25 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Incident Outcome',
         optional: true
     },
-   /* 'subject located date-time': {
+    'subjectLocatedDateTime': {
         type: Date,
         label: 'Subject Located Date/Time',
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                'class': 'bsDateInput',
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm'
+                }
+            }
+        }
+    },
+    'incidentClosedDateTime': {
+        type: Date,
+        label: 'Incident Closed Date/Time',
         optional: true,
         autoform: {
             afFieldInput: {
@@ -602,21 +619,6 @@ Schemas.incidentOutcome = new SimpleSchema({
             }
         }
     },
-    'incident closed date-time': {
-        type: Date,
-        label: 'Incident CLosed Date/Time',
-        optional: true,
-        autoform: {
-            afFieldInput: {
-                placeholder: 'MM/DD/YYYY HH:MM',
-                type: "bootstrap-datetimepicker",
-                dateTimePickerOptions: {
-                    use24hours: true,
-                    format: 'MM/DD/YYYY HH:mm'
-                }
-            }
-        }
-    },*/
     'scenario': {
         type: String,
         autoform: {
@@ -1255,14 +1257,6 @@ Schemas.formEditions = new SimpleSchema({
         type: String
     },
 });
-
-
-
-
-
-
-
-
 Schemas.SARCAT = new SimpleSchema({
     measureUnits: {
         type: String,
@@ -1499,4 +1493,3 @@ Schemas.config = new SimpleSchema({
     },
 });
 Config.attachSchema(Schemas.config);
-

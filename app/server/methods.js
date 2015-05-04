@@ -81,8 +81,8 @@ Meteor.methods({
         var update = Records.update(id, {
             $set: obj
         });
-        console.log(update);
-        return [id, name, val];
+
+        return update;
     },
     toggleListPrivacy: function (list) {
         //console.log(list, list.userId);

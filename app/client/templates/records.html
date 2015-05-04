@@ -38,17 +38,17 @@
         <li role="presentation" class="active"><a href="#records" aria-controls="home" role="tab" data-toggle="tab" class="white">List</a> </li>
         <li role="presentation"><a href="#recordStats" aria-controls="profile" role="tab" data-toggle="tab" class="white recordStats">Map</a> </li>
         <div id="toolbar" class="btn-group pull-right mar0y">
-            <button id="downloadRecords" type="button" class="btn btn-default">
+            <a id="downloadRecords" type="button" class="btn btn-default">
                 <i class="glyphicon glyphicon-save-file"></i> Download
-            </button>
-            <button type="button" class="btn btn-default" style="margin-y=-12px">
+            </a>
+            <a type="button" class="btn btn-default" style="margin-y=-12px">
                 Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
-            </button>
+            </a>
         </div>
         {{#if createNewBtn}}
-            <button type="button" class="btn btn-primary pull-right mar0" data-target="#createRecordModal" data-toggle="modal">
+            <a type="button" class="btn btn-primary pull-right mar0" data-target="#createRecordModal" data-toggle="modal">
                 <i class="glyphicon glyphicon-plus"></i> New Record
-            </button>
+            </a>
         {{/if}}
     </ul>
     <div class="tab-content admin">
