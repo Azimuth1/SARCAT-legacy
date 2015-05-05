@@ -1,8 +1,8 @@
 var map;
-Template.admin.created = function () {
+Template.admin.onCreated(function (a) {
     Session.set('userView', 'admin');
-};
-Template.admin.rendered = function () {
+});
+Template.admin.onRendered(function (a) {
     $('label:contains("Forecast API Key")')
         .append('<span class="forecastio small em mar0y text-default">*Auto calculate weather by getting a key from <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a></span>');
     var logo = document.getElementById('agencyLogo');
@@ -17,7 +17,7 @@ Template.admin.rendered = function () {
         $('input[name="role_' + id + '"][value="' + role + '"]')
             .prop("checked", true)
     });
-};
+});
 Template.admin.helpers({
     profileIncomplete: function () {
         var agencyProfile = Session.get('agencyProfile');

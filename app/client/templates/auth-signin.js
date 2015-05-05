@@ -3,15 +3,12 @@ var ERRORS_KEY = 'signinErrors';
 Accounts.ui.config({
   passwordSignupFields: "USERNAME_ONLY"
 });*/
-Template.signin.created = function () {
+Template.signin.onCreated(function () {
     Session.set(ERRORS_KEY, {});
-
-    /*var config = Config.findOne();
-    if (config) {
-        Session.set('logo', 'uploads/logo/default_logo.png')
-    }*/
-
-};
+    if (Meteor.user()) {
+        Router.go('home');
+    }
+});
 Template.signin.helpers({
     errorMessages: function () {
         return _.values(Session.get(ERRORS_KEY));
@@ -49,7 +46,6 @@ Template.signin.events({
                 });
             }
             Router.go('home', Meteor.user());
-
         });
     }
 });

@@ -1,6 +1,87 @@
-Template.recordStats.onCreated(function () {})
-Template.recordStats.onRendered(function () {
-    stats()
+Template.stats.onCreated(function () {
+    Session.set('userView', 'stats');
+    var records = Records.find()
+        .fetch();
+    r = records
+    data = recordStats(records);
+    Session.set('records', records);
+    Session.set('data', data);
+});
+Template.stats.onRendered(function () {
+    data.forEach(function (d) {
+        drawGraph(d);
+    });
+    var coords = records.map(function (d) {
+        return d.coords
+    });
+    if (!records.length) {
+        return;
+    }
+    var mapBounds = coords[0].bounds;
+    mapBounds = boundsString2Array(mapBounds);
+    map = statsSetMap('statsMap', mapBounds);
+    var mapPoints = [{
+        val: "ippCoordinates",
+        name: "coords.ippCoordinates",
+        text: 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>', //"IPP Location",
+        icon: 'fa-times-circle-o',
+        color: 'red'
+    }, {
+        val: "findCoord",
+        name: "coords.findCoord",
+        text: "Find Location",
+        icon: 'fa-flag-checkered',
+        color: 'blue'
+    }, {
+        val: "actualRoute",
+        name: "coords.actualRoute",
+        text: "Actual Route",
+        path: {
+            stroke: 'green',
+            weight: 8
+        }
+    }, ];
+    /*
+    _.each(mapPoints, function (d, ind) {
+  
+        coords.forEach(function (e) {
+            if (!e) {
+                return;
+            }
+            var latlng = e[d.val];
+            if (!latlng) {
+                return
+            };
+            d.coords = latlng;
+            map.add(d);
+        });
+    })
+
+*/
+    //_.each(mapPoints, function (d, ind) {
+    records.forEach(function (d) {
+        console.log(d)
+        map.addPoint({
+            val: "ippCoordinates",
+            name: "coords.ippCoordinates",
+            text: 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>', //"IPP Location",
+            icon: 'fa-times-circle-o',
+            color: 'red',
+            coords: d.coords.ippCoordinates
+        });
+        /*
+                    if (!e) {
+                        return;
+                    }
+                    var latlng = e[d.val];
+                    if (!latlng) {
+                        return
+                    };
+                    d.coords = latlng;
+                    map.add(d);*/
+    });
+    // })
+    map.fitBounds();
 })
 var drawGraph = function (d) {
     colors = d3.scale.category20c();
@@ -142,9 +223,9 @@ recordStats = function (data) {
             } else if (!schema) {
                 var split = e.split('.');
                 label0 = split[1].charAt(0)
-                    .toUpperCase() + split[1].slice(1);;
-                label1 = split[2].charAt(0)
-                    .toUpperCase() + split[2].slice(1);
+                    .toUpperCase() + split[1].slice(1);
+                label1 = split[split.length - 1].charAt(0)
+                    .toUpperCase() + split[split.length - 1].slice(1);
                 label = label0 + '-' + label1;
                 // label = label.charAt(0).toUpperCase() + label.slice(1);
             }
@@ -155,13 +236,20 @@ recordStats = function (data) {
             };
         })
         .value();
-    var omit = ['Incident Status', 'Incident Type', 'Incident Environment', 'Ecoregion Domain', 'Response State/Region', 'Agency Having Jurisdiction', 'Subject Category', 'Land Owner', 'Terrrain', 'Land Cover',
+    /*var omit = ['Incident Status', 'Incident Type', 'Incident Environment', 'Ecoregion Domain', 'Response State/Region', 'Agency Having Jurisdiction', 'Subject Category', 'Land Owner', 'Terrrain', 'Land Cover',
         'Precipitation Type', 'Distance From IPP', "Elevation Change", "Track Offset", "Incident Outcome", "Scenario", "Lost Strategy", "Mobility (hours)", "IPP Type", "IPP Classification", "Determining Factor", "Type of Decision Point", "Subject-Age", "Subject-Sex", "Subject-Weight,Resource-Type", "Subject-Status"
     ]
     omit = ['_id', 'Latitude', 'Longitude', 'Record Name', 'Incident #', 'Mission #', 'Incident Date/Time'];
-    count = count.filter(function (d) {
-        return !_.contains(omit, d.label);
-    });
+    
+*/
+
+keep = ["incidentOperations.ipptype", "incidentOperations.ippclassification", "incidentOperations.PLS_HowDetermined", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status", "incident.SARNotifiedDateTime", "incident.county-region", "incident.subjectcategory", "incident.contactmethod", "incident.landOwner", "incident.incidentEnvironment", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "weather.precipType", "incidentOutcome.incidentOutcome", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.detectability", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.lostStrategy", "incidentOutcome.mobility_hours", "rescueDetails.signalling", "subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "resourcesUsed.numTasks", "resourcesUsed.totalPersonnel", "resourcesUsed.totalManHours", "resourcesUsed.distanceTraveled", "resourcesUsed.totalCost", "resourcesUsed.resource.$.type", "resourcesUsed.resource.$.count", "resourcesUsed.resource.$.hours", "resourcesUsed.resource.$.findResource"];
+count=count.filter(function(d){return _.contains(keep,d.field)})
+
+/*
+
+    count = 
+    */
     /*
         var use1  = ["Subject-Age", "Subject Category", "Ecoregion Division", "Subject-Illness", "Subject-InjuryType", "Subject-Mechanism", "Incident Type", "Land Owner", "Subject-Treatmentby", "Subject-EvacuationMethod", "Contact Method", "Population Density", "Land Cover", "Terrrain", "Subject-Physical_fitness", "Subject-Experience", "Subject-Equipment", "Subject-Clothing", "Subject-Survival_training", "Incident Status", "Incident Environment", "Ecoregion Domain", "Subject-Status", "Subject-Local", "Subject-Sex", "IPP Classification", "Incident Response Country", "State/Province", "Incident County/Region", "Signalling", "Injured Searcher", "Total # of Tasks", "Total Man Hours", "Total Cost", "Total Personnel", "Total Distance Traveled", "Distance From IPP", "Find Bearing (deg)", "Incident Outcome", "Subject Located Date/Time", "Incident Closed Date/Time", "Scenario", "Suspension Reasons", "Find Feature", "Detectability", "Mobility/Responsiveness", "Lost Strategy", "Mobility (hours)", "", "Subject-Weight", "Subject-Height", "Resource-_key", "Resource-Type", "Resource-Count", "Resource-Hours", "Resource-FindResource"]
         filteredCount = count.filter(function (d) {
@@ -171,9 +259,6 @@ recordStats = function (data) {
     count = _.sortBy(count, function (d) {
         return -d.count.length
     })
-    count.forEach(function (d) {
-        drawGraph(d);
-    });
     return count;
 };
 statsSetMap = function (context, bounds, points) {
@@ -192,7 +277,7 @@ statsSetMap = function (context, bounds, points) {
             id: 'examples.map-i875mjb7'
         })
         .addTo(map);
-    obj.add = function (d) {
+    /*obj.add = function (d) {
         //console.log(d)
         z = coords;
         var val = d.val;
@@ -202,22 +287,28 @@ statsSetMap = function (context, bounds, points) {
         }
         if (d.path) {
             coords[d.val] = d;
-            if (d.coords) {
-                obj.addPoly(d, JSON.parse(d.coords));
-                return;
-            }
+            //console.log(d);
+             if (d.coords) {
+                 obj.addPoly(d, JSON.parse(d.coords));
+                 return;
+             }
             var start = coords.ippCoordinates.layer.getLatLng();
-            var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : map.getCenter();
+            var end = (coords.findCoord) ? coords.findCoord.layer.getLatLng() : null;
+            if (!start || !end) {
+                return
+            }
             var latlngs = [
                 [start.lat, start.lng],
                 [end.lat, end.lng]
             ];
-            console.log(d, latlngs)
+            console.log(latlngs[0][0])
             obj.addPoly(d, latlngs);
         }
-    };
+    };*/
     obj.addPoint = function (d) {
+     
         var _coords = d.coords || map.getCenter();
+        
         var myIcon = L.divIcon({
             iconSize: [41, 39],
             className: 'fa ' + d.icon + ' fa-4x fa-fw'
@@ -252,14 +343,15 @@ statsSetMap = function (context, bounds, points) {
     obj.addPoly = function (d, latlngs) {
         color = d.path.stroke;
         polyline = L.polyline(latlngs, {
-            color: '#0',
+            color: '#000',
             opacity: 0.8,
             name: d.name,
             val: d.val,
             editable: false,
             weight: 4
         });
-        //polyline.addTo(map)
+        polyline.addTo(map)
+        return
         drawnPaths.addLayer(polyline);
         //paths[d.val] = polyline;
         coords[d.val].layer = polyline;
@@ -285,112 +377,14 @@ statsSetMap = function (context, bounds, points) {
         delete coords[d.val];
     };
     obj.fitBounds = function () {
+        return
         map.fitBounds(drawnPaths.getBounds()
             .pad(.3));
     };
     return obj;
 }
 stats = function () {
-    var records = Records.find()
-        .fetch();
-    data = recordStats(records);
-    //return
-    var coords = records.map(function (d) {
-        return d.coords
-    });
-    if (!records.length) {
-        return;
-    }
-    var mapBounds = coords[0].bounds;
-    mapBounds = boundsString2Array(mapBounds);
-    map = statsSetMap('statsMap', mapBounds);
-    var mapPoints = [{
-            val: "ippCoordinates",
-            name: "coords.ippCoordinates",
-            text: 'IPP Location. <br>Direction of Travel (hover to edit): <div class="fa fa-arrow-circle-up fa-2x fa-fw travelDirection"></div>', //"IPP Location",
-            icon: 'fa-times-circle-o',
-            color: 'red'
-        }, {
-            val: "destinationCoord",
-            name: "coords.destinationCoord",
-            text: "Intended Destination",
-            icon: 'fa-flag-checkered',
-            color: 'blue'
-        }, {
-            val: "actualRoute",
-            name: "coords.actualRoute",
-            text: "Actual Route",
-            path: {
-                stroke: 'green',
-                weight: 8
-            }
-        },
-        /*{
-                val: "decisionPointCoord",
-                name: "coords.decisionPointCoord",
-                text: "Decision Point",
-                icon: 'fa-code-fork',
-                color: 'orange'
-            }, {
-                val: "revisedLKP_PLS",
-                name: "coords.revisedLKP_PLS",
-                text: "Revised IPP",
-                icon: 'fa-male',
-                color: 'red'
-            }, {
-                val: "findCoord",
-                name: "coords.findCoord",
-                text: "Find Location",
-                icon: 'fa-flag-checkered',
-                color: 'green'
-            }, {
-                val: "intendedRoute",
-                name: "coords.intendedRoute",
-                text: "Intended Route",
-                path: {
-                    stroke: '#37A8DA'
-                }
-            }*/
-    ];
-    _.each(mapPoints, function (d, ind) {
-        /*if (ind > 1) {
-            return;
-        }*/
-        coords.forEach(function (e) {
-            if (!e) {
-                return;
-            }
-            var latlng = e[d.val];
-            if (!latlng) {
-                return
-            };
-            d.coords = latlng;
-            map.add(d);
-        });
-    })
-    map.fitBounds();
     $('#recordStats .panel-heading')
         .html('<h3 class="panel-title"><span class="text-danger">Red Circles = IPP</span>, <span class="text-primary"n>Blue Circles = Find Coordinates</span></div>');
-    /*
-        var legend = L.control({position: 'bottomright'});
-
-    legend.onAdd = function (map) {
-
-        var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-            labels = [];
-
-        // loop through our density intervals and generate a label with a colored square for each interval
-        for (var i = 0; i < grades.length; i++) {
-            div.innerHTML +=
-                '<i style="background:#ff0000"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-        }
-
-        return div;
-    };
-
-    legend.addTo(map);
-    */
 };
 

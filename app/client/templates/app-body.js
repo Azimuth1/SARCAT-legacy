@@ -5,10 +5,8 @@ var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 settings = Meteor.settings.public;
 Template.appBody.onCreated(function () {
-
 });
 Template.appBody.onRendered(function () {
-
 });
 Template.appBody.helpers({
     email: function (view) {
@@ -62,9 +60,10 @@ Template.appBody.events({
         event.preventDefault();
     },
     'click .js-logout': function () {
-        Session.set('adminRole', false);
-        Meteor.logout();
-        Router.go('signin');
+        Meteor.logout(function () {
+            Session.set('adminRole', false);
+            Router.go('signin');
+        });
     },
 });
 

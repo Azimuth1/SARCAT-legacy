@@ -1,0 +1,42 @@
+<template name="stats">
+    <ul class="nav nav-tabs navyBLue-bg">
+        {{#if isAdmin}}
+            {{#if createNewBtn}}
+                <a type="button" class="btn btn-primary mar0" data-target="#createRecordModal" data-toggle="modal">
+                    <i class="glyphicon glyphicon-plus"></i> New Record
+                </a>
+            {{/if}}
+            {{#if selectedRecords}}
+                <button type="button" class="btn btn-default deleteRecord mar0">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+            {{/if}}
+
+        {{/if}}
+
+        <div id="toolbar" class="btn-group pull-right mar0y">
+
+            <a id="downloadRecords" type="button" class="btn btn-default">
+                <i class="glyphicon glyphicon-save-file"></i> Download
+            </a>
+            {{#if isAdmin}}
+                <a type="button" class="btn btn-default" style="margin-y=-12px">
+                Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
+            </a>
+            {{/if}}
+
+        </div>
+    </ul>
+
+    <div class="tab-content admin pad1">
+        <div class="panel panel-default">
+            <div class="panel-heading"> </div>
+            <div class="panel-body pad0">
+                <div id='statsMap' style="width:100%;height:400px"></div>
+                <div id='target_table_id'></div>
+            </div>
+        </div>
+        <div id="recordss"></div>
+    </div>
+</template>
+

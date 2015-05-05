@@ -1,11 +1,14 @@
 var ERRORS_KEY = 'joinErrors';
-Template.join.created = function() {
+
+Template.join.onCreated(function () {
     Session.set(ERRORS_KEY, {});
-    /*Meteor.call('getCount', function(error, result) {
-        Session.set('initConfig', result);
-        return result;
-    });*/
-};
+    if (Meteor.user()) {
+        Router.go('home');
+    }
+});
+
+
+
 Template.join.helpers({
     errorMessages: function() {
         return _.values(Session.get(ERRORS_KEY));
@@ -28,6 +31,7 @@ Template.join.helpers({
     }
 });
 var isValidPassword = function(password) {
+    return true;
     if (password.length < 6) {
         console.log('Your password should be 6 characters or longer.');
         return false;
