@@ -4,11 +4,9 @@ var drawn;
 Session.setDefault('modal', false);
 Session.setDefault('tableHide', false);
 Template.records.onCreated(function (a) {
-    Tracker.autorun(function () {
-        var count = Records.find()
-            .count()
-        Session.set('count', count);
-    });
+    Session.set('modal', false);
+    Session.set('tableHide', false);
+    Session.set('selectedRecords', 0);
 })
 Template.records.onRendered(function () {
     drawn = false;
@@ -36,51 +34,30 @@ Template.records.onRendered(function () {
                 .bootstrapTable('destroy');
         })
         .on('shown.bs.modal', function (e) {
-            /* 
-            //http://ipinfo.io/developers
-
-            $('.datetimepicker')
-                 .datetimepicker({
-                     use24hours: true,
-                     format: 'HH:mm'
-                 });
-
-             $('.datetimepicker')
-                 .datetimepicker({
-                     locale: moment.locale(),
-                     maxDate: new Date()
-                 });
-             $('.datetimepicker input')
-                 .val(new Date()
-                     .toLocaleString())
-                 .trigger('change')*/
             mapDrawn.reset();
         });
 });
 Template.records.helpers({
+    userView: function(name){
+console.log(Session.equals('userView',name))
+        return Session.equals('userView',name);
+    },
     modal: function () {
         return Session.get('modal');
     },
     allRecords: function () {
-        return this.records;
-    },
-    config: function () {
-        return Session.get('config');
+        return Records.find({}, {
+            sort: {
+                'recordInfo.incidentnum': -1
+            }
+        });
     },
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
     noRecords: function () {
-        return !Records.find({}, {
-                sort: {
-                    name: 1
-                }
-            })
-            .fetch()
-            .length;
-    },
-    newRecord: function () {
-        return Records.findOne(Session.get('newRecord'));
+        return !Records.find()
+            .count()
     },
     createNewBtn: function () {
         var agencyProfile = Session.get('agencyProfile');
@@ -91,64 +68,37 @@ Template.records.helpers({
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile && role;
     },
-    /*toDateString: function (date) {
-        return date;
-        if (!date) {
-            return;
-        }
-        return moment(date).format('MM/DD/YYYY HH:mm')
-    },*/
     selectedRecords: function () {
-        //console.log(checked = $('.bs-checkbox [name="btSelectItem"]:checked')[0])
-        return Session.get('selectedRecords');
+        return Session.get('selectedRecords')
+            .length ? true : false;
     },
     tableHide: function () {
         return Session.get('tableHide');
     }
 });
 Template.records.events({
-    'click .modal-backdrop': function () {
-        var record = Records.findOne(Session.get('newRecord'));
-        Meteor.call('removeRecord', record, function (error, d) {
-            console.log(error, d)
-        })
-    },
-    'click .recordStats': function (event, template) {
-        if (drawn) {
-            return;
-        }
-        drawn = true;
-        template.$('a[data-toggle="tab"][href="#recordStats"]')
-            .on('shown.bs.tab', function (e) {
-                stats();
-            });
-    },
+
     'click .openRecord': function (event, template) {
-        if (event.target.className === 'bs-checkbox') {
+        if (event.target.className === 'recordSel') {
             return;
         }
-        Router.go('form', {
+        return Router.go('form', {
             _id: event.currentTarget.id
         });
     },
     'click .deleteRecord': function (event, template) {
-        var toDelete = $('.bs-checkbox [name="btSelectItem"]:checked')
-            .parent()
-            .parent()
-            .map(function (d) {
-                return this.id
-            }).toArray();
+        var toDelete = Session.get('selectedRecords');
         if (!toDelete.length) {
             return;
         }
-        var all = Records.find().fetch();
+        var all = Records.find()
+            .fetch();
         var names = _.map(toDelete, function (d) {
             return _.findWhere(all, {
                     _id: d
                 })
                 .recordInfo.name;
         })
-    
         var message = 'Are you sure you want to delete the following records: ' + names.join(',')
         if (confirm(message)) {
             console.log(toDelete);
@@ -156,8 +106,8 @@ Template.records.events({
                 .bootstrapTable('destroy');
             Session.set('tableHide', true);
             Meteor.call('removeRecord', toDelete, function (error, d) {
-                var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
-                Session.set('selectedRecords', checked.length);
+                var checked = Session.get('selectedRecords')
+                Session.set('selectedRecords', checked);
                 if (error) {
                     return console.log(error);
                 }
@@ -181,15 +131,13 @@ Template.records.events({
         console.log(lat, lng);
         mapDrawn.editPoint(lat, lng);
     },
-    'change .bs-checkbox input,[name="btSelectAll"]': function (event, template) {
-        var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
-        Session.set('selectedRecords', checked.length);
-    },
-    'change [name="btSelectAll"]': function (event, template) {
-        setTimeout(function () {
-            var checked = $('.bs-checkbox [name="btSelectItem"]:checked');
-            Session.set('selectedRecords', checked.length)
-        }, 100)
+    'change .recordSel': function (event, template) {
+        var checked = $('.recordSel:checked')
+            .map(function () {
+                return this.value
+            })
+            .toArray();
+        Session.set('selectedRecords', checked);
     },
     'click #downloadRecords': function (event, template) {
         var flatten = function (x, result, prefix) {

@@ -3,7 +3,7 @@
         <ul class="nav nav-tabs navyBLue-bg" role="tablist">
             <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
             <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-            <li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>
+            <!--<li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>-->
 
             <li class="pull-right">
 
@@ -51,7 +51,29 @@
 
                             <!--{{> afQuickField name="googleAPI" }} -->
 
-                            {{> afQuickField name="forecastAPI" }} {{> afQuickField name="measureUnits"}}
+                            {{> afQuickField name="forecastAPI" }} 
+
+                            
+
+
+
+
+
+ {{> afQuickField name="measureUnits"}}
+ <!--
+                            {{#autoForm id="createcustomQuestionsId" type="insert" collection="Records" validation="submit" }}
+                            
+                            {{> afQuickField name='coords.ippCoordinates' }} 
+
+                            {{> afQuickField name='recordInfo'}}
+
+
+                             {{/autoForm}}
+-->
+
+
+
+
 
                             <div class="col-md-12 pad00">
                                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
@@ -59,6 +81,31 @@
                         {{/autoForm}}
                     </div>
                 </div>
+
+
+
+
+
+
+
+                <div class="panel panel-default mar1">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Create Customized Incident Questions For Your Team
+                  </h3>
+                    </div>
+                    <div class="panel-body">
+{{#autoForm collection='Config' doc=configs id='adminCustomQuestionsId' type="update" fields="customQuestions" resetOnSuccess=false}}
+{{> afQuickField name="customQuestions.q1"}} 
+{{> afQuickField name="customQuestions.q2"}} 
+{{> afQuickField name="customQuestions.q3"}} 
+ <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>Submit</button>
+{{/autoForm}}
+</div>
+</div>                     
+
+
+
+
                 <div class="panel panel-default mar1">
                     <div class="panel-heading">
                         <h3 class="panel-title">Default SAR Response Area
@@ -70,9 +117,7 @@
                             <div class="mapCrosshair">+</div>
                         </div>
                         <div class="col-md-12 mar1y">
-                            <!--
- {{> quickForm collection='Config' doc=configs id='formIdAgencyMap' class="hide" autosave=true type='update' fields="bounds" buttonContent= "Save Response Area"}}
--->
+
                             {{#autoForm id='formIdAgencyMap' collection='Config' doc=configs type='update' afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}} {{> afQuickField name="bounds" label-class="hide" class="hide"}}
                                 <button type="submit" class="saveBounds btn btn-primary btn-block btn-lg"><i class="glyphicon glyphicon-check"></i> Save Bounds</button>
                             {{/autoForm}}
@@ -123,15 +168,15 @@
                     </table>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane pad0 scroll" id="options">
+            <!--<div role="tabpanel" class="tab-pane pad0 scroll" id="options">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Data Form Type</h3> </div>
                     <div class="panel-body">
-                        <!-- {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}-->
+                         {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     {{/if}}
 </template>

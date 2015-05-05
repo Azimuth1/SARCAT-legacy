@@ -1,4 +1,4 @@
-Meteor.publish('publicLists', function () {
+Meteor.publish('records', function () {
     if (this.userId) {
         return Records.find({});
         //return Records.find({},{fields: {recordInfo: 1}});
@@ -25,6 +25,7 @@ Meteor.publish('privateLists', function () {
         //this.ready();
     }
 });
+
 Meteor.publish('userData', function () {
     if (Roles.userIsInRole(this.userId, ['admin'])) {
         return Meteor.users.find();

@@ -1,8 +1,7 @@
 //var initSetup;
 console.log('router.js');
 Meteor.startup(function () {
-    console.log('router-startup')
-    if (!Meteor.isServer) {
+    if (Meteor.isClient) {
         Tracker.autorun(function () {
             var config = Config.findOne();
             if (config) {
@@ -13,14 +12,10 @@ Meteor.startup(function () {
                 Session.set('bounds', config.bounds);
                 Session.set('logo', config.agencyLogo);
                 Session.set('measureUnits', config.measureUnits);
-
             }
         });
         settings = Meteor.settings.public;
-        config = Meteor.settings.public.config;
-
-            //console.log(Meteor.settings)
-            //initSetup = Meteor.settings.public.config.initSetup;
+        //config = Meteor.settings.public.config;
     }
 });
 Handlebars.registerHelper('json', function (context) {
@@ -35,7 +30,7 @@ Router.configure({
     loadingTemplate: 'appLoading',
     waitOn: function () {
         return [
-            Meteor.subscribe('publicLists'),
+            //Meteor.subscribe('records'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
             Meteor.subscribe('roles'),
@@ -83,20 +78,24 @@ Router.route('adminSetup', {
 });
 Router.route('join');
 Router.route('signin');
+Router.route('appLoading');
+Router.route('profiles');
+Router.route('about');
 Router.route('records', {
     path: '/records',
     waitOn: function () {
-        return [this.subscribe('publicLists')];
+        return this.subscribe('records');
     },
-    data: function () {
-        var obj = {};
-        obj.users = Meteor.users.find();
-        obj.records = Records.find({},{
-            sort: {
-                    'recordInfo.incidentnum': -1
-                }
-        });
-        return obj;
+    action: function () {
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});
+Router.route('stats', {
+    path: '/stats',
+    waitOn: function () {
+        return this.subscribe('records');
     },
     action: function () {
         if (this.ready()) {
@@ -113,6 +112,7 @@ Router.route('admin', {
         var obj = {};
         obj.users = Meteor.users.find();
         obj.records = Records.find();
+        obj.title = 'ddd'
         return obj;
     },
     action: function () {
@@ -121,9 +121,6 @@ Router.route('admin', {
         }
     }
 });
-Router.route('appLoading');
-Router.route('profiles');
-Router.route('about');
 Router.route('form', {
     path: '/form/:_id',
     waitOn: function () {
@@ -145,5 +142,6 @@ meteor add insecure
 meteor add autopublish
 meteor remove insecure
 meteor remove autopublish
-*/
 
+Resource Responses
+*/

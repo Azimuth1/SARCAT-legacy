@@ -9,7 +9,13 @@
                 <a class="btn-pad js-logout btn-secondary">Logout</a>
             </div>
             <div class="btns-group-vertical btns-userHome">
-                <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> {{#if isAdmin}}
+                <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
+
+
+                <a href="{{pathFor 'stats'}}" class="btn-pad js-sharedRecords _userView btn-secondary {{isUserView 'stats'}}" data="stats">SARCAT Stats</a> 
+
+
+                {{#if isAdmin}}
                 <a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> {{/if}}
                 <a href="{{pathFor 'about'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'about'}}" data='about'>About</a>
             </div>
