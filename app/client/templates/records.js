@@ -1,11 +1,21 @@
-//Template.dpReplacement.replaces("afBootstrapDateTimePicker");
+var flatten = function (x, result, prefix) {
+    if (_.isObject(x)) {
+        _.each(x, function (v, k) {
+            flatten(v, result, prefix ? prefix + '.' + k : k)
+        })
+    } else {
+        result[prefix] = x
+    }
+    return result
+}
 var mapDrawn;
 var drawn;
 var filterFields
 Session.setDefault('recordMap', false);
 Template.records.onCreated(function (a) {
     Session.set('selectedRecords', 0);
-    var records = Records.find().fetch();
+    var records = Records.find()
+        .fetch();
     Session.set('allRecords', records);
     var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"];
     var allFields = _.map(Schemas.SARCAT._schema, function (d, e) {
@@ -15,7 +25,8 @@ Template.records.onCreated(function (a) {
             key: e,
             fieldId: e,
             label: d.label,
-            hidden: !_.contains(activeFields, e)
+            hidden: !_.contains(activeFields, e),
+            parent: e.split('.')[0]
         };
     });
     Session.set('allFields', allFields);
@@ -28,16 +39,23 @@ Template.records.onCreated(function (a) {
     Session.set('filterFields', filterFields);
 })
 Template.records.onRendered(function () {
-    var records = Records.find().fetch();
+    var records = Records.find()
+        .fetch();
     if (Session.get('recordMap')) {
-        recordsSetMap('recordsMap', records);
+        var recordMap = recordsSetMap('recordsMap', records);
+        console.log(recordMap)
+            //Session.set('map',recordMap.map)
     }
     r = records
-    dates = _.chain(records).map(function (d) {
-        return moment(d.recordInfo.incidentdate).format('MM/DD/YYYY HH:mm');
-    }).sortBy(function (d) {
-        return new Date(d);
-    }).value();
+    dates = _.chain(records)
+        .map(function (d) {
+            return moment(d.recordInfo.incidentdate)
+                .format('MM/DD/YYYY HH:mm');
+        })
+        .sortBy(function (d) {
+            return new Date(d);
+        })
+        .value();
     drawn = false;
     Session.set('userView', 'records');
     var bounds = Session.get('bounds');
@@ -48,10 +66,43 @@ Template.records.onRendered(function () {
     });
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
+            AutoForm.resetForm('createRecordModalFormId');
             mapDrawn.reset();
         });
 });
 Template.records.helpers({
+    stats: function () {
+        var data = Session.get('selectedFeature');
+        var filterFields = Session.get('filterFields');
+        var flatData = flatten(data, {});
+        var displayData = _.chain(flatData)
+            .map(function (d, e) {
+                var goodVal = _.findWhere(filterFields, {
+                    key: e
+                });
+                if (goodVal) {
+                    return {
+                        key: goodVal.label,
+                        parent: Schemas.SARCAT._schema[goodVal.parent].label,
+                        val: d
+                    };
+                }
+            })
+            .compact()
+            .value();
+        
+        displayData = _.chain(displayData)
+            .groupBy('parent')
+            .map(function (d, e) {
+                return {
+                    field: e,
+                    data: d
+                };
+            })
+            .value();
+        console.log(displayData);
+        return displayData;
+    },
     settings: function () {
         //["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"]
         var fields = Session.get('filterFields');
@@ -136,19 +187,24 @@ Template.records.events({
         });
     },
     'click .deleteRecord': function (event, template) {
-        var toDelete = $('.recordSel:checked').map(function () {
-            return this.value
-        }).toArray();
-        var names = $('.recordSel:checked').map(function () {
-            return this.name;
-        }).toArray();
+        var toDelete = $('.recordSel:checked')
+            .map(function () {
+                return this.value
+            })
+            .toArray();
+        var names = $('.recordSel:checked')
+            .map(function () {
+                return this.name;
+            })
+            .toArray();
         if (!toDelete.length) {
             return;
         }
         var message = 'Are you sure you want to delete the following records: ' + names.join(',')
         if (confirm(message)) {
             Meteor.call('removeRecord', toDelete, function (error, d) {
-                var checked = Session.get('selectedRecords').length;
+                var checked = Session.get('selectedRecords')
+                    .length;
                 Session.set('selectedRecords', checked);
                 if (error) {
                     return console.log(error);
@@ -178,9 +234,11 @@ Template.records.events({
     'change .recordSelAll': function (event, template) {
         var checked = event.target.checked;
         if (checked) {
-            $('.recordSel').prop('checked', true);
+            $('.recordSel')
+                .prop('checked', true);
         } else {
-            $('.recordSel').prop('checked', false)
+            $('.recordSel')
+                .prop('checked', false)
         }
         Session.set('selectedRecords', checked);
     },
@@ -190,32 +248,26 @@ Template.records.events({
         var newMap = !currentMap;
         if (newMap) {
             setTimeout(function () {
-                recordsSetMap('recordsMap', Records.find().fetch());
+                recordsSetMap('recordsMap', Records.find()
+                    .fetch());
             }, 100);
         }
     },
     'click #downloadRecords': function (event, template) {
-        var flatten = function (x, result, prefix) {
-            if (_.isObject(x)) {
-                _.each(x, function (v, k) {
-                    flatten(v, result, prefix ? prefix + '.' + k : k)
-                })
-            } else {
-                result[prefix] = x
-            }
-            return result
-        }
-        var checked = $('.recordSel:checked').map(function () {
-            return this.value;
-        }).toArray();
+        var checked = $('.recordSel:checked')
+            .map(function () {
+                return this.value;
+            })
+            .toArray();
         if (!checked.length) {
             return;
         }
         var allRecords = Records.find({
-            '_id': {
-                $in: checked
-            }
-        }).fetch();
+                '_id': {
+                    $in: checked
+                }
+            })
+            .fetch();
         allRecordsFlat = allRecords.map(function (d) {
             return flatten(d, {});
         })
@@ -280,13 +332,15 @@ Template.records.events({
 AutoForm.hooks({
     createRecordModalFormId: {
         beginSubmit: function () {
-            $('#recordTable_wrapper').remove();
+            $('#recordTable_wrapper')
+                .remove();
             Session.set('tableHide', true);
         },
         endSubmit: function () {
             console.log('!')
             Session.set('tableHide', false);
-            $('#recordTable').DataTable()
+            $('#recordTable')
+                .DataTable()
         },
         onSuccess: function (formType, result) {
             $('#createRecordModal')
@@ -297,3 +351,4 @@ AutoForm.hooks({
         },
     }
 });
+

@@ -207,13 +207,19 @@ var drawGraphDate = function (d) {
     // Parse the date / time
     var parseDate = d3.time.format("%m/%d/%Y %H:%M");
     // Set the ranges
-    var x = d3.time.scale().range([0, width]);
-    var y = d3.scale.linear().range([height, 0]);
+    var x = d3.time.scale()
+        .range([0, width]);
+    var y = d3.scale.linear()
+        .range([height, 0]);
     // Define the axes
-    var xAxis = d3.svg.axis().scale(x)
-        .orient("bottom").ticks(5);
-    var yAxis = d3.svg.axis().scale(y)
-        .orient("left").ticks(5);
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .ticks(5);
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(5);
     // Define the line
     var valueline = d3.svg.line()
         .x(function (d) {
@@ -276,7 +282,8 @@ recordStats = function (data) {
         return result
     }
     _.keys(Schemas.SARCAT._schema);
-    records = Records.find().fetch();
+    records = Records.find()
+        .fetch();
     flattenedRecords = records.map(function (d, e) {
         var flat = flatten(d, {});
         _.each(flat, function (val, field1) {
@@ -375,7 +382,8 @@ statsSetMap = function (context, bounds, points) {
     var obj = {};
     var map = L.map(context);
     m = map;
-    var drawnPaths = new L.FeatureGroup().addTo(map);
+    var drawnPaths = new L.FeatureGroup()
+        .addTo(map);
     var layerControl = L.control.layers(layers);
     var sarcatLayers = ["ippCoordinates", "findCoord", "destinationCoord", "decisionPointCoord"]; //, "intendedRoute", "actualRoute"];
     var layerGroups = sarcatLayers.map(function (d) {
@@ -499,8 +507,9 @@ statsSetMap = function (context, bounds, points) {
         map.fitBounds(layerGroups.ippCoordinates.getBounds());
     };
     return obj;
-}
+};
 recordsSetMap = function (context, data) {
+    var geojson;
     if (!data.length) {
         return;
     }
@@ -510,200 +519,13 @@ recordsSetMap = function (context, data) {
         Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
     };
     var obj = {};
-    var map = L.map(context).setView([37.8, -96], 4);
+    var map = L.map(context)
+        .setView([37.8, -96], 4);
+    obj.map = map;
     layers.Outdoors.addTo(map);
-    m = map;
-    /*
-    var drawnPaths = new L.FeatureGroup().addTo(map);
-    var layerControl = L.control.layers(layers, null, {
-        collapsed: false
-    });
-    var sarcatLayers = ["ippCoordinates", "findCoord", "destinationCoord", "decisionPointCoord"]; //, "intendedRoute", "actualRoute"];
-    layerGroups = sarcatLayers.map(function (d) {
-        var group = new L.FeatureGroup();
-        layerControl.addOverlay(group, d);
-        return {
-            name: d,
-            layer: group
-        };
-    });
-    layerGroups = _.object(_.map(layerGroups, function (x) {
-        return [x.name, x.layer];
-    }));
-    map.scrollWheelZoom.disable();
-    
-    layerControl.addTo(map);
-    
-    obj.add = function (d) {
-        if (d.coords && layerGroups[d.val]) {
-            obj.addPoint(d);
-        }
-        return
-        if (d.path) {
-            if (d.coords) {
-                obj.addPoly(d, JSON.parse(d.coords));
-                return;
-            }
-            var start = d.start;
-            var end = d.end;
-            if (!start || !end) {
-                return
-            }
-            var latlngs = [
-                [start.lat, start.lng],
-                [end.lat, end.lng]
-            ];
-            obj.addPoly(d, latlngs);
-        }
-    };
-    obj.addPoint = function (d) {
-        var marker = L.circleMarker(d.coords, {
-            fillColor: d.color,
-            color: d.color,
-            stroke: d.color,
-            fillColor: d.color,
-            fillOpacity: 1.3,
-            //stroke: false,
-            weight: 1,
-            radius: 3
-        });
-        //console.log(d,layerGroups)
-        layerGroups[d.val].addLayer(marker);
-        return marker;
-    }
-    obj.remove = function (d) {
-        // console.log(d)
-        var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
-        if (removePath) {
-            // console.log(removePath)
-            obj.removePoly(coords[removePath]);
-        }
-        if (d.path) {
-            obj.removePoly(d);
-        } else {
-            obj.removePoint(d);
-            return;
-        }
-    };
-    obj.addPoly = function (d, latlngs) {
-        color = d.path.stroke;
-        polyline = L.polyline(latlngs, {
-            color: '#000',
-            opacity: 0.4,
-            name: d.name,
-            val: d.val,
-            editable: false,
-            weight: 1
-        });
-        polyline.addTo(map)
-        return
-        drawnPaths.addLayer(polyline);
-        //paths[d.val] = polyline;
-        coords[d.val].layer = polyline;
-        //var lineString = JSON.stringify(layer.toGeoJSON());
-    };
-    obj.removePoly = function (d) {
-        var path = coords[d.val].layer;
-        $('[name="' + d.name + '"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(path);
-        delete coords[d.val];
-    };
-    obj.removePoint = function (d) {
-        var marker = coords[d.val].layer;
-        $('[name="' + d.name + '.lng"]')
-            .val('')
-            .trigger("change");
-        $('[name="' + d.name + '.lat"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(marker);
-        delete coords[d.val];
-    };
-    obj.fitBounds = function () {
-        map.fitBounds(layerGroups.ippCoordinates.getBounds());
-    };
-    var mapPoints = [{
-        val: "ippCoordinates",
-        name: "coords.ippCoordinates",
-        text: "Incident Location",
-        icon: 'fa-times-circle-o',
-        color: 'red'
-    }, {
-        val: "decisionPointCoord",
-        name: "coords.decisionPointCoord",
-        text: "Decision Point",
-        icon: 'fa-code-fork',
-        color: 'orange'
-    }, {
-        val: "destinationCoord",
-        name: "coords.destinationCoord",
-        text: "Intended Destination",
-        icon: 'fa-flag-checkered',
-        color: 'blue'
-    }, {
-        val: "revisedLKP_PLS",
-        name: "coords.revisedLKP_PLS",
-        text: "Revised IPP",
-        icon: 'fa-male',
-        color: 'red'
-    }, {
-        val: "findCoord",
-        name: "coords.findCoord",
-        text: "Find Location",
-        icon: 'fa-flag-checkered',
-        color: 'green'
-    }];
-    obj.addLegend = function (grades) {
-        var legend = L.control({
-            position: 'bottomright'
-        });
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend');
-            for (var i = 0; i < grades.length; i++) {
-                console.log(grades[i].color, grades[i].text)
-                div.innerHTML +=
-                    '<i style="background:' + grades[i].color + '"></i> ' +
-                    grades[i].text + '<br>';
-            }
-            return div;
-        };
-        legend.addTo(map);
-    };
-    obj.addLegend(mapPoints);
-    data.forEach(function (d) {
-        mapPoints.forEach(function (e) {
-            console.log(d)
-            e.coords = d.coords[e.val];
-            obj.add(e);
-        })
-    });
-    obj.fitBounds();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-    // control that shows state info on hover
-    var info = L.control();
+    /*var info = L.control();
     info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'info');
+        this._div = L.DomUtil.create('div', 'srecordMapInfo');
         this.update();
         return this._div;
     };
@@ -711,157 +533,224 @@ recordsSetMap = function (context, data) {
         this._div.innerHTML = '<h4>SARCAT Incident Records</h4>' + (props ?
             '<b>' + JSON.stringify(props) + '</b><br />' + JSON.stringify(props) + ' people / mi<sup>2</sup>' : 'Hover over a state');
     };
-    info.addTo(map);
-
-    function style(d) {
-        var field = d.properties.field;
-        mapPoints = [{
-            val: "ippCoordinates",
-            name: "coords.ippCoordinates",
-            text: "Incident Location",
-            icon: 'fa-times-circle-o',
-            color: 'red'
-        }, {
-            val: "decisionPointCoord",
-            name: "coords.decisionPointCoord",
-            text: "Decision Point",
-            icon: 'fa-code-fork',
-            color: 'orange'
-        }, {
-            val: "destinationCoord",
-            name: "coords.destinationCoord",
-            text: "Intended Destination",
-            icon: 'fa-flag-checkered',
-            color: 'blue'
-        }, {
-            val: "revisedLKP_PLS",
-            name: "coords.revisedLKP_PLS",
-            text: "Revised IPP",
-            icon: 'fa-male',
-            color: 'red'
-        }, {
-            val: "findCoord",
-            name: "coords.findCoord",
-            text: "Find Location",
-            icon: 'fa-flag-checkered',
-            color: 'green'
-        }];
-        d = _.findWhere(mapPoints, {
-            val: field
-        })
-        return {
-            fillColor: d.color,
-            color: d.color,
-            stroke: d.color,
-            fillColor: d.color,
-            fillOpacity: 0.3,
-            weight: 1,
-            radius: 3
-        };
+    info.addTo(map);*/
+    var layerControl = L.control.layers(layers, null, {
+        collapsed: false
+    });
+    var mapPoints = [{
+        val: "ippCoordinates",
+        sib: ["ippCoordinates2FindCoord", "findCoord"],
+        text: "Incident Location",
+        icon: 'fa-times-circle-o',
+        color: '#C9302C',
+        bg: 'bg-red',
+        style: {
+            fillColor: '#fff',
+            color: '#C9302C',
+            fillOpacity: 1,
+            opacity: .8,
+            weight: 3,
+            radius: 8,
+            fillOpacity: 0.7
+        }
+    }, {
+        val: "findCoord",
+        sib: ["ippCoordinates2FindCoord", "ippCoordinates"],
+        text: "Find Location",
+        icon: 'fa-flag-checkered',
+        color: '#449D44',
+        bg: 'bg-green',
+        style: {
+            fillColor: '#fff',
+            color: '#449D44',
+            fillOpacity: 1,
+            opacity: .8,
+            weight: 3,
+            radius: 8,
+            fillOpacity: 0.7
+        }
+    }, {
+        type: 'path',
+        val: "ippCoordinates2FindCoord",
+        sib: ["ippCoordinates", "findCoord"],
+        text: "As the Crow Flies",
+        bg: 'bg-black-line',
+        style: {
+            color: '#000',
+            fillColor: '#000',
+            weight: 4,
+            opacity: 0.4,
+        }
+    }, ];
+    var flatten = function (x, result, prefix) {
+        if (_.isObject(x)) {
+            _.each(x, function (v, k) {
+                flatten(v, result, prefix ? prefix + '.' + k : k)
+            })
+        } else {
+            result[prefix] = x
+        }
+        return result
     }
+    var activeFeatures = [];
 
     function highlightFeature(e, f) {
-        field = this.feature.properties;
-        t=this
+        Session.set('selectedFeature', this.feature.properties.record);
+        var properties = this.feature.properties;
+        var id = properties.id;
+        var sib = properties.field.sib
         var layer = e.target;
+        if (activeFeatures.length) {
+            resetHighlight(activeFeatures)
+        }
+        activeFeatures.push({
+            layer: layer,
+            style: properties.field.style
+        });
+        z = activeFeatures;
         layer.setStyle({
-            weight: 5,
-            radius: 5,
-            //color: '#666',
-            dashArray: '',
-            fillOpacity: 0.7
+            //color: '#fff',
+            fillColor: properties.field.color,
+            radius: 12,
+            opacity: .7,
+            dashArray: '1',
+            fillOpacity: 1
+        });
+        sib.forEach(function (d) {
+            layerGroups[d].eachLayer(function (e) {
+                if (e.feature.properties.id === id) {
+                    activeFeatures.push({
+                        layer: e,
+                        style: e.feature.properties.field.style
+                    });
+                    e.setStyle({
+                        //color: '#fff',
+                        fillColor: e.feature.properties.field.color,
+                        radius: 12,
+                        opacity: .7,
+                        dashArray: '1',
+                        fillOpacity: 1
+                    });
+                    e.bringToFront();
+                }
+            })
         });
         if (!L.Browser.ie && !L.Browser.opera) {
             layer.bringToFront();
         }
-        info.update(layer.feature.properties);
     }
-    var geojson;
 
-    function resetHighlight(e) {
-        geojson.resetStyle(e.target);
-        info.update();
+    function resetHighlight(actives) {
+        actives.forEach(function (e) {
+            e.layer.setStyle(e.style)
+        });
     }
 
     function zoomToFeature(e) {
         map.fitBounds(e.target.getBounds());
     }
-
-    function onEachFeature(feature, layer) {
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            click: zoomToFeature
-        });
-    }
-    var statesData = _.chain(data).map(function (d) {
-        return _.map(d.coords, function (e, field) {
-            if (!e.lat || !e.lng) {
-                return;
-            };
-            return {
-                "type": "Feature",
-                "properties": {
-                    field: field,
-                    id:d._id,
-                    density: Math.floor((1 / Math.random()) * 100)
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [e.lng, e.lat]
+    layerGroups = mapPoints.map(function (d) {
+        var geojson = L.geoJson(null, {
+            style: function (feature) {
+                return d.style;
+            },
+            pointToLayer: function (feature, latlng) {
+                console.log(feature.properties.field);
+                if (feature.properties.field.type === 'path') {
+                    return; // L.polyline(latlng, d.style);
+                } else {
+                    return L.circleMarker(latlng, d.style);
                 }
+            },
+            onEachFeature: function (feature, layer) {
+                layer.on({
+                    click: highlightFeature,
+                    //mouseout: resetHighlight,
+                    //click: zoomToFeature
+                });
             }
         });
-    }).flatten().compact().value();
-    var geojsonMarkerOptions = {
-        radius: 8,
-        fillColor: "#ff7800",
-        color: "#000",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-    };
-    geojson = L.geoJson(statesData, {
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, style);
-        },
-        style: style,
-        onEachFeature: onEachFeature
-    }).addTo(map);
-    map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
-    var legend = L.control({
-        position: 'bottomright'
+        geojson.addTo(map);
+        layerControl.addOverlay(geojson, d.text);
+        return {
+            name: d.val,
+            layer: geojson
+        };
     });
-    legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-            labels = [],
-            from, to;
-        for (var i = 0; i < grades.length; i++) {
-            from = grades[i];
-            to = grades[i + 1];
-            labels.push(
-                '<i style="background:' + getColor(from + 1) + '"></i> ' +
-                from + (to ? '&ndash;' + to : '+'));
-        }
-        div.innerHTML = labels.join('<br>');
-        return
-        div;
-    };
+    layerGroups = _.object(_.map(layerGroups, function (x) {
+        return [x.name, x.layer];
+    }));
+    //map.scrollWheelZoom.disable();
     var legend = L.control({
-        position: 'bottomright'
+        position: 'bottomleft'
     });
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
-        for (var i = 0; i < mapPoints.length; i++) {
-            //console.log(grades[i].color, grades[i].text)
+        mapPoints.forEach(function (d) {
             div.innerHTML +=
-                '<i style="background:' + mapPoints[i].color + '"></i> ' +
-                mapPoints[i].text + '<br>';
-        }
+                '<div class="fa-marker ' + d.bg + '"></div>' + d.text + '<br>';
+        });
         return div;
     };
     legend.addTo(map);
-    map.fitBounds(geojson.getBounds());
+
+    function ipp2find(d, feature) {
+        var ipp = d.coords.ippCoordinates;
+        var find = d.coords.findCoord;
+        if (!ipp || !find) {
+            return
+        }
+        var latlngs = [
+            [ipp.lng, ipp.lat],
+            [find.lng, find.lat]
+        ];
+        layerGroups[feature.val].addData({
+            "type": "Feature",
+            "properties": {
+                record: d,
+                field: feature,
+                id: d._id
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": latlngs
+            }
+        });
+        //var polyline = L.polyline(latlngs, feature.style);
+        //layerGroups[feature.val].addLayer(polyline);
+    }
+    data.forEach(function (d) {
+        mapPoints.forEach(function (feature) {
+            var coords = d.coords[feature.val];
+            if (coords) {
+                //var marker = L.circleMarker(coords, feature.style);
+                //layerGroups[feature.val].addLayer(marker);
+                layerGroups[feature.val].addData({
+                    "type": "Feature",
+                    "properties": {
+                        record: d,
+                        field: feature,
+                        id: d._id
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [coords.lng, coords.lat]
+                    }
+                });
+            } else if (feature.type === 'path') {
+                ipp2find(d, feature)
+            }
+        });
+    });
+    g = geojson
+    var bounds = _.reduce(layerGroups, function (d, e) {
+        if (e.getBounds) {
+            return e.getBounds();
+        };
+        return d.extend(e);
+    });
+    map.fitBounds(bounds);
+    console.log(obj)
     return obj;
 }
+
