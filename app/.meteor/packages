@@ -26,3 +26,4 @@ meteorhacks:npm
 npm-container
 mrt:moment-timezone
 tsega:bootstrap3-datetimepicker@=3.1.3_3
+aslagle:reactive-table
