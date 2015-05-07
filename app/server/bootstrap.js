@@ -242,6 +242,15 @@ for (var i = 0; i < length; i++) {
 
     record.created = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
     record.recordInfo.incidentdate = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
+    
+
+        var allowed = Schemas.recordInfo._schema.incidenttype.allowedValues;
+        if (allowed) {
+            var sample = _.sample(allowed, 1)[0];
+            record.recordInfo.incidenttype = sample;
+        }
+
+
     _.each(record.recordInfo, function (d, name) {
         var allowed = Schemas.recordInfo._schema[name].allowedValues;
         if (allowed) {
