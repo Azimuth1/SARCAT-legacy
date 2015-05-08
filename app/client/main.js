@@ -1,4 +1,229 @@
-console.log('main.js');
+keep = [{
+    "field": "recordInfo.incidentdate",
+    "count": [],
+    "label": "Incident Date/Time"
+}, {
+    "field": "incident.subjectcategory",
+    "count": [],
+    "label": "Subject Category",
+    klass: 'col-md-12',
+    rotate: '-25'
+}, {
+    "field": "incident.ecoregiondomain",
+    "count": [],
+    "label": "Ecoregion Domain",
+    klass: 'col-md-6',
+}, {
+    "field": "recordInfo.incidenttype",
+    "count": [],
+    "label": "Incident Type",
+    klass: 'col-md-6',
+    rotate: '-25'
+}, {
+    "field": "incident.landOwner",
+    "count": [],
+    "label": "Land Owner",
+        klass: 'col-md-6',
+    rotate: '-25'
+}, {
+    "field": "incident.contactmethod",
+    "count": [],
+    "label": "Contact Method",
+        klass: 'col-md-6',
+    rotate: '-25'
+}, {
+    "field": "incident.populationDensity",
+    "count": [],
+    "label": "Population Density"
+}, {
+    "field": "incident.landCover",
+    "count": [],
+    "label": "Land Cover"
+}, {
+    "field": "incident.terrain",
+    "count": [],
+    "label": "Terrrain"
+}, {
+    "field": "recordInfo.status",
+    "count": [],
+    "label": "Incident Status"
+}, {
+    "field": "incident.incidentEnvironment",
+    "count": [],
+    "label": "Incident Environment"
+}, {
+    "field": "incidentOperations.ipptype",
+    "count": [],
+    "label": "IPP Type"
+}, {
+    "field": "incidentOperations.ippclassification",
+    "count": [],
+    "label": "IPP Classification"
+}, {
+    "field": "incident.SARNotifiedDateTime",
+    "count": [],
+    "label": "SAR Notified Date/Time"
+}, {
+    "field": "incident.county-region",
+    "count": [],
+    "label": "Incident County/Region"
+}, {
+    "field": "rescueDetails.signalling",
+    "count": [],
+    "label": "Signalling"
+}, {
+    "field": "resourcesUsed.numTasks",
+    "count": [],
+    "label": "Total # of Tasks"
+}, {
+    "field": "resourcesUsed.totalManHours",
+    "count": [],
+    "label": "Total Man Hours"
+}, {
+    "field": "resourcesUsed.totalCost",
+    "count": [],
+    "label": "Total Cost"
+}, {
+    "field": "resourcesUsed.totalPersonnel",
+    "count": [],
+    "label": "Total Personnel"
+}, {
+    "field": "resourcesUsed.distanceTraveled",
+    "count": [],
+    "label": "Total Distance Traveled"
+}, {
+    "field": "incidentOutcome.distanceIPP",
+    "count": [],
+    "label": "Distance From IPP"
+}, {
+    "field": "incidentOutcome.incidentOutcome",
+    "count": [],
+    "label": "Incident Outcome"
+}, {
+    "field": "incidentOutcome.scenario",
+    "count": [],
+    "label": "Scenario"
+}, {
+    "field": "incidentOutcome.suspensionReasons",
+    "count": [],
+    "label": "Suspension Reasons"
+}, {
+    "field": "incidentOutcome.findFeature",
+    "count": [],
+    "label": "Find Feature"
+}, {
+    "field": "incidentOutcome.detectability",
+    "count": [],
+    "label": "Detectability"
+}, {
+    "field": "incidentOutcome.mobility&Responsiveness",
+    "count": [],
+    "label": "Mobility/Responsiveness"
+}, {
+    "field": "incidentOutcome.lostStrategy",
+    "count": [],
+    "label": "Lost Strategy"
+}, {
+    "field": "incidentOutcome.mobility_hours",
+    "count": [],
+    "label": "Mobility (hours)"
+}];
+d3Calender = function (context, data1) {
+    d = data1;
+    var width = 735,
+        height = 96,
+        cellSize = 13; // cell size
+    var day = d3.time.format("%w"),
+        week = d3.time.format("%U"),
+        percent = d3.format(".1%"),
+        format = d3.time.format("%Y-%m-%d");
+    var color = d3.scale.quantize()
+        .domain([-.05, .05])
+        .range(d3.range(11).map(function (d) {
+            return "q" + d + "-11";
+        }));
+    var svg = d3.select(context).selectAll("svg")
+        .data(d3.range(2012, 2016))
+        .enter().append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "col-md-12 RdYlGn pad00")
+        .append("g")
+        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+    svg.append("text")
+        .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+        .style("text-anchor", "middle")
+        .text(function (d) {
+            return d;
+        });
+    var rect = svg.selectAll(".day")
+        .data(function (d) {
+            return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+        })
+        .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("x", function (d) {
+            return week(d) * cellSize;
+        })
+        .attr("y", function (d) {
+            return day(d) * cellSize;
+        })
+        .datum(format);
+    rect.append("title")
+        .text(function (d) {
+            return d;
+        });
+    svg.selectAll(".month")
+        .data(function (d) {
+            //console.log(d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)))
+            return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+        })
+        .enter().append("path")
+        .attr("class", "month")
+        .attr("d", monthPath);
+    //d3.csv("dji.csv", function (error, csv) {
+    /*var data = d3.nest()
+        .key(function (d) {
+            return d.Date;
+        })
+        .rollup(function (d) {
+            return (d[0].Close - d[0].Open) / d[0].Open;
+        })
+        .map(csv);*/
+    //});
+    function monthPath(t0) {
+        var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+            d0 = +day(t0),
+            w0 = +week(t0),
+            d1 = +day(t1),
+            w1 = +week(t1);
+        return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize + "H" + w0 * cellSize + "V" + 7 * cellSize + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize + "H" + (w1 + 1) * cellSize + "V" + 0 + "H" + (w0 + 1) * cellSize + "Z";
+    }
+    d3.select(self.frameElement).style("height", "2910px");
+    var data = d3.nest()
+        .key(function (d) {
+            return moment(d.name).format('YYYY-MM-DD')
+        })
+        .rollup(function (d) {
+            return -0.003689859718846812;
+            return Math.random() * 1000;
+            return d[0].data
+        })
+        .map(data1);
+    rect.filter(function (d) {
+            return d in data;
+        })
+        .attr("class", function (d) {
+            // console.log(color(data[d]),data[d])
+            return "day q7-11"; // + color(data[d]);
+        })
+        .select("title")
+        .text(function (d) {
+            return d + ": " + percent(data[d]);
+        });
+};
 dialogBoxOptions = function (callbackFunctionName) {
     return {
         callBack: callbackFunctionName
