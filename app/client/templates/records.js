@@ -388,15 +388,10 @@ Template.records.events({
 AutoForm.hooks({
     createRecordModalFormId: {
         beginSubmit: function () {
-            $('#recordTable_wrapper')
-                .remove();
-            Session.set('tableHide', true);
+        
         },
         endSubmit: function () {
-            console.log('!')
-            Session.set('tableHide', false);
-            $('#recordTable')
-                .DataTable()
+     
         },
         onSuccess: function (formType, result) {
             $('#createRecordModal')
