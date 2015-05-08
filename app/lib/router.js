@@ -1,6 +1,11 @@
-//var initSetup;
-console.log('router.js');
+
 Meteor.startup(function () {
+
+
+
+
+
+
     if (Meteor.isClient) {
         Tracker.autorun(function () {
             var config = Config.findOne();

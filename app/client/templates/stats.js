@@ -1,133 +1,204 @@
+var records;
+var data;
 Template.stats.onCreated(function () {
     Session.set('userView', 'stats');
-    var records = Records.find()
-        .fetch();
+    records = Records.find().fetch();
     r = records
     data = recordStats(records);
-    Session.set('records', records);
-    Session.set('data', data);
+    dd = data;
+    Session.set('activeRecord', false);
+    Session.set('allRecords', records);
+    var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"];
+    var allFields = _.map(Schemas.SARCAT._schema, function (d, e) {
+        return {
+            headerClass: 'default-bg',
+            cellClass: 'white-bg',
+            key: e,
+            fieldId: e,
+            label: d.label,
+            hidden: !_.contains(activeFields, e),
+            parent: e.split('.')[0]
+        };
+    });
+    Session.set('allFields', allFields);
+    var keep = ["subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incident.county-region", "incident.ecoregionDivision", "incident.incidentEnvironment", "incident.landCover", "incident.landOwner", "incident.populationDensity", "incident.subjectcategory", "incident.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "incidentOutcome.detectability", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidenttype", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "rescueDetails.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
+    filterFields = _.map(keep, function (d) {
+        return _.findWhere(allFields, {
+            key: d
+        });
+    });
+    Session.set('filterFields', filterFields);
+    res = _.map(records, function (data, e) {
+        return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
+            return -d.count;
+        }).value();
+    })
+    res = _.flatten(res, 1);
+    res = _.groupBy(res, function (d) {
+        return d.type
+    })
+    resCount = {
+        label: 'Resources/Number Used',
+        count: {}
+    };
+    resHours = {
+        label: 'Resources/Hours Used',
+        count: {}
+    };
+    _.each(res, function (a, key) {
+        _.each(a, function (d) {
+            if (!resCount.count[key]) {
+                resCount.count[key] = 0;
+            }
+            if (!resHours.count[key]) {
+                resHours.count[key] = 0;
+            }
+            resCount.count[key] = resCount.count[key] + d.count;
+            resHours.count[key] = resHours.count[key] + d.hours
+        });
+    });
+    delete resCount.count._key;
+    delete resHours.count._key;
+    resCount.count = _.map(resCount.count, function (d, e) {
+        return {
+            name: e,
+            data: d
+        }
+    })
+    resHours.count = _.map(resHours.count, function (d, e) {
+        return {
+            name: e,
+            data: d
+        }
+    })
+    sub = records.map(function (d) {
+        return flatten(d.subjects.subject, {});
+    });
+    sum = {};
+    _.each(sub, function (d) {
+        _.each(d, function (val, _key) {
+            var key = _key.split('.')[1]
+            if (!sum[key]) {
+                sum[key] = [];
+            }
+            sum[key].push(val);
+        });
+    });
+    delete sum._key;
+    subjects = _.map(sum, function (items, e) {
+        var aggr = _.chain(items).reduce(function (counts, word) {
+            counts[word] = (counts[word] || 0) + 1;
+            return counts;
+        }, {}).map(function (d, e) {
+            return {
+                data: d,
+                name: e
+            };
+        }).value();
+        return {
+            label: 'Subject '+e.substr(e.lastIndexOf('.') + 1),
+            count: aggr,
+            field: 'subjects.subject.$.' + e,
+        };
+    });
+    subjects = _.filter(subjects, function (d) {
+        return _.contains(keep, d.field);
+    });
 });
 Template.stats.onRendered(function () {
-    /* Date.prototype.addDays = function (days) {
-        var dat = new Date(this.valueOf())
-        dat.setDate(dat.getDate() + days);
-        return dat;
-    }
-
-    function getDates(startDate, stopDate) {
-        var dateArray = new Array();
-        var currentDate = startDate;
-        while (currentDate <= stopDate) {
-            dateArray.push(new Date(currentDate))
-            currentDate = currentDate.addDays(1);
-        }
-        return dateArray;
-    }
-    var dates = _.chain(data[0].count).map(function (d) {
-        return moment(d.letter).format('MMM/DD/YYYY');
-    }).sortBy(function (d) {
-        return new Date(d);
-    }).value();
-
-allDates = getDates(z[0],z[z.length-1]);
-
-allDates.map(function(d){
-    var frequency = _
-    return {letter:d,frequency:}
-})
-
-    drawGraphDate(data[0]);*/
-    //var colors = d3.scale.category20c();
-    var colors = ["#3D1D23", "#412029", "#44242F", "#482835", "#4A2C3B", "#4C3042", "#4E3548", "#4F394F", "#4F3E55", "#4F435C", "#4E4962", "#4D4E68", "#4A546D", "#475972", "#445F77", "#40647B", "#3C6A7E", "#377081", "#337584", "#2F7B85", "#2B8086", "#298686", "#298B86", "#2B9085", "#309583", "#369A81", "#3E9F7E", "#47A47B", "#51A977", "#5CAD73", "#67B16F", "#73B56B", "#7FB967", "#8BBC63", "#98BF5F", "#A6C25C", "#B4C559", "#C2C757", "#D0C956", "#DFCB56"];
-    colors = _.shuffle(colors);
+    var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
+    subjects.forEach(function (d, i) {
+        var color = colors[i % 10];
+        drawGraph(d, color, "#recordsSubject");
+    });
+    drawGraph(resCount, colors[5], "#recordsResource");
+    drawGraph(resHours, colors[9], "#recordsResource");
     data.forEach(function (d, i) {
-        //console.log(colors,i)
-        var color = colors[i];
-        drawGraph(d, color);
-    });
-    var coords = records.map(function (d) {
-        return d.coords
-    });
-    if (!records.length) {
-        return;
-    }
-    var mapBounds = coords[0].bounds;
-    mapBounds = boundsString2Array(mapBounds);
-    map = statsSetMap('statsMap', mapBounds);
-    var mapPoints = [{
-            val: "ippCoordinates",
-            name: "coords.ippCoordinates",
-            text: "Incident Location",
-            icon: 'fa-times-circle-o',
-            color: 'red'
-        }, {
-            val: "decisionPointCoord",
-            name: "coords.decisionPointCoord",
-            text: "Decision Point",
-            icon: 'fa-code-fork',
-            color: 'orange'
-        }, {
-            val: "destinationCoord",
-            name: "coords.destinationCoord",
-            text: "Intended Destination",
-            icon: 'fa-flag-checkered',
-            color: 'blue'
-        }, {
-            val: "revisedLKP_PLS",
-            name: "coords.revisedLKP_PLS",
-            text: "Revised IPP",
-            icon: 'fa-male',
-            color: 'red'
-        }, {
-            val: "findCoord",
-            name: "coords.findCoord",
-            text: "Find Location",
-            icon: 'fa-flag-checkered',
-            color: 'green'
+      
+        if (d.field === 'recordInfo.incidentdate') {
+            return d3Calender('#d3Calender', d.count)
         }
-        /*, {
-                val: "intendedRoute",
-                name: "coords.intendedRoute",
-                text: "Intended Route",
-                path: {
-                    stroke: '#37A8DA'
-                }
-            }, {
-                val: "actualRoute",
-                name: "coords.actualRoute",
-                text: "Actual Route",
-                path: {
-                    stroke: 'green',
-                    weight: 8
-                }
-            }*/
-    ];
-    map.addLegend(mapPoints)
-    records.forEach(function (d) {
-        mapPoints.forEach(function (e) {
-            e.coords = d.coords[e.val];
-            map.add(e);
-        })
+        var color = colors[i % 10];
+        drawGraph(d, color, "#recordss");
     });
-    map.fitBounds();
+    var recordMap = recordsSetMap('recordsMap', records);
 })
-var drawGraph = function (d, color) {
+Template.stats.helpers({
+    stats: function () {
+        var data = Session.get('activeRecord');
+        if (!data) {
+            return;
+        }
+        var filterFields = Session.get('filterFields');
+        var flatData = flatten(data, {});
+        f = flatData
+        var displayData = _.chain(flatData)
+            .map(function (d, e) {
+                var goodVal = _.findWhere(filterFields, {
+                    key: e
+                });
+                if (goodVal) {
+                    return {
+                        key: goodVal.label,
+                        parent: Schemas.SARCAT._schema[goodVal.parent].label,
+                        val: d
+                    };
+                }
+            })
+            .compact()
+            .value();
+        subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
+        var resources2 = resourceArrayForm(data);
+        displayData = _.flatten([displayData, subjects2, resources2]);
+        displayData2 = _.chain(displayData)
+            .groupBy('parent')
+            .map(function (d, e) {
+                return {
+                    field: e,
+                    data: d
+                };
+            })
+            .value();
+        // console.log(displayData, displayData2);
+        return displayData2;
+    },
+});
+var drawGraph = function (d, color, context) {
     //colors = d3.scale.category20c();
     var title = d.label;
     var data = d.count;
-    var container = d3.select("#recordss")
+    var options = d.options;
+    var numItems = data.length;
+    var klass;
+    var rotate = 0;
+    var margin = {
+        top: 10,
+        right: 10,
+        bottom: 30,
+        left: 40
+    };
+    // console.log(numItems)
+    if (numItems === 1) {
+        klass = 'col-sm-3 pad00'
+    } else if (numItems < 11) {
+        klass = 'col-sm-6 pad00'
+    } else {
+        klass = 'col-sm-12 pad00';
+        rotate = '-25';
+        margin = {
+            top: 10,
+            right: 40,
+            bottom: 60,
+            left: 60
+        }
+    }
+    var container = d3.select(context)
         .append("div")
-        .attr('class', 'col-md-4');
-    container.append('h3')
+        .attr('class', klass);
+    container.append('h4').attr('class', 'text-center')
         .text(title);
     var width = parseInt(container.style('width')); // / 1;
-    var margin = {
-            top: 10,
-            right: 20,
-            bottom: 30,
-            left: 40
-        },
-        width = width - margin.left - margin.right,
+    width = width - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
@@ -141,7 +212,7 @@ var drawGraph = function (d, color) {
         .orient("left")
         .tickFormat(d3.format("d"))
         //.tickSubdivide(false)
-        //.tickValues(d.count.map(function(v){return v.frequency}))
+        //.tickValues(d.count.map(function(v){return v.data}))
         .ticks(4);
     var svg = container.append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -149,15 +220,24 @@ var drawGraph = function (d, color) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     x.domain(data.map(function (d) {
-        return d.letter;
+        return d.name;
     }));
     y.domain([0, d3.max(data, function (d) {
-        return d.frequency;
+        return d.data;
     })]);
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
+    if (rotate) {
+        svg.selectAll(".x.axis text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", function (d) {
+                return "rotate(" + rotate + ")";
+            });
+    }
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
@@ -173,103 +253,249 @@ var drawGraph = function (d, color) {
         .append("rect")
         .attr("class", "_bar")
         .attr("x", function (d) {
-            return x(d.letter);
+            return x(d.name);
         })
         .attr("width", x.rangeBand())
         .attr("y", function (d) {
-            return y(d.frequency);
+            return y(d.data);
         })
         .attr("height", function (d) {
-            return height - y(d.frequency);
+            return height - y(d.data);
         })
         .attr("fill", color);
 }
-var drawGraphDate = function (d) {
-    //colors = d3.scale.category20c();
-    var colors = ["#3D1D23", "#412029", "#44242F", "#482835", "#4A2C3B", "#4C3042", "#4E3548", "#4F394F", "#4F3E55", "#4F435C", "#4E4962", "#4D4E68", "#4A546D", "#475972", "#445F77", "#40647B", "#3C6A7E", "#377081", "#337584", "#2F7B85", "#2B8086", "#298686", "#298B86", "#2B9085", "#309583", "#369A81", "#3E9F7E", "#47A47B", "#51A977", "#5CAD73", "#67B16F", "#73B56B", "#7FB967", "#8BBC63", "#98BF5F", "#A6C25C", "#B4C559", "#C2C757", "#D0C956", "#DFCB56"];
-    var title = d.label;
-    var data = d.count;
-    dates = data
-    var container = d3.select("#recordss")
-        .append("div")
-        .attr('class', 'col-md-4');
-    container.append('h3')
-        .text(title);
-    // Set the dimensions of the canvas / graph
-    var margin = {
-            top: 30,
-            right: 20,
-            bottom: 30,
-            left: 50
-        },
-        width = 600 - margin.left - margin.right,
-        height = 270 - margin.top - margin.bottom;
-    // Parse the date / time
-    var parseDate = d3.time.format("%m/%d/%Y %H:%M");
-    // Set the ranges
-    var x = d3.time.scale()
-        .range([0, width]);
-    var y = d3.scale.linear()
-        .range([height, 0]);
-    // Define the axes
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-        .ticks(5);
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(5);
-    // Define the line
-    var valueline = d3.svg.line()
-        .x(function (d) {
-            return x(d.letter);
-        })
-        .y(function (d) {
-            return y(d.frequency);
-        });
-    // Adds the svg canvas
-    var svg = container
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-    // Get the data
-    //d3.csv("data.csv", function(error, data) {
-    data.push({
-        frequency: 9,
-        letter: '02/04/1971 02:22'
-    })
-    data.forEach(function (d) {
-        //console.log(d);
-        console.log(parseDate.parse(d.letter), +d.frequency);
-        d.letter = parseDate.parse(d.letter);
-        d.frequency = +d.frequency;
+recordsSetMap = function (context, data) {
+    var geojson;
+    if (!data.length) {
+        return;
+    }
+    var layers = {
+        OSM: L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+        Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
+        Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
+    };
+    var obj = {};
+    var map = L.map(context)
+        .setView([37.8, -96], 4);
+    obj.map = map;
+    layers.Outdoors.addTo(map);
+    map.scrollWheelZoom.disable();
+    var layerControl = L.control.layers(layers, null, {
+        collapsed: false
     });
-    // Scale the range of the data
-    x.domain(d3.extent(data, function (d) {
-        return d.letter;
+    var mapPoints = [{
+        val: "ippCoordinates",
+        sib: ["ippCoordinates2FindCoord", "findCoord"],
+        text: "Incident Location",
+        icon: 'fa-times-circle-o',
+        color: '#C9302C',
+        bg: 'bg-red',
+        style: {
+            fillColor: '#C9302C',
+            color: '#C9302C',
+            fillOpacity: 0.8,
+            opacity: 0.8,
+            weight: 1,
+            radius: 6,
+            fillOpacity: 0.7
+        }
+    }, {
+        type: 'path',
+        val: "ippCoordinates2FindCoord",
+        sib: ["ippCoordinates", "findCoord"],
+        text: "", //As the Crow Flies",
+        bg: 'bg-black-line',
+        style: {
+            color: '#000',
+            weight: 3,
+            opacity: 0.4,
+            dashArray: '5,5',
+        }
+    }, {
+        val: "findCoord",
+        sib: ["ippCoordinates2FindCoord", "ippCoordinates"],
+        text: "Find Location",
+        icon: 'fa-flag-checkered',
+        color: '#449D44',
+        bg: 'bg-green',
+        style: {
+            fillColor: '#449D44',
+            color: '#449D44',
+            //stroke:false,
+            fillOpacity: 0.8,
+            opacity: 0.8,
+            weight: 1,
+            radius: 6,
+            fillOpacity: 0.7
+        }
+    }];
+    var flatten = function (x, result, prefix) {
+        if (_.isObject(x)) {
+            _.each(x, function (v, k) {
+                flatten(v, result, prefix ? prefix + '.' + k : k)
+            })
+        } else {
+            result[prefix] = x
+        }
+        return result
+    }
+    var activeFeatures = [];
+
+    function highlightFeature(e, f) {
+        Session.set('activeRecord', this.feature.properties.record);
+        var properties = this.feature.properties;
+        var id = properties.id;
+        var sib = properties.field.sib
+        var layer = e.target;
+        if (activeFeatures.length) {
+            resetHighlight(activeFeatures)
+        }
+        activeFeatures.push({
+            layer: layer,
+            style: properties.field.style
+        });
+        z = activeFeatures;
+        layer.setStyle({
+            color: '#2CC5D2',
+            //fillColor: properties.field.color,
+            radius: 12,
+            weight: 4,
+            opacity: 1,
+            dashArray: '1',
+            fillOpacity: 1
+        });
+        sib.forEach(function (d) {
+            layerGroups[d].eachLayer(function (e) {
+                if (e.feature.properties.id === id) {
+                    activeFeatures.push({
+                        layer: e,
+                        style: e.feature.properties.field.style
+                    });
+                    e.setStyle({
+                        color: '#2CC5D2',
+                        //fillColor: e.feature.properties.field.color,
+                        radius: 12,
+                        weight: 4,
+                        opacity: 1,
+                        dashArray: '1',
+                        fillOpacity: 1
+                    });
+                    e.bringToFront();
+                }
+            })
+        });
+        if (!L.Browser.ie && !L.Browser.opera) {
+            layer.bringToFront();
+        }
+    }
+
+    function resetHighlight(actives) {
+        actives.forEach(function (e) {
+            e.layer.setStyle(e.style)
+        });
+    }
+
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
+    layerGroups = mapPoints.map(function (d) {
+        var geojson = L.geoJson(null, {
+            style: function (feature) {
+                return d.style;
+            },
+            pointToLayer: function (feature, latlng) {
+                //console.log(feature.properties.field);
+                if (feature.properties.field.type === 'path') {
+                    return; // L.polyline(latlng, d.style);
+                } else {
+                    return L.circleMarker(latlng, d.style);
+                }
+            },
+            onEachFeature: function (feature, layer) {
+                layer.on({
+                    click: highlightFeature,
+                    //mouseout: resetHighlight,
+                    //click: zoomToFeature
+                });
+            }
+        });
+        geojson.addTo(map);
+        layerControl.addOverlay(geojson, d.text);
+        return {
+            name: d.val,
+            layer: geojson
+        };
+    });
+    layerGroups = _.object(_.map(layerGroups, function (x) {
+        return [x.name, x.layer];
     }));
-    y.domain([0, d3.max(data, function (d) {
-        return d.frequency;
-    })]);
-    // Add the valueline path.
-    svg.append("path")
-        .attr("class", "line")
-        .attr("d", valueline(data));
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-    //});
-};
+    //map.scrollWheelZoom.disable();
+    var legend = L.control({
+        position: 'bottomleft'
+    });
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        mapPoints.forEach(function (d) {
+            div.innerHTML += '<div class="statLegend"><div class="small">' + d.text + '</div><div class="fa-marker ' + d.bg + '"></div></div>';
+        });
+        return div;
+    };
+    legend.addTo(map);
+
+    function ipp2find(d, feature) {
+        var ipp = d.coords.ippCoordinates;
+        var find = d.coords.findCoord;
+        if (!ipp || !find) {
+            return
+        }
+        var latlngs = [
+            [ipp.lng, ipp.lat],
+            [find.lng, find.lat]
+        ];
+        layerGroups[feature.val].addData({
+            "type": "Feature",
+            "properties": {
+                record: d,
+                field: feature,
+                id: d._id
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": latlngs
+            }
+        });
+    }
+    data.forEach(function (d) {
+        mapPoints.forEach(function (feature) {
+            var coords = d.coords[feature.val];
+            if (coords) {
+                layerGroups[feature.val].addData({
+                    "type": "Feature",
+                    "properties": {
+                        record: d,
+                        field: feature,
+                        id: d._id
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [coords.lng, coords.lat]
+                    }
+                });
+            } else if (feature.type === 'path') {
+                ipp2find(d, feature)
+            }
+        });
+    });
+    g = geojson
+    var bounds = _.reduce(layerGroups, function (d, e) {
+        if (e.getBounds) {
+            return e.getBounds();
+        };
+        return d.extend(e);
+    });
+    map.fitBounds(bounds);
+    return obj;
+}
 recordStats = function (data) {
     var flatten = function (x, result, prefix) {
         if (_.isObject(x)) {
@@ -316,11 +542,11 @@ recordStats = function (data) {
                 .countBy(_.identity)
                 .map(function (d, e) {
                     return {
-                        frequency: d,
-                        letter: e
+                        data: d,
+                        name: e
                     }
                 })
-                .sortBy('frequency')
+                .sortBy('data')
                 .reverse()
                 .value();
             var schema = Schemas.SARCAT._schema[e];
@@ -348,409 +574,69 @@ recordStats = function (data) {
             };
         })
         .value();
-    /*var omit = ['Incident Status', 'Incident Type', 'Incident Environment', 'Ecoregion Domain', 'Response State/Region', 'Agency Having Jurisdiction', 'Subject Category', 'Land Owner', 'Terrrain', 'Land Cover',
-        'Precipitation Type', 'Distance From IPP', "Elevation Change", "Track Offset", "Incident Outcome", "Scenario", "Lost Strategy", "Mobility (hours)", "IPP Type", "IPP Classification", "Determining Factor", "Type of Decision Point", "Subject-Age", "Subject-Sex", "Subject-Weight,Resource-Type", "Subject-Status"
-    ]
-    omit = ['_id', 'Latitude', 'Longitude', 'Record Name', 'Incident #', 'Mission #', 'Incident Date/Time'];
-    
-        */
-    keep = ["incidentOperations.ipptype", "incidentOperations.ippclassification", "incidentOperations.PLS_HowDetermined", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status", "incident.SARNotifiedDateTime", "incident.county-region", "incident.subjectcategory", "incident.contactmethod", "incident.landOwner", "incident.incidentEnvironment", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "weather.precipType", "incidentOutcome.incidentOutcome", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.detectability", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.lostStrategy", "incidentOutcome.mobility_hours", "rescueDetails.signalling", "subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "resourcesUsed.numTasks", "resourcesUsed.totalPersonnel", "resourcesUsed.totalManHours", "resourcesUsed.distanceTraveled", "resourcesUsed.totalCost", "resourcesUsed.resource.$.type", "resourcesUsed.resource.$.count", "resourcesUsed.resource.$.hours", "resourcesUsed.resource.$.findResource"];
+    //keep = ["incidentOperations.ipptype", "incidentOperations.ippclassification", "incidentOperations.PLS_HowDetermined", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status", "incident.SARNotifiedDateTime", "incident.county-region", "incident.subjectcategory", "incident.contactmethod", "incident.landOwner", "incident.incidentEnvironment", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "weather.precipType", "incidentOutcome.incidentOutcome", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.detectability", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.lostStrategy", "incidentOutcome.mobility_hours", "rescueDetails.signalling", "subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "resourcesUsed.numTasks", "resourcesUsed.totalPersonnel", "resourcesUsed.totalManHours", "resourcesUsed.distanceTraveled", "resourcesUsed.totalCost", "resourcesUsed.resource.$.type", "resourcesUsed.resource.$.count", "resourcesUsed.resource.$.hours", "resourcesUsed.resource.$.findResource"];
+    //keep = _.first(keep, 8)
     count = count.filter(function (d) {
-            return _.contains(keep, d.field)
-        })
-        /*
-
-            count = 
-            */
-        /*
-            var use1  = ["Subject-Age", "Subject Category", "Ecoregion Division", "Subject-Illness", "Subject-InjuryType", "Subject-Mechanism", "Incident Type", "Land Owner", "Subject-Treatmentby", "Subject-EvacuationMethod", "Contact Method", "Population Density", "Land Cover", "Terrrain", "Subject-Physical_fitness", "Subject-Experience", "Subject-Equipment", "Subject-Clothing", "Subject-Survival_training", "Incident Status", "Incident Environment", "Ecoregion Domain", "Subject-Status", "Subject-Local", "Subject-Sex", "IPP Classification", "Incident Response Country", "State/Province", "Incident County/Region", "Signalling", "Injured Searcher", "Total # of Tasks", "Total Man Hours", "Total Cost", "Total Personnel", "Total Distance Traveled", "Distance From IPP", "Find Bearing (deg)", "Incident Outcome", "Subject Located Date/Time", "Incident Closed Date/Time", "Scenario", "Suspension Reasons", "Find Feature", "Detectability", "Mobility/Responsiveness", "Lost Strategy", "Mobility (hours)", "", "Subject-Weight", "Subject-Height", "Resource-_key", "Resource-Type", "Resource-Count", "Resource-Hours", "Resource-FindResource"]
-            filteredCount = count.filter(function (d) {
-                return _.contains(use1, d.field);
-            })
-        */
+        var options = _.findWhere(keep, {
+            field: d.field
+        });
+        d.options = options;
+        return options;
+    });
     count = _.sortBy(count, function (d) {
-        return -d.count.length
+        return -d.count.length;
     })
+    console.log(count)
     return count;
 };
-statsSetMap = function (context, bounds, points) {
-    var layers = {
-        OSM: L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
-        Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
-    };
-    var obj = {};
-    var map = L.map(context);
-    m = map;
-    var drawnPaths = new L.FeatureGroup()
-        .addTo(map);
-    var layerControl = L.control.layers(layers);
-    var sarcatLayers = ["ippCoordinates", "findCoord", "destinationCoord", "decisionPointCoord"]; //, "intendedRoute", "actualRoute"];
-    var layerGroups = sarcatLayers.map(function (d) {
-        var group = new L.FeatureGroup();
-        layerControl.addOverlay(group, d);
+resourceArrayForm = function (data) {
+    return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
+        return -d.count;
+    }).map(function (d, e) {
+        var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
         return {
-            name: d,
-            layer: group
+            key: d.type,
+            parent: 'Resources Used',
+            val: sum
         };
-    });
-    layerGroups = _.object(_.map(layerGroups, function (x) {
-        return [x.name, x.layer];
-    }));
-    map.scrollWheelZoom.disable();
-    layers.Outdoors.addTo(map);
-    layerControl.addTo(map);
-    obj.addLegend = function (grades) {
-        var legend = L.control({
-            position: 'bottomright'
-        });
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend');
-            for (var i = 0; i < grades.length; i++) {
-                console.log(grades[i].color, grades[i].text)
-                div.innerHTML +=
-                    '<i style="background:' + grades[i].color + '"></i> ' +
-                    grades[i].text + '<br>';
-            }
-            return div;
-        };
-        legend.addTo(map);
-    }
-    obj.add = function (d) {
-        if (d.coords && layerGroups[d.val]) {
-            obj.addPoint(d);
-        }
-        return
-        if (d.path) {
-            if (d.coords) {
-                obj.addPoly(d, JSON.parse(d.coords));
-                return;
-            }
-            var start = d.start;
-            var end = d.end;
-            if (!start || !end) {
-                return
-            }
-            var latlngs = [
-                [start.lat, start.lng],
-                [end.lat, end.lng]
-            ];
-            obj.addPoly(d, latlngs);
-        }
-    };
-    obj.addPoint = function (d) {
-        var marker = L.circleMarker(d.coords, {
-            fillColor: d.color,
-            color: d.color,
-            stroke: d.color,
-            fillColor: d.color,
-            fillOpacity: 0.3,
-            //stroke: false,
-            weight: 1,
-            radius: 3
-        });
-        //console.log(d,layerGroups)
-        layerGroups[d.val].addLayer(marker);
-        return marker;
-    }
-    obj.remove = function (d) {
-        // console.log(d)
-        var removePath = (d.val === 'destinationCoord') ? 'intendedRoute' : (d.val === 'findCoord') ? 'actualRoute' : null;
-        if (removePath) {
-            // console.log(removePath)
-            obj.removePoly(coords[removePath]);
-        }
-        if (d.path) {
-            obj.removePoly(d);
-        } else {
-            obj.removePoint(d);
+    }).value()
+};
+
+subjectArrayForm = function (flatData, name, parent) {
+    return _.chain(flatData).map(function (d, e) {
+        if (e.indexOf('_key') > -1) {
             return;
         }
-    };
-    obj.addPoly = function (d, latlngs) {
-        color = d.path.stroke;
-        polyline = L.polyline(latlngs, {
-            color: '#000',
-            opacity: 0.4,
-            name: d.name,
-            val: d.val,
-            editable: false,
-            weight: 1
-        });
-        polyline.addTo(map)
-        return
-        drawnPaths.addLayer(polyline);
-        //paths[d.val] = polyline;
-        coords[d.val].layer = polyline;
-        //var lineString = JSON.stringify(layer.toGeoJSON());
-    };
-    obj.removePoly = function (d) {
-        var path = coords[d.val].layer;
-        $('[name="' + d.name + '"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(path);
-        delete coords[d.val];
-    };
-    obj.removePoint = function (d) {
-        var marker = coords[d.val].layer;
-        $('[name="' + d.name + '.lng"]')
-            .val('')
-            .trigger("change");
-        $('[name="' + d.name + '.lat"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(marker);
-        delete coords[d.val];
-    };
-    obj.fitBounds = function () {
-        map.fitBounds(layerGroups.ippCoordinates.getBounds());
-    };
-    return obj;
-};
-recordsSetMap = function (context, data) {
-    var geojson;
-    if (!data.length) {
-        return;
-    }
-    var layers = {
-        OSM: L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
-        Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
-    };
-    var obj = {};
-    var map = L.map(context)
-        .setView([37.8, -96], 4);
-    obj.map = map;
-    layers.Outdoors.addTo(map);
-    /*var info = L.control();
-    info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'srecordMapInfo');
-        this.update();
-        return this._div;
-    };
-    info.update = function (props) {
-        this._div.innerHTML = '<h4>SARCAT Incident Records</h4>' + (props ?
-            '<b>' + JSON.stringify(props) + '</b><br />' + JSON.stringify(props) + ' people / mi<sup>2</sup>' : 'Hover over a state');
-    };
-    info.addTo(map);*/
-    var layerControl = L.control.layers(layers, null, {
-        collapsed: false
-    });
-    var mapPoints = [{
-        val: "ippCoordinates",
-        sib: ["ippCoordinates2FindCoord", "findCoord"],
-        text: "Incident Location",
-        icon: 'fa-times-circle-o',
-        color: '#C9302C',
-        bg: 'bg-red',
-        style: {
-            fillColor: '#fff',
-            color: '#C9302C',
-            fillOpacity: 1,
-            opacity: .8,
-            weight: 3,
-            radius: 8,
-            fillOpacity: 0.7
+        if (e.indexOf('.' + name + '.') > -1) {
+            return {
+                key: e,
+                val: d
+            };
         }
-    }, {
-        val: "findCoord",
-        sib: ["ippCoordinates2FindCoord", "ippCoordinates"],
-        text: "Find Location",
-        icon: 'fa-flag-checkered',
-        color: '#449D44',
-        bg: 'bg-green',
-        style: {
-            fillColor: '#fff',
-            color: '#449D44',
-            fillOpacity: 1,
-            opacity: .8,
-            weight: 3,
-            radius: 8,
-            fillOpacity: 0.7
-        }
-    }, {
-        type: 'path',
-        val: "ippCoordinates2FindCoord",
-        sib: ["ippCoordinates", "findCoord"],
-        text: "As the Crow Flies",
-        bg: 'bg-black-line',
-        style: {
-            color: '#000',
-            fillColor: '#000',
-            weight: 4,
-            opacity: 0.4,
-        }
-    }, ];
-    var flatten = function (x, result, prefix) {
-        if (_.isObject(x)) {
-            _.each(x, function (v, k) {
-                flatten(v, result, prefix ? prefix + '.' + k : k)
-            })
-        } else {
-            result[prefix] = x
-        }
-        return result
-    }
-    var activeFeatures = [];
-
-    function highlightFeature(e, f) {
-        Session.set('selectedFeature', this.feature.properties.record);
-        var properties = this.feature.properties;
-        var id = properties.id;
-        var sib = properties.field.sib
-        var layer = e.target;
-        if (activeFeatures.length) {
-            resetHighlight(activeFeatures)
-        }
-        activeFeatures.push({
-            layer: layer,
-            style: properties.field.style
-        });
-        z = activeFeatures;
-        layer.setStyle({
-            //color: '#fff',
-            fillColor: properties.field.color,
-            radius: 12,
-            opacity: .7,
-            dashArray: '1',
-            fillOpacity: 1
-        });
-        sib.forEach(function (d) {
-            layerGroups[d].eachLayer(function (e) {
-                if (e.feature.properties.id === id) {
-                    activeFeatures.push({
-                        layer: e,
-                        style: e.feature.properties.field.style
-                    });
-                    e.setStyle({
-                        //color: '#fff',
-                        fillColor: e.feature.properties.field.color,
-                        radius: 12,
-                        opacity: .7,
-                        dashArray: '1',
-                        fillOpacity: 1
-                    });
-                    e.bringToFront();
-                }
-            })
-        });
-        if (!L.Browser.ie && !L.Browser.opera) {
-            layer.bringToFront();
-        }
-    }
-
-    function resetHighlight(actives) {
-        actives.forEach(function (e) {
-            e.layer.setStyle(e.style)
-        });
-    }
-
-    function zoomToFeature(e) {
-        map.fitBounds(e.target.getBounds());
-    }
-    layerGroups = mapPoints.map(function (d) {
-        var geojson = L.geoJson(null, {
-            style: function (feature) {
-                return d.style;
-            },
-            pointToLayer: function (feature, latlng) {
-                console.log(feature.properties.field);
-                if (feature.properties.field.type === 'path') {
-                    return; // L.polyline(latlng, d.style);
-                } else {
-                    return L.circleMarker(latlng, d.style);
-                }
-            },
-            onEachFeature: function (feature, layer) {
-                layer.on({
-                    click: highlightFeature,
-                    //mouseout: resetHighlight,
-                    //click: zoomToFeature
-                });
-            }
-        });
-        geojson.addTo(map);
-        layerControl.addOverlay(geojson, d.text);
+    }).compact().groupBy(function (d) {
+        return d.key.substr(d.key.lastIndexOf('.') + 1);
+    }).map(function (d, e) {
+        var items = d.map(function (f) {
+            return f.val;
+        }).sort();
+        var sum = _.chain(items).reduce(function (counts, word) {
+            counts[word] = (counts[word] || 0) + 1;
+            return counts;
+        }, {}).map(function (d, e) {
+            return [d, e];
+        }).sortBy(function (d) {
+            return -d[0];
+        }).map(function (d, e) {
+            if (d[0] === 1) {
+                return d[1];
+            };
+            return d[1] + '(' + d[0] + ')';
+        }).value().join(', ');
         return {
-            name: d.val,
-            layer: geojson
+            key: e,
+            parent: parent,
+            val: items.sort().join(', '),
+            val: sum
         };
-    });
-    layerGroups = _.object(_.map(layerGroups, function (x) {
-        return [x.name, x.layer];
-    }));
-    //map.scrollWheelZoom.disable();
-    var legend = L.control({
-        position: 'bottomleft'
-    });
-    legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'info legend');
-        mapPoints.forEach(function (d) {
-            div.innerHTML +=
-                '<div class="fa-marker ' + d.bg + '"></div>' + d.text + '<br>';
-        });
-        return div;
-    };
-    legend.addTo(map);
-
-    function ipp2find(d, feature) {
-        var ipp = d.coords.ippCoordinates;
-        var find = d.coords.findCoord;
-        if (!ipp || !find) {
-            return
-        }
-        var latlngs = [
-            [ipp.lng, ipp.lat],
-            [find.lng, find.lat]
-        ];
-        layerGroups[feature.val].addData({
-            "type": "Feature",
-            "properties": {
-                record: d,
-                field: feature,
-                id: d._id
-            },
-            "geometry": {
-                "type": "LineString",
-                "coordinates": latlngs
-            }
-        });
-        //var polyline = L.polyline(latlngs, feature.style);
-        //layerGroups[feature.val].addLayer(polyline);
-    }
-    data.forEach(function (d) {
-        mapPoints.forEach(function (feature) {
-            var coords = d.coords[feature.val];
-            if (coords) {
-                //var marker = L.circleMarker(coords, feature.style);
-                //layerGroups[feature.val].addLayer(marker);
-                layerGroups[feature.val].addData({
-                    "type": "Feature",
-                    "properties": {
-                        record: d,
-                        field: feature,
-                        id: d._id
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [coords.lng, coords.lat]
-                    }
-                });
-            } else if (feature.type === 'path') {
-                ipp2find(d, feature)
-            }
-        });
-    });
-    g = geojson
-    var bounds = _.reduce(layerGroups, function (d, e) {
-        if (e.getBounds) {
-            return e.getBounds();
-        };
-        return d.extend(e);
-    });
-    map.fitBounds(bounds);
-    console.log(obj)
-    return obj;
-}
-
+    }).value();
+};

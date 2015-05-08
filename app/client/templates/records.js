@@ -1,4 +1,4 @@
-var flatten = function (x, result, prefix) {
+flatten = function (x, result, prefix) {
     if (_.isObject(x)) {
         _.each(x, function (v, k) {
             flatten(v, result, prefix ? prefix + '.' + k : k)
@@ -13,9 +13,9 @@ var drawn;
 var filterFields
 Session.setDefault('recordMap', false);
 Template.records.onCreated(function (a) {
+    Session.set('activeRecord', false);
     Session.set('selectedRecords', 0);
-    var records = Records.find()
-        .fetch();
+    var records = Records.find().fetch();
     Session.set('allRecords', records);
     var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"];
     var allFields = _.map(Schemas.SARCAT._schema, function (d, e) {
@@ -30,7 +30,7 @@ Template.records.onCreated(function (a) {
         };
     });
     Session.set('allFields', allFields);
-    var keep = ["incident.SARNotifiedDateTime", "incident.contactmethod", "incident.county-region", "incident.ecoregionDivision", "incident.incidentEnvironment", "incident.landCover", "incident.landOwner", "incident.populationDensity", "incident.subjectcategory", "incident.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "incidentOutcome.detectability", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidenttype", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "rescueDetails.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
+    var keep = ["subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incident.county-region", "incident.ecoregionDivision", "incident.incidentEnvironment", "incident.landCover", "incident.landOwner", "incident.populationDensity", "incident.subjectcategory", "incident.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "incidentOutcome.detectability", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidenttype", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "rescueDetails.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
     filterFields = _.map(keep, function (d) {
         return _.findWhere(allFields, {
             key: d
@@ -43,8 +43,7 @@ Template.records.onRendered(function () {
         .fetch();
     if (Session.get('recordMap')) {
         var recordMap = recordsSetMap('recordsMap', records);
-        console.log(recordMap)
-            //Session.set('map',recordMap.map)
+        //Session.set('map',recordMap.map)
     }
     r = records
     dates = _.chain(records)
@@ -70,11 +69,65 @@ Template.records.onRendered(function () {
             mapDrawn.reset();
         });
 });
+resourceArrayForm = function (data) {
+    return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
+        return -d.count;
+    }).map(function (d, e) {
+        var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
+        return {
+            key: d.type,
+            parent: 'Resources Used',
+            val: sum
+        };
+    }).value()
+};
+subjectArrayForm = function (flatData, name, parent) {
+    return _.chain(flatData).map(function (d, e) {
+        if (e.indexOf('_key') > -1) {
+            return;
+        }
+        if (e.indexOf('.' + name + '.') > -1) {
+            return {
+                key: e,
+                val: d
+            };
+        }
+    }).compact().groupBy(function (d) {
+        return d.key.substr(d.key.lastIndexOf('.') + 1);
+    }).map(function (d, e) {
+        var items = d.map(function (f) {
+            return f.val;
+        }).sort();
+        var sum = _.chain(items).reduce(function (counts, word) {
+            counts[word] = (counts[word] || 0) + 1;
+            return counts;
+        }, {}).map(function (d, e) {
+            return [d, e];
+        }).sortBy(function (d) {
+            return -d[0];
+        }).map(function (d, e) {
+            if (d[0] === 1) {
+                return d[1];
+            };
+            return d[1] + '(' + d[0] + ')';
+        }).value().join(', ');
+        return {
+            key: e,
+            parent: parent,
+            val: items.sort().join(', '),
+            val: sum
+        };
+    }).value();
+};
 Template.records.helpers({
     stats: function () {
-        var data = Session.get('selectedFeature');
+        var data = Session.get('activeRecord');
+        if (!data) {
+            return;
+        }
         var filterFields = Session.get('filterFields');
         var flatData = flatten(data, {});
+        f = flatData
         var displayData = _.chain(flatData)
             .map(function (d, e) {
                 var goodVal = _.findWhere(filterFields, {
@@ -90,8 +143,11 @@ Template.records.helpers({
             })
             .compact()
             .value();
-        
-        displayData = _.chain(displayData)
+        var subjects = subjectArrayForm(flatData, 'subject', 'Subjects');
+        var resources = resourceArrayForm(data);
+        displayData = _.flatten([displayData, subjects, resources]);
+        //displayData = displayData.concat(displayData, resources);
+        displayData2 = _.chain(displayData)
             .groupBy('parent')
             .map(function (d, e) {
                 return {
@@ -100,15 +156,15 @@ Template.records.helpers({
                 };
             })
             .value();
-        console.log(displayData);
-        return displayData;
+        console.log(displayData, displayData2);
+        return displayData2;
     },
     settings: function () {
         //["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"]
         var fields = Session.get('filterFields');
         fields.unshift({
             headerClass: 'default-bg text-center',
-            cellClass: 'white-bg recordSel text-center',
+            cellClass: 'white-bg recordSel text-center pointer',
             fieldId: 'recordSel',
             key: 'cb',
             sortable: false,
@@ -127,7 +183,7 @@ Template.records.helpers({
             collection: Records,
             rowsPerPage: 50,
             showFilter: true,
-            class: "table table-hover table-bordered table-condensed",
+            class: "table table-hover table-bordered table-condensed pointer",
             fields: fields
         };
     },
@@ -229,7 +285,7 @@ Template.records.events({
                 return this.value
             })
             .toArray();
-        Session.set('selectedRecords', checked);
+        Session.set('selectedRecords', checked.length);
     },
     'change .recordSelAll': function (event, template) {
         var checked = event.target.checked;
@@ -351,4 +407,3 @@ AutoForm.hooks({
         },
     }
 });
-

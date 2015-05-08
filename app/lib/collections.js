@@ -1,4 +1,3 @@
-console.log('collections.js');
 Records = new Mongo.Collection('records');
 Config = new Mongo.Collection('config');
 Records.lastRecord = function (type) {
@@ -239,7 +238,7 @@ Schemas.incident = new SimpleSchema({
     },
     'SARNotifiedDateTime': {
         type: String,
-        label: 'SAR Notified Date/Time',
+        label: 'SAR Notified Date',
         optional: true,
         autoform: {
             afFieldInput: {
@@ -1553,4 +1552,3 @@ Schemas.formEditions = new SimpleSchema({
     },
 });
 */
-

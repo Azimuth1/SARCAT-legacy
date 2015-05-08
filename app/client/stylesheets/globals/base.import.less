@@ -1026,7 +1026,9 @@ a {
     border: none!important;
 }
 
-#recordss svg {
+#recordss svg,
+#recordsSubject svg,
+#recordsResources svg {
     .bar {
         fill: steelblue;
     }
@@ -1597,12 +1599,27 @@ path {
     border-radius: 10px;
 }
 
+.statLegend {
+    text-align: center;
+    display: inline-block;
+}
+
 .fa-marker {
     border-radius: 10px;
     width: 20px !important;
-    height: 20px !important;
     text-align: center;
     vertical-align: middle;
+    display: inline-block;
+    height: 20px;
+}
+
+.bg-black-line {
+    background-color: #000;
+    width: 80px !important;
+    height: 4px !important;
+    opacity: .5;
+    margin-left: -35px;
+    margin-right: -27px;
 }
 
 .bg-yellow {
@@ -1621,92 +1638,70 @@ path {
     background-color: #C9302C;
 }
 
-.bg-black-line {
-  background-color: #000;
-  width: 80% !important;
-  height: 4px !important;
-  margin: 10px 0;
-  opacity: .5;
+.border-top {
+    border-top: 1px solid #000;
 }
 
+.pointer {
+    cursor: pointer;
+}
 
+#d3Calender {
+    font: 10px sans-serif;
+    shape-rendering: crispEdges;
+}
 
+#d3Calender .day {
+    fill: #fff;
+    stroke: #ccc;
+}
 
-.flex-container {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-inline-flexbox;
-    display: -webkit-inline-flex;
-    display: inline-flex;
-    -webkit-box-direction: normal;
-    -moz-box-direction: normal;
-    -webkit-box-orient: horizontal;
-    -moz-box-orient: horizontal;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-align-content: center;
-    -ms-flex-line-pack: center;
-    align-content: center;
-    -webkit-box-align: start;
-    -moz-box-align: start;
-    -webkit-align-items: flex-start;
-    -ms-flex-align: start;
-    align-items: flex-start;
-    }
+#d3Calender .month {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2px;
+}
 
-.flex-item:nth-child(1) {
-    -webkit-box-ordinal-group: 1;
-    -moz-box-ordinal-group: 1;
-    -webkit-order: 0;
-    -ms-flex-order: 0;
-    order: 0;
-    -webkit-box-flex: 0;
-    -moz-box-flex: 0;
-    -webkit-flex: 0 1 auto;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
-    -webkit-align-self: stretch;
-    -ms-flex-item-align: stretch;
-    align-self: stretch;
-    }
+#d3Calender .RdYlGn .q0-11 {
+    fill: rgb(165, 0, 38)
+}
 
-.flex-item:nth-child(2) {
-    -webkit-box-ordinal-group: 1;
-    -moz-box-ordinal-group: 1;
-    -webkit-order: 0;
-    -ms-flex-order: 0;
-    order: 0;
-    -webkit-box-flex: 0;
-    -moz-box-flex: 0;
-    -webkit-flex: 0 1 auto;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
-    -webkit-align-self: stretch;
-    -ms-flex-item-align: stretch;
-    align-self: stretch;
-    }
+#d3Calender .RdYlGn .q1-11 {
+    fill: rgb(215, 48, 39)
+}
 
-.flex-item:nth-child(3) {
-    -webkit-box-ordinal-group: 1;
-    -moz-box-ordinal-group: 1;
-    -webkit-order: 0;
-    -ms-flex-order: 0;
-    order: 0;
-    -webkit-box-flex: 0;
-    -moz-box-flex: 0;
-    -webkit-flex: 0 1 auto;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
-    -webkit-align-self: stretch;
-    -ms-flex-item-align: stretch;
-    align-self: stretch;
-    }
+#d3Calender .RdYlGn .q2-11 {
+    fill: rgb(244, 109, 67)
+}
+
+#d3Calender .RdYlGn .q3-11 {
+    fill: rgb(253, 174, 97)
+}
+
+#d3Calender .RdYlGn .q4-11 {
+    fill: rgb(254, 224, 139)
+}
+
+#d3Calender .RdYlGn .q5-11 {
+    fill: rgb(255, 255, 191)
+}
+
+#d3Calender .RdYlGn .q6-11 {
+    fill: rgb(217, 239, 139)
+}
+
+#d3Calender .RdYlGn .q7-11 {
+    fill: rgb(166, 217, 106)
+}
+
+#d3Calender .RdYlGn .q8-11 {
+    fill: rgb(102, 189, 99)
+}
+
+#d3Calender .RdYlGn .q9-11 {
+    fill: rgb(26, 152, 80)
+}
+
+#d3Calender .RdYlGn .q10-11 {
+    fill: rgb(0, 104, 55)
+}
