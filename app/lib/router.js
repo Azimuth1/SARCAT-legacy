@@ -1,11 +1,4 @@
-
 Meteor.startup(function () {
-
-
-
-
-
-
     if (Meteor.isClient) {
         Tracker.autorun(function () {
             var config = Config.findOne();
