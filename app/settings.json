@@ -13,8 +13,8 @@
         }
     },
     "private": {
-        "forecastAPI": "",
-        "googleAPI": ""
+        "_forecastAPI": "",
+        "_googleAPI": ""
     },
     "public": {
         "environment": "production",

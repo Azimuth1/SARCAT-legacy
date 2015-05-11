@@ -1418,6 +1418,11 @@ Schemas.config = new SimpleSchema({
         label: 'Forecast API Key',
         optional: true
     },
+    mapQuestAPI: {
+        type: String,
+        label: 'MapQuest API Key',
+        optional: true
+    },
     customQuestions: {
         type: Schemas.customQuestions,
         label: 'Create Customized Incident Questions For Your Team',
@@ -1552,3 +1557,4 @@ Schemas.formEditions = new SimpleSchema({
     },
 });
 */
+
