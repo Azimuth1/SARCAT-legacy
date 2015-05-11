@@ -52,7 +52,6 @@ Meteor.methods({
         return Records.insert(list);
     },
     removeRecord: function (id) {
-console.log(id)
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -61,7 +60,11 @@ console.log(id)
                 remove: "true"
             }
         },function(d,e){console.log(d,e)});*/
-        return Records.remove({_id:{$in:id}})
+        return Records.remove({
+            _id: {
+                $in: id
+            }
+        })
     },
     pushArray: function (id, name) {
         var obj = {};
@@ -81,7 +84,6 @@ console.log(id)
         var update = Records.update(id, {
             $set: obj
         });
-
         return update;
     },
     toggleListPrivacy: function (list) {
@@ -229,7 +231,8 @@ console.log(id)
         });
         var coords = record.coords.ippCoordinates;
         var date = record.recordInfo.incidentdate;
-        date = date.toISOString()
+        date = new Date(date)
+            .toISOString()
             .split('T')[0];
         if (!date || !coords) {
             return;
@@ -239,7 +242,7 @@ console.log(id)
         var dateTime = [date, time].join('');
         var latlngDate = [latlng, dateTime].join(',');
         var units = (record.measureUnits === 'Metric') ? 'units=si' : 'units=us';
-        var url = 'http://api.forecast.io/forecast/'; // + forecastAPI + '/';
+        var url = 'http://api.forecast.io/forecast/' + forecastAPI + '/';
         url += latlngDate + '?';
         url += units;
         console.log(url)
@@ -252,27 +255,16 @@ console.log(id)
             return;
         }
         var dailyData = data.daily.data[0];
-        _.each(dailyData, function (d, name) {
-            var obj = {};
-            obj['weather.' + name] = d;
-            Records.update(id, {
-                $set: obj
-            });
-        });
+        console.log(dailyData);
         if (!dailyData.precipType) {
-            Records.update(id, {
-                $set: {
-                    'weather.precipType': 'none'
-                }
-            });
+            dailyData.precipType = 'none';
         }
-        Config.update(Config.findOne()
-            ._id, {
-                $set: {
-                    weatherAPI: true
-                }
+        Records.update('RaiD6QehYRjQsWFGr', {
+            $set: {
+                'weather': dailyData
             }
-        );
+        });
+
         return dailyData;
     },
     setBearing: function (id, field) {
@@ -318,7 +310,7 @@ console.log(id)
         });
         return val;
     },
-    setElevation: function (id) {
+    /*setElevation: function (id) {
         var googleAPI = Config.findOne()
             .googleAPI;
         if (!googleAPI) {
@@ -347,6 +339,58 @@ console.log(id)
         }
         var _coord1 = results[0].elevation;
         var _coord2 = results[1].elevation;
+        if (!_coord1 || !_coord2) {
+            return;
+        }
+        var val = parseInt(_coord2 - _coord1);
+        if (record.measureUnits === 'US') {
+            val = parseInt(val * 3.2808399);
+        }
+        Records.update(id, {
+            $set: {
+                'incidentOutcome.elevationChange': val
+            }
+        });
+        return result;
+    },*/
+    setElevation: function (id) {
+        var mapQuestAPI = Config.findOne()
+            .mapQuestAPI;
+        if (!mapQuestAPI) {
+            return;
+        }
+        var record = Records.findOne(id);
+        Records.update(id, {
+            $unset: {
+                'incidentOutcome.elevationChange': ''
+            }
+        });
+        var coord1 = record.coords.ippCoordinates;
+        var coord2 = record.coords.findCoord;
+        if (!coord1 || !coord2) {
+            return false;
+        }
+        var url = 'http://open.mapquestapi.com/elevation/v1/profile?key='+mapQuestAPI+'&shapeFormat=json&latLngCollection=' + coord1.lat + ',' + coord1.lng + ',' + coord2.lat + ',' + coord2.lng + '';
+        //var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + googleAPI;
+        var result = HTTP.get(url);
+
+
+
+
+     
+        var data = result.data;
+        if (!data) {
+            return;
+        }
+   
+
+
+        var results = data.elevationProfile;
+        if (!results.length) {
+            return;
+        }
+        var _coord1 = results[0].height;
+        var _coord2 = results[1].height;
         if (!_coord1 || !_coord2) {
             return;
         }

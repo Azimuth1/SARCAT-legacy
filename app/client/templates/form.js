@@ -656,7 +656,6 @@ Template.form.events({
         Meteor.call('setWeather', Session.get('record')
             ._id,
             function (err, d) {
-                console.log(d);
                 if (err) {
                     console.log(err);
                     Meteor.call('updateConfig', {

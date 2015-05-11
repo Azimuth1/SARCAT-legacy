@@ -47,8 +47,8 @@ Meteor.publish('roles', function () {
 Meteor.publish('config', function () {
     return Config.find({}, {
         fields: {
-            'forecastAPI': 0,
-            'googleAPI': 0
+            /*'forecastAPI': 0,
+            'googleAPI': 0*/
         }
     });
 });

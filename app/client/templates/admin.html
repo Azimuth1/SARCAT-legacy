@@ -49,9 +49,10 @@
                         </div>
                         {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="_recordForm2" resetOnSuccess=false}}
 
-                            <!--{{> afQuickField name="googleAPI" }} -->
-
+                          {{> afQuickField name="googleAPI" }}
+  {{> afQuickField name="mapQuestAPI" }} 
                             {{> afQuickField name="forecastAPI" }} 
+                          
 
                             
 
@@ -60,17 +61,6 @@
 
 
  {{> afQuickField name="measureUnits"}}
- <!--
-                            {{#autoForm id="createcustomQuestionsId" type="insert" collection="Records" validation="submit" }}
-                            
-                            {{> afQuickField name='coords.ippCoordinates' }} 
-
-                            {{> afQuickField name='recordInfo'}}
-
-
-                             {{/autoForm}}
--->
-
 
 
 
