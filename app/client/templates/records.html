@@ -10,8 +10,13 @@
                         <p class="small"><em>*Drag Icon to Incident Location/IPP or enter coordinates below</em></p>
                     </div>
                     <div id='recordMap' style="width:100%;height:400px"></div>
-                    {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" validation="submit" resetOnSuccess=true}} {{> afQuickField name='coords.ippCoordinates' }} {{> afQuickField name='recordInfo'}}
-                    <div class="form-group modal-footer">
+                    {{#autoForm id="createRecordModalFormId" type="insert" collection="Records" validation="submit" resetOnSuccess=true class="recordForm2 smallLabels hideHeader"}} 
+
+
+                    {{> afQuickField name='coords.ippCoordinates' }} 
+
+                    {{> afQuickField name='recordInfo'}}
+                    <div class="modal-footer">
                         <button type="reset" class="btn btn-default pull-left">Reset Form</button>
                         <button data-dismiss="modal" class="btn btn-default pull-left">Cancel</button>
                         <button id="saveNewRecord" type="submit" class="btn btn-primary">Add Record</button>
@@ -46,33 +51,16 @@
         </div>
     </ul>
     <div class="tab-content admin pad1">
-        <!-- {{#if recordMap}}
-        <div class=" col-md-12 default-bg pad2 mar2y">
-            <div id='recordsMap' style="width:100%;height:300px">
-            </div>
-            <div class="pad0 small default-bg">
-                {{#each stats}}
-                <div class="col-md-12 noBorder pad00 white-bg">
-                    <div class="panel panel-default noBorder">
-                        <div class="panel-heading">
-                            <h3 class="panel-title text-center text-uppercase">{{this.field}}</h3>
-                        </div>
-                        <div class="panel-body afBody pad0 _white-bg">
-                            <div class="row">
-                                {{#each this.data}}
-                                <div class="col-md-4">
-                                    <span class="strong text-default">{{this.key}}</span>
-                                    <span class="text-black em">{{this.val}}</span>
-                                </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-        {{/if}} -->
-        {{> reactiveTable settings=settings}}
+<!--
+<div>
+{{#each summary}}
+{{this.name}}{{this.val}}
+{{/each}}</div>
+-->
+        {{#unless noRecords}} 
+        {{> reactiveTable settings=settings}} {{else}}
+        <button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>
+        <p class="text-center text-default">Begin Creating Records!</p>
+        {{/unless}}
     </div>
 </template>

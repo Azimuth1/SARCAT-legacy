@@ -1,164 +1,121 @@
 <template name="admin">
     {{#if isInRole 'admin'}}
-        <ul class="nav nav-tabs navyBLue-bg" role="tablist">
-            <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
-            <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-            <!--<li role="presentation"><a href="#options" aria-controls="profile" role="tab" data-toggle="tab" class="white">Form Options</a> </li>-->
-
-            <li class="pull-right">
-
-                <img style="max-height:44px" id="agencyLogo" onerror='this.style.display = "none"'>
-
-            </li>
-        </ul>
-        <div class="tab-content admin pad1">
-            <div role="tabpanel" class="tab-pane active pad0" id="profile">
-                <div class="panel afSarcat {{profileIncomplete}}">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Organization Information
-                    </h3>
-                        </div>
-                        <div class="panel-body afBody">
-                            {{#autoForm collection='Config' resetOnSuccess=false doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2" }}
-
-                                {{> afQuickField name="agencyProfile.organization"}} {{> afQuickField name="agencyProfile.phoneNum"}} {{> afQuickField name="agencyProfile.country"}} {{> afQuickField name="agencyProfile.state-province"}} {{> afQuickField name="agencyProfile.street"}} {{> afQuickField name="agencyProfile.city"}}
-
-                                <div class="col-md-12 pad00">
-                                    <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>{{#if profileIncomplete}} Submit {{else}} Edit{{/if}}</button>
-                                </div>
-                            {{/autoForm}}
-                        </div>
-                    </div>
-                </div>
+    <ul class="nav nav-tabs navyBLue-bg" role="tablist">
+        <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
+        <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
+        <li class="pull-right">
+            <img style="max-height:44px" id="agencyLogo" onerror='this.style.display = "none"'>
+        </li>
+    </ul>
+    <div class="tab-content admin pad1">
+        <div role="tabpanel" class="tab-pane active pad0" id="profile">
+            <div class="_panel afSarcat {{profileIncomplete}}">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Custom Settings
+                        <h3 class="panel-title">Organization Information
                     </h3>
                     </div>
                     <div class="panel-body afBody">
-                        <div class="form-group">
-                            <label for="syNWDsq4rJiyL5WrZ" class="control-label">Organization Logo - jpg/png
-                            </label>
-                            {{#if configs.agencyLogo}}
-                                <span class="btn text-danger deleteLogo btn-xs">
-                                    <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span>
-                            {{/if}}
-
-                            {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
+                        {{#autoForm collection='Config' resetOnSuccess=false doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2" }} {{> afQuickField name="agencyProfile.organization"}} {{> afQuickField name="agencyProfile.phoneNum"}} {{> afQuickField name="agencyProfile.country"}} {{> afQuickField name="agencyProfile.state-province"}} {{> afQuickField name="agencyProfile.street"}} {{> afQuickField name="agencyProfile.city"}}
+                        <div class="col-md-12 pad00">
+                            <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>{{#if profileIncomplete}} Submit {{else}} Edit{{/if}}</button>
                         </div>
-                        {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="_recordForm2" resetOnSuccess=false}}
-
-                          {{> afQuickField name="googleAPI" }}
-  {{> afQuickField name="mapQuestAPI" }} 
-                            {{> afQuickField name="forecastAPI" }} 
-                          
-
-                            
-
-
-
-
-
- {{> afQuickField name="measureUnits"}}
-
-
-
-
-                            <div class="col-md-12 pad00">
-                                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
-                            </div>
                         {{/autoForm}}
                     </div>
                 </div>
-
-
-
-
-
-
-
-                <div class="panel panel-default mar1">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Create Customized Incident Questions For Your Team
-                  </h3>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Custom Settings
+                    </h3>
+                </div>
+                <div class="panel-body afBody">
+                    <div class="form-group">
+                        <label for="syNWDsq4rJiyL5WrZ" class="control-label">Organization Logo - jpg/png
+                        </label>
+                        {{#if configs.agencyLogo}}
+                        <span class="btn text-danger deleteLogo btn-xs">
+                                    <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span> {{/if}} {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
                     </div>
-                    <div class="panel-body">
-{{#autoForm collection='Config' doc=configs id='adminCustomQuestionsId' type="update" fields="customQuestions" resetOnSuccess=false}}
-{{> afQuickField name="customQuestions.q1"}} 
-{{> afQuickField name="customQuestions.q2"}} 
-{{> afQuickField name="customQuestions.q3"}} 
- <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>Submit</button>
-{{/autoForm}}
-</div>
-</div>                     
-
-
-
-
-                <div class="panel panel-default mar1">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Default SAR Response Area
-                  </h3>
+                    {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="_recordForm2" resetOnSuccess=false}} {{> afQuickField name="mapQuestAPI" }} {{> afQuickField name="forecastAPI" }} {{> afQuickField name="measureUnits"}}
+                    <div class="col-md-12 pad00">
+                        <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
                     </div>
-                    <div class="panel-body afBody pad00">
-                        <div id='adminMap' style="width:100%;height:500px">
-                            <a href='#' id='geolocate' class='map-ui-button'>Geolocate my position!</a>
-                            <div class="mapCrosshair">+</div>
-                        </div>
-                        <div class="col-md-12 mar1y">
-
-                            {{#autoForm id='formIdAgencyMap' collection='Config' doc=configs type='update' afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}} {{> afQuickField name="bounds" label-class="hide" class="hide"}}
-                                <button type="submit" class="saveBounds btn btn-primary btn-block btn-lg"><i class="glyphicon glyphicon-check"></i> Save Bounds</button>
-                            {{/autoForm}}
-                        </div>
+                    {{/autoForm}}
+                </div>
+            </div>
+            <div class="panel panel-default mar1">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Create Customized Incident Questions For Your Team
+                  </h3>
+                </div>
+                <div class="panel-body">
+                    {{#autoForm collection='Config' doc=configs id='adminCustomQuestionsId' type="update" fields="customQuestions" resetOnSuccess=false}} {{> afQuickField name="customQuestions.q1"}} {{> afQuickField name="customQuestions.q2"}} {{> afQuickField name="customQuestions.q3"}}
+                    <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>Submit</button>
+                    {{/autoForm}}
+                </div>
+            </div>
+            <div class="panel panel-default mar1">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Default SAR Response Area
+                  </h3>
+                </div>
+                <div class="panel-body afBody pad00">
+                    <div id='adminMap' style="width:100%;height:500px">
+                        <a href='#' id='geolocate' class='map-ui-button'>Geolocate my position!</a>
+                        <div class="mapCrosshair">+</div>
+                    </div>
+                    <div class="col-md-12 mar1y">
+                        {{#autoForm id='formIdAgencyMap' collection='Config' doc=configs type='update' afFieldInput-placeholder="schemaLabel" resetOnSuccess=false}} {{> afQuickField name="bounds" label-class="hide" class="hide"}}
+                        <button type="submit" class="saveBounds btn btn-primary btn-block btn-lg"><i class="glyphicon glyphicon-check"></i> Save Bounds</button>
+                        {{/autoForm}}
                     </div>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
-                <div class="afTablePane">
-                    <table class="table table-hover table-bordered table-condensed">
-                        <thead class='default-bg'>
-                            <tr>
-                                <td class='afTable'>User</td>
-                                <td class='afTable'>Roles</td>
-                                <td class='afTable'>Email</td>
-                                <td class='afTable'>Action</td>
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#if noUsers}}
-                                <tr>
-                                    <td colspan="4" class="text-center text-default">You are the only user!</td>
-                                </tr>
-                            {{/if}}
-                            {{#each userRoleList}}
-                                <tr>
-                                    <td>{{this.username}}</td>
-                                    <td>
-                                        <div class="admin_ChangeRole">
-                                            <label class="radio-inline">
-                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
-                                            </label>
-                                            <label class="radio-inline">
-                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsCkhecked}}">Editor
-                                            </label>
-                                            <label class="radio-inline">
-                                                <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="admin" checked="{{roleIsCkhecked}}"> Admin
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>{{userEmail}}</td>
-                                    <td>
-                                        <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
-                                    </td>
-                                </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+        </div>
+        <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
+            <div class="afTablePane">
+                <table class="table table-hover table-bordered table-condensed">
+                    <thead class='default-bg'>
+                        <tr>
+                            <td class='afTable'>User</td>
+                            <td class='afTable'>Roles</td>
+                            <td class='afTable'>Email</td>
+                            <td class='afTable'>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody class='white-bg'>
+                        {{#if noUsers}}
+                        <tr>
+                            <td colspan="4" class="text-center text-default">You are the only user!</td>
+                        </tr>
+                        {{/if}} {{#each userRoleList}}
+                        <tr>
+                            <td>{{this.username}}</td>
+                            <td>
+                                <div class="admin_ChangeRole">
+                                    <label class="radio-inline">
+                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="editor" checked="{{roleIsCkhecked}}">Editor
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="admin" checked="{{roleIsCkhecked}}"> Admin
+                                    </label>
+                                </div>
+                            </td>
+                            <td>{{userEmail}}</td>
+                            <td>
+                                <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
-            <!--<div role="tabpanel" class="tab-pane pad0 scroll" id="options">
+        </div>
+        <!--<div role="tabpanel" class="tab-pane pad0 scroll" id="options">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Data Form Type</h3> </div>
@@ -167,7 +124,6 @@
                     </div>
                 </div>
             </div>-->
-        </div>
+    </div>
     {{/if}}
 </template>
-

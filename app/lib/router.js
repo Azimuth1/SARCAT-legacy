@@ -14,6 +14,7 @@ Meteor.startup(function () {
         });
         settings = Meteor.settings.public;
         //config = Meteor.settings.public.config;
+        //insertSampleRecords()
     }
 });
 Handlebars.registerHelper('json', function (context) {
@@ -85,6 +86,9 @@ Router.route('records', {
         return this.subscribe('records');
     },
     action: function () {
+        if (!Meteor.userId()) {
+            Router.go('home');
+        }
         if (this.ready()) {
             this.render();
         }
@@ -96,6 +100,9 @@ Router.route('stats', {
         return this.subscribe('records');
     },
     action: function () {
+        if (!Meteor.userId()) {
+            Router.go('home');
+        }
         if (this.ready()) {
             this.render();
         }
@@ -114,6 +121,9 @@ Router.route('admin', {
         return obj;
     },
     action: function () {
+        if (!Meteor.userId() || !Roles.userIsInRole(Meteor.userId(), ['admin'])) {
+            Router.go('home');
+        }
         if (this.ready()) {
             this.render();
         }
@@ -130,6 +140,9 @@ Router.route('form', {
         return obj;
     },
     action: function () {
+        if (!Meteor.userId()) {
+            Router.go('home');
+        }
         if (this.ready()) {
             this.render();
         }

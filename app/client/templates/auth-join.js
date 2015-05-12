@@ -1,24 +1,25 @@
 var ERRORS_KEY = 'joinErrors';
-
 Template.join.onCreated(function () {
     Session.set(ERRORS_KEY, {});
     if (Meteor.user()) {
         Router.go('home');
     }
 });
-
-
-
+Template.join.onRendered(function () {
+    var logo = document.getElementById('agencyLogo');
+    logo.src = 'uploads/logo/' + Session.get('logo');
+    logo.style.display = 'inline';
+});
 Template.join.helpers({
-    errorMessages: function() {
+    errorMessages: function () {
         return _.values(Session.get(ERRORS_KEY));
     },
-    errorClass: function(key) {
+    errorClass: function (key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    initConfig: function() {
+    initConfig: function () {
         //    return Session.get('initConfig');
-        Meteor.call('getCount', function(error, result) {
+        Meteor.call('getCount', function (error, result) {
             console.log(error, result);
             Session.set('initConfig', result);
             return result;
@@ -30,7 +31,7 @@ Template.join.helpers({
         });*/
     }
 });
-var isValidPassword = function(password) {
+var isValidPassword = function (password) {
     return true;
     if (password.length < 6) {
         console.log('Your password should be 6 characters or longer.');
@@ -39,7 +40,7 @@ var isValidPassword = function(password) {
     return true;
 };
 Template.join.events({
-    'submit': function(event, template) {
+    'submit': function (event, template) {
         event.preventDefault();
         //var username = template.$('[name=username]').val();
         var firstname = template.$('[name=firstname]')
@@ -82,7 +83,7 @@ Template.join.events({
             password: password,
             username: [firstname, lastname].join(' ')
                 //profile:{role:'dd'}
-        }, function(error) {
+        }, function (error) {
             if (error) {
                 return Session.set(ERRORS_KEY, {
                     'none': error.reason

@@ -9,13 +9,8 @@
                 <a class="btn-pad js-logout btn-secondary">Logout</a>
             </div>
             <div class="btns-group-vertical btns-userHome">
-                <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a> 
-
-
-                <a href="{{pathFor 'stats'}}" class="btn-pad js-sharedRecords _userView btn-secondary {{isUserView 'stats'}}" data="stats">SARCAT Stats</a> 
-
-
-                {{#if isAdmin}}
+                <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords _userView btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a>
+                <a href="{{pathFor 'stats'}}" class="btn-pad js-sharedRecords _userView btn-secondary {{isUserView 'stats'}}" data="stats">SARCAT Stats</a> {{#if isAdmin}}
                 <a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> {{/if}}
                 <a href="{{pathFor 'about'}}" class="btn-pad js-dashboard _userView btn-secondary {{isUserView 'about'}}" data='about'>About</a>
             </div>
@@ -25,73 +20,8 @@
         </section>
         <div class="content-overlay"></div>
         <div id="content-container">
-            
-        <!--
-            <nav class="navbar default-bg rad0 mar00 z99">
-                <div class="container-fluid">
-                    <div class="navbar-header white">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">SARCAT</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Tutorial<span class="sr-only">(current)</span></a></li>
-                            <li><a href="#">Docs</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">About <span class="caret"></span></a>
-                                <ul class="dropdown-menu ddlinkIcons" role="menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="https://twitter.com/azimuth1tech">
-                                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-twitter fa-stack-1x white"></i>
-                            </span> Twitter</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://www.linkedin.com/company/azimuth1">
-                                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-linkedin fa-stack-1x white"></i>
-                            </span> Linkedin</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://github.com/Azimuth1">
-                                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github fa-stack-1x white"></i>
-                            </span> GitHub</a>
-                                    </li>
-                                    <li>
-                                        <a href="mailto:contact@azimuth1.com">
-                                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-envelope-o fa-stack-1x white"></i>
-                            </span>Contact</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <a class="navbar-brand pad00" rel="home" href="#">
-                                <img style="max-height:48px" id="agencyLogo" onerror='this.style.display = "none"'>
-                            </a>
-                        </ul>
-                    </div>
-                </div>
-            </nav>-->
 
-
+        
             {{#each thisArray}} {{> yield}} {{/each}}
         </div>
     </div>

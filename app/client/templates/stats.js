@@ -3,12 +3,10 @@ var data;
 Template.stats.onCreated(function () {
     Session.set('userView', 'stats');
     records = Records.find().fetch();
-    r = records
     data = recordStats(records);
-    dd = data;
     Session.set('activeRecord', false);
     Session.set('allRecords', records);
-    var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"];
+    var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidentType", "recordInfo.status"];
     var allFields = _.map(Schemas.SARCAT._schema, function (d, e) {
         return {
             headerClass: 'default-bg',
@@ -21,14 +19,14 @@ Template.stats.onCreated(function () {
         };
     });
     Session.set('allFields', allFields);
-    var keep = ["subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incident.county-region", "incident.ecoregionDivision", "incident.incidentEnvironment", "incident.landCover", "incident.landOwner", "incident.populationDensity", "incident.subjectcategory", "incident.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "incidentOutcome.detectability", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidenttype", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "rescueDetails.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
-    filterFields = _.map(keep, function (d) {
+    var keep = ["subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.age", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incidentLocation.county-region", "incidentLocation.ecoregionDivision", "recordInfo.incidentEnvironment", "incidentLocation.landCover", "incidentLocation.landOwner", "incidentLocation.populationDensity", "recordInfo.subjectCategory", "incidentLocation.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "findLocation.detectability", "findLocation.distanceIPP", "findLocation.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidentType", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "incidentOutcome.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
+    var filterFields = _.map(keep, function (d) {
         return _.findWhere(allFields, {
             key: d
         });
     });
     Session.set('filterFields', filterFields);
-    res = _.map(records, function (data, e) {
+    var res = _.map(records, function (data, e) {
         return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
             return -d.count;
         }).value();
@@ -62,19 +60,19 @@ Template.stats.onCreated(function () {
     resCount.count = _.map(resCount.count, function (d, e) {
         return {
             name: e,
-            data: d
+            data: d || 0
         }
     })
     resHours.count = _.map(resHours.count, function (d, e) {
         return {
             name: e,
-            data: d
+            data: d || 0
         }
     })
-    sub = records.map(function (d) {
+    var sub = records.map(function (d) {
         return flatten(d.subjects.subject, {});
     });
-    sum = {};
+    var sum = {};
     _.each(sub, function (d) {
         _.each(d, function (val, _key) {
             var key = _key.split('.')[1]
@@ -96,7 +94,7 @@ Template.stats.onCreated(function () {
             };
         }).value();
         return {
-            label: 'Subject '+e.substr(e.lastIndexOf('.') + 1),
+            label: 'Subject ' + e.substr(e.lastIndexOf('.') + 1),
             count: aggr,
             field: 'subjects.subject.$.' + e,
         };
@@ -104,6 +102,9 @@ Template.stats.onCreated(function () {
     subjects = _.filter(subjects, function (d) {
         return _.contains(keep, d.field);
     });
+    subjects = _.sortBy(subjects, function (d) {
+        return d.field;
+    })
 });
 Template.stats.onRendered(function () {
     var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
@@ -114,13 +115,13 @@ Template.stats.onRendered(function () {
     drawGraph(resCount, colors[5], "#recordsResource");
     drawGraph(resHours, colors[9], "#recordsResource");
     data.forEach(function (d, i) {
-      
         if (d.field === 'recordInfo.incidentdate') {
             return d3Calender('#d3Calender', d.count)
         }
         var color = colors[i % 10];
         drawGraph(d, color, "#recordss");
     });
+    Session.set('activeRecord', null);
     var recordMap = recordsSetMap('recordsMap', records);
 })
 Template.stats.helpers({
@@ -159,7 +160,6 @@ Template.stats.helpers({
                 };
             })
             .value();
-        // console.log(displayData, displayData2);
         return displayData2;
     },
 });
@@ -177,7 +177,6 @@ var drawGraph = function (d, color, context) {
         bottom: 30,
         left: 40
     };
-    // console.log(numItems)
     if (numItems === 1) {
         klass = 'col-sm-3 pad00'
     } else if (numItems < 11) {
@@ -211,8 +210,6 @@ var drawGraph = function (d, color, context) {
         .scale(y)
         .orient("left")
         .tickFormat(d3.format("d"))
-        //.tickSubdivide(false)
-        //.tickValues(d.count.map(function(v){return v.data}))
         .ticks(4);
     var svg = container.append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -276,7 +273,6 @@ recordsSetMap = function (context, data) {
     };
     var obj = {};
     var map = L.map(context)
-        .setView([37.8, -96], 4);
     obj.map = map;
     layers.Outdoors.addTo(map);
     map.scrollWheelZoom.disable();
@@ -339,25 +335,22 @@ recordsSetMap = function (context, data) {
         }
         return result
     }
-    var activeFeatures = [];
+    activeFeatures = [];
+    Session.set('activeFeatures', activeFeatures);
 
     function highlightFeature(e, f) {
+        resetHighlight();
         Session.set('activeRecord', this.feature.properties.record);
         var properties = this.feature.properties;
         var id = properties.id;
         var sib = properties.field.sib
         var layer = e.target;
-        if (activeFeatures.length) {
-            resetHighlight(activeFeatures)
-        }
         activeFeatures.push({
             layer: layer,
             style: properties.field.style
         });
-        z = activeFeatures;
         layer.setStyle({
             color: '#2CC5D2',
-            //fillColor: properties.field.color,
             radius: 12,
             weight: 4,
             opacity: 1,
@@ -373,7 +366,6 @@ recordsSetMap = function (context, data) {
                     });
                     e.setStyle({
                         color: '#2CC5D2',
-                        //fillColor: e.feature.properties.field.color,
                         radius: 12,
                         weight: 4,
                         opacity: 1,
@@ -387,12 +379,24 @@ recordsSetMap = function (context, data) {
         if (!L.Browser.ie && !L.Browser.opera) {
             layer.bringToFront();
         }
+        var bounds
+        activeFeatures.forEach(function (d) {
+            if (!bounds) {
+                bounds = d.layer.getBounds();
+                return;
+            }
+            bounds.extend(d.layer.getBounds());
+        })
+        map.fitBounds(bounds);
     }
 
-    function resetHighlight(actives) {
-        actives.forEach(function (e) {
-            e.layer.setStyle(e.style)
-        });
+    function resetHighlight() {
+        if (activeFeatures && activeFeatures.length) {
+            activeFeatures.forEach(function (e) {
+                e.layer.setStyle(e.style)
+            });
+        }
+        activeFeatures = [];
     }
 
     function zoomToFeature(e) {
@@ -404,9 +408,8 @@ recordsSetMap = function (context, data) {
                 return d.style;
             },
             pointToLayer: function (feature, latlng) {
-                //console.log(feature.properties.field);
                 if (feature.properties.field.type === 'path') {
-                    return; // L.polyline(latlng, d.style);
+                    return;
                 } else {
                     return L.circleMarker(latlng, d.style);
                 }
@@ -430,6 +433,11 @@ recordsSetMap = function (context, data) {
         return [x.name, x.layer];
     }));
     //map.scrollWheelZoom.disable();
+    map.on('mousedown', function () {
+        if (activeFeatures.length) {
+            resetHighlight(activeFeatures)
+        }
+    })
     var legend = L.control({
         position: 'bottomleft'
     });
@@ -486,7 +494,6 @@ recordsSetMap = function (context, data) {
             }
         });
     });
-    g = geojson
     var bounds = _.reduce(layerGroups, function (d, e) {
         if (e.getBounds) {
             return e.getBounds();
@@ -550,10 +557,7 @@ recordStats = function (data) {
                 .reverse()
                 .value();
             var schema = Schemas.SARCAT._schema[e];
-            //console.log(schema)
-            if (e === '_id') {
-                //return {};
-            }
+            if (e === '_id') {}
             var label;
             label = schema ? schema.label : e;
             if (e === '_id') {
@@ -565,7 +569,6 @@ recordStats = function (data) {
                 label1 = split[split.length - 1].charAt(0)
                     .toUpperCase() + split[split.length - 1].slice(1);
                 label = label0 + '-' + label1;
-                // label = label.charAt(0).toUpperCase() + label.slice(1);
             }
             return {
                 field: e,
@@ -574,8 +577,6 @@ recordStats = function (data) {
             };
         })
         .value();
-    //keep = ["incidentOperations.ipptype", "incidentOperations.ippclassification", "incidentOperations.PLS_HowDetermined", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status", "incident.SARNotifiedDateTime", "incident.county-region", "incident.subjectcategory", "incident.contactmethod", "incident.landOwner", "incident.incidentEnvironment", "incident.ecoregionDivision", "incident.populationDensity", "incident.terrain", "incident.landCover", "weather.precipType", "incidentOutcome.incidentOutcome", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.detectability", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.lostStrategy", "incidentOutcome.mobility_hours", "rescueDetails.signalling", "subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "resourcesUsed.numTasks", "resourcesUsed.totalPersonnel", "resourcesUsed.totalManHours", "resourcesUsed.distanceTraveled", "resourcesUsed.totalCost", "resourcesUsed.resource.$.type", "resourcesUsed.resource.$.count", "resourcesUsed.resource.$.hours", "resourcesUsed.resource.$.findResource"];
-    //keep = _.first(keep, 8)
     count = count.filter(function (d) {
         var options = _.findWhere(keep, {
             field: d.field
@@ -601,7 +602,6 @@ resourceArrayForm = function (data) {
         };
     }).value()
 };
-
 subjectArrayForm = function (flatData, name, parent) {
     return _.chain(flatData).map(function (d, e) {
         if (e.indexOf('_key') > -1) {
