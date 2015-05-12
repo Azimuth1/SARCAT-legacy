@@ -1,61 +1,20 @@
-flatten = function (x, result, prefix) {
-    if (_.isObject(x)) {
-        _.each(x, function (v, k) {
-            flatten(v, result, prefix ? prefix + '.' + k : k)
-        })
-    } else {
-        result[prefix] = x
-    }
-    return result
-}
 var mapDrawn;
-var drawn;
-var filterFields
-Session.setDefault('recordMap', false);
 Template.records.onCreated(function (a) {
     Session.set('activeRecord', false);
     Session.set('selectedRecords', 0);
-    var records = Records.find().fetch();
-    Session.set('allRecords', records);
-    var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"];
-    var allFields = _.map(Schemas.SARCAT._schema, function (d, e) {
-        return {
-            headerClass: 'default-bg',
-            cellClass: 'white-bg',
-            key: e,
-            fieldId: e,
-            label: d.label,
-            hidden: !_.contains(activeFields, e),
-            parent: e.split('.')[0]
-        };
-    });
-    Session.set('allFields', allFields);
-    var keep = ["subjects.subject.$.age", "subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incident.county-region", "incident.ecoregionDivision", "incident.incidentEnvironment", "incident.landCover", "incident.landOwner", "incident.populationDensity", "incident.subjectcategory", "incident.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "incidentOutcome.detectability", "incidentOutcome.distanceIPP", "incidentOutcome.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidenttype", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "rescueDetails.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
-    filterFields = _.map(keep, function (d) {
-        return _.findWhere(allFields, {
-            key: d
-        });
-    });
-    Session.set('filterFields', filterFields);
-})
+});
 Template.records.onRendered(function () {
-    var records = Records.find()
-        .fetch();
-    if (Session.get('recordMap')) {
-        var recordMap = recordsSetMap('recordsMap', records);
-        //Session.set('map',recordMap.map)
-    }
+    var records = Records.find().fetch();
     r = records
-    dates = _.chain(records)
-        .map(function (d) {
-            return moment(d.recordInfo.incidentdate)
-                .format('MM/DD/YYYY HH:mm');
-        })
-        .sortBy(function (d) {
-            return new Date(d);
-        })
-        .value();
-    drawn = false;
+        /*dates = _.chain(records)
+            .map(function (d) {
+                return moment(d.recordInfo.incidentdate)
+                    .format('MM/DD/YYYY HH:mm');
+            })
+            .sortBy(function (d) {
+                return new Date(d);
+            })
+            .value();*/
     Session.set('userView', 'records');
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
@@ -66,102 +25,35 @@ Template.records.onRendered(function () {
     $('#createRecordModal')
         .on('shown.bs.modal', function (e) {
             AutoForm.resetForm('createRecordModalFormId');
+            $('[name="recordInfo.incidentEnvironment"]').val('Land')
+            $('[name="recordInfo.incidentType"]').val('Search')
             mapDrawn.reset();
         });
+    $('label:contains("Subject Category")')
+        //$('[name="incident.subject.category"]')
+        .after('<span class="small em mar0y text-default"><a class="em" href="/profiles" target="_blank"}}"> *info</span>');
 });
-resourceArrayForm = function (data) {
-    return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
-        return -d.count;
-    }).map(function (d, e) {
-        var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
-        return {
-            key: d.type,
-            parent: 'Resources Used',
-            val: sum
-        };
-    }).value()
-};
-subjectArrayForm = function (flatData, name, parent) {
-    return _.chain(flatData).map(function (d, e) {
-        if (e.indexOf('_key') > -1) {
-            return;
-        }
-        if (e.indexOf('.' + name + '.') > -1) {
-            return {
-                key: e,
-                val: d
-            };
-        }
-    }).compact().groupBy(function (d) {
-        return d.key.substr(d.key.lastIndexOf('.') + 1);
-    }).map(function (d, e) {
-        var items = d.map(function (f) {
-            return f.val;
-        }).sort();
-        var sum = _.chain(items).reduce(function (counts, word) {
-            counts[word] = (counts[word] || 0) + 1;
-            return counts;
-        }, {}).map(function (d, e) {
-            return [d, e];
-        }).sortBy(function (d) {
-            return -d[0];
-        }).map(function (d, e) {
-            if (d[0] === 1) {
-                return d[1];
-            };
-            return d[1] + '(' + d[0] + ')';
-        }).value().join(', ');
-        return {
-            key: e,
-            parent: parent,
-            val: items.sort().join(', '),
-            val: sum
-        };
-    }).value();
-};
 Template.records.helpers({
-    stats: function () {
-        var data = Session.get('activeRecord');
-        if (!data) {
-            return;
-        }
-        var filterFields = Session.get('filterFields');
-        var flatData = flatten(data, {});
-        f = flatData
-        var displayData = _.chain(flatData)
-            .map(function (d, e) {
-                var goodVal = _.findWhere(filterFields, {
-                    key: e
-                });
-                if (goodVal) {
-                    return {
-                        key: goodVal.label,
-                        parent: Schemas.SARCAT._schema[goodVal.parent].label,
-                        val: d
-                    };
-                }
-            })
-            .compact()
-            .value();
-        var subjects = subjectArrayForm(flatData, 'subject', 'Subjects');
-        var resources = resourceArrayForm(data);
-        displayData = _.flatten([displayData, subjects, resources]);
-        //displayData = displayData.concat(displayData, resources);
-        displayData2 = _.chain(displayData)
-            .groupBy('parent')
-            .map(function (d, e) {
-                return {
-                    field: e,
-                    data: d
-                };
-            })
-            .value();
-        console.log(displayData, displayData2);
-        return displayData2;
-    },
     settings: function () {
-        //["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidenttype", "recordInfo.status"]
-        var fields = Session.get('filterFields');
+        var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidentType", "recordInfo.status", "recordInfo.subjectCategory"];
+        var keep = ["recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidentType", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "recordInfo.subjectCategory", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incidentLocation.county-region", "incidentLocation.ecoregionDivision", "recordInfo.incidentEnvironment", "incidentLocation.landCover", "incidentLocation.landOwner", "incidentLocation.populationDensity", "incidentLocation.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "findLocation.detectability", "findLocation.distanceIPP", "findLocation.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "incidentOutcome.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
+        var fields = _.map(keep, function (e) {
+            //console.log(e);
+            //console.log(Schemas.SARCAT._schema[e].label)
+            var parent = e.split('.')[0];
+            var parentLabel = Schemas.SARCAT._schema[parent].label;
+            return {
+                headerClass: 'default-bg',
+                cellClass: 'white-bg',
+                key: e,
+                fieldId: e,
+                label: function () {
+                    return new Spacebars.SafeString('<span class="hideInTable strong">' + parentLabel + ' - </span><i>' + Schemas.SARCAT._schema[e].label + '</i>');
+                },
+                hidden: !_.contains(activeFields, e),
+                parent: parent
+            };
+        });
         fields.unshift({
             headerClass: 'default-bg text-center',
             cellClass: 'white-bg recordSel text-center pointer',
@@ -173,18 +65,23 @@ Template.records.helpers({
                 return new Spacebars.SafeString('<input type="checkbox" class="recordSelAll">');
             },
             fn: function (value, obj) {
+                if (!obj.recordInfo) {
+                    return;
+                }
                 return new Spacebars.SafeString('<input value="' + obj._id + '" name="' + obj.recordInfo.name + '" type="checkbox" class="recordSel">');
             }
         });
         fields[1].sortByValue = true;
-        fields[1].sort = 'descending';
+        fields[1].sort = 'ascending';
         return {
             showColumnToggles: true,
             collection: Records,
             rowsPerPage: 50,
             showFilter: true,
             class: "table table-hover table-bordered table-condensed pointer",
-            fields: fields
+            fields: fields,
+            showNavigation: 'auto',
+            showNavigationRowsPerPage: false,
         };
     },
     Records: function () {
@@ -222,6 +119,14 @@ Template.records.helpers({
     },
     recordMap: function () {
         return Session.get('recordMap');
+    },
+    summary: function () {
+        var ar = [];
+        arr.push({
+            name: 'Total Incidents',
+            val: Records.find().count()
+        })
+        return arr;
     }
 });
 Template.records.events({
@@ -233,6 +138,9 @@ Template.records.events({
         return Router.go('form', {
             _id: this._id
         });
+    },
+    'click .createSampleRecords': function (event) {
+        insertSampleRecords()
     },
     'click .openRecord': function (event, template) {
         if (event.target.className === 'recordSel') {
@@ -387,12 +295,8 @@ Template.records.events({
 });
 AutoForm.hooks({
     createRecordModalFormId: {
-        beginSubmit: function () {
-        
-        },
-        endSubmit: function () {
-     
-        },
+        beginSubmit: function () {},
+        endSubmit: function () {},
         onSuccess: function (formType, result) {
             $('#createRecordModal')
                 .modal('hide');

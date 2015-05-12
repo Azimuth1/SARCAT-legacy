@@ -28,7 +28,6 @@ Meteor.methods({
                     initSetup: false
                 }
             });
-        // Meteor.users.remove(Meteor.userId());
     },
     addRole: function (id, role) {
         Roles.addUsersToRoles(id, [role]);
@@ -55,11 +54,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        /*return Records.update(id, {
-            $set: {
-                remove: "true"
-            }
-        },function(d,e){console.log(d,e)});*/
         return Records.remove({
             _id: {
                 $in: id
@@ -86,37 +80,6 @@ Meteor.methods({
         });
         return update;
     },
-    toggleListPrivacy: function (list) {
-        //console.log(list, list.userId);
-        a = Meteor.userId();
-        //console.log(a);
-        if (!Meteor.user()) {
-            return alert('Please sign in or create an account to make private lists.');
-        }
-        if (list.userId) {
-            Records.update(list._id, {
-                $unset: {
-                    userId: true
-                }
-            });
-        } else {
-            // console.log(2);
-            // ensure the last public list cannot be made private
-            if (Records.find({
-                    userId: {
-                        $exists: false
-                    }
-                })
-                .count() === 1) {
-                return alert('Sorry, you cannot make the final public list private!');
-            }
-            Records.update(list._id, {
-                $set: {
-                    userId: Meteor.userId()
-                }
-            });
-        }
-    },
     defaultAdmin: function () {
         var defaultAdmin = Meteor.users.find({
                 emails: {
@@ -133,9 +96,7 @@ Meteor.methods({
         if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['manage-users', 'support-staff'], group)) {
             throw new Meteor.Error(403, 'Access denied');
         }
-        // remove permissions for target group
         Roles.setUserRoles(targetUserId, [], group);
-        // do other actions required when a user is removed...
     },
     changeRole: function (user, val) {
         if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
@@ -172,7 +133,6 @@ Meteor.methods({
     getFilesInPublicFolder: function (id) {
         var fs = Npm.require('fs');
         var dir = '../web.browser/app/uploads/records/' + id;
-        //var stats = fs.lstatSync(dir);
         if (!fs.existsSync(dir)) {
             return [];
         }
@@ -181,8 +141,6 @@ Meteor.methods({
     },
     removeLogo: function () {
         var fs = Npm.require('fs');
-        //var filePath = process.env.PWD + '/public/uploads/logo/' + name;
-        //fs.unlinkSync(filePath);
         var dirPath = process.env.PWD + '/public/uploads/logo';
         try {
             var files = fs.readdirSync(dirPath);
@@ -211,13 +169,14 @@ Meteor.methods({
         var ecoregionDivision = (val.DIV_NUM && val.DIV_DESC) ? (val.DIV_NUM + '-' + val.DIV_DESC) : null;
         Records.update(id, {
             $set: {
-                'incident.ecoregiondomain': ecoregiondomain,
-                'incident.ecoregionDivision': ecoregionDivision
+                'incidentLocation.ecoregionDomain': ecoregiondomain,
+                'incidentLocation.ecoregionDivision': ecoregionDivision
             }
         });
         return result;
     },
-    setWeather: function (id) {
+    setWeather: function (id, options) {
+        var options = options || {};
         var forecastAPI = Config.findOne()
             .forecastAPI;
         if (!forecastAPI) {
@@ -229,6 +188,9 @@ Meteor.methods({
                 'weather': {}
             }
         });
+        if (options.unset) {
+            return true;
+        }
         var coords = record.coords.ippCoordinates;
         var date = record.recordInfo.incidentdate;
         date = new Date(date)
@@ -255,16 +217,13 @@ Meteor.methods({
             return;
         }
         var dailyData = data.daily.data[0];
-        console.log(dailyData);
-        if (!dailyData.precipType) {
-            dailyData.precipType = 'none';
-        }
-        Records.update('RaiD6QehYRjQsWFGr', {
+        dailyData.precipType = dailyData.precipType || 'none';
+        dailyData.cloudCover = dailyData.cloudCover || 0;
+        Records.update(id, {
             $set: {
                 'weather': dailyData
             }
         });
-
         return dailyData;
     },
     setBearing: function (id, field) {
@@ -310,49 +269,6 @@ Meteor.methods({
         });
         return val;
     },
-    /*setElevation: function (id) {
-        var googleAPI = Config.findOne()
-            .googleAPI;
-        if (!googleAPI) {
-            return;
-        }
-        var record = Records.findOne(id);
-        Records.update(id, {
-            $unset: {
-                'incidentOutcome.elevationChange': ''
-            }
-        });
-        var coord1 = record.coords.ippCoordinates;
-        var coord2 = record.coords.findCoord;
-        if (!coord1 || !coord2) {
-            return false;
-        }
-        var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + googleAPI;
-        var result = HTTP.get(url);
-        var data = result.data;
-        if (!data) {
-            return;
-        }
-        var results = data.results;
-        if (!results || !results.length) {
-            return;
-        }
-        var _coord1 = results[0].elevation;
-        var _coord2 = results[1].elevation;
-        if (!_coord1 || !_coord2) {
-            return;
-        }
-        var val = parseInt(_coord2 - _coord1);
-        if (record.measureUnits === 'US') {
-            val = parseInt(val * 3.2808399);
-        }
-        Records.update(id, {
-            $set: {
-                'incidentOutcome.elevationChange': val
-            }
-        });
-        return result;
-    },*/
     setElevation: function (id) {
         var mapQuestAPI = Config.findOne()
             .mapQuestAPI;
@@ -362,7 +278,7 @@ Meteor.methods({
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
-                'incidentOutcome.elevationChange': ''
+                'findLocation.elevationChange': ''
             }
         });
         var coord1 = record.coords.ippCoordinates;
@@ -370,21 +286,12 @@ Meteor.methods({
         if (!coord1 || !coord2) {
             return false;
         }
-        var url = 'http://open.mapquestapi.com/elevation/v1/profile?key='+mapQuestAPI+'&shapeFormat=json&latLngCollection=' + coord1.lat + ',' + coord1.lng + ',' + coord2.lat + ',' + coord2.lng + '';
-        //var url = 'https://maps.googleapis.com/maps/api/elevation/json?locations=' + coord1.lat + ',' + coord1.lng + '|' + coord2.lat + ',' + coord2.lng + '&sensor=false&key=' + googleAPI;
+        var url = 'http://open.mapquestapi.com/elevation/v1/profile?key=' + mapQuestAPI + '&shapeFormat=json&latLngCollection=' + coord1.lat + ',' + coord1.lng + ',' + coord2.lat + ',' + coord2.lng + '';
         var result = HTTP.get(url);
-
-
-
-
-     
         var data = result.data;
         if (!data) {
             return;
         }
-   
-
-
         var results = data.elevationProfile;
         if (!results.length) {
             return;
@@ -400,7 +307,7 @@ Meteor.methods({
         }
         Records.update(id, {
             $set: {
-                'incidentOutcome.elevationChange': val
+                'findLocation.elevationChange': val
             }
         });
         return result;
@@ -433,7 +340,7 @@ Meteor.methods({
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
-                'incidentOutcome.distanceIPP': ''
+                'findLocation.distanceIPP': ''
             }
         });
         var coord1 = record.coords.ippCoordinates;
@@ -447,10 +354,9 @@ Meteor.methods({
         });
         Records.update(id, {
             $set: {
-                'incidentOutcome.distanceIPP': val
+                'findLocation.distanceIPP': val
             }
         });
-        //  return JSON.stringify([coord1, coord2, unit, val])
         return val;
     },
     setLocale: function (id) {
@@ -532,4 +438,3 @@ Meteor.users.allow({
         }
     }
 });
-

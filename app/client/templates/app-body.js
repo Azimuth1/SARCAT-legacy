@@ -1,12 +1,11 @@
-console.log('app.body.js')
 var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 settings = Meteor.settings.public;
-Template.appBody.onCreated(function () {
-});
+Template.appBody.onCreated(function () {});
 Template.appBody.onRendered(function () {
+
 });
 Template.appBody.helpers({
     email: function (view) {
@@ -66,4 +65,3 @@ Template.appBody.events({
         });
     },
 });
-

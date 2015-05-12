@@ -1,46 +1,56 @@
+flatten = function (x, result, prefix) {
+    if (_.isObject(x)) {
+        _.each(x, function (v, k) {
+            flatten(v, result, prefix ? prefix + '.' + k : k)
+        })
+    } else {
+        result[prefix] = x
+    }
+    return result
+}
 keep = [{
     "field": "recordInfo.incidentdate",
     "count": [],
     "label": "Incident Date/Time"
 }, {
-    "field": "incident.subjectcategory",
+    "field": "recordInfo.subjectcategory",
     "count": [],
     "label": "Subject Category",
     klass: 'col-md-12',
     rotate: '-25'
 }, {
-    "field": "incident.ecoregiondomain",
+    "field": "incidentLocation.ecoregionDomain",
     "count": [],
     "label": "Ecoregion Domain",
     klass: 'col-md-6',
 }, {
-    "field": "recordInfo.incidenttype",
+    "field": "recordInfo.incidentType",
     "count": [],
     "label": "Incident Type",
     klass: 'col-md-6',
     rotate: '-25'
 }, {
-    "field": "incident.landOwner",
+    "field": "incidentLocation.landOwner",
     "count": [],
     "label": "Land Owner",
-        klass: 'col-md-6',
+    klass: 'col-md-6',
     rotate: '-25'
 }, {
     "field": "incident.contactmethod",
     "count": [],
     "label": "Contact Method",
-        klass: 'col-md-6',
+    klass: 'col-md-6',
     rotate: '-25'
 }, {
-    "field": "incident.populationDensity",
+    "field": "incidentLocation.populationDensity",
     "count": [],
     "label": "Population Density"
 }, {
-    "field": "incident.landCover",
+    "field": "incidentLocation.landCover",
     "count": [],
     "label": "Land Cover"
 }, {
-    "field": "incident.terrain",
+    "field": "incidentLocation.terrain",
     "count": [],
     "label": "Terrrain"
 }, {
@@ -48,7 +58,7 @@ keep = [{
     "count": [],
     "label": "Incident Status"
 }, {
-    "field": "incident.incidentEnvironment",
+    "field": "recordInfo.incidentEnvironment",
     "count": [],
     "label": "Incident Environment"
 }, {
@@ -92,7 +102,7 @@ keep = [{
     "count": [],
     "label": "Total Distance Traveled"
 }, {
-    "field": "incidentOutcome.distanceIPP",
+    "field": "findLocation.distanceIPP",
     "count": [],
     "label": "Distance From IPP"
 }, {
@@ -108,11 +118,11 @@ keep = [{
     "count": [],
     "label": "Suspension Reasons"
 }, {
-    "field": "incidentOutcome.findFeature",
+    "field": "findLocation.findFeature",
     "count": [],
     "label": "Find Feature"
 }, {
-    "field": "incidentOutcome.detectability",
+    "field": "findLocation.detectability",
     "count": [],
     "label": "Detectability"
 }, {
@@ -177,22 +187,12 @@ d3Calender = function (context, data1) {
         });
     svg.selectAll(".month")
         .data(function (d) {
-            //console.log(d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)))
             return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
         })
         .enter().append("path")
         .attr("class", "month")
         .attr("d", monthPath);
-    //d3.csv("dji.csv", function (error, csv) {
-    /*var data = d3.nest()
-        .key(function (d) {
-            return d.Date;
-        })
-        .rollup(function (d) {
-            return (d[0].Close - d[0].Open) / d[0].Open;
-        })
-        .map(csv);*/
-    //});
+
     function monthPath(t0) {
         var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
             d0 = +day(t0),
@@ -216,8 +216,7 @@ d3Calender = function (context, data1) {
             return d in data;
         })
         .attr("class", function (d) {
-            // console.log(color(data[d]),data[d])
-            return "day q7-11"; // + color(data[d]);
+            return "day q7-11";
         })
         .select("title")
         .text(function (d) {
@@ -286,11 +285,6 @@ setMap = function (context, bounds, agencyMapComplete) {
         Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
         Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
     };
-    /*var layers = {
-        Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
-        Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
-    };*/
     layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
@@ -313,10 +307,6 @@ setMap = function (context, bounds, agencyMapComplete) {
             }
         })
         .addTo(map);
-    /*if (agencyMapComplete) {
-        $('#geolocate').addClass('hide');
-         return;
-    }*/
     var searching;
     if (!navigator.geolocation) {
         $('#geolocate')
@@ -331,11 +321,7 @@ setMap = function (context, bounds, agencyMapComplete) {
             $('#geolocate')
                 .html('Locating.....');
             searching = true;
-            //map.locate();
             lc.start();
-            //setTimeout(function () {
-            //lc.stop();
-            //}, 8000);
         };
     }
     map.on('locationfound', function (e) {
@@ -361,15 +347,6 @@ newProjectSetMap = function (context, bounds, points) {
     var obj = {};
     var marker;
     var map = L.map(context);
-    /*L.mapbox.accessToken = 'pk.eyJ1IjoibWFwcGlza3lsZSIsImEiOiJ5Zmp5SnV3In0.mTZSyXFbiPBbAsJCFW8kfg';
-    var map = L.mapbox.map(context);
-    L.control.scale().addTo(map);
-    var layers = {
-        Outdoors: L.mapbox.tileLayer('examples.ik7djhcc'),
-        Streets: L.mapbox.tileLayer('jasondalton.h4gh1idp'),
-        Satellite: L.mapbox.tileLayer('jasondalton.map-7z4qef6u')
-    };
-    */
     var layers = {
         Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
         Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
@@ -412,7 +389,6 @@ newProjectSetMap = function (context, bounds, points) {
     });
     var marker = L.marker(center, {
         draggable: true,
-        //editable: false,//true,
         icon: myIcon,
         name: ipp.name,
         val: ipp.val,
@@ -492,6 +468,7 @@ getCoords = function (record) {
     });
 };
 formSetMap = function (context, recordId) {
+    console.log(recordId)
     var markers = {};
     var paths = {};
     var coords = {};
@@ -502,18 +479,12 @@ formSetMap = function (context, recordId) {
             metric: units
         })
         .addTo(map);
-    var layers = {
-        Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
-        Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
-    };
     var layers = Meteor.settings.public.layers;
     _.each(layers, function (d, e) {
         layers[e] = L.tileLayer(d);
     })
     var firstLayer = Object.keys(layers)[0];
     layers[firstLayer].addTo(map);
-    //layers.Outdoors.addTo(map);
     L.control.layers(layers)
         .addTo(map);
     drawnPaths = new L.FeatureGroup()
@@ -633,10 +604,7 @@ formSetMap = function (context, recordId) {
         delete coords[d.val];
     };
     obj.editPoint = function (name) {
-        console.log(name)
-        var coords = Records.findOne(recordId)
-            .coords[name];
-        console.log(coords)
+        var coords = Records.findOne(recordId).coords[name];
         var layer = drawnPoints.getLayers()
             .filter(function (d) {
                 return d.options.name === 'coords.' + name;
@@ -664,92 +632,37 @@ formSetMap = function (context, recordId) {
             markerColor: d.color,
             iconColor: '#fff',
         });
-        /* if (d.name === "coords.ippCoordinates") {
-             var myIcon = L.divIcon({
-                 iconSize: [50, 50],
-                 iconAnchor: [25, 25],
-                 className: 'fa ' + d.icon + ' fa-5x fa-fw _pad1 text-danger'
-             });
-         }*/
         var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
         marker = L.marker(_coords, {
             draggable: draggable,
-            //editable: false,//true,
             icon: myIcon,
             name: d.name,
             val: d.val,
         });
         var text = d.text;
-        //marker.dragging.disable()
         coords[d.val].layer = marker;
         drawnPoints.addLayer(marker);
-        // }
-        //marker.setZIndexOffset(4);
         $('[name="' + d.name + '.lng"]')
             .val(_coords.lng)
             .trigger("change");
         $('[name="' + d.name + '.lat"]')
             .val(_coords.lat)
             .trigger("change");
-        /*function newElev(d) {
-                console.log(d)
-                if (d.name !== 'coords.ippCoordinates' && d.name !== 'coords.findCoord') {
-                    return;
-                }
-                var record = Records.findOne(recordId);
-                Meteor.call('setLocale', record._id, function (err, d) {
-                    console.log(d);
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-                Meteor.call('setDistance', record._id, function (err, d) {
-                    console.log(d);
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-                Meteor.call('setBearing', record._id, 'incidentOutcome.findBearing', function (err, d) {
-                    console.log(d);
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-                Meteor.call('setEcoRegion', recordId, function (err, d) {
-                    if (err) {
-                        return;
-                    }
-                });
-                Meteor.call('setElevation', record._id, function (err, d) {
-                    console.log(d);
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-            }*/
-        /*marker.on('dragstart', function (event) {
-            confirm('Are you sure you want to update your IPP?')
-        });*/
         marker.on('dragend', function (event) {
             var marker = event.target;
             var position = marker.getLatLng();
-            console.log(recordId, d.name, position)
             Meteor.call('updateRecord', recordId, d.name, position, function (err, res) {
                 if (err) {
                     console.log(err);
                     return;
                 }
-                /*if (d.name === 'coords.ippCoordinates' || d.name === 'coords.findCoord') {
-                    newElev(d);
-                }*/
             });
         });
         return marker;
     }
     obj.fitBounds = function () {
-        map.fitBounds(drawnPoints.getBounds()
-            .extend(drawnPaths.getBounds())
-            .pad(.3));
+        map.fitBounds(drawnPoints.getBounds());
+        return
         if (Object.keys(coords)
             .length < 2) {
             map.setZoom(9)
@@ -757,3 +670,259 @@ formSetMap = function (context, recordId) {
     };
     return obj;
 }
+insertSampleRecords = function () {
+    function randomDate(start, end) {
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    }
+    var data = [];
+    var length = 100;
+    for (var i = 0; i < length; i++) {
+        var record = {
+            "coords": {
+                "ippCoordinates": {
+                    "lat": 38.90879303268068,
+                    "lng": -77.2573184967041
+                },
+                "findCoord": {
+                    "lat": 39.104488809440475,
+                    "lng": -76.93450927734375
+                },
+                "destinationCoord": {
+                    "lat": 38.97222194853654,
+                    "lng": -76.8658447265625
+                },
+                "intendedRoute": "[[38.90879303268068,-77.2573184967041],[38.97222194853654,-76.8658447265625]]",
+                "actualRoute": "[[38.90879303268068,-77.2573184967041],[39.104488809440475,-76.93450927734375]]",
+                "decisionPointCoord": {
+                    "lat": 38.976492485539424,
+                    "lng": -77.0635986328125
+                }
+            },
+            "recordInfo": {
+                "name": "Record-99",
+                "incidentnum": 99,
+                "missionnum": "#201599",
+                "incidentdate": "05/01/2015 13:14",
+                "incidenttype": "Search",
+                "status": "Closed"
+            },
+            "measureUnits": "US",
+            "userId": "FuZitzYuiJeR8gbQ3",
+            "incidentOperations": {
+                "initialDirectionofTravel_Boolean": "Yes",
+                "ipptype": "Point Last Seen",
+                "ippclassification": "Residence",
+                "initialDirectionofTravel": 99,
+                "DOTHowdetermined": "Physical Clue",
+                "typeofDecisionPoint": "Saddle"
+            },
+            "incident": {
+                "incidentEnvironment": "Land",
+                "ecoregiondomain": "TEMPERATE",
+                "ecoregionDivision": "230-SUBTROPICAL DIVISION",
+                "leadagency": "Maryland State Police",
+                "SARNotifiedDateTime": "05/02/2015 13:18",
+                "country": "USA",
+                "state-province": "MD",
+                "county-region": "Montgomery",
+                "subjectcategory": "ATV",
+                "contactmethod": "Vehicle Found",
+                "landOwner": "Commercial",
+                "populationDensity": "Rural",
+                "landCover": "Bare",
+                "terrain": "Hilly"
+            },
+            "weather": {},
+            "rescueDetails": {
+                "signalling": "SPOT",
+                "injuredSearcher": "No"
+            },
+            "subjects": {
+                "subject": [{
+                    "_key": "2015-05-04T17:19:48.925Z",
+                    "age": 54,
+                    "sex": "Male",
+                    "status": "DOA",
+                    "evacuationMethod": "Walkout",
+                    "mechanism": "Fall - ground level",
+                    "illness": "Appendicitis",
+                    "weight": "180",
+                    "height": "72",
+                    "physical_fitness": "Excellent",
+                    "experience": "Poor",
+                    "equipment": "Fair",
+                    "clothing": "Excellent",
+                    "survival_training": "Poor",
+                    "local": "Yes",
+                    "injuryType": "Frostbite",
+                    "treatmentby": "EMT"
+                }, {
+                    "_key": "2015-05-04T17:19:48.925Z",
+                    "age": 54,
+                    "sex": "Male",
+                    "status": "DOA",
+                    "evacuationMethod": "Walkout",
+                    "mechanism": "Fall - ground level",
+                    "illness": "Appendicitis",
+                    "weight": "180",
+                    "height": "72",
+                    "physical_fitness": "Excellent",
+                    "experience": "Poor",
+                    "equipment": "Fair",
+                    "clothing": "Excellent",
+                    "survival_training": "Poor",
+                    "local": "Yes",
+                    "injuryType": "Frostbite",
+                    "treatmentby": "EMT"
+                }, {
+                    "_key": "2015-05-04T17:19:48.925Z",
+                    "age": 54,
+                    "sex": "Male",
+                    "status": "DOA",
+                    "evacuationMethod": "Walkout",
+                    "mechanism": "Fall - ground level",
+                    "illness": "Appendicitis",
+                    "weight": "180",
+                    "height": "72",
+                    "physical_fitness": "Excellent",
+                    "experience": "Poor",
+                    "equipment": "Fair",
+                    "clothing": "Excellent",
+                    "survival_training": "Poor",
+                    "local": "Yes",
+                    "injuryType": "Frostbite",
+                    "treatmentby": "EMT"
+                }, {
+                    "_key": "2015-05-04T17:19:48.925Z",
+                    "age": 54,
+                    "sex": "Male",
+                    "status": "DOA",
+                    "evacuationMethod": "Walkout",
+                    "mechanism": "Fall - ground level",
+                    "illness": "Appendicitis",
+                    "weight": "180",
+                    "height": "72",
+                    "physical_fitness": "Excellent",
+                    "experience": "Poor",
+                    "equipment": "Fair",
+                    "clothing": "Excellent",
+                    "survival_training": "Poor",
+                    "local": "Yes",
+                    "injuryType": "Frostbite",
+                    "treatmentby": "EMT"
+                }]
+            },
+            "resourcesUsed": {
+                "resource": [{
+                    "_key": "2015-05-04T17:20:18.143Z",
+                    "type": "Boat",
+                    "count": 3,
+                    "hours": 7,
+                    "findResource": true
+                }, {
+                    "_key": "2015-05-04T17:20:21.544Z",
+                    "type": "Bike",
+                    "count": 4,
+                    "hours": 3
+                }, {
+                    "_key": "2015-05-04T17:20:24.502Z",
+                    "type": "Dogs",
+                    "count": 5,
+                    "hours": 6
+                }],
+                "numTasks": 8,
+                "totalManHours": 234,
+                "totalCost": "$1,3300",
+                "totalPersonnel": 83,
+                "distanceTraveled": "543"
+            },
+            "admin": {
+                "user": "Kyle Kalwarski",
+                "email": "kyle.kalwarski@azimuth1.com",
+                "phonenum": "7036290113"
+            },
+            "incidentOutcome": {
+                "lkp_pls_Boolean": "No",
+                "distanceIPP": "21.99",
+                "findBearing": "52",
+                "incidentOutcome": "Closed by Search",
+                "subjectLocatedDateTime": "05/03/2015 13:18",
+                "incidentClosedDateTime": "05/03/2015 13:19",
+                "scenario": "Criminal",
+                "suspensionReasons": "Weather",
+                "findFeature": "Forest/Woods",
+                "detectability": "Good",
+                "mobility&Responsiveness": "Immobile and responsive",
+                "lostStrategy": "Evasive",
+                "mobility_hours": 8
+            }
+        };
+        delete record._id;
+        delete record.created;
+        record.recordInfo.name = 'Record-' + i;
+        record.recordInfo.incidentnum = i;
+        record.recordInfo.missionnum = '#2015' + i;
+        record.created = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
+        record.recordInfo.incidentdate = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
+        var allowed = Schemas.recordInfo._schema.incidenttype.allowedValues;
+        if (allowed) {
+            var sample = _.sample(allowed, 1)[0];
+            record.recordInfo.incidenttype = sample;
+        }
+        _.each(record.recordInfo, function (d, name) {
+            var allowed = Schemas.recordInfo._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                record.recordInfo[name] = sample;
+            }
+        });
+        _.each(record.incident, function (d, name) {
+            Schemas.incident._schema[name]
+            var allowed = Schemas.incident._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                record.incident[name] = sample;
+            }
+        });
+        _.each(record.incidentoutcome, function (d, name) {
+            var allowed = Schemas.incidentoutcome._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                //console.log(record.incident[name],sample)
+                record.incidentoutcome[name] = sample;
+            }
+        });
+        _.each(record.subjects.subject, function (e, ind) {
+            _.each(e, function (d, name) {
+                var allowed = Schemas.subjects._schema['subject.$.' + name].allowedValues;
+                if (allowed) {
+                    var sample = _.sample(allowed, 1)[0];
+                    // console.log(record.subjects.subject[ind][name],sample)
+                    record.subjects.subject[ind][name] = sample;
+                }
+            });
+            e.age = Math.floor(Math.random() * 70) + 1;
+        });
+        var lat = +(Math.random() * (38.800 - 38.2200) + 38.2200)
+            .toFixed(4);
+        var lng = -(Math.random() * (77.950 - 77.310) + 77.310)
+            .toFixed(4);
+        record.coords.ippCoordinates.lat = lat;
+        record.coords.ippCoordinates.lng = lng;
+        _.each(record.coords, function (d, name) {
+            if (name === 'ippCoordinates') {
+                return;
+            }
+            if (d.lat) {
+                d.lat = lat + parseFloat((Math.random() * (0.100 - (-0.1)) + (-0.1))
+                    .toFixed(4));
+                d.lng = lng + parseFloat((Math.random() * (0.100 - (-0.1)) + (-0.1))
+                    .toFixed(4));
+            }
+        })
+        data[i] = record;
+    }
+    data.forEach(function (d) {
+        Records.insert(d);
+    })
+};

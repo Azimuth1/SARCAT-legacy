@@ -200,17 +200,46 @@ Schemas.recordInfo = new SimpleSchema({
         }
     },
     ////defaultValue: moment().format('YYYY-MM-DThh:mm')
-    incidenttype: {
+    incidentType: {
         type: String,
         allowedValues: ['Unknown', 'Search', 'Rescue', 'Beacon', 'Recovery', 'Training', 'Disaster', 'Fugitive', 'False Report', 'StandBy', 'Attempt To Locate', 'Evidence'],
         label: 'Incident Type',
         defaultValue: 'Search'
     },
+    incidentEnvironment: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Land', 'Air', 'Water'],
+        label: 'Incident Environment',
+        defaultValue: 'Land'
+    },
+    subjectCategory: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ["ATV", "Abandoned Vehicle", "Abduction", "Ages 1-3 (Toddler)", "Ages 10-12 (Pre-Teenager)", "Ages 13-15 (Adolescent)", "Ages 4-6 (PreSchool)", "Ages 7-9 (SchoolAge)", "Aircraft Incident", "Alpine Skier", "Angler", "Autism", "Car Camper", "Caver", "Day Climber", "Dementia", "Despondent", "Extreme Race", "Gatherer", "Hiker", "Horseback Rider", "Hunter", "Intellectual Disability", "Mental Illness", "Motorcycle", "Mountain Bike", "Mountaineer", "Non-Powered Boat", "Nordic Skier", "Person in Current Water", "Person in Flat Water", "Person in Flood Water", "Power Boat", "Runner", "Snowboarder", "Snowmobiler", "Snowshoer", "Substance Intoxication", "Unknown", "Vehicle (4WD)", "Vehicle (Road)", "Worker", "Other"],
+        label: 'Subject Category',
+    },
+    subjectSubCategory: {
+        type: String,
+        optional: true,
+        label: 'Subject Sub-Category (Misc. Description)',
+    },
     status: {
         type: String,
-        allowedValues: ['Unknown', 'Active', 'Closed', 'Open'],
+        allowedValues: ['Active', 'Closed', 'Open'],
         label: 'Incident Status',
         autoform: {
+            class: 'col-md-12',
             type: "select-radio-inline",
             options: function () {
                 return [{
@@ -222,20 +251,118 @@ Schemas.recordInfo = new SimpleSchema({
                 }, {
                     "label": "Closed",
                     "value": "Closed"
-                }, {
-                    "label": "Unknown",
-                    "value": "Unknown"
-                }, ];
+                }];
             }
         }
     },
 });
-Schemas.incident = new SimpleSchema({
-    leadagency: {
+Schemas.incidentLocation = new SimpleSchema({
+    country: {
+        type: String,
+        label: 'Incident Response Country',
+        optional: true,
+        autoValue: function(){
+            if(this.isInsert){
+                return Config.findOne().agencyProfile.country;
+            }
+        }
+    },
+    'state-province': {
+        type: String,
+        label: 'State/Province',
+        optional: true,
+        autoValue: function(){
+            if(this.isInsert){
+                return Config.findOne().agencyProfile['state-province'];
+            }
+        }
+    },
+    'county-region': {
+        type: String,
+        label: 'Incident County/Region',
+        optional: true,
+    },
+
+    landOwner: {
         type: String,
         optional: true,
-        label: 'Agency Having Jurisdiction',
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
+        label: 'Land Owner',
     },
+    /*    incidentEnvironment: {
+            type: String,
+            optional: true,
+            autoform: {
+                firstOption: function () {
+                    return "--";
+                }
+            },
+            allowedValues: ['Unknown', 'Land', 'Air', 'Water'],
+            label: 'Incident Environment',
+            defaultValue: 'Land'
+        },*/
+    ecoregionDomain: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ["POLAR", "TEMPERATE", "DRY", "TROPICAL"],
+        label: 'Ecoregion Domain',
+    },
+    ecoregionDivision: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ["110-ICECAP DIVISION", "120-TUNDRA DIVISION", "130-SUBARCTIC DIVISION", "210-WARM CONTINENTAL DIVISION", "220-HOT CONTINENTAL DIVISION", "230-SUBTROPICAL DIVISION", "240-MARINE DIVISION", "250-PRAIRIE DIVISION", "260-MEDITERRANEAN DIVISION", "310-TROPICAL/SUBTROPICAL STEPPE DIVISION", "320-TROPICAL/SUBTROPICAL DESERT DIVISION", "330-TEMPERATE STEPPE DIVISION", "340-TEMPERATE DESERT DIVISION", "410-SAVANNA DIVISION", "420-RAINFOREST DIVISION", "M110-ICECAP REGIME MOUNTAINS", "M120-TUNDRA REGIME MOUNTAINS", "M130-SUBARCTIC REGIME MOUNTAINS", "M210-WARM CONTINENTAL REGIME MOUNTAINS", "M220-HOT CONTINENTAL REGIME MOUNTAINS", "M230-SUBTROPICAL REGIME MOUNTAINS", "M240-MARINE REGIME MOUNTAINS", "M250-PRAIRIE REGIME MOUNTAINS", "M260-MEDITERRANEAN REGIME MOUNTAINS", "M310-TROPICAL/SUBTROPICAL STEPPE REGIME MOUNTAINS", "M320-TROPICAL/SUBTROPICAL DESERT REGIME MOUNTAINS", "M330-TEMPERATE STEPPE REGIME MOUNTAINS", "M340-TEMPERATE DESERT REGIME MOUNTAINS", "M410-SAVANNA REGIME DIVISION", "M420-RAINFOREST REGIME MOUNTAINS"],
+        label: 'Ecoregion Division',
+    },
+    populationDensity: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Wilderness', 'Rural', 'Suburban', 'Urban'],
+        label: 'Developed Environment',
+    },
+    terrain: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Mountain', 'Hilly', 'Flat', 'Water'],
+        label: 'Terrrain',
+    },
+    landCover: {
+        type: String,
+        optional: true,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Bare', 'Light', 'Moderate', 'Heavy', 'Water'],
+        label: 'Land Cover',
+    }
+});
+Schemas.incident = new SimpleSchema({
     'SARNotifiedDateTime': {
         type: String,
         label: 'SAR Notified Date',
@@ -255,38 +382,29 @@ Schemas.incident = new SimpleSchema({
             return Records.isDate(this.value);
         }
     },
-    country: {
+    leadagency: {
         type: String,
-        label: 'Incident Response Country',
         optional: true,
+        label: 'Agency Having Jurisdiction',
     },
-    'state-province': {
-        type: String,
-        label: 'State/Province',
-        optional: true,
-    },
-    'county-region': {
-        type: String,
-        label: 'Incident County/Region',
-        optional: true,
-    },
-    subjectcategory: {
-        type: String,
-        optional: true,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
+    /*
+        subjectcategory: {
+            type: String,
+            optional: true,
+            autoform: {
+                firstOption: function () {
+                    return "--";
+                }
+            },
+            allowedValues: ["ATV", "Abandoned Vehicle", "Abduction", "Ages 1-3 (Toddler)", "Ages 10-12 (Pre-Teenager)", "Ages 13-15 (Adolescent)", "Ages 4-6 (PreSchool)", "Ages 7-9 (SchoolAge)", "Aircraft Incident", "Alpine Skier", "Angler", "Autism", "Car Camper", "Caver", "Day Climber", "Dementia", "Despondent", "Extreme Race", "Gatherer", "Hiker", "Horseback Rider", "Hunter", "Intellectual Disability", "Mental Illness", "Motorcycle", "Mountain Bike", "Mountaineer", "Non-Powered Boat", "Nordic Skier", "Person in Current Water", "Person in Flat Water", "Person in Flood Water", "Power Boat", "Runner", "Snowboarder", "Snowmobiler", "Snowshoer", "Substance Intoxication", "Unknown", "Vehicle (4WD)", "Vehicle (Road)", "Worker", "Other"],
+            label: 'Subject Category',
         },
-        allowedValues: ["ATV", "Abandoned Vehicle", "Abduction", "Ages 1-3 (Toddler)", "Ages 10-12 (Pre-Teenager)", "Ages 13-15 (Adolescent)", "Ages 4-6 (PreSchool)", "Ages 7-9 (SchoolAge)", "Aircraft Incident", "Alpine Skier", "Angler", "Autism", "Car Camper", "Caver", "Day Climber", "Dementia", "Despondent", "Extreme Race", "Gatherer", "Hiker", "Horseback Rider", "Hunter", "Intellectual Disability", "Mental Illness", "Motorcycle", "Mountain Bike", "Mountaineer", "Non-Powered Boat", "Nordic Skier", "Person in Current Water", "Person in Flat Water", "Person in Flood Water", "Power Boat", "Runner", "Snowboarder", "Snowmobiler", "Snowshoer", "Substance Intoxication", "Unknown", "Vehicle (4WD)", "Vehicle (Road)", "Worker", "Other"],
-        label: 'Subject Category',
-    },
-    subjectSubCategory: {
-        type: String,
-        optional: true,
-        label: 'Subject Sub-Category',
-        //changeName???
-    },
+        subjectSubCategory: {
+            type: String,
+            optional: true,
+            label: 'Subject Sub-Category',
+        },
+        */
     contactmethod: {
         type: String,
         optional: true,
@@ -297,6 +415,22 @@ Schemas.incident = new SimpleSchema({
         },
         allowedValues: ['Unknown', 'Reported Missing', 'Vehicle Found', 'Registration Card', 'ELT/PLB/EPIRP', 'Satelitte Alerting Technology', 'Subject Cell Phone', 'Radio', 'Distress Signal'],
         label: 'Contact Method',
+    },
+    /*
+    'county-region': {
+        type: String,
+        label: 'Incident County/Region',
+        optional: true,
+    },
+    country: {
+        type: String,
+        label: 'Incident Response Country',
+        optional: true,
+    },
+    'state-province': {
+        type: String,
+        label: 'State/Province',
+        optional: true,
     },
     landOwner: {
         type: String,
@@ -351,10 +485,8 @@ Schemas.incident = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Wilderness', 'Rural', 'Suburban', 'Urban', 'Water'],
-        label: 'Population Density',
-        //ask Bob
-        //UTI????
+        allowedValues: ['Wilderness', 'Rural', 'Suburban', 'Urban'],
+        label: 'Developed Environment',
     },
     terrain: {
         type: String,
@@ -377,7 +509,7 @@ Schemas.incident = new SimpleSchema({
         },
         allowedValues: ['Unknown', 'Bare', 'Light', 'Moderate', 'Heavy', 'Water'],
         label: 'Land Cover',
-    },
+    }*/
 });
 Schemas.coords = new SimpleSchema({
     ippCoordinates: {
@@ -500,7 +632,7 @@ Schemas.incidentOperations = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
+        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Cellular forensics','Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
     },
     'initialDirectionofTravel_Boolean': {
@@ -576,6 +708,78 @@ Schemas.incidentOperations = new SimpleSchema({
         label: 'Determining Factor',
         optional: true
     },
+    'lkp_pls_Boolean': {
+        type: String,
+        label: 'Is LKP/PLS Different from IPP?',
+        optional: true,
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return [{
+                    label: "Yes",
+                    value: "Yes"
+                }, {
+                    label: "No",
+                    value: "No"
+                }];
+            },
+            defaultValue: 'No'
+        }
+    }
+});
+Schemas.findLocation = new SimpleSchema({
+    'findFeature': {
+        type: String,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/Woods', 'Ice/Snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
+        label: 'Find Feature',
+        optional: true
+    },
+    'foundSecondary': {
+        type: String,
+        label: 'Found Secondary',
+        optional: true
+    },
+    'detectability': {
+        type: String,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Excellent', 'Good', 'Fair', 'Poor'],
+        label: 'Detectability',
+        optional: true
+    },
+    'distanceIPP': {
+        type: String,
+        label: 'Distance From IPP',
+        optional: true
+    },
+    'dispersionAngle': {
+        type: String,
+        label: 'Dispersion Angle (deg)',
+        optional: true
+    },
+    'findBearing': {
+        type: String,
+        label: 'Find Bearing (deg)',
+        optional: true
+    },
+    'elevationChange': {
+        type: String,
+        label: 'Elevation Change',
+        optional: true
+    },
+    'trackOffset': {
+        type: String,
+        label: 'Track Offset',
+        optional: true
+    },
 });
 Schemas.incidentOutcome = new SimpleSchema({
     'incidentOutcome': {
@@ -587,6 +791,17 @@ Schemas.incidentOutcome = new SimpleSchema({
         },
         allowedValues: ['Unknown', 'Closed by Search', 'Closed by Public', 'Closed by Self-Rescue', 'Closed by Investigation', 'Closed by Investigation-False Report', 'Closed by Investigation-Friend/Family', 'Closed by investigation-In facility', 'Closed by Investigation-Staged', 'Closed by investigation-Transportation', 'Open/Suspended', 'Other'],
         label: 'Incident Outcome',
+        optional: true
+    },
+    'suspensionReasons': {
+        type: String,
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Unknown', 'Lack of clues', 'Lack of resources', 'Weather', 'Hazards', 'Lack of Survivability', 'Investigative information'],
+        label: 'Suspension Reasons',
         optional: true
     },
     'subjectLocatedDateTime': {
@@ -637,86 +852,35 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Scenario',
         optional: true
     },
-    'suspensionReasons': {
+    'signalling': {
         type: String,
         autoform: {
             firstOption: function () {
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Lack of clues', 'Lack of resources', 'Weather', 'Hazards', 'Lack of Survivability', 'Investigative information'],
-        label: 'Suspension Reasons',
+        allowedValues: ['Unknown', 'None', 'N/A', 'ELT', 'EPIRP', 'PLB', 'SPOT', 'Satellite-Alerting', 'Cell phone', 'Cell + GPS', 'Radio', 'FRS/GMRS', 'Fire/Smoke', 'Flare', 'Mirror', 'Visual', 'Sound', 'Other'],
+        label: 'Signalling',
         optional: true
     },
-    'lkp_pls_Boolean': {
+    'injuredSearcher': {
         type: String,
-        label: 'Is LKP/PLS Different from IPP?',
+        label: 'Injured Searcher',
+        autoform: {
+            firstOption: function () {
+                return "--";
+            }
+        },
+        allowedValues: ['Yes', 'No'],
+        optional: true,
+    },
+    'injuredSearcherDetails': {
+        type: String,
+        label: 'Injured Searcher Details',
         optional: true,
         autoform: {
-            type: "select-radio-inline",
-            options: function () {
-                return [{
-                    label: "Yes",
-                    value: "Yes"
-                }, {
-                    label: "No",
-                    value: "No"
-                }];
-            },
-            defaultValue: 'No'
+            rows: 2
         }
-    },
-    'distanceIPP': {
-        type: String,
-        label: 'Distance From IPP',
-        optional: true
-    },
-    'dispersionAngle': {
-        type: String,
-        label: 'Dispersion Angle (deg)',
-        optional: true
-    },
-    'findBearing': {
-        type: String,
-        label: 'Find Bearing (deg)',
-        optional: true
-    },
-    'trackOffset': {
-        type: String,
-        label: 'Track Offset',
-        optional: true
-    },
-    'elevationChange': {
-        type: String,
-        label: 'Elevation Change',
-        optional: true
-    },
-    'findFeature': {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/Woods', 'Ice/Snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
-        label: 'Find Feature',
-        optional: true
-    },
-    'foundSecondary': {
-        type: String,
-        label: 'Found Secondary',
-        optional: true
-    },
-    'detectability': {
-        type: String,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: ['Unknown', 'Excellent', 'Good', 'Fair', 'Poor'],
-        label: 'Detectability',
-        optional: true
     },
     'mobility&Responsiveness': {
         type: String,
@@ -744,7 +908,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         type: Number,
         label: 'Mobility (hours)',
         optional: true
-    },
+    }
 });
 Schemas.subjects = new SimpleSchema({
     subject: {
@@ -978,11 +1142,6 @@ Schemas.rescueDetails = new SimpleSchema({
         },
         allowedValues: ['Yes', 'No'],
         optional: true,
-        /*autoform: {
-            afFieldInput: {
-                type: "boolean-checkbox"
-            }
-        }*/
     },
     'injuredSearcherDetails': {
         type: String,
@@ -1116,7 +1275,7 @@ Schemas.weather = new SimpleSchema({
         optional: true,
         label: 'Cloud Cover (%)',
     },
-})
+});
 Schemas.xComments = new SimpleSchema({
     'summary': {
         type: String,
@@ -1177,7 +1336,7 @@ Schemas.customQuestions = new SimpleSchema({
             rows: 3
         }
     },
-})
+});
 Schemas.SARCAT = new SimpleSchema({
     measureUnits: {
         type: String,
@@ -1194,8 +1353,7 @@ Schemas.SARCAT = new SimpleSchema({
         },
         autoValue: function () {
             if (this.isInsert) {
-                return Config.findOne()
-                    .measureUnits;
+                return Config.findOne().measureUnits;
             } else {
                 this.unset();
             }
@@ -1262,30 +1420,42 @@ Schemas.SARCAT = new SimpleSchema({
         label: 'Record Info',
         //optional: true
     },
+    incidentLocation: {
+        type: Schemas.incidentLocation,
+        optional: true,
+        label: 'Incident Location',
+        defaultValue: {}
+    },
     incident: {
         type: Schemas.incident,
-        optional: true,
+        //optional: true,
         label: 'Incident Details',
         defaultValue: {}
     },
     weather: {
         type: Schemas.weather,
         label: 'Weather',
-        optional: true,
+        //optional: true,
+        defaultValue: {}
+    },
+    findLocation: {
+        type: Schemas.findLocation,
+        //optional: true,
+        label: 'Find Location',
         defaultValue: {}
     },
     incidentOutcome: {
         type: Schemas.incidentOutcome,
-        label: 'Incident Outcome',
+        label: 'Incident Outcome/Rescue',
         optional: true,
         defaultValue: {}
     },
-    rescueDetails: {
+    /*rescueDetails: {
         type: Schemas.rescueDetails,
         label: 'Rescue Details',
         optional: true,
         defaultValue: {}
-    },
+    },*/
     subjects: {
         type: Schemas.subjects,
         label: 'Subject Information',
@@ -1380,19 +1550,6 @@ Schemas.config = new SimpleSchema({
                 }];
             },
         },
-    },
-    agencyProfileComplete: {
-        type: Boolean,
-        autoValue: function () {
-            var config = Config.findOne();
-            if (!config) {
-                return false;
-            }
-            var agencyProfile = config.agencyProfile;
-            var apKeys = Object.keys(agencyProfile);
-            var complete = apKeys.length === Schemas.agencyProfile._schemaKeys.length;
-            return complete;
-        }
     },
     agencyLogo: {
         type: String,
@@ -1557,4 +1714,3 @@ Schemas.formEditions = new SimpleSchema({
     },
 });
 */
-
