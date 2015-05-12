@@ -1,120 +1,15 @@
-var records;
-var data;
 Template.stats.onCreated(function () {
     Session.set('userView', 'stats');
     records = Records.find().fetch();
-    data = recordStats(records);
+    r = records
     Session.set('activeRecord', false);
-    Session.set('allRecords', records);
-    var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidentType", "recordInfo.status"];
-    var allFields = _.map(Schemas.SARCAT._schema, function (d, e) {
-        return {
-            headerClass: 'default-bg',
-            cellClass: 'white-bg',
-            key: e,
-            fieldId: e,
-            label: d.label,
-            hidden: !_.contains(activeFields, e),
-            parent: e.split('.')[0]
-        };
-    });
-    Session.set('allFields', allFields);
-    var keep = ["subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.age", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incidentLocation.county-region", "incidentLocation.ecoregionDivision", "recordInfo.incidentEnvironment", "incidentLocation.landCover", "incidentLocation.landOwner", "incidentLocation.populationDensity", "recordInfo.subjectCategory", "incidentLocation.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "findLocation.detectability", "findLocation.distanceIPP", "findLocation.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidentType", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "incidentOutcome.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
-    var filterFields = _.map(keep, function (d) {
-        return _.findWhere(allFields, {
-            key: d
-        });
-    });
-    Session.set('filterFields', filterFields);
-    var res = _.map(records, function (data, e) {
-        return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
-            return -d.count;
-        }).value();
-    })
-    res = _.flatten(res, 1);
-    res = _.groupBy(res, function (d) {
-        return d.type
-    })
-    resCount = {
-        label: 'Resources/Number Used',
-        count: {}
-    };
-    resHours = {
-        label: 'Resources/Hours Used',
-        count: {}
-    };
-    _.each(res, function (a, key) {
-        _.each(a, function (d) {
-            if (!resCount.count[key]) {
-                resCount.count[key] = 0;
-            }
-            if (!resHours.count[key]) {
-                resHours.count[key] = 0;
-            }
-            resCount.count[key] = resCount.count[key] + d.count;
-            resHours.count[key] = resHours.count[key] + d.hours
-        });
-    });
-    delete resCount.count._key;
-    delete resHours.count._key;
-    resCount.count = _.map(resCount.count, function (d, e) {
-        return {
-            name: e,
-            data: d || 0
-        }
-    })
-    resHours.count = _.map(resHours.count, function (d, e) {
-        return {
-            name: e,
-            data: d || 0
-        }
-    })
-    var sub = records.map(function (d) {
-        return flatten(d.subjects.subject, {});
-    });
-    var sum = {};
-    _.each(sub, function (d) {
-        _.each(d, function (val, _key) {
-            var key = _key.split('.')[1]
-            if (!sum[key]) {
-                sum[key] = [];
-            }
-            sum[key].push(val);
-        });
-    });
-    delete sum._key;
-    subjects = _.map(sum, function (items, e) {
-        var aggr = _.chain(items).reduce(function (counts, word) {
-            counts[word] = (counts[word] || 0) + 1;
-            return counts;
-        }, {}).map(function (d, e) {
-            return {
-                data: d,
-                name: e
-            };
-        }).value();
-        return {
-            label: 'Subject ' + e.substr(e.lastIndexOf('.') + 1),
-            count: aggr,
-            field: 'subjects.subject.$.' + e,
-        };
-    });
-    subjects = _.filter(subjects, function (d) {
-        return _.contains(keep, d.field);
-    });
-    subjects = _.sortBy(subjects, function (d) {
-        return d.field;
-    })
 });
 Template.stats.onRendered(function () {
+    var data = recordStats(records);
+    var sub_res = selectedSubjectResourceInfo(records);
+    var allData = _.flatten([sub_res, data])
     var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
-    subjects.forEach(function (d, i) {
-        var color = colors[i % 10];
-        drawGraph(d, color, "#recordsSubject");
-    });
-    drawGraph(resCount, colors[5], "#recordsResource");
-    drawGraph(resHours, colors[9], "#recordsResource");
-    data.forEach(function (d, i) {
+    allData.forEach(function (d, i) {
         if (d.field === 'recordInfo.incidentdate') {
             return d3Calender('#d3Calender', d.count)
         }
@@ -130,28 +25,26 @@ Template.stats.helpers({
         if (!data) {
             return;
         }
-        var filterFields = Session.get('filterFields');
         var flatData = flatten(data, {});
-        f = flatData
         var displayData = _.chain(flatData)
             .map(function (d, e) {
-                var goodVal = _.findWhere(filterFields, {
-                    key: e
+                var val = _.findWhere(allInputs, {
+                    field: e
                 });
-                if (goodVal) {
+                if (val) {
                     return {
-                        key: goodVal.label,
-                        parent: Schemas.SARCAT._schema[goodVal.parent].label,
+                        key: val.label,
+                        parent: val.parent,
                         val: d
                     };
                 }
             })
             .compact()
             .value();
-        subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
+        var subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
         var resources2 = resourceArrayForm(data);
-        displayData = _.flatten([displayData, subjects2, resources2]);
-        displayData2 = _.chain(displayData)
+        var displayData = _.flatten([displayData, subjects2, resources2]);
+        var displayData2 = _.chain(displayData)
             .groupBy('parent')
             .map(function (d, e) {
                 return {
@@ -179,7 +72,7 @@ var drawGraph = function (d, color, context) {
     };
     if (numItems === 1) {
         klass = 'col-sm-3 pad00'
-    } else if (numItems < 11) {
+    } else if (numItems < 9) {
         klass = 'col-sm-6 pad00'
     } else {
         klass = 'col-sm-12 pad00';
@@ -261,24 +154,23 @@ var drawGraph = function (d, color, context) {
         })
         .attr("fill", color);
 }
-recordsSetMap = function (context, data) {
+var recordsSetMap = function (context, data) {
     var geojson;
     if (!data.length) {
         return;
     }
-    var layers = {
-        OSM: L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
-        Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
-    };
     var obj = {};
     var map = L.map(context)
     obj.map = map;
-    layers.Outdoors.addTo(map);
     map.scrollWheelZoom.disable();
-    var layerControl = L.control.layers(layers, null, {
-        collapsed: false
-    });
+    var defaultLayers = Meteor.settings.public.layers;
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
+        return [e, L.tileLayer(x)];
+    }));
+    var firstLayer = Object.keys(layers)[0];
+    layers[firstLayer].addTo(map);
+    var layerControl = L.control.layers(layers)
+        .addTo(map);
     var mapPoints = [{
         val: "ippCoordinates",
         sib: ["ippCoordinates2FindCoord", "findCoord"],
@@ -325,16 +217,6 @@ recordsSetMap = function (context, data) {
             fillOpacity: 0.7
         }
     }];
-    var flatten = function (x, result, prefix) {
-        if (_.isObject(x)) {
-            _.each(x, function (v, k) {
-                flatten(v, result, prefix ? prefix + '.' + k : k)
-            })
-        } else {
-            result[prefix] = x
-        }
-        return result
-    }
     activeFeatures = [];
     Session.set('activeFeatures', activeFeatures);
 
@@ -502,8 +384,8 @@ recordsSetMap = function (context, data) {
     });
     map.fitBounds(bounds);
     return obj;
-}
-recordStats = function (data) {
+};
+var recordStats = function (data) {
     var flatten = function (x, result, prefix) {
         if (_.isObject(x)) {
             _.each(x, function (v, k) {
@@ -578,7 +460,7 @@ recordStats = function (data) {
         })
         .value();
     count = count.filter(function (d) {
-        var options = _.findWhere(keep, {
+        var options = _.findWhere(_allInputs, {
             field: d.field
         });
         d.options = options;
@@ -590,7 +472,7 @@ recordStats = function (data) {
     console.log(count)
     return count;
 };
-resourceArrayForm = function (data) {
+var resourceArrayForm = function (data) {
     return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
         return -d.count;
     }).map(function (d, e) {
@@ -602,7 +484,7 @@ resourceArrayForm = function (data) {
         };
     }).value()
 };
-subjectArrayForm = function (flatData, name, parent) {
+var subjectArrayForm = function (flatData, name, parent) {
     return _.chain(flatData).map(function (d, e) {
         if (e.indexOf('_key') > -1) {
             return;
@@ -639,4 +521,170 @@ subjectArrayForm = function (flatData, name, parent) {
             val: sum
         };
     }).value();
+};
+var selectedSubjectResourceInfo = function (records) {
+    var res = _.map(records, function (data, e) {
+        return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
+            return -d.count;
+        }).value();
+    })
+    res = _.flatten(res, 1);
+    res = _.groupBy(res, function (d) {
+        return d.type
+    })
+    var resCount = {
+        label: 'Resources/Number Used',
+        count: {}
+    };
+    var resHours = {
+        label: 'Resources/Hours Used',
+        count: {}
+    };
+    _.each(res, function (a, key) {
+        _.each(a, function (d) {
+            if (!resCount.count[key]) {
+                resCount.count[key] = 0;
+            }
+            if (!resHours.count[key]) {
+                resHours.count[key] = 0;
+            }
+            resCount.count[key] = resCount.count[key] + d.count;
+            resHours.count[key] = resHours.count[key] + d.hours
+        });
+    });
+    delete resCount.count._key;
+    delete resHours.count._key;
+    resCount.count = _.map(resCount.count, function (d, e) {
+        return {
+            name: e,
+            data: d || 0
+        }
+    })
+    resHours.count = _.map(resHours.count, function (d, e) {
+        return {
+            name: e,
+            data: d || 0
+        }
+    })
+    var sub = records.map(function (d) {
+        return flatten(d.subjects.subject, {});
+    });
+    var sum = {};
+    _.each(sub, function (d) {
+        _.each(d, function (val, _key) {
+            var key = _key.split('.')[1]
+            if (!sum[key]) {
+                sum[key] = [];
+            }
+            sum[key].push(val);
+        });
+    });
+    delete sum._key;
+    var keep = ["subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.age", "subjects.subject.$.evacuationMethod"]
+    var subjects = _.chain(sum).map(function (items, e) {
+        var aggr = _.chain(items).reduce(function (counts, word) {
+            counts[word] = (counts[word] || 0) + 1;
+            return counts;
+        }, {}).map(function (d, e) {
+            return {
+                data: d,
+                name: e
+            };
+        }).value();
+        return {
+            label: 'Subject ' + e.substr(e.lastIndexOf('.') + 1),
+            count: aggr,
+            field: 'subjects.subject.$.' + e,
+        };
+    }).filter(function (d) {
+        return _.contains(keep, d.field);
+    }).sortBy(function (d) {
+        return d.field;
+    }).value();
+    return _.flatten([subjects, resHours, resCount])
+};
+var d3Calender = function (context, data1) {
+    d = data1;
+    var width = 735,
+        height = 96,
+        cellSize = 13; // cell size
+    var day = d3.time.format("%w"),
+        week = d3.time.format("%U"),
+        percent = d3.format(".1%"),
+        format = d3.time.format("%Y-%m-%d");
+    var color = d3.scale.quantize()
+        .domain([-.05, .05])
+        .range(d3.range(11).map(function (d) {
+            return "q" + d + "-11";
+        }));
+    var svg = d3.select(context).selectAll("svg")
+        .data(d3.range(2012, 2016))
+        .enter().append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "col-md-12 RdYlGn pad00")
+        .append("g")
+        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+    svg.append("text")
+        .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+        .style("text-anchor", "middle")
+        .text(function (d) {
+            return d;
+        });
+    var rect = svg.selectAll(".day")
+        .data(function (d) {
+            return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+        })
+        .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("x", function (d) {
+            return week(d) * cellSize;
+        })
+        .attr("y", function (d) {
+            return day(d) * cellSize;
+        })
+        .datum(format);
+    rect.append("title")
+        .text(function (d) {
+            return d;
+        });
+    svg.selectAll(".month")
+        .data(function (d) {
+            return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+        })
+        .enter().append("path")
+        .attr("class", "month")
+        .attr("d", monthPath);
+
+    function monthPath(t0) {
+        var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+            d0 = +day(t0),
+            w0 = +week(t0),
+            d1 = +day(t1),
+            w1 = +week(t1);
+        return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize + "H" + w0 * cellSize + "V" + 7 * cellSize + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize + "H" + (w1 + 1) * cellSize + "V" + 0 + "H" + (w0 + 1) * cellSize + "Z";
+    }
+    d3.select(self.frameElement).style("height", "2910px");
+    var data = d3.nest()
+        .key(function (d) {
+            return moment(d.name).format('YYYY-MM-DD')
+        })
+        .rollup(function (d) {
+            return -0.003689859718846812;
+            return Math.random() * 1000;
+            return d[0].data
+        })
+        .map(data1);
+    rect.filter(function (d) {
+            return d in data;
+        })
+        .attr("class", function (d) {
+            return "day q7-11";
+        })
+        .select("title")
+        .text(function (d) {
+            return d + ": " + percent(data[d]);
+        });
 };

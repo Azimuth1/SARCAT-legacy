@@ -6,15 +6,6 @@ Template.records.onCreated(function (a) {
 Template.records.onRendered(function () {
     var records = Records.find().fetch();
     r = records
-        /*dates = _.chain(records)
-            .map(function (d) {
-                return moment(d.recordInfo.incidentdate)
-                    .format('MM/DD/YYYY HH:mm');
-            })
-            .sortBy(function (d) {
-                return new Date(d);
-            })
-            .value();*/
     Session.set('userView', 'records');
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
@@ -35,25 +26,21 @@ Template.records.onRendered(function () {
 });
 Template.records.helpers({
     settings: function () {
-        var activeFields = ["recordInfo.name", "recordInfo.incidentnum", "recordInfo.missionnum", "recordInfo.incidentdate", "recordInfo.incidentType", "recordInfo.status", "recordInfo.subjectCategory"];
-        var keep = ["recordInfo.incidentdate", "recordInfo.incidentnum", "recordInfo.incidentType", "recordInfo.missionnum", "recordInfo.name", "recordInfo.status", "recordInfo.subjectCategory", "subjects.subject.$.evacuationMethod", "incident.SARNotifiedDateTime", "incident.contactmethod", "incidentLocation.county-region", "incidentLocation.ecoregionDivision", "recordInfo.incidentEnvironment", "incidentLocation.landCover", "incidentLocation.landOwner", "incidentLocation.populationDensity", "incidentLocation.terrain", "incidentOperations.PLS_HowDetermined", "incidentOperations.ippclassification", "incidentOperations.ipptype", "findLocation.detectability", "findLocation.distanceIPP", "findLocation.findFeature", "incidentOutcome.incidentOutcome", "incidentOutcome.lostStrategy", "incidentOutcome.mobility&Responsiveness", "incidentOutcome.mobility_hours", "incidentOutcome.scenario", "incidentOutcome.suspensionReasons", "incidentOutcome.signalling", "resourcesUsed.distanceTraveled", "resourcesUsed.numTasks", "resourcesUsed.totalCost", "resourcesUsed.totalManHours", "resourcesUsed.totalPersonnel", "weather.precipType"];
-        var fields = _.map(keep, function (e) {
-            //console.log(e);
-            //console.log(Schemas.SARCAT._schema[e].label)
-            var parent = e.split('.')[0];
-            var parentLabel = Schemas.SARCAT._schema[parent].label;
+        var fields = _.chain(allInputs).filter(function (d) {
+            return d.tableList;
+        }).map(function (d) {
             return {
                 headerClass: 'default-bg',
                 cellClass: 'white-bg',
-                key: e,
-                fieldId: e,
+                key: d.field,
+                fieldId: d.field,
                 label: function () {
-                    return new Spacebars.SafeString('<span class="hideInTable strong">' + parentLabel + ' - </span><i>' + Schemas.SARCAT._schema[e].label + '</i>');
+                    return new Spacebars.SafeString('<span class="hideInTable strong">' + d.parent + ' - </span><i>' + d.label + '</i>');
                 },
-                hidden: !_.contains(activeFields, e),
-                parent: parent
+                hidden: d.tableVisible ? false : true,
+                parent: d.parent
             };
-        });
+        }).value();
         fields.unshift({
             headerClass: 'default-bg text-center',
             cellClass: 'white-bg recordSel text-center pointer',
