@@ -8,226 +8,6 @@ flatten = function (x, result, prefix) {
     }
     return result
 }
-keep = [{
-    "field": "recordInfo.incidentdate",
-    "count": [],
-    "label": "Incident Date/Time"
-}, {
-    "field": "recordInfo.subjectcategory",
-    "count": [],
-    "label": "Subject Category",
-    klass: 'col-md-12',
-    rotate: '-25'
-}, {
-    "field": "incidentLocation.ecoregionDomain",
-    "count": [],
-    "label": "Ecoregion Domain",
-    klass: 'col-md-6',
-}, {
-    "field": "recordInfo.incidentType",
-    "count": [],
-    "label": "Incident Type",
-    klass: 'col-md-6',
-    rotate: '-25'
-}, {
-    "field": "incidentLocation.landOwner",
-    "count": [],
-    "label": "Land Owner",
-    klass: 'col-md-6',
-    rotate: '-25'
-}, {
-    "field": "incident.contactmethod",
-    "count": [],
-    "label": "Contact Method",
-    klass: 'col-md-6',
-    rotate: '-25'
-}, {
-    "field": "incidentLocation.populationDensity",
-    "count": [],
-    "label": "Population Density"
-}, {
-    "field": "incidentLocation.landCover",
-    "count": [],
-    "label": "Land Cover"
-}, {
-    "field": "incidentLocation.terrain",
-    "count": [],
-    "label": "Terrrain"
-}, {
-    "field": "recordInfo.status",
-    "count": [],
-    "label": "Incident Status"
-}, {
-    "field": "recordInfo.incidentEnvironment",
-    "count": [],
-    "label": "Incident Environment"
-}, {
-    "field": "incidentOperations.ipptype",
-    "count": [],
-    "label": "IPP Type"
-}, {
-    "field": "incidentOperations.ippclassification",
-    "count": [],
-    "label": "IPP Classification"
-}, {
-    "field": "incident.SARNotifiedDateTime",
-    "count": [],
-    "label": "SAR Notified Date/Time"
-}, {
-    "field": "incident.county-region",
-    "count": [],
-    "label": "Incident County/Region"
-}, {
-    "field": "rescueDetails.signalling",
-    "count": [],
-    "label": "Signalling"
-}, {
-    "field": "resourcesUsed.numTasks",
-    "count": [],
-    "label": "Total # of Tasks"
-}, {
-    "field": "resourcesUsed.totalManHours",
-    "count": [],
-    "label": "Total Man Hours"
-}, {
-    "field": "resourcesUsed.totalCost",
-    "count": [],
-    "label": "Total Cost"
-}, {
-    "field": "resourcesUsed.totalPersonnel",
-    "count": [],
-    "label": "Total Personnel"
-}, {
-    "field": "resourcesUsed.distanceTraveled",
-    "count": [],
-    "label": "Total Distance Traveled"
-}, {
-    "field": "findLocation.distanceIPP",
-    "count": [],
-    "label": "Distance From IPP"
-}, {
-    "field": "incidentOutcome.incidentOutcome",
-    "count": [],
-    "label": "Incident Outcome"
-}, {
-    "field": "incidentOutcome.scenario",
-    "count": [],
-    "label": "Scenario"
-}, {
-    "field": "incidentOutcome.suspensionReasons",
-    "count": [],
-    "label": "Suspension Reasons"
-}, {
-    "field": "findLocation.findFeature",
-    "count": [],
-    "label": "Find Feature"
-}, {
-    "field": "findLocation.detectability",
-    "count": [],
-    "label": "Detectability"
-}, {
-    "field": "incidentOutcome.mobility&Responsiveness",
-    "count": [],
-    "label": "Mobility/Responsiveness"
-}, {
-    "field": "incidentOutcome.lostStrategy",
-    "count": [],
-    "label": "Lost Strategy"
-}, {
-    "field": "incidentOutcome.mobility_hours",
-    "count": [],
-    "label": "Mobility (hours)"
-}];
-d3Calender = function (context, data1) {
-    d = data1;
-    var width = 735,
-        height = 96,
-        cellSize = 13; // cell size
-    var day = d3.time.format("%w"),
-        week = d3.time.format("%U"),
-        percent = d3.format(".1%"),
-        format = d3.time.format("%Y-%m-%d");
-    var color = d3.scale.quantize()
-        .domain([-.05, .05])
-        .range(d3.range(11).map(function (d) {
-            return "q" + d + "-11";
-        }));
-    var svg = d3.select(context).selectAll("svg")
-        .data(d3.range(2012, 2016))
-        .enter().append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("class", "col-md-12 RdYlGn pad00")
-        .append("g")
-        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
-    svg.append("text")
-        .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
-        .style("text-anchor", "middle")
-        .text(function (d) {
-            return d;
-        });
-    var rect = svg.selectAll(".day")
-        .data(function (d) {
-            return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
-        })
-        .enter().append("rect")
-        .attr("class", "day")
-        .attr("width", cellSize)
-        .attr("height", cellSize)
-        .attr("x", function (d) {
-            return week(d) * cellSize;
-        })
-        .attr("y", function (d) {
-            return day(d) * cellSize;
-        })
-        .datum(format);
-    rect.append("title")
-        .text(function (d) {
-            return d;
-        });
-    svg.selectAll(".month")
-        .data(function (d) {
-            return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
-        })
-        .enter().append("path")
-        .attr("class", "month")
-        .attr("d", monthPath);
-
-    function monthPath(t0) {
-        var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
-            d0 = +day(t0),
-            w0 = +week(t0),
-            d1 = +day(t1),
-            w1 = +week(t1);
-        return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize + "H" + w0 * cellSize + "V" + 7 * cellSize + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize + "H" + (w1 + 1) * cellSize + "V" + 0 + "H" + (w0 + 1) * cellSize + "Z";
-    }
-    d3.select(self.frameElement).style("height", "2910px");
-    var data = d3.nest()
-        .key(function (d) {
-            return moment(d.name).format('YYYY-MM-DD')
-        })
-        .rollup(function (d) {
-            return -0.003689859718846812;
-            return Math.random() * 1000;
-            return d[0].data
-        })
-        .map(data1);
-    rect.filter(function (d) {
-            return d in data;
-        })
-        .attr("class", function (d) {
-            return "day q7-11";
-        })
-        .select("title")
-        .text(function (d) {
-            return d + ": " + percent(data[d]);
-        });
-};
-dialogBoxOptions = function (callbackFunctionName) {
-    return {
-        callBack: callbackFunctionName
-    };
-}
 labelUnits = function (currentUnit, type) {
     var unitType = {
         height: {
@@ -278,14 +58,29 @@ boundsString2Array = function (bounds) {
         [bounds[3], bounds[2]]
     ];
 };
-setMap = function (context, bounds, agencyMapComplete) {
+newMap = function (context, bounds) {
+    var bounds = bounds || boundsString2Array(Session.get('bounds'));
     var map = L.map(context, {});
-    var layers = {
-        OSM: L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg'),
-        Satellite: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg')
-    };
-    layers.Outdoors.addTo(map);
+    var defaultLayers = Meteor.settings.public.layers;
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
+        return [e, L.tileLayer(x)];
+    }));
+    var firstLayer = Object.keys(layers)[0];
+    layers[firstLayer].addTo(map);
+    L.control.layers(layers)
+        .addTo(map);
+    map.scrollWheelZoom.disable();
+    map.fitBounds(bounds);
+};
+setAdminMap = function (context) {
+    var bounds = bounds || boundsString2Array(Session.get('bounds'));
+    var map = L.map(context, {});
+    var defaultLayers = Meteor.settings.public.layers;
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
+        return [e, L.tileLayer(x)];
+    }));
+    var firstLayer = Object.keys(layers)[0];
+    layers[firstLayer].addTo(map);
     L.control.layers(layers)
         .addTo(map);
     map.scrollWheelZoom.disable();
@@ -346,13 +141,13 @@ setMap = function (context, bounds, agencyMapComplete) {
 newProjectSetMap = function (context, bounds, points) {
     var obj = {};
     var marker;
-    var map = L.map(context);
-    var layers = {
-        Streets: L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png'),
-        Outdoors: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.h4gh1idp/{z}/{x}/{y}.png'),
-        Satellite: L.tileLayer('https://{s}.tiles.mapbox.com/v3/jasondalton.map-7z4qef6u/{z}/{x}/{y}.png')
-    };
-    layers.Outdoors.addTo(map);
+    var map = L.map(context, {});
+    var defaultLayers = Meteor.settings.public.layers;
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
+        return [e, L.tileLayer(x)];
+    }));
+    var firstLayer = Object.keys(layers)[0];
+    layers[firstLayer].addTo(map);
     L.control.layers(layers)
         .addTo(map);
     var latLngBounds = L.latLngBounds(bounds);
@@ -389,7 +184,12 @@ newProjectSetMap = function (context, bounds, points) {
     });
     var marker = L.marker(center, {
         draggable: true,
-        icon: myIcon,
+        icon: L.AwesomeMarkers.icon({
+            icon: ipp.icon,
+            prefix: 'fa',
+            markerColor: ipp.color,
+            iconColor: '#fff',
+        }),
         name: ipp.name,
         val: ipp.val,
     });
@@ -468,7 +268,6 @@ getCoords = function (record) {
     });
 };
 formSetMap = function (context, recordId) {
-    console.log(recordId)
     var markers = {};
     var paths = {};
     var coords = {};
@@ -479,14 +278,17 @@ formSetMap = function (context, recordId) {
             metric: units
         })
         .addTo(map);
-    var layers = Meteor.settings.public.layers;
-    _.each(layers, function (d, e) {
-        layers[e] = L.tileLayer(d);
-    })
+    var defaultLayers = Meteor.settings.public.layers;
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
+        return [e, L.tileLayer(x)];
+    }));
     var firstLayer = Object.keys(layers)[0];
     layers[firstLayer].addTo(map);
     L.control.layers(layers)
         .addTo(map);
+    var bounds = boundsString2Array(Session.get('bounds'));
+    map.fitBounds(bounds);
+    console.log('fitbounds')
     drawnPaths = new L.FeatureGroup()
         .addTo(map);
     drawnPoints = new L.FeatureGroup()
@@ -882,6 +684,230 @@ insertSampleRecords = function () {
             if (allowed) {
                 var sample = _.sample(allowed, 1)[0];
                 record.incident[name] = sample;
+            }
+        });
+        _.each(record.incidentoutcome, function (d, name) {
+            var allowed = Schemas.incidentoutcome._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                //console.log(record.incident[name],sample)
+                record.incidentoutcome[name] = sample;
+            }
+        });
+        _.each(record.subjects.subject, function (e, ind) {
+            _.each(e, function (d, name) {
+                var allowed = Schemas.subjects._schema['subject.$.' + name].allowedValues;
+                if (allowed) {
+                    var sample = _.sample(allowed, 1)[0];
+                    // console.log(record.subjects.subject[ind][name],sample)
+                    record.subjects.subject[ind][name] = sample;
+                }
+            });
+            e.age = Math.floor(Math.random() * 70) + 1;
+        });
+        var lat = +(Math.random() * (38.800 - 38.2200) + 38.2200)
+            .toFixed(4);
+        var lng = -(Math.random() * (77.950 - 77.310) + 77.310)
+            .toFixed(4);
+        record.coords.ippCoordinates.lat = lat;
+        record.coords.ippCoordinates.lng = lng;
+        _.each(record.coords, function (d, name) {
+            if (name === 'ippCoordinates') {
+                return;
+            }
+            if (d.lat) {
+                d.lat = lat + parseFloat((Math.random() * (0.100 - (-0.1)) + (-0.1))
+                    .toFixed(4));
+                d.lng = lng + parseFloat((Math.random() * (0.100 - (-0.1)) + (-0.1))
+                    .toFixed(4));
+            }
+        })
+        data[i] = record;
+    }
+    data.forEach(function (d) {
+        Records.insert(d);
+    })
+};
+createSampleRecords = function () {
+    function randomDate(start, end) {
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    }
+    var data = [];
+    var length = 100;
+    for (var i = 0; i < length; i++) {
+        var record = {
+            "_id": "jvTdNXbq735pbpmZN",
+            "coords": {
+                "ippCoordinates": {
+                    "lat": 38.95940093438834,
+                    "lng": -77.11638450622559
+                },
+                "findCoord": {
+                    "lat": 39.128994951066765,
+                    "lng": -76.88369750976561
+                },
+                "intendedRoute": "[[38.95940093438834,-77.11638450622559],[39.059823558538355,-76.57897710800171]]",
+                "destinationCoord": {
+                    "lat": 39.059823558538355,
+                    "lng": -76.57897710800171
+                },
+                "actualRoute": "[[38.95940093438834,-77.11638450622559],[39.128994951066765,-76.88369750976561]]",
+                "decisionPointCoord": {
+                    "lat": 39.02558514933794,
+                    "lng": -76.90292358398438
+                }
+            },
+            "recordInfo": {
+                "name": "5",
+                "incidentnum": "5",
+                "missionnum": "5",
+                "incidentdate": "05/25/2015 01:38",
+                "incidentType": "Search",
+                "incidentEnvironment": "Land",
+                "subjectCategory": "Abandoned Vehicle",
+                "status": "Closed"
+            },
+            "measureUnits": "US",
+            "userId": "E5C5fHJHM3No9D6eM",
+            "created": "05/12/2015 01:38",
+            "incidentOperations": {
+                "initialDirectionofTravel_Boolean": "Yes",
+                "lkp_pls_Boolean": "No",
+                "initialDirectionofTravel": 92,
+                "typeofDecisionPoint": "Saddle",
+                "decisionPointFactor": "Yes"
+            },
+            "incidentLocation": {
+                "country": "United States",
+                "state-province": "MD",
+                "ecoregionDomain": "TEMPERATE",
+                "ecoregionDivision": "230-SUBTROPICAL DIVISION",
+                "county-region": "Loudoun County",
+                "landOwner": "NPS",
+                "terrain": "Flat",
+                "populationDensity": "Suburban",
+                "landCover": "Bare"
+            },
+            "incident": {
+                "leadagency": "County Police",
+                "contactmethod": "Satelitte Alerting Technology",
+                "SARNotifiedDateTime": "05/14/2015 02:17"
+            },
+            "weather": {
+                "summary": "Mostly cloudy throughout the day.",
+                "precipType": "rain",
+                "temperatureMin": 63.92,
+                "temperatureMax": 77.48,
+                "windSpeed": "4.73",
+                "cloudCover": "0.64"
+            },
+            "findLocation": {
+                "findFeature": "Cave",
+                "detectability": "Good",
+                "distanceIPP": "17.13",
+                "findBearing": "46",
+                "elevationChange": "55",
+                "dispersionAngle": "78",
+                "trackOffset": "70"
+            },
+            "subjects": {
+                "subject": [{
+                    "_key": "2015-05-12T05:58:11.766Z",
+                    "age": 9,
+                    "sex": "Male",
+                    "status": "Alive and well"
+                }, {
+                    "_key": "2015-05-12T06:01:44.073Z",
+                    "status": "Injured",
+                    "age": 16,
+                    "sex": "Female"
+                }, {
+                    "_key": "2015-05-12T06:17:36.269Z",
+                    "status": "DOA",
+                    "age": 32,
+                    "sex": "Male"
+                }]
+            },
+            "resourcesUsed": {
+                "resource": [{
+                    "_key": "2015-05-12T06:18:36.635Z",
+                    "type": "CERT",
+                    "count": 8,
+                    "hours": 9,
+                    "findResource": true
+                }, {
+                    "_key": "2015-05-12T06:18:40.215Z",
+                    "type": "Boat",
+                    "count": 7,
+                    "hours": 9
+                }, {
+                    "_key": "2015-05-12T06:18:41.487Z",
+                    "type": "Cave",
+                    "count": 5,
+                    "hours": 5
+                }],
+                "numTasks": 87,
+                "totalPersonnel": 56,
+                "totalManHours": 234,
+                "distanceTraveled": "654",
+                "totalCost": "$1,000"
+            },
+            "customQuestions": {},
+            "admin": {
+                "user": "Kyle Kalwarski",
+                "email": "kkalwarski@gmail.com",
+                "phonenum": "7036290113"
+            },
+            "incidentOutcome": {
+                "incidentOutcome": "Closed by Self-Rescue",
+                "subjectLocatedDateTime": "05/13/2015 02:18",
+                "incidentClosedDateTime": "05/13/2015 02:18",
+                "scenario": "Evading",
+                "signalling": "SPOT",
+                "injuredSearcher": "No",
+                "lostStrategy": "Downhill",
+                "mobility_hours": 9
+            },
+            "xComments": {}
+        };
+        delete record._id;
+        delete record.created;
+        record.recordInfo.name = 'Record-' + i;
+        record.recordInfo.incidentnum = i;
+        record.recordInfo.missionnum = '#2015' + i;
+        record.created = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
+        record.recordInfo.incidentdate = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
+        var allowed = Schemas.recordInfo._schema.incidentType.allowedValues;
+        if (allowed) {
+            var sample = _.sample(allowed, 1)[0];
+            record.recordInfo.incidentType = sample;
+        }
+        _.each(record.recordInfo, function (d, name) {
+            var allowed = Schemas.recordInfo._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                record.recordInfo[name] = sample;
+            }
+        });
+        _.each(record.incident, function (d, name) {
+            var allowed = Schemas.incident._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                record.incident[name] = sample;
+            }
+        });
+        _.each(record.incidentLocation, function (d, name) {
+            var allowed = Schemas.incidentLocation._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                record.incidentLocation[name] = sample;
+            }
+        });
+        _.each(record.findLocation, function (d, name) {
+            var allowed = Schemas.findLocation._schema[name].allowedValues;
+            if (allowed) {
+                var sample = _.sample(allowed, 1)[0];
+                record.findLocation[name] = sample;
             }
         });
         _.each(record.incidentoutcome, function (d, name) {

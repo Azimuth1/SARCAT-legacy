@@ -1,13 +1,10 @@
 var map;
 Session.setDefault('subjectTableView', 'Description');
-Template.registerHelper("Schemas", Schemas);
+//Template.registerHelper("Schemas", Schemas);
 Template.form.onCreated(function () {
     Session.set('editRecordInfo', 'list');
     Session.set('userView', this.data.record._id);
     Session.set('record', this.data.record);
-    Meteor.call('getFilesInPublicFolder', this.data.record._id, function (err, d) {
-        Session.set('fileUploads', d)
-    });
 });
 Template.form.onRendered(function () {
     var record = this.data.record;
@@ -19,6 +16,9 @@ Template.form.onRendered(function () {
         }
     });
     map.fitBounds();
+    Meteor.call('getFilesInPublicFolder', this.data.record._id, function (err, d) {
+        Session.set('fileUploads', d)
+    });
     var currentUnit = Session.get('measureUnits');
     var degree = record.incidentOperations.initialDirectionofTravel || 0;
     $('.knob').knobKnob({

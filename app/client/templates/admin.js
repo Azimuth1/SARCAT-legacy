@@ -5,14 +5,14 @@ Template.admin.onCreated(function (a) {
 Template.admin.onRendered(function (a) {
     $('label:contains("Forecast API Key")')
         .append('<span class="forecastio small em mar0y text-default">*Auto-calculate weather by getting a key from <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a></span>');
-        $('label:contains("MapQuest API Key")')
+    $('label:contains("MapQuest API Key")')
         .append('<span class="forecastio small em mar0y text-default">*Auto-calculate elevation by getting a key from <a class="em" href="http://open.mapquestapi.com/elevation/" target="_blank">MapQuest</a></span>');
     var logo = document.getElementById('agencyLogo');
     logo.src = 'uploads/logo/' + Session.get('logo');
     logo.style.display = 'inline';
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
-    map = setMap('adminMap', newBounds);
+    map = setAdminMap('adminMap', bounds);
     this.data.users.forEach(function (d) {
         var role = d.roles[0];
         var id = d._id;
@@ -136,4 +136,3 @@ var hooksObject = {
     }
 }
 AutoForm.addHooks(['formIdAgencyProfile', 'formIdAgencyMap', 'formIdConfig'], hooksObject);
-
