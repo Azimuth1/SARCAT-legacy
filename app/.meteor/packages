@@ -20,10 +20,8 @@ d3
 tomi:upload-server
 tomi:upload-jquery
 mrt:moment
-meteorhacks:npm
-
-
-npm-container
-mrt:moment-timezone
+#meteorhacks:npm
+#npm-container
+#mrt:moment-timezone
 tsega:bootstrap3-datetimepicker@=3.1.3_3
 aslagle:reactive-table

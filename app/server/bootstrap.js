@@ -1,6 +1,6 @@
 Meteor.startup(function () {
     var settings = JSON.parse(process.env.METEOR_SETTINGS);
-    console.log(settings)
+    //console.log(settings)
     var environment = process.env.METEOR_ENV || "development";
     var config = Config.findOne();
     var privateSettings = settings.private;
@@ -9,7 +9,9 @@ Meteor.startup(function () {
         password: 'admin',
         username: 'default'
     };
-    if (!config) {
+  
+ 
+    if (!Meteor.users.find().count()) {
         console.log('Creating default admin user.');
         var admin = Accounts.createUser({
             email: defaultUser.email,

@@ -35,4 +35,4 @@ MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METE
 #export METEOR_SETTINGS=$(cat settings.dev.json)
 #node main.js
 
-#MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.dev.json) node main.js
+MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.dev.json) node main.js
