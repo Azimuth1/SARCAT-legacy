@@ -605,6 +605,7 @@ var selectedSubjectResourceInfo = function (records) {
 };
 var d3Calender = function (context, data1) {
     d = data1;
+dd=d;
     var width = 735,
         height = 96,
         cellSize = 13; // cell size
@@ -617,14 +618,20 @@ var d3Calender = function (context, data1) {
         .range(d3.range(11).map(function (d) {
             return "q" + d + "-11";
         }));
+
+        var maxYear = +moment(_.max(data1,function(e){return moment(e.name)}).name).format('YYYY')+1;
+        var minYear = +moment(_.min(data1,function(e){return moment(e.name)}).name).format('YYYY');
     var svg = d3.select(context).selectAll("svg")
-        .data(d3.range(2012, 2016))
+        .data(d3.range(minYear,maxYear))
         .enter().append("svg")
         .attr("width", width)
         .attr("height", height)
         .attr("class", "col-md-12 RdYlGn pad00")
         .append("g")
         .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+    
+
+
     svg.append("text")
         .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
         .style("text-anchor", "middle")
