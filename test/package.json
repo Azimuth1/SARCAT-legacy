@@ -1,0 +1,29 @@
+{
+    "name": "SARCAT",
+    "version": "1.0.0",
+    "description": "Search & Rescue Incident Database",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Azimuth1/SARCAT.git"
+    },
+    "keywords": [
+        "SAR"
+    ],
+    "author": "Azimuth1",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Azimuth1/SARCAT/issues"
+    },
+    "homepage": "https://github.com/Azimuth1/SARCAT"
+}
+

@@ -12,10 +12,9 @@ Meteor.methods({
             }
         });
     },
-
     setPassword: function (set, userId) {
-        Accounts.setPassword(userId, password,function(err,d){
-            console.log(err,d)
+        Accounts.setPassword(userId, password, function (err, d) {
+            console.log(err, d)
         })
     },
     createAdmin: function (username, email, password, id) {
@@ -206,7 +205,7 @@ Meteor.methods({
             return true;
         }
         var coords = record.coords.ippCoordinates;
-        var date = record.recordInfo.incidentdate;
+        var date = record.timeLog.lastSeenDateTime;
         date = new Date(date)
             .toISOString()
             .split('T')[0];
@@ -276,6 +275,27 @@ Meteor.methods({
             return false;
         }
         var val = bearing(coord1.lat, coord1.lng, coord2.lat, coord2.lng);
+        var obj = {};
+        obj[field] = val;
+        Records.update(id, {
+            $set: obj
+        });
+        return val;
+    },
+    setDispersionAngle: function (id) {
+        var field = 'findLocation.dispersionAngle';
+        var record = Records.findOne(id);
+        var obj = {};
+        obj[field] = '';
+        Records.update(id, {
+            $unset: obj
+        });
+        var initialDirectionofTravel = record.incidentOperations.initialDirectionofTravel;
+        var findBearing = record.findLocation.findBearing;
+        var val = findBearing - initialDirectionofTravel
+        if (!initialDirectionofTravel && !findBearing) {
+            return;
+        }
         var obj = {};
         obj[field] = val;
         Records.update(id, {
@@ -452,3 +472,4 @@ Meteor.users.allow({
         }
     }
 });
+

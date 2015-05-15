@@ -10,7 +10,7 @@ Template.stats.onRendered(function () {
     var allData = _.flatten([sub_res, data])
     var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
     allData.forEach(function (d, i) {
-        if (d.field === 'recordInfo.incidentdate') {
+        if (d.field === 'timeLog.lastSeenDateTime') {
             return d3Calender('#d3Calender', d.count)
         }
         var color = colors[i % 10];

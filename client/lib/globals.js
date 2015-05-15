@@ -258,6 +258,20 @@ _allInputs = [{
     "count": [],
     "label": "Ecoregion Domain",
     klass: 'col-md-6',
+},{
+    "field": "timeLog.totalHours",
+    "count": [],
+    "label": "Total Missing Hours",
+    "tableList": false,
+    "parent": "timeLog",
+    "stats": true
+},{
+    "field": "timeLog.searchHours",
+    "count": [],
+    "label": "Total Search Hours",
+    "tableList": false,
+    "parent": "timeLog",
+    "stats": true
 }, {
     "field": "recordInfo.incidentType",
     "count": [],
