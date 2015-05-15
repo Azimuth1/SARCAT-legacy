@@ -23,12 +23,12 @@ allInputs = [{
     "parent": "Record Info",
     "stats": true
 }, {
-    "field": "recordInfo.incidentdate",
+    "field": "timeLog.incidentdate",
     "count": [],
-    "label": "Incident Date/Time",
+    "label": "Last Seen Date/Time",
     "tableVisible": true,
-    "tableList": true,
-    "parent": "Record Info",
+    "tableList": false,
+    "parent": "timeLog",
     "stats": true
 }, {
     "field": "recordInfo.subjectCategory",
@@ -125,11 +125,11 @@ allInputs = [{
     "parent": "Incident Map Operations",
     "stats": true
 }, {
-    "field": "incident.SARNotifiedDateTime",
+    "field": "timeLog.SARNotifiedDateTime",
     "count": [],
     "label": "SAR Notified Date/Time",
     "tableList": true,
-    "parent": "Incident Details",
+    "parent": "timeLog",
     "stats": true
 }, {
     "field": "incident.county-region",
@@ -242,9 +242,9 @@ allInputs = [{
     "stats": true
 }];
 _allInputs = [{
-    "field": "recordInfo.incidentdate",
+    "field": "timeLog.incidentdate",
     "count": [],
-    "label": "Incident Date/Time",
+    "label": "Last Seen Date/Time",
     "tableVisible": true
 }, {
     "field": "recordInfo.subjectcategory",
@@ -307,7 +307,7 @@ _allInputs = [{
     "count": [],
     "label": "IPP Classification"
 }, {
-    "field": "incident.SARNotifiedDateTime",
+    "field": "timeLog.SARNotifiedDateTime",
     "count": [],
     "label": "SAR Notified Date/Time"
 }, {

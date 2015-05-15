@@ -21,6 +21,23 @@ Template.admin.onRendered(function (a) {
     });
 });
 Template.admin.helpers({
+    userAlert: function (a, b) {
+        setTimeout(function () {
+            $('.userAlert').fadeOut(500, function () {
+                Session.set('userAlert', null);
+            })
+        }, 500)
+        return Session.get('userAlert');
+    },
+    userAlertClass: function () {
+        return Session.get('userAlert').error ? 'bg-danger text-danger' : 'bg-success text-success';
+    },
+    errorMessages: function () {
+        return _.values(Session.get(ERRORS_KEY));
+    },
+    errorClass: function (key) {
+        return Session.get(ERRORS_KEY)[key] && 'error';
+    },
     profileIncomplete: function () {
         var agencyProfile = Session.get('agencyProfile');
         var done = _.compact(_.map(agencyProfile, function (d) {
@@ -108,18 +125,24 @@ Template.admin.events({
     },
     'change .adminUserRoles': function (event) {
         var user = this._id;
+        var origRole = this.roles[0];
+        var username = this.username;
         var val = $('input[name="role_' + user + '"]:checked')
             .val();
         Meteor.call('changeRole', user, val, function (err) {
             if (err) {
                 console.log(err);
+            } else {
+                Session.set('userAlert', {
+                    error: false,
+                    text: username + ' Successfully Changed from ' + origRole + ' To ' + val + '!'
+                });
             }
         });
     }
 });
 var hooksObject = {
     onSuccess: function (insertDoc, updateDoc, currentDoc) {
-        d = this
         context = $(this.event.target)
             .find('[type="submit"]');
         text = context.html();

@@ -200,7 +200,13 @@
             </div>
         </div>
         <!--END MAP-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" validation="none" resetOnSuccess=false}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" validation="none" resetOnSuccess=false}}
+
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="timeLog" validation="none" resetOnSuccess=false}}
+
+
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" validation="none" resetOnSuccess=false}} 
+
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" validation="none" resetOnSuccess=false}}
         <!--Subject Info-->
         <div class="panel panel-default">
             <div class="panel-heading">

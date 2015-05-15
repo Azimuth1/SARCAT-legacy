@@ -474,7 +474,13 @@ Template.form.events({
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'change [name="recordInfo.incidentdate"]': function (event, template) {
+    'change [name="timeLog.lastSeenDateTime"]': function (event, template) {
+        /*
+ endTime = moment(time.subjectLocatedDateTime)
+    startTime = moment(time.lastSeenDateTime)
+    duration = moment.duration(endTime.diff(startTime));
+    elapsedTime = duration.asHours();
+*/
         var record = Session.get('record');
         Meteor.call('setWeather', record._id, {
             unset: true

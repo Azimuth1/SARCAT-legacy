@@ -5,7 +5,6 @@ Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 settings = Meteor.settings.public;
 Template.appBody.onCreated(function () {});
 Template.appBody.onRendered(function () {
-
 });
 Template.appBody.helpers({
     email: function (view) {

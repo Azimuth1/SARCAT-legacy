@@ -1742,3 +1742,45 @@ path {
 table .hideInTable {
     display: none;
 }
+
+.fadeIn {
+    opacity: 1;
+    font-size: 21px;
+    margin-top: 25px;
+    text-align: center;
+    -webkit-transition: opacity 1s ease-in;
+    -moz-transition: opacity 1s ease-in;
+    -ms-transition: opacity 1s ease-in;
+    -o-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in;
+}
+
+.fadeOut {
+    opacity: 0;
+}
+
+.fullScreen {
+    z-index: 9;
+    opacity: .4;
+    background-color: #000;
+    width: 100%;
+    height: auto;
+    bottom: 0px;
+    top: 0px;
+    left: 0;
+    position: absolute;
+}
+
+.userAlert {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    z-index: 9;
+    padding: 15px 10px;
+}
+
+.modal-backdrop {
+    display: none;
+}

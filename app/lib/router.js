@@ -57,7 +57,8 @@ Router.route('home', {
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
                 Router.go('admin');
             } else {
-                Router.go('records', Meteor.user());
+                //Router.go('records', Meteor.user());
+                Router.go('userhome', Meteor.user());
             }
         } else {
             Router.go('signin');
@@ -80,6 +81,25 @@ Router.route('signin');
 Router.route('appLoading');
 Router.route('profiles');
 Router.route('about');
+//Router.route('userhome');
+//Router.route('forgot-password');
+
+Router.route('userhome', {
+    path: '/userhome',
+    waitOn: function () {
+        return this.subscribe('records');
+    },
+    action: function () {
+        if (!Meteor.userId()) {
+            Router.go('home');
+        }
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});
+
+
 Router.route('records', {
     path: '/records',
     waitOn: function () {
