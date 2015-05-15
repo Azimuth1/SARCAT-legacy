@@ -10,7 +10,6 @@ less
 accounts-password
 aldeed:autoform
 aldeed:collection2
-twbs:bootstrap
 accounts-base
 alanning:roles
 underscore
@@ -25,3 +24,4 @@ mrt:moment
 #mrt:moment-timezone
 tsega:bootstrap3-datetimepicker@=3.1.3_3
 aslagle:reactive-table
+twbs:bootstrap@3.3.2

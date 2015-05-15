@@ -112,6 +112,16 @@ Schemas.User = new SimpleSchema({
 });
 Meteor.users.attachSchema(Schemas.User);
 Schemas.admin = new SimpleSchema({
+    userId: {
+        type: String,
+        optional: true,
+        label: 'userId',
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.userId()
+            }
+        }
+    },
     user: {
         type: String,
         optional: true,
@@ -181,7 +191,7 @@ Schemas.recordInfo = new SimpleSchema({
             }
         },
     },
-    incidentdate: {
+    /*incidentdate: {
         type: String,
         label: 'Incident Date/Time',
         autoform: {
@@ -198,7 +208,7 @@ Schemas.recordInfo = new SimpleSchema({
         autoValue: function (a, b) {
             return Records.isDate(this.value);
         }
-    },
+    },*/
     ////defaultValue: moment().format('YYYY-MM-DThh:mm')
     incidentType: {
         type: String,
@@ -261,8 +271,8 @@ Schemas.incidentLocation = new SimpleSchema({
         type: String,
         label: 'Incident Response Country',
         optional: true,
-        autoValue: function(){
-            if(this.isInsert){
+        autoValue: function () {
+            if (this.isInsert) {
                 return Config.findOne().agencyProfile.country;
             }
         }
@@ -271,8 +281,8 @@ Schemas.incidentLocation = new SimpleSchema({
         type: String,
         label: 'State/Province',
         optional: true,
-        autoValue: function(){
-            if(this.isInsert){
+        autoValue: function () {
+            if (this.isInsert) {
                 return Config.findOne().agencyProfile['state-province'];
             }
         }
@@ -282,7 +292,6 @@ Schemas.incidentLocation = new SimpleSchema({
         label: 'Incident County/Region',
         optional: true,
     },
-
     landOwner: {
         type: String,
         optional: true,
@@ -363,7 +372,7 @@ Schemas.incidentLocation = new SimpleSchema({
     }
 });
 Schemas.incident = new SimpleSchema({
-    'SARNotifiedDateTime': {
+    /*'SARNotifiedDateTime': {
         type: String,
         label: 'SAR Notified Date',
         optional: true,
@@ -381,7 +390,7 @@ Schemas.incident = new SimpleSchema({
         autoValue: function (a, b) {
             return Records.isDate(this.value);
         }
-    },
+    },*/
     leadagency: {
         type: String,
         optional: true,
@@ -632,7 +641,7 @@ Schemas.incidentOperations = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Cellular forensics','Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
+        allowedValues: ['Unknown', 'Airport', 'Beacon', 'Building', 'Cellular forensics', 'Field', 'Radar', 'Residence', 'Road', 'Signal', 'Trail', 'Trailhead', 'Vehicle', 'Water', 'Woods', 'Other'],
         label: 'IPP Classification',
     },
     'initialDirectionofTravel_Boolean': {
@@ -710,7 +719,7 @@ Schemas.incidentOperations = new SimpleSchema({
     },
     'lkp_pls_Boolean': {
         type: String,
-        label: 'Is LKP/PLS Different from IPP?',
+        label: 'Do You Have a Revised LKP/PLS?',
         optional: true,
         autoform: {
             type: "select-radio-inline",
@@ -804,7 +813,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         label: 'Suspension Reasons',
         optional: true
     },
-    'subjectLocatedDateTime': {
+    /*'subjectLocatedDateTime': {
         type: String,
         label: 'Subject Located Date/Time',
         optional: true,
@@ -840,7 +849,7 @@ Schemas.incidentOutcome = new SimpleSchema({
         autoValue: function (a, b) {
             return Records.isDate(this.value);
         }
-    },
+    },*/
     'scenario': {
         type: String,
         autoform: {
@@ -1337,6 +1346,114 @@ Schemas.customQuestions = new SimpleSchema({
         }
     },
 });
+Schemas.timeLog = new SimpleSchema({
+    'lastSeenDateTime': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        autoform: {
+            afFieldInput: {
+                'class': 'bsDateInput',
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm',
+                }
+            }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
+        },
+        'label': 'Last Seen Date/Time',
+        optional: true
+    },
+    'SARNotifiedDatetime': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        autoform: {
+            afFieldInput: {
+                'class': 'bsDateInput',
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm',
+                }
+            }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
+        },
+        'label': 'SAR Notified Date/Time',
+        optional: true
+    },
+    'subjectLocatedDateTime': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        autoform: {
+            afFieldInput: {
+                'class': 'bsDateInput',
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm',
+                }
+            }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
+        },
+        'label': 'Subject Located Date/Time',
+        optional: true
+    },
+    'incidentClosedDateTime': {
+        type: String,
+        autoform: {
+            afFieldInput: {
+                type: 'datetime-local'
+            }
+        },
+        autoform: {
+            afFieldInput: {
+                'class': 'bsDateInput',
+                placeholder: 'MM/DD/YYYY HH:MM',
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    use24hours: true,
+                    format: 'MM/DD/YYYY HH:mm',
+                }
+            }
+        },
+        autoValue: function (a, b) {
+            return Records.isDate(this.value);
+        },
+        'label': 'Incident Closed Date/Time',
+        optional: true
+    },
+    'totalHours': {
+        type: Number,
+        'label': 'Total Missing Hours',
+        optional: true
+    },
+    'searchHours': {
+        type: Number,
+        'label': 'Total Search Hours',
+        optional: true
+    }
+});
 Schemas.SARCAT = new SimpleSchema({
     measureUnits: {
         type: String,
@@ -1407,6 +1524,12 @@ Schemas.SARCAT = new SimpleSchema({
         optional: true,
         //blackbox: true,
         //defaultValue: {}
+    },
+    timeLog: {
+        type: Schemas.timeLog,
+        optional: true,
+        label: 'Incident Time Log',
+        defaultValue: {}
     },
     incidentOperations: {
         type: Schemas.incidentOperations,

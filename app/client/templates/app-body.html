@@ -5,7 +5,8 @@
                 <img src="/icon.png" style="max-width: 100%;max-height: 200px;">
             </div>
             {{#if currentUser}}
-            <div class="btns-group-vertical"> <a class="btn-pad btn-secondary strong default-bg js-userProfile _userView" data='userProfile'>{{email}}</a>
+            <div class="btns-group-vertical">
+                <a href="{{pathFor 'userhome'}}" class="strong default-bg btn-pad js-sharedRecords _userView btn-secondary {{isUserView 'userhome'}}" data="records">{{email}}</a>
                 <a class="btn-pad js-logout btn-secondary">Logout</a>
             </div>
             <div class="btns-group-vertical btns-userHome">
@@ -20,8 +21,6 @@
         </section>
         <div class="content-overlay"></div>
         <div id="content-container">
-
-        
             {{#each thisArray}} {{> yield}} {{/each}}
         </div>
     </div>

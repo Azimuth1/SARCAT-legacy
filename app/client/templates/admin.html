@@ -74,14 +74,21 @@
             </div>
         </div>
         <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
+            {{#if userAlert}}
+            <div class="fullScreen strong text-center">
+            </div>
+            <div class="strong userAlert text-capitalize {{userAlertClass}}">
+               {{userAlert.text}}
+            </div>
+            {{/if}}
             <div class="afTablePane">
                 <table class="table table-hover table-bordered table-condensed">
                     <thead class='default-bg'>
                         <tr>
-                            <td class='afTable'>User</td>
-                            <td class='afTable'>Roles</td>
-                            <td class='afTable'>Email</td>
-                            <td class='afTable'>Action</td>
+                            <th class='afTable'>Username</th>
+                            <th class='afTable'>Roles</th>
+                            <th class='afTable'>Email</th>
+                            <th class='afTable'>Action</th>
                         </tr>
                     </thead>
                     <tbody class='white-bg'>

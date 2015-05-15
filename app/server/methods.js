@@ -4,6 +4,20 @@ Meteor.methods({
             Meteor.users.remove(userId);
         }
     },
+    editUser: function (set, userId) {
+        console.log(set, userId)
+        Meteor.users.update(userId, set, function (error, result) {
+            if (error) {
+                console.log(error, result);
+            }
+        });
+    },
+
+    setPassword: function (set, userId) {
+        Accounts.setPassword(userId, password,function(err,d){
+            console.log(err,d)
+        })
+    },
     createAdmin: function (username, email, password, id) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
