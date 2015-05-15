@@ -3,9 +3,10 @@ node_modules
 .DS_Store
 *.db
 .ignore
-
+*.log
 
 main_logo
 /uploads/records/**
 /uploads/logo/**
 settings.dev.json
+npm-debug.log

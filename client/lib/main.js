@@ -229,8 +229,9 @@ getCoords = function (record) {
         val: "revisedLKP_PLS",
         name: "coords.revisedLKP_PLS",
         text: "Revised IPP",
-        icon: 'fa-male',
-        color: 'red'
+        icon: 'fa-times-circle-o',
+        color: 'red',
+        extraClasses: 'Rev'
     }, {
         val: "findCoord",
         name: "coords.findCoord",
@@ -290,9 +291,9 @@ formSetMap = function (context, recordId) {
     map.fitBounds(bounds);
     console.log('fitbounds')
     drawnPaths = new L.FeatureGroup()
-        .addTo(map);
+        //.addTo(map);
     drawnPoints = new L.FeatureGroup()
-        .addTo(map);
+        //.addTo(map);
     map.scrollWheelZoom.disable();
     map.on('moveend', function () {
         var bounds = map.getBounds()
@@ -406,7 +407,8 @@ formSetMap = function (context, recordId) {
         delete coords[d.val];
     };
     obj.editPoint = function (name) {
-        var coords = Records.findOne(recordId).coords[name];
+        var coords = Records.findOne(recordId)
+            .coords[name];
         var layer = drawnPoints.getLayers()
             .filter(function (d) {
                 return d.options.name === 'coords.' + name;
@@ -433,6 +435,7 @@ formSetMap = function (context, recordId) {
             prefix: 'fa',
             markerColor: d.color,
             iconColor: '#fff',
+            extraClasses: d.extraClasses
         });
         var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
         marker = L.marker(_coords, {
@@ -463,7 +466,11 @@ formSetMap = function (context, recordId) {
         return marker;
     }
     obj.fitBounds = function () {
-        map.fitBounds(drawnPoints.getBounds());
+        map.fitBounds(drawnPoints.getBounds()
+            .pad(0.5));
+        m = map
+        drawnPaths.addTo(map);
+        drawnPoints.addTo(map);
         return
         if (Object.keys(coords)
             .length < 2) {
@@ -480,198 +487,162 @@ insertSampleRecords = function () {
     var length = 100;
     for (var i = 0; i < length; i++) {
         var record = {
+            "_id": "xFDAz8MF6wvKY6sdu",
             "coords": {
                 "ippCoordinates": {
-                    "lat": 38.90879303268068,
-                    "lng": -77.2573184967041
+                    "lat": 38.96331304643642,
+                    "lng": -77.12870121002197
                 },
                 "findCoord": {
-                    "lat": 39.104488809440475,
-                    "lng": -76.93450927734375
+                    "lat": 38.953201586850895,
+                    "lng": -77.16290473937988
                 },
                 "destinationCoord": {
-                    "lat": 38.97222194853654,
-                    "lng": -76.8658447265625
+                    "lat": 38.95019790508175,
+                    "lng": -77.14264869689941
                 },
-                "intendedRoute": "[[38.90879303268068,-77.2573184967041],[38.97222194853654,-76.8658447265625]]",
-                "actualRoute": "[[38.90879303268068,-77.2573184967041],[39.104488809440475,-76.93450927734375]]",
+                "intendedRoute": "[[38.96331304643642,-77.12870121002197],[38.959942720227495,-77.09814548492432]]",
+                "actualRoute": "[[38.96331304643642,-77.12870121002197],[38.953201586850895,-77.16290473937988]]",
                 "decisionPointCoord": {
-                    "lat": 38.976492485539424,
-                    "lng": -77.0635986328125
+                    "lat": 38.956805836944525,
+                    "lng": -77.14513778686523
+                },
+                "revisedLKP_PLS": {
+                    "lat": 38.95580467475027,
+                    "lng": -77.1265983581543
                 }
             },
             "recordInfo": {
-                "name": "Record-99",
-                "incidentnum": 99,
-                "missionnum": "#201599",
-                "incidentdate": "05/01/2015 13:14",
-                "incidenttype": "Search",
+                "name": "1",
+                "incidentnum": "1",
+                "missionnum": "1",
+                "incidentType": "Search",
+                "incidentEnvironment": "Land",
+                "subjectCategory": "ATV",
                 "status": "Closed"
             },
             "measureUnits": "US",
-            "userId": "FuZitzYuiJeR8gbQ3",
+            "userId": "cYPBpNKhviSp4yjJQ",
+            "created": "05/15/2015 07:42",
             "incidentOperations": {
                 "initialDirectionofTravel_Boolean": "Yes",
+                "lkp_pls_Boolean": "Yes",
                 "ipptype": "Point Last Seen",
-                "ippclassification": "Residence",
-                "initialDirectionofTravel": 99,
-                "DOTHowdetermined": "Physical Clue",
-                "typeofDecisionPoint": "Saddle"
+                "ippclassification": "Road",
+                "DOTHowdetermined": "Sighting",
+                "typeofDecisionPoint": "Shortcut",
+                "decisionPointFactor": "Yes",
+                "initialDirectionofTravel": 161
+            },
+            "incidentLocation": {
+                "country": "United States",
+                "state-province": "Virginia",
+                "ecoregionDomain": "TEMPERATE",
+                "ecoregionDivision": "230-SUBTROPICAL DIVISION",
+                "county-region": "Fairfax",
+                "landOwner": "Commercial",
+                "populationDensity": "Suburban",
+                "terrain": "Hilly",
+                "landCover": "Light"
             },
             "incident": {
-                "incidentEnvironment": "Land",
-                "ecoregiondomain": "TEMPERATE",
-                "ecoregionDivision": "230-SUBTROPICAL DIVISION",
-                "leadagency": "Maryland State Police",
-                "SARNotifiedDateTime": "05/02/2015 13:18",
-                "country": "USA",
-                "state-province": "MD",
-                "county-region": "Montgomery",
-                "subjectcategory": "ATV",
-                "contactmethod": "Vehicle Found",
-                "landOwner": "Commercial",
-                "populationDensity": "Rural",
-                "landCover": "Bare",
-                "terrain": "Hilly"
+                "leadagency": "Fairfax County Police",
+                "contactmethod": "Reported Missing"
             },
             "weather": {},
-            "rescueDetails": {
-                "signalling": "SPOT",
-                "injuredSearcher": "No"
+            "findLocation": {
+                "distanceIPP": "1.97",
+                "findBearing": "249",
+                "elevationChange": "-49",
+                "dispersionAngle": "88",
+                "findFeature": "Road",
+                "detectability": "Excellent",
+                "trackOffset": "20"
+            },
+            "incidentOutcome": {
+                "incidentOutcome": "Closed by Search",
+                "scenario": "Lost",
+                "signalling": "PLB",
+                "lostStrategy": "Stayed put",
+                "mobility&Responsiveness": "Mobile and responsive",
+                "injuredSearcher": "Yes",
+                "mobility_hours": 20
             },
             "subjects": {
                 "subject": [{
-                    "_key": "2015-05-04T17:19:48.925Z",
-                    "age": 54,
+                    "_key": "2015-05-15T15:05:50.038Z",
+                    "age": 10,
                     "sex": "Male",
-                    "status": "DOA",
-                    "evacuationMethod": "Walkout",
-                    "mechanism": "Fall - ground level",
-                    "illness": "Appendicitis",
-                    "weight": "180",
-                    "height": "72",
-                    "physical_fitness": "Excellent",
-                    "experience": "Poor",
-                    "equipment": "Fair",
-                    "clothing": "Excellent",
-                    "survival_training": "Poor",
-                    "local": "Yes",
-                    "injuryType": "Frostbite",
-                    "treatmentby": "EMT"
+                    "status": "Alive and well"
                 }, {
-                    "_key": "2015-05-04T17:19:48.925Z",
-                    "age": 54,
-                    "sex": "Male",
-                    "status": "DOA",
-                    "evacuationMethod": "Walkout",
-                    "mechanism": "Fall - ground level",
-                    "illness": "Appendicitis",
-                    "weight": "180",
-                    "height": "72",
-                    "physical_fitness": "Excellent",
-                    "experience": "Poor",
-                    "equipment": "Fair",
-                    "clothing": "Excellent",
-                    "survival_training": "Poor",
-                    "local": "Yes",
-                    "injuryType": "Frostbite",
-                    "treatmentby": "EMT"
+                    "_key": "2015-05-15T15:05:52.234Z",
+                    "age": 18,
+                    "sex": "Female",
+                    "status": "Injured"
                 }, {
-                    "_key": "2015-05-04T17:19:48.925Z",
-                    "age": 54,
-                    "sex": "Male",
-                    "status": "DOA",
-                    "evacuationMethod": "Walkout",
-                    "mechanism": "Fall - ground level",
-                    "illness": "Appendicitis",
-                    "weight": "180",
-                    "height": "72",
-                    "physical_fitness": "Excellent",
-                    "experience": "Poor",
-                    "equipment": "Fair",
-                    "clothing": "Excellent",
-                    "survival_training": "Poor",
-                    "local": "Yes",
-                    "injuryType": "Frostbite",
-                    "treatmentby": "EMT"
-                }, {
-                    "_key": "2015-05-04T17:19:48.925Z",
-                    "age": 54,
-                    "sex": "Male",
-                    "status": "DOA",
-                    "evacuationMethod": "Walkout",
-                    "mechanism": "Fall - ground level",
-                    "illness": "Appendicitis",
-                    "weight": "180",
-                    "height": "72",
-                    "physical_fitness": "Excellent",
-                    "experience": "Poor",
-                    "equipment": "Fair",
-                    "clothing": "Excellent",
-                    "survival_training": "Poor",
-                    "local": "Yes",
-                    "injuryType": "Frostbite",
-                    "treatmentby": "EMT"
+                    "_key": "2015-05-15T15:05:54.294Z",
+                    "age": 30,
+                    "sex": "Female",
+                    "status": "DOA"
                 }]
             },
             "resourcesUsed": {
                 "resource": [{
-                    "_key": "2015-05-04T17:20:18.143Z",
-                    "type": "Boat",
-                    "count": 3,
-                    "hours": 7,
+                    "_key": "2015-05-15T15:29:57.046Z",
+                    "type": "Bike",
+                    "count": 9,
+                    "hours": 27,
                     "findResource": true
                 }, {
-                    "_key": "2015-05-04T17:20:21.544Z",
-                    "type": "Bike",
-                    "count": 4,
-                    "hours": 3
-                }, {
-                    "_key": "2015-05-04T17:20:24.502Z",
-                    "type": "Dogs",
-                    "count": 5,
+                    "_key": "2015-05-15T15:30:00.667Z",
+                    "type": "Helicopter",
+                    "count": 2,
                     "hours": 6
                 }],
-                "numTasks": 8,
-                "totalManHours": 234,
-                "totalCost": "$1,3300",
-                "totalPersonnel": 83,
-                "distanceTraveled": "543"
+                "numTasks": 32,
+                "totalPersonnel": 565,
+                "totalManHours": 3045,
+                "distanceTraveled": "3421",
+                "totalCost": "$1,000,500"
             },
+            "customQuestions": {},
             "admin": {
-                "user": "Kyle Kalwarski",
-                "email": "kyle.kalwarski@azimuth1.com",
+                "userId": "cYPBpNKhviSp4yjJQ",
+                "user": "Kyle K",
+                "email": "admin@sarcat",
                 "phonenum": "7036290113"
             },
-            "incidentOutcome": {
-                "lkp_pls_Boolean": "No",
-                "distanceIPP": "21.99",
-                "findBearing": "52",
-                "incidentOutcome": "Closed by Search",
-                "subjectLocatedDateTime": "05/03/2015 13:18",
-                "incidentClosedDateTime": "05/03/2015 13:19",
-                "scenario": "Criminal",
-                "suspensionReasons": "Weather",
-                "findFeature": "Forest/Woods",
-                "detectability": "Good",
-                "mobility&Responsiveness": "Immobile and responsive",
-                "lostStrategy": "Evasive",
-                "mobility_hours": 8
+            "timeLog": {
+                "SARNotifiedDatetime": "05/04/2015 09:21",
+                "incidentClosedDateTime": "05/05/2015 09:21",
+                "totalHours": 96,
+                "searchHours": 26,
+                "subjectLocatedDateTime": "05/05/2015 11:03",
+                "lastSeenDateTime": "05/01/2015 11:03"
+            },
+            "xComments": {
+                "summary": "Good Search!"
             }
-        };
+        }
         delete record._id;
         delete record.created;
         record.recordInfo.name = 'Record-' + i;
         record.recordInfo.incidentnum = i;
         record.recordInfo.missionnum = '#2015' + i;
-        record.created = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
-        record.recordInfo.incidentdate = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
-        var allowed = Schemas.recordInfo._schema.incidenttype.allowedValues;
-        if (allowed) {
-            var sample = _.sample(allowed, 1)[0];
-            record.recordInfo.incidenttype = sample;
-        }
+        record.created = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
+        record.timeLog.lastSeenDateTime = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
+        record.timeLog.SARNotifiedDatetime = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
+        record.timeLog.subjectLocatedDateTime = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
+        record.timeLog.incidentClosedDateTime = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
+        console.log(Schemas)
+
         _.each(record.recordInfo, function (d, name) {
+            console.log(name)
             var allowed = Schemas.recordInfo._schema[name].allowedValues;
             if (allowed) {
                 var sample = _.sample(allowed, 1)[0];
@@ -875,8 +846,10 @@ createSampleRecords = function () {
         record.recordInfo.name = 'Record-' + i;
         record.recordInfo.incidentnum = i;
         record.recordInfo.missionnum = '#2015' + i;
-        record.created = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
-        record.recordInfo.incidentdate = moment(randomDate(new Date(2012, 0, 1), new Date())).format('MM/DD/YYYY HH:mm');
+        record.created = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
+        record.recordInfo.incidentdate = moment(randomDate(new Date(2012, 0, 1), new Date()))
+            .format('MM/DD/YYYY HH:mm');
         var allowed = Schemas.recordInfo._schema.incidentType.allowedValues;
         if (allowed) {
             var sample = _.sample(allowed, 1)[0];
@@ -952,3 +925,4 @@ createSampleRecords = function () {
         Records.insert(d);
     })
 };
+

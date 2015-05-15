@@ -110,3 +110,64 @@ Changing form status affects all forms - database is always platinum
 
 Dashboard => Admin Tools
 My SAR Team Stats...
+
+
+
+
+
+
+
+
+
+
+delete logo
+ipp - red X
+subject category description page
+change domain names to simpler names
+
+
+"Runaway"
+
+subject sub-category vs subj desc
+
+
+water incdiecnt  - fall into river
+
+search - 95% land
+incident type = water then environment = water
+
+impervious layer = population desity
+
+alert when moving IPP - are you sure
+
+
+alert on UI for bug fix
+
+trackoffset - diastance form nearest linear feature
+
+travel bearing - ipp angle = 30, find = 31..dispersion = 1;
+
+
+
+
+find-feature - use NLCD to get value... 
+
+add Lock to Personal Subject Info
+dont let viewer see information
+
+add evacuation methof to subject
+
+signalling - add to rescue
+
+other Resources
+
+incident status - radio button
+
+precip type = none
+
+style injured searcher
+
+
+*fouynd alive vs dead different colors showing where they are
+
+add data import
