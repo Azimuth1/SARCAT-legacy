@@ -1,28 +1,82 @@
 Template.stats.onCreated(function () {
     Session.set('userView', 'stats');
-    records = Records.find().fetch();
-    r = records
     Session.set('activeRecord', false);
 });
 Template.stats.onRendered(function () {
-    var data = recordStats(records);
-    sub_res = selectedSubjectResourceInfo(records);
-    var allData = _.flatten([sub_res, data])
+    var records = Records.find()
+        .fetch();
+    r = records
+    var ages = _.chain(records)
+        .map(function (d) {
+            return _.pluckDeep(d.subjects.subject, 'age')
+        })
+        .flatten()
+        .value();
+    ages = d3.layout.histogram()
+        .bins(5)
+        (ages)
+        .map(function (e) {
+            return {
+                data: e.length,
+                name: d3.extent(e)
+                    .join('-')
+            }
+        });
+    ages = {
+        options: {
+            label: 'Subject Ages (Range)',
+            number: true
+        },
+        "count": ages,
+    };
+    var sex = _.chain(records)
+        .map(function (d) {
+            return _.pluckDeep(d.subjects.subject, 'sex')
+        })
+        .flatten()
+        .value();
+    data = recordStats(records);
     var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
+    var numberData = _.filter(data, function (d) {
+        return d.options.number;
+    });
+    var numberDiv = d3.select("#recordss")
+        // .append('div')
+        // .attr('class', 'row');
+    numberData.forEach(function (d, i) {
+        var color = colors[i % 10];
+        drawGraph(d, color, numberDiv);
+    });
+    var noNumberData = _.filter(data, function (d) {
+        return !d.options.number;
+    });
+    noNumberData = _.sortBy(noNumberData, function (d) {
+        return d.count.length;
+    });
+    var noNumberDiv = d3.select("#recordss")
+        //.append('div')
+        // .attr('class', 'row');
+    noNumberData.forEach(function (d, i) {
+        var color = colors[i % 10];
+        drawGraph(d, color, noNumberDiv);
+    });
+    //return drawHistogram(ages, "#5D2E2C", "#recordss");
+    //sub_res = selectedSubjectResourceInfo(records);
+    allData = _.flatten([data])
+        //var allData = _.flatten([sub_res, data])
     allData.forEach(function (d, i) {
         if (d.field === 'timeLog.lastSeenDateTime') {
-            return d3Calender('#d3Calender', d.count)
+            // return d3Calender('#d3Calender', d.count)
         }
         var color = colors[i % 10];
         //console.log(d.field)
         //if (d.field === 'subjects.subject.$.age' || d.number) {
-        if (d.field === 'subjects.subject.$.age') {
-            return drawHistogram(d, color, "#recordss");
-            //return drawLine(d, color, "#recordss");
+        if (d.field === '_subjects.subject.$.age') {
+            //return drawHistogram(d, color, "#recordss");
+            return drawLine(d, color, "#recordss");
         } else {
-            drawGraph(d, color, "#recordss");
+            // drawGraph(d, color, "#recordss");
         }
-
     });
     Session.set('activeRecord', null);
     var recordMap = recordsSetMap('recordsMap', records);
@@ -55,6 +109,7 @@ Template.stats.helpers({
         var displayData2 = _.chain(displayData)
             .groupBy('parent')
             .map(function (d, e) {
+                console.log(d.field)
                 return {
                     field: e,
                     data: d
@@ -64,184 +119,227 @@ Template.stats.helpers({
         return displayData2;
     },
 });
-
-
-
-
-
-
-
-
-
-var drawHistogram = function (d, color, context) {
-
-    //colors = d3.scale.category20c();
-    var title = d.label;
-    var values = d.count;
-    var options = d.options;
-    var numItems = data.length;
-    var klass;
-    var rotate = 0;
-    var margin = {
-        top: 10,
-        right: 10,
-        bottom: 30,
-        left: 40
-    };
-    if (numItems === 1) {
-        klass = 'col-sm-3 pad00'
-    } else if (numItems < 9) {
-        klass = 'col-sm-6 pad00'
-    } else {
-        klass = 'col-sm-12 pad00';
-        rotate = '-25';
-        margin = {
-            top: 10,
-            right: 40,
-            bottom: 60,
-            left: 60
+var recordStats = function (data) {
+    var flatten = function (x, result, prefix) {
+        if (_.isObject(x)) {
+            _.each(x, function (v, k) {
+                flatten(v, result, prefix ? prefix + '.' + k : k)
+            })
+        } else {
+            result[prefix] = x
         }
-    }
-
-    var container = d3.select(context)
-        .append("div")
-        .attr('class', klass);
-    container.append('h4').attr('class', 'text-center')
-        .text(title);
-    var width = parseInt(container.style('width')); // / 1;
-    width = width - margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom;
-
-
-
-
-
-
-    //var values = d; //3.range(1000).map(d3.random.bates(10));
-
-    // A formatter for counts.
-    var formatCount = d3.format(",.0f");
-
-    var margin = {
-            top: 10,
-            right: 30,
-            bottom: 30,
-            left: 30
-        },
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
-
-    var x = d3.scale.linear()
-        .domain([0, 1])
-        .range([0, width]);
-
-    // Generate a histogram using twenty uniformly-spaced bins.
-    var data = d3.layout.histogram()
-        .bins(x.ticks(20))
-        (values);
-
-    var y = d3.scale.linear()
-        .domain([0, d3.max(data, function (d) {
-            return d.y;
-        })])
-        .range([height, 0]);
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var svg = container.append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    var bar = svg.selectAll(".bar")
-        .data(data)
-        .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function (d) {
-            return "translate(" + x(d.x) + "," + y(d.y) + ")";
-        });
-
-    bar.append("rect")
-        .attr("x", 1)
-        .attr("width", x(data[0].dx) - 1)
-        .attr("height", function (d) {
-            return height - y(d.y);
-        });
-
-    bar.append("text")
-        .attr("dy", ".75em")
-        .attr("y", 6)
-        .attr("x", x(data[0].dx) / 2)
-        .attr("text-anchor", "middle")
-        .text(function (d) {
-            return formatCount(d.y);
-        });
-
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+        return result
+    };
+    var records = Records.find()
+        .fetch();
+    toGraph = _.chain(allInputs)
+        .map(function (d) {
+            if (d.stats) {
+                return d; //.field;
+            }
+        })
+        .compact()
+        .value();
+    flattenedRecords = _.chain(records)
+        .map(function (d, e) {
+            var flat = flatten(d, {});
+            return _.pick(flat, toGraph.map(function (key) {
+                return key.field;
+            }));
+        })
+        .value();
+    grouped = _.chain(flattenedRecords)
+        .reduce(function (acc, obj) {
+            _.each(obj, function (value, key) {
+                if (!_.isArray(acc[key])) {
+                    acc[key] = [];
+                }
+                acc[key].push(value)
+            });
+            return acc;
+        }, {})
+        .value();
+    count = _.chain(grouped)
+        .map(function (d, e) {
+            var options = _.findWhere(allInputs, {
+                field: e
+            });
+            var vals;
+            if (options.number) {
+                vals = d3.layout.histogram()
+                    .bins(5)
+                    (d)
+                    .map(function (a) {
+                        return {
+                            data: a.length,
+                            name: d3.extent(a)
+                                .join('-')
+                        }
+                    });
+                options.xLabel = ' Value Ranges';
+            } else {
+                /*vals = d3.layout.histogram()
+                    .bins(5)
+                    (d.map(function(d){return d.data}))
+                    .map(function (a) {
+                        return {
+                            data: a.length,
+                            name: d3.extent(a)
+                                .join('-')
+                        }
+                    });
+                options.label += ' (Range)';*/
+                vals = _.chain(d)
+                    .countBy(_.identity)
+                    .map(function (d, e) {
+                        return {
+                            data: d,
+                            name: e
+                        };
+                    })
+                    .value();
+                _vals = _.chain(vals)
+                    .groupBy(function (d) {
+                        return d.data
+                    })
+                    .map(function (d, e) {
+                        var names = d.map(function (f) {
+                                return f.name;
+                            })
+                            .join(', ');
+                        return {
+                            data: e,
+                            name: names
+                        }
+                    })
+                    .value()
+                options.xLabel = ' Values';
+            }
+            vals = _.chain(vals)
+                .sortBy('data')
+                .reverse()
+                .value();
+            return {
+                options: options,
+                count: vals,
+            };
+        })
+        .sortBy(function (d) {
+            return d.options.number;
+            //return -d.count.length;
+        })
+        .reverse()
+        .sortBy(function (d) {
+            return d.options.number + d.count.length; //-d.count.length;
+            //return -d.count.length;
+        })
+        .reverse()
+        .value();
+    console.log(count)
+    return count;
 };
-
-
-
-
-
 var drawGraph = function (d, color, context) {
     //colors = d3.scale.category20c();
-    var title = d.label;
+    var title = d.options.label; //label;
     var data = d.count;
-    var options = d.options;
+    //console.log(d)
+    var options = d.options || {};
     var numItems = data.length;
-    var klass;
+    var klass = 'col-sm-3 pad00 _borderTop _default-border';
     var rotate = 0;
     var margin = {
         top: 10,
         right: 10,
-        bottom: 30,
+        bottom: 50,
         left: 40
     };
-    if (numItems === 1) {
-        klass = 'col-sm-3 pad00'
-    } else if (numItems < 9) {
-        klass = 'col-sm-6 pad00'
-    } else {
-        klass = 'col-sm-12 pad00';
-        rotate = '-25';
-        margin = {
-            top: 10,
-            right: 40,
-            bottom: 60,
-            left: 60
-        }
-    }
-    var container = d3.select(context)
+    /*
+        if (numItems < 7) {
+            klass = 'col-sm-3 pad00'
+        } else if (numItems < 9) {
+            klass = 'col-sm-6 pad00'
+        } else {
+            klass = 'col-sm-12 pad00';
+            rotate = '-25';
+            margin = {
+                top: 40,
+                right: 40,
+                bottom: 60,
+                left: 60
+            }
+        }*/
+    /*else if (numItems === 1) {
+            klass = 'col-sm-3 pad00'
+        } else if (numItems < 9) {
+            klass = 'col-sm-6 pad00'
+        } else {
+            klass = 'col-sm-12 pad00';
+            rotate = '-25';
+            margin = {
+                top: 40,
+                right: 40,
+                bottom: 60,
+                left: 60
+            }
+        }*/
+    var container = context
         .append("div")
         .attr('class', klass);
-    container.append('h4').attr('class', 'text-center')
-        .text(title);
+    var brighter = d3.rgb(color)
+        .brighter(1)
+        .toString();
+    var brighter2 = d3.rgb(color)
+        .brighter(2)
+        .toString();
+    var darker = d3.rgb(color)
+        .darker(1)
+        .toString();
     var width = parseInt(container.style('width')); // / 1;
-    width = width - margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom;
+    width = width - margin.left - margin.right;
+    var height = 300 - margin.top - margin.bottom;
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
     var y = d3.scale.linear()
         .rangeRound([height, 0]);
     var xAxis = d3.svg.axis()
         .scale(x)
-        .orient("bottom");
+        .orient("bottom")
+        //.ticks(4);
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
         .tickFormat(d3.format("d"))
         .ticks(4);
-    var svg = container.append("svg")
+    var svg1 = container.append("svg")
+        .style('background', function (d) {
+            return color
+        })
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
+        .attr("height", height + margin.top + margin.bottom);
+    svg1.append("linearGradient")
+        .attr("id", "temperature-gradient")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", '0%')
+        .attr("y1", '0%')
+        .attr("x2", '0%')
+        .attr("y2", '80%')
+        .selectAll("stop")
+        .data([{
+            offset: "0%",
+            color: color
+        }, {
+            offset: "80%",
+            color: brighter
+        }])
+        .enter()
+        .append("stop")
+        .attr("offset", function (d) {
+            return d.offset;
+        })
+        .attr("stop-color", function (d) {
+            return d.color;
+        });
+    var svg = svg1.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     x.domain(data.map(function (d) {
         return d.name;
@@ -250,53 +348,212 @@ var drawGraph = function (d, color, context) {
         return d.data;
     })]);
     svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-    if (rotate) {
-        svg.selectAll(".x.axis text")
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", function (d) {
-                return "rotate(" + rotate + ")";
-            });
-    }
-    svg.append("g")
         .attr("class", "y axis")
+        .attr('fill', '#fff')
         .call(yAxis)
         .append("text")
+        .attr('class', 'y_label')
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
+        .attr("y", -30)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("Frequency");
-    svg.selectAll(".bar")
+    svg.append("text")
+        .attr("class", "x_label")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", margin.top)
+        .text(title)
+        .attr('fill', brighter2);
+    bar = svg.selectAll(".bar")
         .data(data)
         .enter()
-        .append("rect")
+        .append("g")
+        .attr("class", "bar")
+        .attr("transform", function (d) {
+            return "translate(" + x(d.name) + "," + y(d.data) + ")";
+        });
+    bar.append("rect")
         .attr("class", "_bar")
-        .attr("x", function (d) {
-            return x(d.name);
-        })
+        .attr('stroke', brighter)
+        .attr('fill', 'url(#temperature-gradient)')
         .attr("width", x.rangeBand())
-        .attr("y", function (d) {
-            return y(d.data);
-        })
         .attr("height", function (d) {
             return height - y(d.data);
         })
-        .attr("fill", color);
+        //.attr("fill", color);
+    bar.append("text")
+        .attr('fill', brighter2)
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", x.rangeBand() / 2)
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d.data
+        });
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .attr('fill', brighter2)
+        .call(xAxis)
+        .append("text")
+        .attr("class", "x_label")
+        .attr('fill', '#fff')
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", margin.bottom * 0.6)
+        .text(options.xLabel)
+    var allXText = svg.selectAll('.x.axis .tick text');
+    var w = _.reduce(allXText[0], function (sum, el) {
+        return sum + el.getBoundingClientRect()
+            .width
+    }, 0);
+    if (w > width * .999) {
+        // console.log(svg[0][0])
+        svg.remove();
+        //svg.style('display','none')
+        //d3.select('.v g').remove()
+        _drawGraph(d, color, svg1);
+        return
+        //svg.attr('fill','#fff');
+        svg.selectAll(".x.axis .tick text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.5em")
+            //.attr('fill', '#fff')
+            //.attr("dy", ".15em")
+            .attr("transform", function (d) {
+                return "rotate(90)";
+            });
+    }
 }
-
-
-
-
-
-
-
-
-
+var _drawGraph = function (d, color, svg1) {
+    if (d.options.number) {
+        return
+    }
+    //colors = d3.scale.category20c();
+    //console.log(d)
+    var title = d.options.label; //label;
+    var data = d.count;
+    //console.log(d)
+    var options = d.options || {};
+    var numItems = data.length;
+    var rotate = 0;
+    var margin = {
+        top: 20,
+        right: 10,
+        bottom: 2,
+        left: 30
+    };
+    var brighter = d3.rgb(color)
+        .brighter(1)
+        .toString();
+    var brighter2 = d3.rgb(color)
+        .brighter(2)
+        .toString();
+    var darker = d3.rgb(color)
+        .darker(1)
+        .toString();
+    var h = 400
+    var factor = 40;
+    var width = parseInt(svg1.style('width')) - margin.left - margin.right;
+    var height = 500; //parseInt(svg1.style('height'));// - margin.top - margin.bottom;;
+    // width = width - margin.left - margin.right;
+    // var height = 400;//(data.length * factor) > 350 ? data.length * factor : 350;
+    svg1.attr('height', height);
+    var svg = svg1.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    //svg.attr('height',height);
+    height = height - margin.top - margin.bottom;
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, height], .1);
+    var y = d3.scale.linear()
+        .rangeRound([width, 0]);
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("right")
+        //.ticks(4);
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("bottom")
+        .tickFormat(d3.format("d"))
+        .ticks(4);
+    console.log(svg[0][0])
+        /* var svgCont = container.append("svg")
+             .style('background', function (d) {
+                 return color
+             })
+             .attr("width", width + margin.left + margin.right)
+             .attr("height", height + margin.top + margin.bottom);
+         svgCont.append("linearGradient")
+             .attr("id", "temperature-gradient")
+             .attr("gradientUnits", "userSpaceOnUse")
+             .attr("x1", '0%')
+             .attr("y1", '0%')
+             .attr("x2", '0%')
+             .attr("y2", '80%')
+             .selectAll("stop")
+             .data([{
+                 offset: "0%",
+                 color: color
+             }, {
+                 offset: "80%",
+                 color: brighter
+             }])
+             .enter()
+             .append("stop")
+             .attr("offset", function (d) {
+                 return d.offset;
+             })
+             .attr("stop-color", function (d) {
+                 return d.color;
+             });
+         svg = svgCont.append("g")
+             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");*/
+    svg1.append("text")
+        .attr("class", "x_label")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", margin.top)
+        .text(title)
+        .attr('fill', brighter2);
+    x.domain(data.map(function (d) {
+        return d.name;
+    }));
+    y.domain([0, d3.max(data, function (d) {
+        return d.data;
+    })]);
+    bar = svg.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "bar")
+        .attr("transform", function (d) {
+            return "translate(" + 0 + "," + x(d.name) + ")";
+        });
+    bar.append("rect")
+        .attr("class", "_bar")
+        .attr("height", x.rangeBand())
+        .attr("width", function (d) {
+            return width - y(d.data);
+        })
+        .attr('stroke', brighter)
+        .attr('fill', 'url(#temperature-gradient)')
+    bar.append("text")
+        .attr('fill', brighter2)
+        .attr('class', 'x value vert')
+        .attr("dy", x.rangeBand() / 2)
+        .attr("x", -3)
+        //.attr("y", x.rangeBand() / 1)
+        .attr("text-anchor", "end")
+        .text(function (d) {
+            return d.data
+        });
+    svg.append("g")
+        .attr("class", "x axis vert")
+        .attr("transform", "translate(0,0)")
+        .call(xAxis)
+        .attr('fill', brighter2)
+}
 var drawLine = function (d, color, context) {
     //colors = d3.scale.category20c();
     var title = d.label;
@@ -331,7 +588,8 @@ var drawLine = function (d, color, context) {
     var container = d3.select(context)
         .append("div")
         .attr('class', klass);
-    container.append('h4').attr('class', 'text-center')
+    container.append('h4')
+        .attr('class', 'text-center')
         .text(title);
     var width = parseInt(container.style('width')); // / 1;
     width = width - margin.left - margin.right,
@@ -386,11 +644,20 @@ var drawLine = function (d, color, context) {
         .attr("height", height + margin.top + margin.bottom)
         .append('g')
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    svg.append("g")
+    xAxis = svg.append("g")
         .attr("class", "x axis")
         .text(d.label)
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
+        .call(xAxis);
+    /*
+    svg.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", width)
+        .attr("y", height - 6)
+        .text("income per capita, inflation-adjusted (dollars)");
+
+*/
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
@@ -499,7 +766,8 @@ var drawLine = function (d, color, context) {
         .y(function (d) {
             return y(d.y_axis);
         });
-    var svg = d3.select("#canvas-svg").append("svg")
+    var svg = d3.select("#canvas-svg")
+        .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -535,132 +803,13 @@ var drawLine = function (d, color, context) {
         .attr("stroke", config.lineColor)
         .attr("stroke-width", config.lineThickness);
 }
-
-var recordStats = function (data) {
-    var flatten = function (x, result, prefix) {
-        if (_.isObject(x)) {
-            _.each(x, function (v, k) {
-                flatten(v, result, prefix ? prefix + '.' + k : k)
-            })
-        } else {
-            result[prefix] = x
-        }
-        return result
-    };
-    var records = Records.find()
-        .fetch();
-    toGraph = _.chain(allInputs).map(function (d) {
-        if (d.stats) {
-            return d; //.field;
-        }
-    }).compact().value();
-    flattenedRecords = _.chain(records).map(function (d, e) {
-        var flat = flatten(d, {});
-        return _.pick(flat, toGraph.map(function (key) {
-            return key.field;
-        }));
-    }).value();
-    grouped = _(flattenedRecords)
-        .reduce(function (acc, obj) {
-            _(obj)
-                .each(function (value, key) {
-                    if (!_.isArray(acc[key])) {
-                        //  console.log(acc)
-                        acc[key] = [];
-                    }
-                    acc[key].push(value)
-                });
-            return acc;
-        }, {});
-    count = _.chain(grouped)
-        .map(function (d, e) {
-            var vals = _.chain(d)
-                .countBy(_.identity)
-                .map(function (d, e) {
-                    return {
-                        data: d,
-                        name: e
-                    }
-                })
-                .sortBy('data')
-                .reverse()
-                .value();
-            return {
-                field: e,
-                count: vals,
-                label: Schemas.SARCAT._schema[e].label
-            };
-        })
-        .value();
-    count = count.filter(function (d) {
-        var options = _.findWhere(allInputs, {
-            field: d.field
-        });
-        d.options = options;
-        d.number = options.number
-        return options;
-    });
-    count = _.sortBy(count, function (d) {
-        return -d.count.length;
-    })
-    console.log(count)
-    return count;
-};
-var resourceArrayForm = function (data) {
-    return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
-        return -d.count;
-    }).map(function (d, e) {
-        var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
-        return {
-            key: d.type,
-            parent: 'Resources Used',
-            val: sum
-        };
-    }).value()
-};
-var subjectArrayForm = function (flatData, name, parent) {
-    return _.chain(flatData).map(function (d, e) {
-        if (e.indexOf('_key') > -1) {
-            return;
-        }
-        if (e.indexOf('.' + name + '.') > -1) {
-            return {
-                key: e,
-                val: d
-            };
-        }
-    }).compact().groupBy(function (d) {
-        return d.key.substr(d.key.lastIndexOf('.') + 1);
-    }).map(function (d, e) {
-        var items = d.map(function (f) {
-            return f.val;
-        }).sort();
-        var sum = _.chain(items).reduce(function (counts, word) {
-            counts[word] = (counts[word] || 0) + 1;
-            return counts;
-        }, {}).map(function (d, e) {
-            return [d, e];
-        }).sortBy(function (d) {
-            return -d[0];
-        }).map(function (d, e) {
-            if (d[0] === 1) {
-                return d[1];
-            };
-            return d[1] + '(' + d[0] + ')';
-        }).value().join(', ');
-        return {
-            key: e,
-            parent: parent,
-            val: items.sort().join(', '),
-            val: sum
-        };
-    }).value();
-};
 var selectedSubjectResourceInfo = function (records) {
     var res = _.map(records, function (data, e) {
-        return _.chain(data.resourcesUsed.resource).sortBy(function (d) {
-            return -d.count;
-        }).value();
+        return _.chain(data.resourcesUsed.resource)
+            .sortBy(function (d) {
+                return -d.count;
+            })
+            .value();
     })
     res = _.flatten(res, 1);
     res = _.groupBy(res, function (d) {
@@ -715,27 +864,100 @@ var selectedSubjectResourceInfo = function (records) {
     });
     delete sum._key;
     var keep = ["subjects.subject.$.sex", "subjects.subject.$.status", "subjects.subject.$.age", "subjects.subject.$.evacuationMethod"]
-    var subjects = _.chain(sum).map(function (items, e) {
-        var aggr = _.chain(items).reduce(function (counts, word) {
-            counts[word] = (counts[word] || 0) + 1;
-            return counts;
-        }, {}).map(function (d, e) {
+    var subjects = _.chain(sum)
+        .map(function (items, e) {
+            var aggr = _.chain(items)
+                .reduce(function (counts, word) {
+                    counts[word] = (counts[word] || 0) + 1;
+                    return counts;
+                }, {})
+                .map(function (d, e) {
+                    return {
+                        data: d,
+                        name: e
+                    };
+                })
+                .value();
             return {
-                data: d,
-                name: e
+                label: 'Subject ' + e.substr(e.lastIndexOf('.') + 1),
+                count: aggr,
+                field: 'subjects.subject.$.' + e,
             };
-        }).value();
-        return {
-            label: 'Subject ' + e.substr(e.lastIndexOf('.') + 1),
-            count: aggr,
-            field: 'subjects.subject.$.' + e,
-        };
-    }).filter(function (d) {
-        return _.contains(keep, d.field);
-    }).sortBy(function (d) {
-        return d.field;
-    }).value();
+        })
+        .filter(function (d) {
+            return _.contains(keep, d.field);
+        })
+        .sortBy(function (d) {
+            return d.field;
+        })
+        .value();
     return _.flatten([subjects, resHours, resCount])
+};
+var resourceArrayForm = function (data) {
+    return _.chain(data.resourcesUsed.resource)
+        .sortBy(function (d) {
+            return -d.count;
+        })
+        .map(function (d, e) {
+            var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
+            return {
+                key: d.type,
+                parent: 'Resources Used',
+                val: sum
+            };
+        })
+        .value()
+};
+var subjectArrayForm = function (flatData, name, parent) {
+    return _.chain(flatData)
+        .map(function (d, e) {
+            if (e.indexOf('_key') > -1) {
+                return;
+            }
+            if (e.indexOf('.' + name + '.') > -1) {
+                return {
+                    key: e,
+                    val: d
+                };
+            }
+        })
+        .compact()
+        .groupBy(function (d) {
+            return d.key.substr(d.key.lastIndexOf('.') + 1);
+        })
+        .map(function (d, e) {
+            var items = d.map(function (f) {
+                    return f.val;
+                })
+                .sort();
+            var sum = _.chain(items)
+                .reduce(function (counts, word) {
+                    counts[word] = (counts[word] || 0) + 1;
+                    return counts;
+                }, {})
+                .map(function (d, e) {
+                    return [d, e];
+                })
+                .sortBy(function (d) {
+                    return -d[0];
+                })
+                .map(function (d, e) {
+                    if (d[0] === 1) {
+                        return d[1];
+                    };
+                    return d[1] + '(' + d[0] + ')';
+                })
+                .value()
+                .join(', ');
+            return {
+                key: e,
+                parent: parent,
+                val: items.sort()
+                    .join(', '),
+                val: sum
+            };
+        })
+        .value();
 };
 var d3Calender = function (context, data1) {
     d = data1;
@@ -749,18 +971,25 @@ var d3Calender = function (context, data1) {
         format = d3.time.format("%Y-%m-%d");
     var color = d3.scale.quantize()
         .domain([-.05, .05])
-        .range(d3.range(11).map(function (d) {
-            return "q" + d + "-11";
-        }));
+        .range(d3.range(11)
+            .map(function (d) {
+                return "q" + d + "-11";
+            }));
     var maxYear = +moment(_.max(data1, function (e) {
-        return moment(e.name)
-    }).name).format('YYYY') + 1;
+                return moment(e.name)
+            })
+            .name)
+        .format('YYYY') + 1;
     var minYear = +moment(_.min(data1, function (e) {
-        return moment(e.name)
-    }).name).format('YYYY');
-    var svg = d3.select(context).selectAll("svg")
+                return moment(e.name)
+            })
+            .name)
+        .format('YYYY');
+    var svg = d3.select(context)
+        .selectAll("svg")
         .data(d3.range(minYear, maxYear))
-        .enter().append("svg")
+        .enter()
+        .append("svg")
         .attr("width", width)
         .attr("height", height)
         .attr("class", "col-md-12 RdYlGn pad00")
@@ -776,7 +1005,8 @@ var d3Calender = function (context, data1) {
         .data(function (d) {
             return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
         })
-        .enter().append("rect")
+        .enter()
+        .append("rect")
         .attr("class", "day")
         .attr("width", cellSize)
         .attr("height", cellSize)
@@ -795,7 +1025,8 @@ var d3Calender = function (context, data1) {
         .data(function (d) {
             return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
         })
-        .enter().append("path")
+        .enter()
+        .append("path")
         .attr("class", "month")
         .attr("d", monthPath);
 
@@ -807,10 +1038,12 @@ var d3Calender = function (context, data1) {
             w1 = +week(t1);
         return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize + "H" + w0 * cellSize + "V" + 7 * cellSize + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize + "H" + (w1 + 1) * cellSize + "V" + 0 + "H" + (w0 + 1) * cellSize + "Z";
     }
-    d3.select(self.frameElement).style("height", "2910px");
+    d3.select(self.frameElement)
+        .style("height", "2910px");
     var data = d3.nest()
         .key(function (d) {
-            return moment(d.name).format('YYYY-MM-DD')
+            return moment(d.name)
+                .format('YYYY-MM-DD')
         })
         .rollup(function (d) {
             return -0.003689859718846812;
@@ -829,15 +1062,6 @@ var d3Calender = function (context, data1) {
             return d + ": " + percent(data[d]);
         });
 };
-
-
-
-
-
-
-
-
-
 var recordsSetMap = function (context, data) {
     var geojson;
     if (!data.length) {
@@ -968,6 +1192,10 @@ var recordsSetMap = function (context, data) {
     function zoomToFeature(e) {
         map.fitBounds(e.target.getBounds());
     }
+    map.on('click', function () {
+        resetHighlight();
+        Session.set('activeRecord',false);
+    })
     layerGroups = mapPoints.map(function (d) {
         var geojson = L.geoJson(null, {
             style: function (feature) {
@@ -1069,3 +1297,4 @@ var recordsSetMap = function (context, data) {
     map.fitBounds(bounds);
     return obj;
 };
+

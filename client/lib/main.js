@@ -604,7 +604,7 @@ insertSampleRecords = function () {
                 "totalPersonnel": 565,
                 "totalManHours": 3045,
                 "distanceTraveled": "3421",
-                "totalCost": "$1000500"
+                "totalCost": "1000500"
             },
             "customQuestions": {},
             "admin": {
@@ -616,8 +616,8 @@ insertSampleRecords = function () {
             "timeLog": {
                 "SARNotifiedDatetime": "05/04/2015 09:21",
                 "incidentClosedDateTime": "05/05/2015 09:21",
-                //"totalSearchHours": 96,
-                //"searchMissingHours": 26,
+                "totalSearchHours": 96,
+                "totalMissingHours": 130,
                 "subjectLocatedDateTime": "05/05/2015 11:03",
                 "lastSeenDateTime": "05/01/2015 11:03"
             },
