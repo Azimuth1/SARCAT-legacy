@@ -238,15 +238,18 @@ Template.records.events({
                 for (var i = 0; i < arrData.length; i++) {
                     var row = "";
                     for (var index in arrData[i]) {
-                        row += '"' + arrData[i][index] + '",';
+                        row += '' + arrData[i][index] + ',';
                     }
-                    row.slice(0, row.length - 1);
+                    console.log(row)
+                    row.slice(0, row.length - 2);
+                    console.log(row)
                     CSV += row + '\r\n';
                 }
                 if (CSV == '') {
                     alert("Invalid data");
                     return;
                 }
+            
                 var fileName = ReportTitle.replace(/ /g, "_");
                 var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
                 var link = document.createElement("a");
