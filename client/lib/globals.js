@@ -70,7 +70,8 @@ allInputs = [{
     "label": "Distance From IPP",
     "tableList": true,
     "parent": "Find Location",
-    "stats": true
+    "stats": true,
+    number: true
 }, {
     "field": "findLocation.findFeature",
     "count": [],
@@ -169,7 +170,8 @@ allInputs = [{
     "label": "Mobility (hours)",
     "tableList": true,
     "parent": "Incident Outcome/Rescue",
-    "stats": true
+    "stats": true,
+    number: true
 }, {
     "field": "incidentOutcome.scenario",
     "count": [],
@@ -196,21 +198,24 @@ allInputs = [{
     "label": "Total Distance Traveled",
     "tableList": true,
     "parent": "Resources Used",
-    "stats": true
+    "stats": true,
+    number: true
 }, {
     "field": "resourcesUsed.numTasks",
     "count": [],
     "label": "Total # of Tasks",
     "tableList": true,
     "parent": "Resources Used",
-    "stats": true
+    "stats": true,
+    number: true
 }, {
     "field": "resourcesUsed.totalCost",
     "count": [],
     "label": "Total Cost",
     "tableList": true,
     "parent": "Resources Used",
-    "stats": true
+    "stats": true,
+    number: true
 }, {
     "field": "resourcesUsed.totalManHours",
     "count": [],
@@ -218,14 +223,15 @@ allInputs = [{
     "tableList": true,
     "parent": "Resources Used",
     "stats": true,
-    //number:true
+    number: true
 }, {
     "field": "resourcesUsed.totalPersonnel",
     "count": [],
     "label": "Total Personnel",
     "tableList": true,
     "parent": "Resources Used",
-    "stats": true
+    "stats": true,
+    number: true
 }, {
     "field": "lastSeenDateTime",
     "count": [],
@@ -255,13 +261,13 @@ allInputs = [{
     "parent": "timeLog",
     "stats": false
 }, {
-    "field": "totalMissingHours",
+    "field": "timeLog.totalMissingHours",
     "count": [],
     "label": "Total Missing Hours",
     "tableList": true,
     "parent": "timeLog",
     "stats": true,
-    number:true
+    number: true
 }, {
     "field": "timeLog.totalSearchHours",
     "count": [],
@@ -269,5 +275,6 @@ allInputs = [{
     "tableList": true,
     "parent": "timeLog",
     "stats": true,
-    number:true
+    number: true
 }];
+

@@ -63,7 +63,7 @@ Template.records.helpers({
         return {
             showColumnToggles: true,
             collection: Records,
-            rowsPerPage: 50,
+            rowsPerPage: 500,
             showFilter: true,
             class: "table table-hover table-bordered table-condensed pointer",
             fields: fields,
@@ -153,13 +153,17 @@ Template.records.events({
         }
         var message = 'Are you sure you want to delete the following records: ' + names.join(',')
         if (confirm(message)) {
+            console.log('!!!')
             Meteor.call('removeRecord', toDelete, function (error, d) {
-                var checked = Session.get('selectedRecords')
-                    .length;
-                Session.set('selectedRecords', checked);
+                console.log(error, d)
                 if (error) {
                     return console.log(error);
                 }
+                var checked = Session.get('selectedRecords')
+                    .length;
+                Session.set('selectedRecords', checked);
+                $('.recordSelAll').prop('checked', false)
+
             });
         }
     },
