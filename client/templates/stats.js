@@ -326,27 +326,24 @@ var stackedBar = function (d, color, context) {
                 .datum()
                 .name;
             return colorCont[parent](d.name);
-        });
-    state.selectAll("rect")
+        })
         .on("mouseover", function (d) {
             console.log(this);
             aa = this;
             var self = d3.select(this);
-            var coordinates = [0, 0];
             coordinates = d3.mouse(this);
             var xPos = coordinates[0];
             var yPos = coordinates[1];
             self.style("stroke", brighter)
                 .attr("stroke-width", 3);
             state.append("text")
-                .attr("x", xPos)
-                .attr("y", yPos)
+                .attr("x", xPos + 3)
+                .attr("y", yPos + 3)
                 .attr("class", "tooltips")
                 .text('sss');
             // }
         })
         .on("mouseout", function () {
-            return
             var self = d3.select(this);
             svg.select(".tooltips")
                 .remove();
@@ -355,9 +352,9 @@ var stackedBar = function (d, color, context) {
     svg.selectAll(".x.axis .tick text")
         .style("text-anchor", "end")
         .attr("dx", "-.5em")
-    .attr("transform", function (d) {
-        return "rotate(-15)";
-    });
+        .attr("transform", function (d) {
+            return "rotate(-15)";
+        });
 };
 var drawGraph = function (d, color, context) {
     var data = d.count;
