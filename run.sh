@@ -1,1 +1,1 @@
-meteor --settings settings.dev.json
+meteor --settings settings.dev.json --port 4000
