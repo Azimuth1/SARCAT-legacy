@@ -167,7 +167,7 @@ allInputs = [{
 }, {
     "field": "incidentOutcome.mobility_hours",
     "count": [],
-    "label": "Mobility (hours)",
+    "label": "Mobility Hours",
     "tableList": true,
     "parent": "Incident Outcome/Rescue",
     "stats": true,

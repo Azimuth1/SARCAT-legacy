@@ -484,7 +484,64 @@ insertSampleRecords = function () {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
     data = [];
+
+
     var length = 200;
+
+    var rand = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    existing = {};
+
+    var generateWeighedList = function (list, name) {
+
+        var f = name + [list[1]];
+        var weight
+        if (existing[f]) {
+
+            weight = existing[f];
+        } else {
+        //    console.log(name)
+                //var _weight = [.2, .1, .7, .1, .1,.01,.05,.1];
+                //weightb=a.slice(0,3);
+                //weight = _.shuffle(weight);
+            weight = list.map(function (d) {
+                return Math.random() * 0.2;
+            });
+            if (weight.length > 8) {
+                weight = _.sample(weight, 4);
+            }
+            weight[Math.floor((weight.length - 1) / 2)] = 0.9;
+            existing[f] = weight;
+        }
+        //console.log(name, f, list.length, weight)
+        //console.log(name,weight)
+        //if(weight[3]){weight[3]=.9}
+        weighed_list = [];
+        //console.log(weight)
+        // Loop over weights
+        for (var i = 0; i < weight.length; i++) {
+            var multiples = weight[i] * 100;
+
+            // Loop over the list of items
+            for (var j = 0; j < multiples; j++) {
+                weighed_list.push(list[i]);
+            }
+        }
+       // console.log(weighed_list)
+        var result = _.sample(weighed_list, 1)[0];
+        //console.log(result, weighed_list);
+        return result;
+    };
+
+    //var list = ['javascript', 'php', 'ruby', 'python'];
+    //var weight = [0.5, 0.2, 0.2, 0.1];
+    //generateWeighedList(list);
+
+
+
+
+
 
     for (var i = 0; i < length; i++) {
         var record = {
@@ -637,18 +694,19 @@ insertSampleRecords = function () {
         //console.log(Schemas)
         _.each(record, function (d, name) {
             if (!isNaN(d)) {
-                d=500;
-                record[name] = Math.floor(Math.abs((Math.random() * ((d*2) - (d/5)) + (d/5))))
+                d = 500;
+                record[name] = Math.floor(Math.abs((Math.random() * ((d * 2) - (d / 5)) + (d / 5))))
             }
             if (_.isObject(d)) {
                 _.each(d, function (e, name2) {
                     if (!isNaN(e)) {
-                        e=500;
-                        record[name][name2] = Math.floor(Math.abs((Math.random() * ((e*2) - (e/5)) + (e/5))))
+                        e = 500;
+                        record[name][name2] = Math.floor(Math.abs((Math.random() * ((e * 2) - (e / 5)) + (e / 5))))
                     }
                     var allowed = Schemas[name]._schema[name2].allowedValues;
                     if (allowed) {
-                        var sample = _.sample(allowed, 1)[0];
+                        //var sample = _.sample(allowed, 1)[0];
+                        var sample = generateWeighedList(allowed, name2)
                         record[name][name2] = sample;
                     }
                 });
@@ -689,7 +747,8 @@ insertSampleRecords = function () {
         //console.log(record.recordInfo.name)
     }
     data.forEach(function (d) {
-        //console.log(d.recordInfo.name)
-             Records.insert(d);
-    })
+        // console.log(d)
+        Records.insert(d);
+    });
+    return data;
 };
