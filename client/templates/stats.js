@@ -5,79 +5,139 @@ Template.stats.onCreated(function () {
 Template.stats.onRendered(function () {
     var records = Records.find()
         .fetch();
-    r = records
-    var ages = _.chain(records)
-        .map(function (d) {
-            return _.pluckDeep(d.subjects.subject, 'age')
+    r = records;
+    var pluckDeepLinear = function (records, first, second, obj) {
+        data = _.chain(records)
+            .map(function (d) {
+                return _.pluckDeep(d[first][second], obj)
+            })
+            .flatten()
+            .value();
+        data = d3.layout.histogram()
+            .bins(5)
+            (data)
+            .map(function (a) {
+                return {
+                    data: a.length,
+                    name: d3.extent(a)
+                        .join('-')
+                }
+            });
+        return data.filter(function (d) {
+            return d.data;
         })
-        .flatten()
-        .value();
-    ages = d3.layout.histogram()
-        .bins(5)
-        (ages)
-        .map(function (e) {
-            return {
-                data: e.length,
-                name: d3.extent(e)
-                    .join('-')
-            }
-        });
+    };
+    var pluckDeepOrdinal = function (records, first, second, obj) {
+
+        data = _.chain(records)
+            .map(function (d) {
+                var vals = _.pluckDeep(d[first][second], obj);
+
+                return vals;
+                // vals = Array(vals.length).join('a').split('');
+            })
+            .flatten()
+            .value();
+
+        return _.chain(data)
+            .countBy(_.identity)
+            .map(function (d, e) {
+                return {
+                    data: d,
+                    name: e
+                };
+            })
+            .value();
+
+    };
+
     ages = {
         options: {
-            label: 'Subject Ages (Range)',
-            number: true
+            label: 'Subject - Ages (Avg Dist)',
+            number: true,
+            xLabel: 'Value Ranges',
+            field: 'subage'
         },
-        "count": ages,
+        "count": pluckDeepLinear(records, 'subjects', 'subject', 'age'),
     };
-    var sex = _.chain(records)
-        .map(function (d) {
-            return _.pluckDeep(d.subjects.subject, 'sex')
-        })
-        .flatten()
-        .value();
+
+    sexes = {
+        options: {
+            label: 'Subject - Sexes',
+            number: true,
+            xLabel: 'Value Ranges',
+            field: 'subage',
+            xLabel: 'Values',
+        },
+        "count": pluckDeepOrdinal(records, 'subjects', 'subject', 'sex'),
+    };
+
+    resType = {
+        options: {
+            "field": "resourcesUsed.type",
+            "label": "Resources Used",
+            "tableList": true,
+            "parent": "Resources Used",
+            xLabel: 'Values',
+        },
+        "count": pluckDeepOrdinal(records, 'resourcesUsed', 'resource', 'type'),
+    };
+    resHours = {
+        options: {
+            "field": "resourcesUsed.hours",
+            "label": "Resource Hours Ages (Avg Dist)",
+            "tableList": true,
+            "parent": "Resources Used",
+            xLabel: 'Values Ranges',
+        },
+        "count": pluckDeepLinear(records, 'resourcesUsed', 'resource', 'hours'),
+    };
+    var colorIndex = 0;
+    var getColor = function () {
+        colorIndex++;
+        var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
+        return colors[colorIndex];
+    };
+
+    var statDiv = d3.select("#recordss");
+    drawGraph(ages, getColor(), statDiv);
+    _drawGraph(sexes, getColor(), statDiv);
+    _drawGraph(resType, getColor(), statDiv);
+    drawGraph(resHours, getColor(), statDiv);
+
+    return
+
     data = recordStats(records);
-    var colors = ["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"];
     var numberData = _.filter(data, function (d) {
         return d.options.number;
     });
+    //numberData.push(ages);
     var numberDiv = d3.select("#recordss")
-        // .append('div')
-        // .attr('class', 'row');
+        //.append('div')
+        //.attr('class', 'row');
+
     numberData.forEach(function (d, i) {
         var color = colors[i % 10];
         drawGraph(d, color, numberDiv);
     });
+
     var noNumberData = _.filter(data, function (d) {
         return !d.options.number;
     });
+
     noNumberData = _.sortBy(noNumberData, function (d) {
         return d.count.length;
     });
+    //noNumberData.push(resType);
+    //noNumberData.push(sexes);
     var noNumberDiv = d3.select("#recordss")
         //.append('div')
-        // .attr('class', 'row');
+        //.attr('class', 'row');
     noNumberData.forEach(function (d, i) {
         var color = colors[i % 10];
-        drawGraph(d, color, noNumberDiv);
+        _drawGraph(d, color, noNumberDiv);
     });
-    //return drawHistogram(ages, "#5D2E2C", "#recordss");
-    //sub_res = selectedSubjectResourceInfo(records);
-    allData = _.flatten([data])
-        //var allData = _.flatten([sub_res, data])
-    allData.forEach(function (d, i) {
-        if (d.field === 'timeLog.lastSeenDateTime') {
-            // return d3Calender('#d3Calender', d.count)
-        }
-        var color = colors[i % 10];
-        //console.log(d.field)
-        //if (d.field === 'subjects.subject.$.age' || d.number) {
-        if (d.field === '_subjects.subject.$.age') {
-            //return drawHistogram(d, color, "#recordss");
-            return drawLine(d, color, "#recordss");
-        } else {
-            // drawGraph(d, color, "#recordss");
-        }
-    });
+
     Session.set('activeRecord', null);
     var recordMap = recordsSetMap('recordsMap', records);
 })
@@ -176,19 +236,13 @@ var recordStats = function (data) {
                                 .join('-')
                         }
                     });
+                vals = vals.filter(function (d) {
+                    return d.data;
+                })
                 options.xLabel = ' Value Ranges';
+                options.label += ' (Avg Dist)';
             } else {
-                /*vals = d3.layout.histogram()
-                    .bins(5)
-                    (d.map(function(d){return d.data}))
-                    .map(function (a) {
-                        return {
-                            data: a.length,
-                            name: d3.extent(a)
-                                .join('-')
-                        }
-                    });
-                options.label += ' (Range)';*/
+
                 vals = _.chain(d)
                     .countBy(_.identity)
                     .map(function (d, e) {
@@ -239,49 +293,18 @@ var recordStats = function (data) {
     return count;
 };
 var drawGraph = function (d, color, context) {
-    //colors = d3.scale.category20c();
     var title = d.options.label; //label;
     var data = d.count;
-    //console.log(d)
     var options = d.options || {};
     var numItems = data.length;
-    var klass = 'col-sm-3 pad00 _borderTop _default-border';
+    var klass = 'col-sm-4 pad00 _borderTop _default-border';
     var rotate = 0;
     var margin = {
-        top: 10,
+        top: 40,
         right: 10,
         bottom: 50,
         left: 40
     };
-    /*
-        if (numItems < 7) {
-            klass = 'col-sm-3 pad00'
-        } else if (numItems < 9) {
-            klass = 'col-sm-6 pad00'
-        } else {
-            klass = 'col-sm-12 pad00';
-            rotate = '-25';
-            margin = {
-                top: 40,
-                right: 40,
-                bottom: 60,
-                left: 60
-            }
-        }*/
-    /*else if (numItems === 1) {
-            klass = 'col-sm-3 pad00'
-        } else if (numItems < 9) {
-            klass = 'col-sm-6 pad00'
-        } else {
-            klass = 'col-sm-12 pad00';
-            rotate = '-25';
-            margin = {
-                top: 40,
-                right: 40,
-                bottom: 60,
-                left: 60
-            }
-        }*/
     var container = context
         .append("div")
         .attr('class', klass);
@@ -317,7 +340,7 @@ var drawGraph = function (d, color, context) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
     svg1.append("linearGradient")
-        .attr("id", "temperature-gradient")
+        .attr("id", "temperature-gradient" + options.field.replace('.', '_'))
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", '0%')
         .attr("y1", '0%')
@@ -339,6 +362,15 @@ var drawGraph = function (d, color, context) {
         .attr("stop-color", function (d) {
             return d.color;
         });
+    svg1.append('g')
+        .append("text")
+        .attr("transform", "translate(3," + margin.top / 2 + ")")
+        .attr("class", "title")
+        .attr("text-anchor", "left")
+        //.attr("x", width / 2)
+        //.attr("y", -10)
+        .text(title)
+        .attr('fill', brighter2);
     var svg = svg1.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     x.domain(data.map(function (d) {
@@ -355,16 +387,9 @@ var drawGraph = function (d, color, context) {
         .attr('class', 'y_label')
         .attr("transform", "rotate(-90)")
         .attr("y", -30)
-        .attr("dy", ".71em")
+        .attr("dy", ".2em")
         .style("text-anchor", "end")
         .text("Frequency");
-    svg.append("text")
-        .attr("class", "x_label")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", margin.top)
-        .text(title)
-        .attr('fill', brighter2);
     bar = svg.selectAll(".bar")
         .data(data)
         .enter()
@@ -376,7 +401,7 @@ var drawGraph = function (d, color, context) {
     bar.append("rect")
         .attr("class", "_bar")
         .attr('stroke', brighter)
-        .attr('fill', 'url(#temperature-gradient)')
+        .attr('fill', 'url(#temperature-gradient' + options.field.replace('.', '_') + ')')
         .attr("width", x.rangeBand())
         .attr("height", function (d) {
             return height - y(d.data);
@@ -408,12 +433,13 @@ var drawGraph = function (d, color, context) {
         return sum + el.getBoundingClientRect()
             .width
     }, 0);
-    if (w > width * .999) {
+    //if (w > width * .999) {
+    if (!options.number) {
         // console.log(svg[0][0])
-        svg.remove();
+        //svg.remove();
         //svg.style('display','none')
         //d3.select('.v g').remove()
-        _drawGraph(d, color, svg1);
+        //_drawGraph(d, color, svg1);
         return
         //svg.attr('fill','#fff');
         svg.selectAll(".x.axis .tick text")
@@ -426,24 +452,23 @@ var drawGraph = function (d, color, context) {
             });
     }
 }
-var _drawGraph = function (d, color, svg1) {
-    if (d.options.number) {
-        return
-    }
-    //colors = d3.scale.category20c();
-    //console.log(d)
+var _drawGraph = function (d, color, context) {
+
     var title = d.options.label; //label;
     var data = d.count;
-    //console.log(d)
     var options = d.options || {};
     var numItems = data.length;
+    var klass = 'col-sm-4 pad00 _borderTop _default-border';
     var rotate = 0;
     var margin = {
-        top: 20,
+        top: 40,
         right: 10,
-        bottom: 2,
-        left: 30
+        bottom: 10,
+        left: 10
     };
+    var container = context
+        .append("div")
+        .attr('class', klass);
     var brighter = d3.rgb(color)
         .brighter(1)
         .toString();
@@ -453,69 +478,56 @@ var _drawGraph = function (d, color, svg1) {
     var darker = d3.rgb(color)
         .darker(1)
         .toString();
-    var h = 400
-    var factor = 40;
-    var width = parseInt(svg1.style('width')) - margin.left - margin.right;
-    var height = 500; //parseInt(svg1.style('height'));// - margin.top - margin.bottom;;
-    // width = width - margin.left - margin.right;
-    // var height = 400;//(data.length * factor) > 350 ? data.length * factor : 350;
-    svg1.attr('height', height);
-    var svg = svg1.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    //svg.attr('height',height);
-    height = height - margin.top - margin.bottom;
+
+    var width = parseInt(container.style('width')); // / 1;
+    width = width - margin.left - margin.right;
+    var height = 300 - margin.top - margin.bottom;
+
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, height], .1);
     var y = d3.scale.linear()
         .rangeRound([width, 0]);
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("right")
-        //.ticks(4);
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("bottom")
-        .tickFormat(d3.format("d"))
-        .ticks(4);
-    console.log(svg[0][0])
-        /* var svgCont = container.append("svg")
-             .style('background', function (d) {
-                 return color
-             })
-             .attr("width", width + margin.left + margin.right)
-             .attr("height", height + margin.top + margin.bottom);
-         svgCont.append("linearGradient")
-             .attr("id", "temperature-gradient")
-             .attr("gradientUnits", "userSpaceOnUse")
-             .attr("x1", '0%')
-             .attr("y1", '0%')
-             .attr("x2", '0%')
-             .attr("y2", '80%')
-             .selectAll("stop")
-             .data([{
-                 offset: "0%",
-                 color: color
-             }, {
-                 offset: "80%",
-                 color: brighter
-             }])
-             .enter()
-             .append("stop")
-             .attr("offset", function (d) {
-                 return d.offset;
-             })
-             .attr("stop-color", function (d) {
-                 return d.color;
-             });
-         svg = svgCont.append("g")
-             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");*/
-    svg1.append("text")
-        .attr("class", "x_label")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", margin.top)
-        .text(title)
+
+    var svg1 = container.append("svg")
+        .style('background', function (d) {
+            return color
+        })
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
+    svg1.append("linearGradient")
+        .attr("id", "temperature-gradient" + options.field.replace('.', '_'))
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", '0%')
+        .attr("y1", '0%')
+        .attr("x2", '80%')
+        .attr("y2", '0%')
+        .selectAll("stop")
+        .data([{
+            offset: "0%",
+            color: color
+        }, {
+            offset: "80%",
+            color: brighter
+        }])
+        .enter()
+        .append("stop")
+        .attr("offset", function (d) {
+            return d.offset;
+        })
+        .attr("stop-color", function (d) {
+            return d.color;
+        });
+    svg1.append('g')
+        .append("text")
+        .attr("transform", "translate(3," + margin.top / 2 + ")")
+        .attr("class", "title")
+        .attr("text-anchor", "left")
+
+    .text(title)
         .attr('fill', brighter2);
+    var svg = svg1.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     x.domain(data.map(function (d) {
         return d.name;
     }));
@@ -530,6 +542,7 @@ var _drawGraph = function (d, color, svg1) {
         .attr("transform", function (d) {
             return "translate(" + 0 + "," + x(d.name) + ")";
         });
+
     bar.append("rect")
         .attr("class", "_bar")
         .attr("height", x.rangeBand())
@@ -537,22 +550,18 @@ var _drawGraph = function (d, color, svg1) {
             return width - y(d.data);
         })
         .attr('stroke', brighter)
-        .attr('fill', 'url(#temperature-gradient)')
+        .attr('fill', 'url(#temperature-gradient' + options.field.replace('.', '_') + ')')
     bar.append("text")
         .attr('fill', brighter2)
-        .attr('class', 'x value vert')
-        .attr("dy", x.rangeBand() / 2)
-        .attr("x", -3)
-        //.attr("y", x.rangeBand() / 1)
-        .attr("text-anchor", "end")
+        .attr("dy", ".75em")
+        .attr("y", x.rangeBand() / 2)
+        .attr("x", function (d) {
+            return width / 2;
+        })
+        .attr("text-anchor", "middle")
         .text(function (d) {
-            return d.data
+            return d.name + ' (' + d.data + ')';
         });
-    svg.append("g")
-        .attr("class", "x axis vert")
-        .attr("transform", "translate(0,0)")
-        .call(xAxis)
-        .attr('fill', brighter2)
 }
 var drawLine = function (d, color, context) {
     //colors = d3.scale.category20c();
@@ -1194,7 +1203,7 @@ var recordsSetMap = function (context, data) {
     }
     map.on('click', function () {
         resetHighlight();
-        Session.set('activeRecord',false);
+        Session.set('activeRecord', false);
     })
     layerGroups = mapPoints.map(function (d) {
         var geojson = L.geoJson(null, {
@@ -1297,4 +1306,3 @@ var recordsSetMap = function (context, data) {
     map.fitBounds(bounds);
     return obj;
 };
-
