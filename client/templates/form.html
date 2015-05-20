@@ -12,7 +12,7 @@
                     <th>Mission #</th>
                     <th>Name</th>
                     <th>Incident Type</th>
-                    <th>Date</th>
+               
                     <th>Status</th>
                     <th>Subject</th>
                     {{#if currentRecord.subjectSubCategory}}
@@ -28,14 +28,17 @@
                         <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
                         <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
                         <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidentType"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId5' autosave=true type='update' fields="recordInfo.incidentdate"}}</td>
+               
+
+
+
                         <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
                         <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideLabel hideSubmit" template="plain" id='zformdId6' autosave=true type='update' label=false fields="recordInfo.subjectCategory"}}</td>
                         {{#if currentRecord.subjectSubCategory}}
                             <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.subjectSubCategory"}}</td>
                         {{/if}}
                         <td>
-                            <button type="button" class="btn btn-sm mar00 btn-success editRecordInfo pull-right mar0" data="list">
+                            <button type="button" class="btn btn-sm mar00 btn-success editRecordInfo" data="list">
                                 <span class="glyphicon glyphicon-edit" data="list" aria-hidden="true"></span>Done
                             </button>
                         </td>
@@ -46,14 +49,14 @@
                         <td>{{record.recordInfo.missionnum}}</td>
                         <td>{{record.recordInfo.name}}</td>
                         <td>{{record.recordInfo.incidentType}}</td>
-                        <td>{{record.recordInfo.incidentdate}}</td>
+            
                         <td>{{record.recordInfo.status}}</td>
                         <td>{{record.recordInfo.subjectCategory}}</td>
                         {{#if currentRecord.subjectSubCategory}}
                             <td>{{record.recordInfo.subjectSubCategory}}</td>
                         {{/if}}
-                        <td>
-                            <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo pull-right mar0" data="edit">
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true" data="edit"></span>Edit
                             </button>
                         </td>
@@ -164,11 +167,17 @@
                                 {{> afQuickField name="incidentOperations.lkp_pls_Boolean"}}
                                 {{#if afFieldValueIs name="incidentOperations.lkp_pls_Boolean" value="Yes" }}
                                     <br> {{> afQuickField name="coords.revisedLKP_PLS.lat"}} {{> afQuickField name="coords.revisedLKP_PLS.lng"}}
-                                    <button type="button" class="btn btn-danger" data="revisedLKP_PLS" style="display:block">
+                                    <button type="button" class="btn btn-danger text-black" data="revisedLKP_PLS" style="display:block">
                                         <input type="checkbox" autocomplete="off" class="hide"> &nbsp; Revised LKP/PLS
-                                        <span class="fa-stack _pull-right">
-                                          <i class="fa fa-male fa-2x fa-fw white">R</i>
+
+
+
+                <span class="fa-stack _pull-right">
+                                          <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
                                         </span>
+
+
+
                                     </button>
                                 {{/if}}
                             </div>

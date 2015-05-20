@@ -206,6 +206,10 @@ newProjectSetMap = function (context, bounds, points) {
     });
     return obj;
 };
+
+
+
+//<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa a-stack-1x fa-inverse text-red">R</i></span>
 getCoords = function (record) {
     var mapPoints = [{
         val: "ippCoordinates",
@@ -230,8 +234,8 @@ getCoords = function (record) {
         name: "coords.revisedLKP_PLS",
         text: "Revised IPP",
         icon: 'fa-times-circle-o',
-        color: 'red',
-        extraClasses: 'Rev'
+        color: 'darkred',
+        tColor:'#000'
     }, {
         val: "findCoord",
         name: "coords.findCoord",
@@ -434,7 +438,7 @@ formSetMap = function (context, recordId) {
             icon: d.icon,
             prefix: 'fa',
             markerColor: d.color,
-            iconColor: '#fff',
+            iconColor: d.tColor || '#fff',
             extraClasses: d.extraClasses
         });
         var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
