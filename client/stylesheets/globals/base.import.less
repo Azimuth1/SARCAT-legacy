@@ -1060,6 +1060,61 @@ a {
 #recordss svg,
 #recordsSubject svg,
 #recordsResources svg {
+    background: #365057;
+    fill: #375057;
+    text {
+        font-size: 1.2em;
+    }
+    .axis {
+        font: 10px sans-serif;
+        fill: #a2d9e7;
+    }
+    .axis path {
+        display: none;
+    }
+    .axis line {
+        shape-rendering: crispEdges;
+        stroke: #0a151b;
+        stroke-dasharray: 2, 2;
+    }
+    .axis .minor line {
+        stroke: #777;
+        stroke-dasharray: 2, 2;
+    }
+    .x.axis text {
+        fill: #a2d9e7;
+    }
+    .barText {
+        fill: #a2d9e7;
+    }
+    .title {
+        font-size: 14px;
+        font-weight: bold;
+        fill: #cb812a;
+        text-transform: uppercase;
+    }
+    .x_label {
+        font-weight: bolder;
+        font-size: 1.3em;
+        font-style: italic;
+        fill: #a2d9e7;
+    }
+    .y_label {
+        font-weight: bolder;
+        font-size: 1.3em;
+        font-style: italic;
+        fill: #a2d9e7;
+    }
+    .tooltips {
+        text-anchor: middle;
+        font-family: sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        fill: #fff;
+    }
+}
+
+#recordsResources svg {
     text {
         font-size: 1.2em;
     }
@@ -1684,7 +1739,7 @@ path {
 }
 
 .bg-green {
-    background-color: #449D44;
+    background-color: #279427;
 }
 
 .bg-blue {
@@ -1692,13 +1747,16 @@ path {
 }
 
 .bg-red {
-    background-color: #C9302C;
+    background-color: #A50905;
 }
 
 .border-top {
     border-top: 1px solid #000;
 }
 
+.darkBg{
+    background:#0a151b;
+}
 .pointer {
     cursor: pointer;
 }

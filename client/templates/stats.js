@@ -99,19 +99,19 @@ Template.stats.onRendered(function () {
             data: _.groupBy(d)
         };
     });
-    stackedBar({
+    /*stackedBar({
         count: totalSum,
         options: {
             class: 'col-md-12',
             height: 800
         }
-    }, getColor(), statDiv);
-    return
+    }, getColor(), statDiv);*/
+    // return
     drawGraph(ages, getColor(), statDiv);
-    _drawGraph(sexes, getColor(), statDiv);
-    _drawGraph(resType, getColor(), statDiv);
+    drawGraph(sexes, getColor(), statDiv);
+    drawGraph(resType, getColor(), statDiv);
     drawGraph(resHours, getColor(), statDiv);
-    return
+
     var numberData = _.filter(data, function (d) {
         return d.options.number;
     });
@@ -133,7 +133,7 @@ Template.stats.onRendered(function () {
         //.append('div')
         //.attr('class', 'row');
     noNumberData.forEach(function (d, i) {
-        _drawGraph(d, getColor(), statDiv);
+        drawGraph(d, getColor(), statDiv);
     });
     Session.set('activeRecord', null);
     var recordMap = recordsSetMap('recordsMap', records);
@@ -308,7 +308,7 @@ var stackedBar = function (d, color, context) {
         .attr("transform", function (d) {
             return "translate(" + x(d.name) + ",0)";
         });
-    state.selectAll("rect")
+    rect = state.selectAll("rect")
         .data(function (d) {
             return d.ages;
         })
@@ -328,19 +328,24 @@ var stackedBar = function (d, color, context) {
             return colorCont[parent](d.name);
         })
         .on("mouseover", function (d) {
-            console.log(this);
-            aa = this;
-            var self = d3.select(this);
+            //console.log(this);
+
+            self = d3.select(this);
+            var parent = d3.select(this.parentNode)
             coordinates = d3.mouse(this);
             var xPos = coordinates[0];
             var yPos = coordinates[1];
             self.style("stroke", brighter)
                 .attr("stroke-width", 3);
-            state.append("text")
+            parent.append("text")
                 .attr("x", xPos + 3)
                 .attr("y", yPos + 3)
                 .attr("class", "tooltips")
-                .text('sss');
+                .text(function (d) {
+                    var name = self.datum().name;
+                    var count = parent.datum()[name];
+                    return name + '-' + count.length;
+                });
             // }
         })
         .on("mouseout", function () {
@@ -357,13 +362,21 @@ var stackedBar = function (d, color, context) {
         });
 };
 var drawGraph = function (d, color, context) {
+    var barColorIndex = 0;
+
+    var barColors = function () {
+        var colors = ['#cb812a', '#b46928'];
+        barColorIndex++;
+        return colors[barColorIndex % 2];
+    }
+
     var data = d.count;
     var options = d.options || {};
     var title = options.label || '';
     var id = options.field || Math.random()
         .toString()
         .slice(2);
-    var klass = options.klass || 'col-sm-4 pad00';
+    var klass = 'col-sm-6 mar00 pad00';
     var h = options.height || 300;
     var margin = {
         top: 40,
@@ -393,50 +406,30 @@ var drawGraph = function (d, color, context) {
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
+        //.tickSize(height)
+        //.tickSubdivide(true),
         //.ticks(4);
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
         .tickFormat(d3.format("d"))
-        .ticks(4);
+        .ticks(4)
+        .tickSize(-width);
     var svg1 = container.append("svg")
-        .style('background', function (d) {
+        /*.style('background', function (d) {
             return color
-        })
+        })*/
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
-    svg1.append("linearGradient")
-        .attr("id", "temperature-gradient_" + id)
-        .attr("gradientUnits", "userSpaceOnUse")
-        .attr("x1", '0%')
-        .attr("y1", '0%')
-        .attr("x2", '0%')
-        .attr("y2", '80%')
-        .selectAll("stop")
-        .data([{
-            offset: "0%",
-            color: color
-        }, {
-            offset: "80%",
-            color: brighter
-        }])
-        .enter()
-        .append("stop")
-        .attr("offset", function (d) {
-            return d.offset;
-        })
-        .attr("stop-color", function (d) {
-            return d.color;
-        });
+
     svg1.append('g')
         .append("text")
-        .attr("transform", "translate(3," + margin.top / 2 + ")")
+        .attr("transform", "translate(" + width / 2 + "," + margin.top / 2 + ")")
         .attr("class", "title")
-        .attr("text-anchor", "left")
-        //.attr("x", width / 2)
-        //.attr("y", -10)
-        .text(title)
-        .attr('fill', brighter2);
+        .attr("text-anchor", "middle")
+
+    .text(title)
+
     var svg = svg1.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     x.domain(data.map(function (d) {
@@ -447,7 +440,7 @@ var drawGraph = function (d, color, context) {
     })]);
     svg.append("g")
         .attr("class", "y axis")
-        .attr('fill', '#fff')
+        //.attr('fill', '#fff')
         .call(yAxis)
         .append("text")
         .attr('class', 'y_label')
@@ -456,36 +449,46 @@ var drawGraph = function (d, color, context) {
         .attr("dy", ".2em")
         .style("text-anchor", "end")
         .text("Frequency");
+
+    var maxBarWidth = 50;
     bar = svg.selectAll(".bar")
         .data(data)
         .enter()
         .append("g")
         .attr("class", "bar")
         .attr("transform", function (d) {
-            return "translate(" + x(d.name) + "," + y(d.data) + ")";
+            return "translate(" + (((x.rangeBand() / 2) + x(d.name)) - (maxBarWidth / 2)) + "," + y(d.data) + ")";
         });
     bar.append("rect")
         .attr("class", "_bar")
-        .attr('stroke', brighter)
-        .attr('fill', 'url(#temperature-gradient_' + id + ')')
-        .attr("width", x.rangeBand())
+        //.attr('stroke', brighter)
+        //.attr('fill', 'url(#temperature-gradient_' + id + ')')
+
+    .attr('fill', function (d) {
+            return barColors();
+        })
+        .attr("width", Math.min.apply(null, [x.rangeBand(), maxBarWidth]))
+        //.attr("width", x.rangeBand())
         .attr("height", function (d) {
             return height - y(d.data);
         })
         //.attr("fill", color);
     bar.append("text")
-        .attr('fill', brighter2)
+        .attr('class', 'barText')
+        //.attr('fill', brighter2)
         .attr("dy", ".75em")
         .attr("y", 6)
-        .attr("x", x.rangeBand() / 2)
+        .attr("x", maxBarWidth / 2)
+        //.attr("x", x.rangeBand() / 2)
+        // .attr("x", (()
         .attr("text-anchor", "middle")
         .text(function (d) {
             return d.data
-        });
+        })
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .attr('fill', brighter2)
+        //.attr('fill', brighter2)
         .call(xAxis)
         .append("text")
         .attr("class", "x_label")
@@ -499,14 +502,14 @@ var drawGraph = function (d, color, context) {
         return sum + el.getBoundingClientRect()
             .width
     }, 0);
-    //if (w > width * .999) {
-    if (!options.number) {
+    if (w > width * .999) {
+        //if (!options.number) {
         // console.log(svg[0][0])
         //svg.remove();
         //svg.style('display','none')
         //d3.select('.v g').remove()
         //_drawGraph(d, color, svg1);
-        return
+        // return
         //svg.attr('fill','#fff');
         svg.selectAll(".x.axis .tick text")
             .style("text-anchor", "end")
@@ -514,7 +517,7 @@ var drawGraph = function (d, color, context) {
             //.attr('fill', '#fff')
             //.attr("dy", ".15em")
             .attr("transform", function (d) {
-                return "rotate(90)";
+                return "rotate(-15)";
             });
     }
 }
@@ -1233,4 +1236,3 @@ var recordsSetMap = function (context, data) {
     map.fitBounds(bounds);
     return obj;
 };
-
