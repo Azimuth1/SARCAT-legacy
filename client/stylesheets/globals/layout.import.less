@@ -2,10 +2,10 @@
 @column: 2.55555%;
 body {
     .position(absolute, 0, 0, 0, 0);
-    background-color: #315481;
-    .background-image( linear-gradient(top, #315481, #918e82 100%));
+    background-color: @color-navyBlue;
+    /*.background-image( linear-gradient(top, #315481, #918e82 100%));
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed;*/
 }
 
 #container {
@@ -24,6 +24,7 @@ body {
 
 #menu {
     .position(absolute, 0, 0, 0, 0, @menu-width);
+    border-right: 1px solid @color-light;
 }
 
 #content-container {
@@ -31,7 +32,7 @@ body {
     .transition(all 200ms ease-out);
     .transform(translate3d(0, 0, 0));
     //background: @color-tertiary;
-    background: #D8E6EA;
+    background: @color-navyBlue;
     opacity: 1;
     @media screen and (min-width: 40em) {
         left: @menu-width;
@@ -44,12 +45,15 @@ body {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         //background: @color-empty;
-        background: @color-tertiary;
-        background: url(mt.png);
+        background: @color-navyBlue;
+        /*background: url(mt.png);
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: center center;
+        background-position: center center;*/
     }
+
+
+
     // Toggle menu on mobile
     .menu-open & {
         .transform(translate3d(@menu-width, 0, 0));

@@ -17,7 +17,7 @@ Template.appBody.helpers({
     isUserView: function (view) {
         view = view || this._id;
         var active = Session.equals('userView', view);
-        return active ? 'primary-bg' : '';
+        return active ? 'lightBlue-bg strong' : '';
     },
     isAdmin: function () {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);

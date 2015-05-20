@@ -1,31 +1,11 @@
 <template name="stats">
-    <ul class="nav nav-tabs navyBLue-bg">
-        {{#if isAdmin}} {{#if createNewBtn}}
-        <a type="button" class="btn btn-primary mar0" data-target="#createRecordModal" data-toggle="modal">
-            <i class="glyphicon glyphicon-plus"></i> New Record
-        </a>
-        {{/if}} {{#if selectedRecords}}
-        <button type="button" class="btn btn-default deleteRecord mar0">
-            <i class="glyphicon glyphicon-trash"></i>
-        </button>
-        {{/if}} {{/if}}
-        <div id="toolbar" class="btn-group pull-right mar0y">
-            <a id="downloadRecords" type="button" class="btn btn-default">
-                <i class="glyphicon glyphicon-save-file"></i> Download
-            </a>
-            {{#if isAdmin}}
-            <a type="button" class="btn btn-default" style="margin-y=-12px">
-                Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
-            </a> {{/if}}
-        </div>
-    </ul>
-    <div class="tab-content admin pad1 darkBg">
+
+    <div class="tab-content admin pad1 ">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title text-center text-uppercase">Click a Point to View Detailed Record Information</h3>
-            </div>
-            <div class="panel-body pad00">
+         
+            <div class="panel-body pad1 greenish-bg">
                 <div class=" col-md-12 pad00">
+                <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
                     <div id='recordsMap' style="width:100%;height:300px">
                     </div>
                     <div class="col-md-12 pad00 mar0y">
@@ -39,8 +19,8 @@
                                     <div class="row">
                                         {{#each this.data}}
                                         <div class="col-md-4">
-                                            <span class="strong text-default">{{this.key}}</span>
-                                            <span class="text-black em">{{this.val}}</span>
+                                            <span class="strong text-default text-uppercase">{{this.key}}</span>
+                                            <span class="text-orange em">{{this.val}}</span>
                                         </div>
                                         {{/each}}
                                     </div>

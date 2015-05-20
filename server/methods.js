@@ -292,10 +292,11 @@ Meteor.methods({
         });
         var initialDirectionofTravel = record.incidentOperations.initialDirectionofTravel;
         var findBearing = record.findLocation.findBearing;
-        var val = findBearing - initialDirectionofTravel
         if (!initialDirectionofTravel && !findBearing) {
             return;
         }
+        var val = findBearing - initialDirectionofTravel
+
         var obj = {};
         obj[field] = val;
         Records.update(id, {

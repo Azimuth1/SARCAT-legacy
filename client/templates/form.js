@@ -229,8 +229,8 @@ Template.form.helpers({
     },
     customQuestions: function () {
         var record = Session.get('record');
-        return Object.keys(record.customQuestions)
-            .length;
+        var keys = Object.keys(record.customQuestions)
+            return keys && keys.length;
     },
     hideCoord: function (d) {
         return this.record.coords[d] ? '' : 'hide';

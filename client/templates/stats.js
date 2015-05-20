@@ -420,7 +420,8 @@ var drawGraph = function (d, color, context) {
             return color
         })*/
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("height", height + margin.top + margin.bottom)
+            .style('border','1px solid #e4e6e7');
 
     svg1.append('g')
         .append("text")
@@ -1026,8 +1027,8 @@ var recordsSetMap = function (context, data) {
         color: '#C9302C',
         bg: 'bg-red',
         style: {
-            fillColor: '#C9302C',
-            color: '#C9302C',
+            fillColor: '#ba5552',
+            color: '#931111',
             fillOpacity: 0.8,
             opacity: 0.8,
             weight: 1,
