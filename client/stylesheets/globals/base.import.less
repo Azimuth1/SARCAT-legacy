@@ -45,13 +45,14 @@ select {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-
+/*
 body {
     .type-regular;
     color: @color-full;
     color: #00444A;
     font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
 }
+*/
 
 // Default type layout
 h1,
@@ -124,8 +125,6 @@ em {
     font-weight: bold;
 }
 
-
-
 .white-bg {
     background: #fff
 }
@@ -159,16 +158,18 @@ em {
 }
 
 .text-red {
-     color: @color-red !important;
+    color: @color-red !important;
 }
 
 .text-orange {
-      color: @color-orange !important;
+    color: @color-orange !important;
 }
-.reactive-table thead .sortable, .reactive-table-add-column thead{
-  cursor: pointer;
+
+.reactive-table thead .sortable,
+.reactive-table-add-column thead {
+    cursor: pointer;
     color: @color-light;
-        text-transform: uppercase;
+    text-transform: uppercase;
 }
 
 .panel-primary {
@@ -685,10 +686,9 @@ em {
     color: @color-light;
 }
 
-.lightBlue-bg{
-    background:@color-lightBlue !important;
+.lightBlue-bg {
+    background: @color-lightBlue !important;
 }
-
 
 .navyBLue-bg {
     background-color: @color-navyBlue !important;
@@ -1028,14 +1028,14 @@ a {
 
 .admin {
     position: absolute;
-    top: 44px;
+    top: 46px;
     right: 0;
     bottom: 0;
     left: 0;
     width: auto;
     height: auto;
     overflow: scroll;
- background: @color-light;
+    background: @color-light;
 }
 
 #formPage {
@@ -1048,7 +1048,7 @@ a {
     height: auto;
     overflow-y: auto;
     background: @color-light;
-    padding:10px;
+    padding: 10px;
 }
 
 .full {
@@ -1073,8 +1073,6 @@ a {
 .pointer {
     cursor: pointer;
 }
-
-
 
 .borderTop {
     border-top: 1px solid #9D9D9D;
@@ -1785,9 +1783,10 @@ path {
     border-top: 1px solid #000;
 }
 
-.darkBg{
-    background:#0a151b;
+.darkBg {
+    background: #0a151b;
 }
+
 .pointer {
     cursor: pointer;
 }
@@ -1898,24 +1897,115 @@ table .hideInTable {
     display: none;
 }
 
-
 btn.btn-info {
-  color: #FFF;
-  background-color: @color-blue;
-  border-color: @color-blue;
+    color: #FFF;
+    background-color: @color-blue;
+    border-color: @color-blue;
 }
 
 .btn.btn-danger {
-  color: #FFF;
-  background-color: @color-red;
-  border-color: @color-red;
+    color: #FFF;
+    background-color: @color-red;
+    border-color: @color-red;
 }
 
 btn.btn-success {
-  color: #FFF;
-  background-color: @color-green;
-  border-color: @color-green;
+    color: #FFF;
+    background-color: @color-green;
+    border-color: @color-green;
 }
 
+.contentNav {
+    border-bottom: 1px solid @color-light;
+    img {
+        max-height: 42px;
+        border: 1px solid #fff;
+    }
+}
 
-
+#dateChart {
+    #charts {
+        padding: 10px 0;
+        background:@color-greenish;
+    }
+    .chart {
+        display: inline-block;
+        height: 151px;
+        margin-bottom: 20px;
+    }
+    .reset {
+        padding-left: 1em;
+        font-size: smaller;
+        color: #ccc;
+    }
+    .background.bar {
+        fill: #ccc;
+    }
+    .foreground.bar {
+        fill: @color-orange;
+    }
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    .axis text {
+        font: 10px sans-serif;
+    }
+    .brush rect.extent {
+        fill: steelblue;
+        fill-opacity: .125;
+    }
+    .brush .resize path {
+        fill: #eee;
+        stroke: #666;
+    }
+    #hour-chart {
+        width: 260px;
+    }
+    #delay-chart {
+        width: 230px;
+    }
+    #distance-chart {
+        width: 420px;
+    }
+    #date-chart {
+        width: 920px;
+    }
+    #flight-list {
+        min-height: 1024px;
+    }
+    #flight-list .date,
+    #flight-list .day {
+        margin-bottom: .4em;
+    }
+    #flight-list .flight {
+        line-height: 1.5em;
+        background: #eee;
+        width: 640px;
+        margin-bottom: 1px;
+    }
+    #flight-list .time {
+        color: #999;
+    }
+    #flight-list .flight div {
+        display: inline-block;
+        width: 100px;
+    }
+    #flight-list div.distance,
+    #flight-list div.delay {
+        width: 160px;
+        padding-right: 10px;
+        text-align: right;
+    }
+    #flight-list .early {
+        color: green;
+    }
+    aside {
+        position: absolute;
+        left: 740px;
+        font-size: smaller;
+        width: 220px;
+    }
+}

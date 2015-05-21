@@ -1,11 +1,9 @@
 @menu-width: 270px;
 @column: 2.55555%;
 body {
-    .position(absolute, 0, 0, 0, 0);
     background-color: @color-navyBlue;
-    /*.background-image( linear-gradient(top, #315481, #918e82 100%));
-    background-repeat: no-repeat;
-    background-attachment: fixed;*/
+    color: @color-navyBlue;
+    font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
 }
 
 #container {
@@ -25,13 +23,24 @@ body {
 #menu {
     .position(absolute, 0, 0, 0, 0, @menu-width);
     border-right: 1px solid @color-light;
+    @media print {
+        display: none !important;
+    }
 }
 
 #content-container {
+    @media print {
+        *, *:before, *:after {
+            color: initial !important;
+            text-shadow: none !important;
+            background-color: @color-navyBlue !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+        }
+    }
     .position(absolute, 0, 0, 0, 0);
     .transition(all 200ms ease-out);
     .transform(translate3d(0, 0, 0));
-    //background: @color-tertiary;
     background: @color-navyBlue;
     opacity: 1;
     @media screen and (min-width: 40em) {
@@ -39,21 +48,13 @@ body {
         _right: 0
     }
     .content-scrollable {
-        //.position(absolute, 3em, 0, 0, 0);
         .position(absolute, 0, 0, 0, 0);
         .transform(translate3d(0, 0, 0));
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        //background: @color-empty;
+        color: @color-light;
         background: @color-navyBlue;
-        /*background: url(mt.png);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;*/
     }
-
-
-
     // Toggle menu on mobile
     .menu-open & {
         .transform(translate3d(@menu-width, 0, 0));
@@ -82,11 +83,30 @@ body {
     }
 }
 
+.sarcat-bg {
+    background: url(mt.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 
+.title {
+    margin-top: 5px;
+    padding: 10px;
+    color: @color-light;
+    p {
+        font-size: 16px;
+        line-height: 16px;
+        color: @color-greenish;
+    }
+}
 
-.sarcat-bg{
-        background: url(mt.png);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
+.agencyLogo {
+    margin-top: 5px;
+    padding: 10px;
+    color: #e4e6e7;
+    img {
+        border: 4px solid @color-light;
+        max-width: 90%
+    }
 }

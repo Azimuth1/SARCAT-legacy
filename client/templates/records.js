@@ -30,7 +30,7 @@ Template.records.helpers({
             return d.tableList;
         }).map(function (d) {
             return {
-                headerClass: 'default-bg',
+                headerClass: 'lightBlue-bg',
                 cellClass: 'white-bg',
                 key: d.field,
                 fieldId: d.field,
@@ -42,7 +42,7 @@ Template.records.helpers({
             };
         }).value();
         fields.unshift({
-            headerClass: 'default-bg text-center',
+            headerClass: 'lightBlue-bg text-center',
             cellClass: 'white-bg recordSel text-center pointer',
             fieldId: 'recordSel',
             key: 'cb',

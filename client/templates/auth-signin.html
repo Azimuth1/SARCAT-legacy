@@ -1,24 +1,20 @@
 <template name="signin">
-
-
     <div class="page auth">
-
-        <div class="content-scrollable">
-
-
-           <div class="pull-right">
-                    <img style="max-height:50px" id="agencyLogo" onerror='this.style.display = "none"'>
+        <nav>
+            <div class="nav-group">
+                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered"></span></a>
             </div>
-
-
+        </nav>
+        <div class="content-scrollable">
+            <div class="text-center agencyLogo">
+                <img src="{{logoSrc}}" onerror='this.style.display = "none"'>
+            </div>
             <div class="wrapper-auth">
-
-            
-                <h2 class="white h1 white mar0y">SARCAT</h2>
-                <p class="white">Search & Rescue Incident Database</p>
-                <h3 class="white h1 white">Sign-in</h3>
-                
-              
+                <div class="title">
+                    <h2 class="h1 mar00">SARCAT</h2>
+                    <p>Search & Rescue Incident Database</p>
+                </div>
+                <h3 class="h3 mar0y em">Sign-in</h3>
                 <form>
                     {{#if errorMessages}}
                     <div class="list-errors">
@@ -29,39 +25,17 @@
                     {{/if}}
                     <div class="input-symbol {{errorClass 'email'}}">
                         <input type="email" name="email" placeholder="Your Email" value="{{defaultEmail}}" />
-                        <span class="tmp icon-email" title="Your Email"></span>
+                        <span class="tmp-icon-email" title="Your Email"></span>
                     </div>
                     <div class="input-symbol {{errorClass 'password'}}">
-                        <input type="password" name="password" placeholder="Password" value="admin"/>
-                        <span class="tmp icon-lock" title="Password"></span>
+                        <input type="password" name="password" placeholder="Password" value="admin" />
+                        <span class="tmp-icon-lock" title="Password"></span>
                     </div>
                     <button type="submit" class="btn-primary btn-pad">Sign in</button>
                 </form>
+                <a href="{{pathFor 'join'}}" class="link-auth-alt">Need an account? Join Now.</a>
             </div>
-            <a href="{{pathFor 'join'}}" class="link-auth-alt">Need an account? Join Now.</a>
-
-            {{#if production}}
-  {{Meteor.settings.public.productionStripePublishableKey}}
-{{else}}
-  {{Meteor.settings.public.stagingStripePublishableKey}}
-{{/if}}
-
-
+            {{#if production}} {{Meteor.settings.public.productionStripePublishableKey}} {{else}} {{Meteor.settings.public.stagingStripePublishableKey}} {{/if}}
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     </div>
 </template>
