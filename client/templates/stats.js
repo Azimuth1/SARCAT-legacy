@@ -1,11 +1,64 @@
 Template.stats.onCreated(function () {
     Session.set('userView', 'stats');
     Session.set('activeRecord', false);
+    Session.set('dateRange', []);
 });
 Template.stats.onRendered(function () {
     var records = Records.find()
         .fetch();
     r = records;
+    drawAllGraphs(records);
+    dateChart(records);
+
+    Session.set('activeRecord', null);
+    var recordMap = recordsSetMap('recordsMap', records);
+})
+Template.stats.helpers({
+    currentRecords: function () {
+        return Session.get('dateRange').length;
+    },
+    stats: function () {
+        var data = Session.get('activeRecord');
+        if (!data) {
+            return;
+        }
+        var flatData = flatten(data, {});
+        var displayData = _.chain(flatData)
+            .map(function (d, e) {
+                var val = _.findWhere(allInputs, {
+                    field: e
+                });
+                if (val) {
+                    return {
+                        key: val.label,
+                        parent: val.parent,
+                        val: d
+                    };
+                }
+            })
+            .compact()
+            .value();
+        var subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
+        var resources2 = resourceArrayForm(data);
+        var displayData = _.flatten([displayData, subjects2, resources2]);
+        var displayData2 = _.chain(displayData)
+            .groupBy('parent')
+            .map(function (d, e) {
+                console.log(d.field)
+                return {
+                    field: e,
+                    data: d
+                };
+            })
+            .value();
+        return displayData2;
+    },
+});
+
+drawAllGraphs = function (records) {
+    $('.renderedChart').children().remove();
+
+    Session.set('dateRange', records);
     var pluckDeepLinear = function (records, first, second, obj) {
         data = _.chain(records)
             .map(function (d) {
@@ -111,13 +164,10 @@ Template.stats.onRendered(function () {
     drawGraph(sexes, getColor(), statDiv);
     drawGraph(resType, getColor(), statDiv);
     drawGraph(resHours, getColor(), statDiv);
-
     var numberData = _.filter(data, function (d) {
         return d.options.number;
     });
-    //numberData.push(ages);
-    //.append('div')
-    //.attr('class', 'row');
+
     numberData.forEach(function (d, i) {
         drawGraph(d, getColor(), statDiv);
     });
@@ -127,55 +177,344 @@ Template.stats.onRendered(function () {
     noNumberData = _.sortBy(noNumberData, function (d) {
         return d.count.length;
     });
-    //noNumberData.push(resType);
-    //noNumberData.push(sexes);
+
     var noNumberDiv = d3.select("#recordss")
-        //.append('div')
-        //.attr('class', 'row');
+
     noNumberData.forEach(function (d, i) {
         drawGraph(d, getColor(), statDiv);
     });
-    Session.set('activeRecord', null);
-    var recordMap = recordsSetMap('recordsMap', records);
-})
-Template.stats.helpers({
-    stats: function () {
-        var data = Session.get('activeRecord');
-        if (!data) {
-            return;
-        }
-        var flatData = flatten(data, {});
-        var displayData = _.chain(flatData)
-            .map(function (d, e) {
-                var val = _.findWhere(allInputs, {
-                    field: e
+
+};
+dateChart = function (data) {
+
+    a = data;
+    flights = data;
+    var dates = flights
+    var maxYear = d3.max(flights, function (d) {
+        return new Date(d.timeLog.lastSeenDateTime);
+    });
+    var minYear = d3.min(flights, function (d) {
+        return new Date(d.timeLog.lastSeenDateTime);
+    });
+    // Various formatters.
+    var formatNumber = d3.format(",d"),
+        formatChange = d3.format("+,d"),
+        formatDate = d3.time.format("%B %d, %Y"),
+        formatTime = d3.time.format("%I:%M %p");
+    var nestByDate = d3.nest()
+        .key(function (d) {
+            return d3.time.day(d.date);
+        });
+    flights.forEach(function (d, i) {
+        d.index = i;
+        d.date = parseDate(d.timeLog.lastSeenDateTime);
+        d.delay = +d.timeLog.totalMissingHours;
+        d.distance = +d.timeLog.totalSearchHours;
+    });
+    var flight = crossfilter(flights),
+        all = flight.groupAll(),
+        date = flight.dimension(function (d) {
+            return d.date;
+        }),
+        dates = date.group(d3.time.day),
+        hour = flight.dimension(function (d) {
+            return d.date.getHours() + d.date.getMinutes() / 60;
+        }),
+        hours = hour.group(Math.floor),
+        delay = flight.dimension(function (d) {
+            return Math.max(-60, Math.min(149, d.delay));
+        }),
+        delays = delay.group(function (d) {
+            return Math.floor(d / 10) * 10;
+        }),
+        distance = flight.dimension(function (d) {
+            return Math.min(1999, d.distance);
+        }),
+        distances = distance.group(function (d) {
+            return Math.floor(d / 50) * 50;
+        });
+    var charts = [
+        barChart()
+        .dimension(date)
+        .group(dates)
+        .round(d3.time.day.round)
+        .x(d3.time.scale()
+            .domain([minYear, maxYear])
+            .rangeRound([0, 10 * 90])
+        )
+    ];
+    var chart = d3.selectAll(".chart")
+        .data(charts)
+        .on("brush", renderAll).on("brushend", renderAll);
+    var list = d3.selectAll(".list")
+        .data([flightList]);
+    d3.selectAll("#total")
+        .text(formatNumber(flight.size()));
+    renderAll();
+
+    function render(method) {
+        d3.select(this).call(method);
+    }
+
+    function renderAll() {
+        chart.each(render);
+        list.each(render);
+        //d3.select("#active").text(formatNumber(all.value()));
+    }
+
+    function parseDate(d) {
+        return new Date(d);
+        return new Date(2001,
+            d.substring(0, 2) - 1,
+            d.substring(2, 4),
+            d.substring(4, 6),
+            d.substring(6, 8));
+    }
+    window.filter = function (filters) {
+        filters.forEach(function (d, i) {
+            charts[i].filter(d);
+        });
+        renderAll();
+    };
+    window.reset = function (i) {
+        charts[i].filter(null);
+        renderAll();
+    };
+
+    function flightList(div) {
+        var flightsByDate = nestByDate.entries(date.top(40));
+        div.each(function () {
+            var date = d3.select(this).selectAll(".date")
+                .data(flightsByDate, function (d) {
+                    return d.key;
                 });
-                if (val) {
-                    return {
-                        key: val.label,
-                        parent: val.parent,
-                        val: d
-                    };
+            date.enter().append("div")
+                .attr("class", "date")
+                .append("div")
+                .attr("class", "day")
+                .text(function (d) {
+                    return formatDate(d.values[0].date);
+                });
+            date.exit().remove();
+            var flight = date.order().selectAll(".flight")
+                .data(function (d) {
+                    return d.values;
+                }, function (d) {
+                    return d.index;
+                });
+            var flightEnter = flight.enter().append("div")
+                .attr("class", "flight");
+            flightEnter.append("div")
+                .attr("class", "time")
+                .text(function (d) {
+                    return formatTime(d.date);
+                });
+            flightEnter.append("div")
+                .attr("class", "origin")
+                .text(function (d) {
+                    return d.origin;
+                });
+            flightEnter.append("div")
+                .attr("class", "destination")
+                .text(function (d) {
+                    return d.destination;
+                });
+            flightEnter.append("div")
+                .attr("class", "distance")
+                .text(function (d) {
+                    return formatNumber(d.distance) + " mi.";
+                });
+            flightEnter.append("div")
+                .attr("class", "delay")
+                .classed("early", function (d) {
+                    return d.delay < 0;
+                })
+                .text(function (d) {
+                    return formatChange(d.delay) + " min.";
+                });
+            flight.exit().remove();
+            flight.order();
+        });
+    }
+
+    function barChart() {
+        if (!barChart.id) barChart.id = 0;
+        var margin = {
+                top: 10,
+                right: 10,
+                bottom: 20,
+                left: 10
+            },
+            x,
+            y = d3.scale.linear().range([100, 0]),
+            id = barChart.id++,
+            axis = d3.svg.axis().orient("bottom"),
+            brush = d3.svg.brush(),
+            brushDirty,
+            dimension,
+            group,
+            round;
+
+        function chart(div) {
+            var width = x.range()[1],
+                height = y.range()[0];
+            y.domain([0, group.top(1)[0].value]);
+            div.each(function () {
+                var div = d3.select(this),
+                    g = div.select("g");
+                // Create the skeletal chart.
+                if (g.empty()) {
+                    div.select(".title").append("a")
+                        .attr("href", "javascript:reset(" + id + ")")
+                        .attr("class", "reset")
+                        .text("reset")
+                        .style("display", "none");
+                    g = div.append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    g.append("clipPath")
+                        .attr("id", "clip-" + id)
+                        .append("rect")
+                        .attr("width", width)
+                        .attr("height", height);
+                    g.selectAll(".bar")
+                        .data(["background", "foreground"])
+                        .enter().append("path")
+                        .attr("class", function (d) {
+                            return d + " bar";
+                        })
+                        .datum(group.all());
+                    g.selectAll(".foreground.bar")
+                        .attr("clip-path", "url(#clip-" + id + ")");
+                    g.append("g")
+                        .attr("class", "axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(axis);
+                    // Initialize the brush component with pretty resize handles.
+                    var gBrush = g.append("g").attr("class", "brush").call(brush);
+                    gBrush.selectAll("rect").attr("height", height);
+                    gBrush.selectAll(".resize").append("path").attr("d", resizePath);
                 }
-            })
-            .compact()
-            .value();
-        var subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
-        var resources2 = resourceArrayForm(data);
-        var displayData = _.flatten([displayData, subjects2, resources2]);
-        var displayData2 = _.chain(displayData)
-            .groupBy('parent')
-            .map(function (d, e) {
-                console.log(d.field)
-                return {
-                    field: e,
-                    data: d
-                };
-            })
-            .value();
-        return displayData2;
-    },
-});
+                // Only redraw the brush if set externally.
+                if (brushDirty) {
+                    brushDirty = false;
+                    g.selectAll(".brush").call(brush);
+                    div.select(".title a").style("display", brush.empty() ? "none" : null);
+                    if (brush.empty()) {
+                        g.selectAll("#clip-" + id + " rect")
+                            .attr("x", 0)
+                            .attr("width", width);
+                    } else {
+                        var extent = brush.extent();
+                        g.selectAll("#clip-" + id + " rect")
+                            .attr("x", x(extent[0]))
+                            .attr("width", x(extent[1]) - x(extent[0]));
+                    }
+                }
+                g.selectAll(".bar").attr("d", barPath);
+            });
+
+            function barPath(groups) {
+                var path = [],
+                    i = -1,
+                    n = groups.length,
+                    d;
+                while (++i < n) {
+                    d = groups[i];
+                    path.push("M", x(d.key), ",", height, "V", y(d.value), "h9V", height);
+                }
+                return path.join("");
+            }
+
+            function resizePath(d) {
+                var e = +(d == "e"),
+                    x = e ? 1 : -1,
+                    y = height / 3;
+                return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
+            }
+        }
+        brush.on("brushstart.chart", function () {
+            var div = d3.select(this.parentNode.parentNode.parentNode);
+            div.select(".title a").style("display", null);
+        });
+
+        brush.on("brush.chart", function () {
+            var g = d3.select(this.parentNode),
+                extent = brush.extent();
+            if (round) g.select(".brush")
+                .call(brush.extent(extent = extent.map(round)))
+                .selectAll(".resize")
+                .style("display", null);
+            g.select("#clip-" + id + " rect")
+                .attr("x", x(extent[0]))
+                .attr("width", x(extent[1]) - x(extent[0]));
+            dimension.filterRange(extent);
+            Session.set('dateExtent', extent);
+
+        });
+        brush.on("brushend.chart", function () {
+            var extent = Session.get('dateExtent');
+            var dateRange = data.filter(function (d) {
+                return new Date(d.timeLog.lastSeenDateTime) >= extent[0] && new Date(d.timeLog.lastSeenDateTime) <= extent[1]
+            });
+            Session.set('dateRange', dateRange);
+                drawAllGraphs(dateRange);
+
+            if (brush.empty()) {
+                var div = d3.select(this.parentNode.parentNode.parentNode);
+                div.select(".title a").style("display", "none");
+                div.select("#clip-" + id + " rect").attr("x", null).attr("width", "100%");
+                dimension.filterAll();
+            }
+        });
+        chart.margin = function (_) {
+            if (!arguments.length) return margin;
+            margin = _;
+            return chart;
+        };
+        chart.x = function (_) {
+            if (!arguments.length) return x;
+            x = _;
+            axis.scale(x);
+            brush.x(x);
+            return chart;
+        };
+        chart.y = function (_) {
+            if (!arguments.length) return y;
+            y = _;
+            return chart;
+        };
+        chart.dimension = function (_) {
+            if (!arguments.length) return dimension;
+            dimension = _;
+            return chart;
+        };
+        chart.filter = function (_) {
+            if (_) {
+                brush.extent(_);
+                dimension.filterRange(_);
+            } else {
+                brush.clear();
+                dimension.filterAll();
+            }
+            brushDirty = true;
+            return chart;
+        };
+        chart.group = function (_) {
+            if (!arguments.length) return group;
+            group = _;
+            return chart;
+        };
+        chart.round = function (_) {
+            if (!arguments.length) return round;
+            round = _;
+            return chart;
+        };
+        return d3.rebind(chart, brush, "on");
+    }
+};
 var stackedBar = function (d, color, context) {
     z = d;
     var data = _.chain(d.count)
@@ -329,7 +668,6 @@ var stackedBar = function (d, color, context) {
         })
         .on("mouseover", function (d) {
             //console.log(this);
-
             self = d3.select(this);
             var parent = d3.select(this.parentNode)
             coordinates = d3.mouse(this);
@@ -363,13 +701,11 @@ var stackedBar = function (d, color, context) {
 };
 var drawGraph = function (d, color, context) {
     var barColorIndex = 0;
-
     var barColors = function () {
         var colors = ['#cb812a', '#b46928'];
         barColorIndex++;
         return colors[barColorIndex % 2];
     }
-
     var data = d.count;
     var options = d.options || {};
     var title = options.label || '';
@@ -421,16 +757,13 @@ var drawGraph = function (d, color, context) {
         })*/
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-            .style('border','1px solid #e4e6e7');
-
+        .style('border', '1px solid #e4e6e7');
     svg1.append('g')
         .append("text")
         .attr("transform", "translate(" + width / 2 + "," + margin.top / 2 + ")")
         .attr("class", "title")
         .attr("text-anchor", "middle")
-
-    .text(title)
-
+        .text(title)
     var svg = svg1.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     x.domain(data.map(function (d) {
@@ -450,7 +783,6 @@ var drawGraph = function (d, color, context) {
         .attr("dy", ".2em")
         .style("text-anchor", "end")
         .text("Frequency");
-
     var maxBarWidth = 50;
     bar = svg.selectAll(".bar")
         .data(data)
@@ -464,8 +796,7 @@ var drawGraph = function (d, color, context) {
         .attr("class", "_bar")
         //.attr('stroke', brighter)
         //.attr('fill', 'url(#temperature-gradient_' + id + ')')
-
-    .attr('fill', function (d) {
+        .attr('fill', function (d) {
             return barColors();
         })
         .attr("width", Math.min.apply(null, [x.rangeBand(), maxBarWidth]))

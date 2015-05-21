@@ -10,17 +10,18 @@ Template.signin.onCreated(function () {
     }
 });
 
-
 Template.signin.onRendered(function () {
-    var logo = document.getElementById('agencyLogo');
-    logo.src = 'uploads/logo/' + Session.get('logo');
-    logo.style.display = 'inline';
+    //var logo = document.getElementById('agencyLogo');
+    //logo.src = 'uploads/logo/' + Session.get('logo');
+    //logo.style.display = 'inline';
 });
 
-
 Template.signin.helpers({
-    defaultEmail: function(){
-        return  Meteor.settings.public.email;
+    logoSrc: function (event, template) {
+        return Session.get('logoSrc');
+    },
+    defaultEmail: function () {
+        return Meteor.settings.public.email;
     },
     errorMessages: function () {
         return _.values(Session.get(ERRORS_KEY));
@@ -61,4 +62,3 @@ Template.signin.events({
         });
     }
 });
-

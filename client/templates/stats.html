@@ -1,11 +1,9 @@
 <template name="stats">
-
     <div class="tab-content admin pad1 ">
         <div class="panel panel-default">
-         
             <div class="panel-body pad1 greenish-bg">
                 <div class=" col-md-12 pad00">
-                <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
+                    <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
                     <div id='recordsMap' style="width:100%;height:300px">
                     </div>
                     <div class="col-md-12 pad00 mar0y">
@@ -32,10 +30,18 @@
                 </div>
             </div>
         </div>
-      <!--  <h4 class="text-center">Incident Date Calender View</h4>-->
-        <div id="d3Calender"></div>
-        <div id="recordsResource"></div>
-        <div id="recordsSubject"></div>
-        <div id="recordss"></div>
+        <div id="dateChart">
+            <div id="charts">
+                <div id="date-chart" class="chart">
+                    <div class="title text-center text-orange">Date Range</div>
+                </div>
+            </div>
+            <aside id="totals"><span id="active">{{currentRecords}}</span> of <span id="total">-</span> flights selected.</aside>
+        </div>
+        <!--  <h4 class="text-center">Incident Date Calender View</h4>-->
+        <div id="d3Calender" class="renderedChart"></div>
+        <div id="recordsResource" class="renderedChart"></div>
+        <div id="recordsSubject" class="renderedChart"></div>
+        <div id="recordss" class="renderedChart"></div>
     </div>
 </template>

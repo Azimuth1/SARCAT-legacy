@@ -1,18 +1,36 @@
 var MENU_KEY = 'menuOpen';
 Session.setDefault(MENU_KEY, false);
+
+var USER_MENU_KEY = 'userMenuOpen';
+Session.setDefault(USER_MENU_KEY, false);
+
 var SHOW_CONNECTION_ISSUE_KEY = 'showConnectionIssue';
 Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
+
+var CONNECTION_ISSUE_TIMEOUT = 5000;
+
 settings = Meteor.settings.public;
 Template.appBody.onCreated(function () {});
-Template.appBody.onRendered(function () {
-});
+Template.appBody.onRendered(function () {});
 Template.appBody.helpers({
+
+    cordova: function () {
+        return Meteor.isCordova && 'cordova';
+    },
+
+    userMenuOpen: function () {
+        return Session.get(USER_MENU_KEY);
+    },
+
     email: function (view) {
         return Meteor.user()
             .emails[0].address.split('@')[0];
     },
     logo: function (view) {
         return Session.get('logo');
+    },
+    logoSrc: function () {
+        return 'uploads/logo/' + Session.get('logo');
     },
     isUserView: function (view) {
         view = view || this._id;
@@ -53,6 +71,24 @@ Template.appBody.helpers({
     }
 });
 Template.appBody.events({
+    'click .js-menu': function () {
+        Session.set(MENU_KEY, !Session.get(MENU_KEY));
+    },
+
+    'click .content-overlay': function (event) {
+        Session.set(MENU_KEY, false);
+        event.preventDefault();
+    },
+
+    'click .js-user-menu': function (event) {
+        Session.set(USER_MENU_KEY, !Session.get(USER_MENU_KEY));
+        // stop the menu from closing
+        event.stopImmediatePropagation();
+    },
+
+    'click #menu a': function () {
+        Session.set(MENU_KEY, false);
+    },
     'click .content-overlay': function (event) {
         Session.set(MENU_KEY, false);
         event.preventDefault();

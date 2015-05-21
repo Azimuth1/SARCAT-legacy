@@ -1,13 +1,20 @@
 <template name="join">
     <div class="page auth">
+        <nav>
+            <div class="nav-group">
+                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered"></span></a>
+            </div>
+        </nav>
         <div class="content-scrollable">
-            <div class="pull-right">
-                <img style="max-height:50px" id="agencyLogo" onerror='this.style.display = "none"'>
+            <div class="text-center agencyLogo">
+                <img src="{{logoSrc}}" _onerror='this.style.display = "none"'>
             </div>
             <div class="wrapper-auth">
-                <h2 class="white h1 white mar0y">SARCAT</h2>
-                <p class="white">Search & Rescue Incident Database</p>
-                <h1 class="white h1 white">Register</h1>
+                <div class="title">
+                    <h2 class="h1 mar00">SARCAT</h2>
+                    <p>Search & Rescue Incident Database</p>
+                </div>
+                <h3 class="h3 mar0y em">Sign-in</h3>
                 <form>
                     {{#if errorMessages}}
                     <div class="list-errors">
@@ -27,21 +34,21 @@
                     <div class="mar0"></div>
                     <div class="input-symbol  {{errorClass 'email'}}">
                         <input type="email" name="email" placeholder="Email" />
-                        <span class="tmp icon-email" title="Email"></span>
+                        <span class="tmp-icon-email" title="Email"></span>
                     </div>
                     <div class="input-symbol  {{errorClass 'password'}}">
                         <input type="password" name="password" placeholder="Password" />
-                        <span class="tmp icon-lock" title="Password"></span>
+                        <span class="tmp-icon-lock" title="Password"></span>
                     </div>
                     <div class="input-symbol {{errorClass 'confirm'}}">
                         <input type="password" name="confirm" placeholder="Confirm Password" />
-                        <span class="tmp icon-lock" title="Confirm Password"></span>
+                        <span class="tmp-icon-lock" title="Confirm Password"></span>
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg btn-block">
-                        <span class="tmp icon-user-add" aria-hidden="true"></span>Join Now</button>
+                        <span class="tmp-icon-user-add" aria-hidden="true"></span>Join Now</button>
+                    <a href="{{pathFor 'signin'}}" class="link-auth-alt">Have an account? Sign in</a>
                 </form>
             </div>
-            <a href="{{pathFor 'signin'}}" class="link-auth-alt">Have an account? Sign in</a>
         </div>
     </div>
 </template>

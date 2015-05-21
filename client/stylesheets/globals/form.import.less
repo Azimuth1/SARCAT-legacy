@@ -65,11 +65,11 @@ input:-webkit-autofill {
 .input-symbol {
     display: inline-block;
     position: relative;
-    &.error [class^="icon-"], &.error [class*=" icon-"] {
+    &.error [class^="tmp-icon-"], &.error [class*=" tmp-icon-"] {
         color: @color-negative;
     }
     // Position & padding
-    [class^="icon-"], [class*=" icon-"] {
+    [class^="tmp-icon-"], [class*=" tmp-icon-"] {
         left: 1em;
     }
     input {
@@ -79,12 +79,12 @@ input:-webkit-autofill {
     input {
         width: 100%;
         &:focus {
-            & + [class^="icon-"], & + [class*=" icon-"] {
+            & + [class^="tmp-icon-"], & + [class*=" tmp-icon-"] {
                 color: @color-primary;
             }
         }
     }
-    [class^="icon-"], [class*=" icon-"] {
+    [class^="tmp-icon-"], [class*=" tmp-icon-"] {
         .transition( all 300ms ease-in);
         .transform(translate3d(0, -50%, 0));
         background: transparent;

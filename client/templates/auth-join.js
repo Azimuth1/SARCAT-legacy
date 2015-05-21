@@ -6,11 +6,14 @@ Template.join.onCreated(function () {
     }
 });
 Template.join.onRendered(function () {
-    var logo = document.getElementById('agencyLogo');
-    logo.src = 'uploads/logo/' + Session.get('logo');
-    logo.style.display = 'inline';
+   // var logo = document.getElementById('agencyLogo');
+  //  logo.src = 'uploads/logo/' + Session.get('logo');
+  //  logo.style.display = 'inline';
 });
 Template.join.helpers({
+    logoSrc: function(event,template){
+        return Session.get('logoSrc');
+    },
     errorMessages: function () {
         return _.values(Session.get(ERRORS_KEY));
     },
