@@ -1,7 +1,7 @@
 @menu-width: 270px;
 @column: 2.55555%;
 body {
-    background-color: @color-blue;
+    background-color: @color-navyBlue;
     color: @color-navyBlue;
     font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
 }
@@ -41,7 +41,7 @@ body {
     .position(absolute, 0, 0, 0, 0);
     .transition(all 200ms ease-out);
     .transform(translate3d(0, 0, 0));
-    background: @color-navyBlue;
+    //background: @color-navyBlue;
     opacity: 1;
     @media screen and (min-width: 40em) {
         left: @menu-width;
@@ -71,6 +71,7 @@ body {
 
 // Transparent screen to prevent interactions on content when menu is open
 .content-overlay {
+background-color: @color-navyBlue;
     .position(absolute, 0, 0, 0, 0);
     cursor: pointer;
     .menu-open & {
@@ -102,11 +103,13 @@ body {
 }
 
 .agencyLogo {
-    margin-top: 5px;
-    padding: 10px;
-    color: #e4e6e7;
-    img {
-        border: 4px solid @color-light;
-        max-width: 90%
+    @media screen and (min-width: 40em) {
+        float: right;
+        margin-top:10px;
+        img {
+
+            border: 4px solid @color-light;
+            max-width: 100%
+        }
     }
 }

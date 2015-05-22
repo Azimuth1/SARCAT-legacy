@@ -1,9 +1,9 @@
-Template.stats.onCreated(function () {
+Template.stats.onCreated(function() {
     Session.set('userView', 'stats');
     Session.set('activeRecord', false);
     Session.set('currentRecords', []);
 });
-Template.stats.onRendered(function () {
+Template.stats.onRendered(function() {
     var records = Records.find()
         .fetch();
     //r = records;
@@ -14,17 +14,17 @@ Template.stats.onRendered(function () {
     var recordMap = recordsSetMap('recordsMap', records);
 })
 Template.stats.helpers({
-    currentRecords: function () {
+    currentRecords: function() {
         return Session.get('currentRecords').length;
     },
-    stats: function () {
+    stats: function() {
         var data = Session.get('activeRecord');
         if (!data) {
             return;
         }
         var flatData = flatten(data, {});
         var displayData = _.chain(flatData)
-            .map(function (d, e) {
+            .map(function(d, e) {
                 var val = _.findWhere(allInputs, {
                     field: e
                 });
@@ -38,12 +38,14 @@ Template.stats.helpers({
             })
             .compact()
             .value();
+
+
         var subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
         var resources2 = resourceArrayForm(data);
         var displayData = _.flatten([displayData, subjects2, resources2]);
         var displayData2 = _.chain(displayData)
             .groupBy('parent')
-            .map(function (d, e) {
+            .map(function(d, e) {
                 //console.log(d.field)
                 return {
                     field: e,
@@ -54,18 +56,18 @@ Template.stats.helpers({
         return displayData2;
     },
 });
-chartStats = function (records) {
+chartStats = function(records) {
     var colorIndex = 0;
     var statDiv = d3.select("#recordss");
     var context = {};
     var height;
     var width;
     var margin;
-    context.countRecords = function (data) {
-        var makeFlat = function (records) {
-            var flatten = function (x, result, prefix) {
+    context.countRecords = function(data) {
+        var makeFlat = function(records) {
+            var flatten = function(x, result, prefix) {
                 if (_.isObject(x)) {
-                    _.each(x, function (v, k) {
+                    _.each(x, function(v, k) {
                         flatten(v, result, prefix ? prefix + '.' + k : k)
                     })
                 } else {
@@ -74,7 +76,7 @@ chartStats = function (records) {
                 return result
             };
             var toGraph = _.chain(allInputs)
-                .map(function (d) {
+                .map(function(d) {
                     if (d.stats) {
                         return d;
                     }
@@ -82,17 +84,17 @@ chartStats = function (records) {
                 .compact()
                 .value();
             return _.chain(records)
-                .map(function (d, e) {
+                .map(function(d, e) {
                     var flat = flatten(d, {});
-                    return _.pick(flat, toGraph.map(function (key) {
+                    return _.pick(flat, toGraph.map(function(key) {
                         return key.field;
                     }));
                 })
                 .value();
         };
-        var pluckDeepLinear = function (records, first, second, obj) {
+        var pluckDeepLinear = function(records, first, second, obj) {
             var data = _.chain(records)
-                .map(function (d) {
+                .map(function(d) {
                     return _.pluckDeep(d[first][second], obj)
                 })
                 .flatten()
@@ -100,20 +102,20 @@ chartStats = function (records) {
             data = d3.layout.histogram()
                 .bins(5)
                 (data)
-                .map(function (a) {
+                .map(function(a) {
                     return {
                         data: a.length,
                         name: d3.extent(a)
                             .join('-')
                     }
                 });
-            return data.filter(function (d) {
+            return data.filter(function(d) {
                 return d.data;
             })
         };
-        var pluckDeepOrdinal = function (records, first, second, obj) {
+        var pluckDeepOrdinal = function(records, first, second, obj) {
             var data = _.chain(records)
-                .map(function (d) {
+                .map(function(d) {
                     var vals = _.pluckDeep(d[first][second], obj);
                     return vals;
                     // vals = Array(vals.length).join('a').split('');
@@ -122,7 +124,7 @@ chartStats = function (records) {
                 .value();
             return _.chain(data)
                 .countBy(_.identity)
-                .map(function (d, e) {
+                .map(function(d, e) {
                     return {
                         data: d,
                         name: e
@@ -171,8 +173,8 @@ chartStats = function (records) {
         };
         var flattenedRecords = makeFlat(data);
         var grouped = _.chain(flattenedRecords)
-            .reduce(function (acc, obj) {
-                _.each(obj, function (value, key) {
+            .reduce(function(acc, obj) {
+                _.each(obj, function(value, key) {
                     if (!_.isArray(acc[key])) {
                         acc[key] = [];
                     }
@@ -182,7 +184,7 @@ chartStats = function (records) {
             }, {})
             .value();
         var count = _.chain(grouped)
-            .map(function (d, e) {
+            .map(function(d, e) {
                 var options = _.findWhere(allInputs, {
                     field: e
                 });
@@ -191,14 +193,14 @@ chartStats = function (records) {
                     vals = d3.layout.histogram()
                         .bins(5)
                         (d)
-                        .map(function (a) {
+                        .map(function(a) {
                             return {
                                 data: a.length,
                                 name: d3.extent(a)
                                     .join('-')
                             }
                         });
-                    vals = vals.filter(function (d) {
+                    vals = vals.filter(function(d) {
                         return d.data;
                     })
                     options.xLabel = ' Value Ranges';
@@ -206,7 +208,7 @@ chartStats = function (records) {
                 } else {
                     vals = _.chain(d)
                         .countBy(_.identity)
-                        .map(function (d, e) {
+                        .map(function(d, e) {
                             return {
                                 data: d,
                                 name: e
@@ -224,11 +226,11 @@ chartStats = function (records) {
                     count: vals,
                 };
             })
-            .sortBy(function (d) {
+            .sortBy(function(d) {
                 return d.options.number;
             })
             .reverse()
-            .sortBy(function (d) {
+            .sortBy(function(d) {
                 return d.options.number + d.count.length;
             })
             .reverse()
@@ -238,14 +240,14 @@ chartStats = function (records) {
         return result;
     };
     context.chartsObj = {};
-    context.drawGraph = function (d, cont) {
+    context.drawGraph = function(d, cont) {
         var data = d.count;
         var options = d.options || {};
         var title = options.label || '';
         var id = options.field || Math.random()
             .toString()
             .slice(2);
-        var klass = 'col-sm-6 mar00 pad00';
+        var klass = 'col-md-6';
         var h = options.height || 300;
         margin = {
             top: 40,
@@ -255,7 +257,9 @@ chartStats = function (records) {
         };
         var container = cont
             .append("div")
-            .attr('class', klass);
+            .attr('class', klass)
+            .append("div")
+            .attr('class', 'mar0x mar1y');
         width = parseInt(container.style('width'));
         width = width - margin.left - margin.right;
         height = 300 - margin.top - margin.bottom;
@@ -275,7 +279,7 @@ chartStats = function (records) {
         context.chartsObj[options.field] = svg;
         return svg;
     };
-    context.drawBars = function (record, svg) {
+    context.drawBars = function(record, svg) {
         // console.log(record.options.field,svg.node())
         var data = record.count;
         var options = record.options || {};
@@ -290,58 +294,27 @@ chartStats = function (records) {
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left")
-            .tickFormat(d3.format("d"))
+            // .tickFormat(d3.format("d"))
             .ticks(4)
-            .tickSize(-width);
-        x.domain(data.map(function (d) {
+            .tickSize(-width,0,0)
+            .tickFormat("");
+        x.domain(data.map(function(d) {
             return d.name;
         }));
-        y.domain([0, d3.max(data, function (d) {
+        y.domain([0, d3.max(data, function(d) {
             return d.data;
         })]);
-        var barColorIndex = 0;
-        var barColors = function () {
-            var colors = ['#cb812a', '#b46928'];
-            barColorIndex++;
-            return colors[barColorIndex % 2];
-        }
-        var maxBarWidth = 50;
-        var bar = svg.selectAll(".bar")
-            .data(data)
-            .enter()
-            .append("g")
-            .attr("class", "bar")
-            .attr("transform", function (d) {
-                return "translate(" + (((x.rangeBand() / 2) + x(d.name)) - (maxBarWidth / 2)) + "," + y(d.data) + ")";
-            });
-        bar.append("rect")
-            .attr("class", "_bar")
-            .attr('fill', function (d) {
-                return barColors();
-            })
-            .attr("width", Math.min.apply(null, [x.rangeBand(), maxBarWidth]))
-            .attr("height", function (d) {
-                return height - y(d.data);
-            });
-        //alert(data);
-        bar.append("text")
-            .attr('class', 'barText')
-            .attr("dy", ".75em")
-            .attr("y", 6)
-            .attr("x", maxBarWidth / 2)
-            .attr("text-anchor", "middle")
-            .text(function (d) {
-                return d.data
-            });
+
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
             .attr('class', 'y_label')
             .attr("transform", "rotate(-90)")
-            .attr("y", -30)
+            .attr("y", -25)
             .attr("dy", ".2em")
-            .style("text-anchor", "end")
+            .attr('x', -height / 2)
+            .style("text-anchor", "middle")
             .text("Frequency");
         svg.append("g")
             .attr("class", "x axis")
@@ -354,8 +327,43 @@ chartStats = function (records) {
             .attr("x", width / 2)
             .attr("y", margin.bottom * 0.6)
             .text(options.xLabel);
+        var barColorIndex = 0;
+        var barColors = function() {
+            var colors = ['#b46928','#cb812a'];
+            barColorIndex++;
+            return colors[barColorIndex % 2];
+        }
+        var maxBarWidth = 50;
+        var bar = svg.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "bar")
+            .attr("transform", function(d) {
+                return "translate(" + (((x.rangeBand() / 2) + x(d.name)) - (maxBarWidth / 2)) + "," + y(d.data) + ")";
+            });
+        bar.append("rect")
+            .attr("class", "_bar")
+            .attr('fill', function(d) {
+                return barColors();
+            })
+            .attr("width", Math.min.apply(null, [x.rangeBand(), maxBarWidth]))
+            .attr("height", function(d) {
+                return height - y(d.data);
+            });
+     
+        bar.append("text")
+            .attr('class', 'barText')
+            //.attr("dy", "1.75em")
+            .attr("y", -2)
+            .attr("x", maxBarWidth / 2)
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                return d.data
+            });
+
         var allXText = svg.selectAll('.x.axis .tick text');
-        var w = _.reduce(allXText[0], function (sum, el) {
+        var w = _.reduce(allXText[0], function(sum, el) {
             return sum + el.getBoundingClientRect()
                 .width
         }, 0);
@@ -363,22 +371,22 @@ chartStats = function (records) {
             svg.selectAll(".x.axis .tick text")
                 .style("text-anchor", "end")
                 .attr("dx", "-.5em")
-                .attr("transform", function (d) {
+                .attr("transform", function(d) {
                     return "rotate(-15)";
                 });
         }
     };
-    context.drawRecords = function (records) {
-        records.forEach(function (d) {
+    context.drawRecords = function(records) {
+        records.forEach(function(d) {
             var svg = context.drawGraph(d, statDiv);
             context.drawBars(d, svg);
         });
     };
-    context.redrawRecords = function (records) {
+    context.redrawRecords = function(records) {
         Session.set('currentRecords', records);
         $('.svgRecord').children().remove()
         countedRecords = context.countRecords(records);
-        countedRecords.forEach(function (e) {
+        countedRecords.forEach(function(e) {
             context.drawBars(e, context.chartsObj[e.options.field]);
         });
     };
@@ -388,12 +396,12 @@ chartStats = function (records) {
     context.initRecords = initRecords;
     return context;
 };
-var resourceArrayForm = function (data) {
+var resourceArrayForm = function(data) {
     return _.chain(data.resourcesUsed.resource)
-        .sortBy(function (d) {
+        .sortBy(function(d) {
             return -d.count;
         })
-        .map(function (d, e) {
+        .map(function(d, e) {
             var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
             return {
                 key: d.type,
@@ -403,9 +411,9 @@ var resourceArrayForm = function (data) {
         })
         .value()
 };
-var subjectArrayForm = function (flatData, name, parent) {
+var subjectArrayForm = function(flatData, name, parent) {
     return _.chain(flatData)
-        .map(function (d, e) {
+        .map(function(d, e) {
             if (e.indexOf('_key') > -1) {
                 return;
             }
@@ -417,26 +425,26 @@ var subjectArrayForm = function (flatData, name, parent) {
             }
         })
         .compact()
-        .groupBy(function (d) {
+        .groupBy(function(d) {
             return d.key.substr(d.key.lastIndexOf('.') + 1);
         })
-        .map(function (d, e) {
-            var items = d.map(function (f) {
+        .map(function(d, e) {
+            var items = d.map(function(f) {
                     return f.val;
                 })
                 .sort();
             var sum = _.chain(items)
-                .reduce(function (counts, word) {
+                .reduce(function(counts, word) {
                     counts[word] = (counts[word] || 0) + 1;
                     return counts;
                 }, {})
-                .map(function (d, e) {
+                .map(function(d, e) {
                     return [d, e];
                 })
-                .sortBy(function (d) {
+                .sortBy(function(d) {
                     return -d[0];
                 })
-                .map(function (d, e) {
+                .map(function(d, e) {
                     if (d[0] === 1) {
                         return d[1];
                     };
@@ -454,7 +462,7 @@ var subjectArrayForm = function (flatData, name, parent) {
         })
         .value();
 };
-var recordsSetMap = function (context, data) {
+var recordsSetMap = function(context, data) {
     var geojson;
     if (!data.length) {
         return;
@@ -464,7 +472,7 @@ var recordsSetMap = function (context, data) {
     obj.map = map;
     map.scrollWheelZoom.disable();
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function (x, e) {
+    var layers = _.object(_.map(defaultLayers, function(x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -539,8 +547,8 @@ var recordsSetMap = function (context, data) {
             dashArray: '1',
             fillOpacity: 1
         });
-        sib.forEach(function (d) {
-            layerGroups[d].eachLayer(function (e) {
+        sib.forEach(function(d) {
+            layerGroups[d].eachLayer(function(e) {
                 if (e.feature.properties.id === id) {
                     activeFeatures.push({
                         layer: e,
@@ -562,7 +570,7 @@ var recordsSetMap = function (context, data) {
             layer.bringToFront();
         }
         var bounds
-        activeFeatures.forEach(function (d) {
+        activeFeatures.forEach(function(d) {
             if (!bounds) {
                 bounds = d.layer.getBounds();
                 return;
@@ -574,7 +582,7 @@ var recordsSetMap = function (context, data) {
 
     function resetHighlight() {
         if (activeFeatures && activeFeatures.length) {
-            activeFeatures.forEach(function (e) {
+            activeFeatures.forEach(function(e) {
                 e.layer.setStyle(e.style)
             });
         }
@@ -584,23 +592,23 @@ var recordsSetMap = function (context, data) {
     function zoomToFeature(e) {
         map.fitBounds(e.target.getBounds());
     }
-    map.on('click', function () {
+    map.on('click', function() {
         resetHighlight();
         Session.set('activeRecord', false);
     })
-    layerGroups = mapPoints.map(function (d) {
+    layerGroups = mapPoints.map(function(d) {
         var geojson = L.geoJson(null, {
-            style: function (feature) {
+            style: function(feature) {
                 return d.style;
             },
-            pointToLayer: function (feature, latlng) {
+            pointToLayer: function(feature, latlng) {
                 if (feature.properties.field.type === 'path') {
                     return;
                 } else {
                     return L.circleMarker(latlng, d.style);
                 }
             },
-            onEachFeature: function (feature, layer) {
+            onEachFeature: function(feature, layer) {
                 layer.on({
                     click: highlightFeature,
                     //mouseout: resetHighlight,
@@ -615,11 +623,11 @@ var recordsSetMap = function (context, data) {
             layer: geojson
         };
     });
-    layerGroups = _.object(_.map(layerGroups, function (x) {
+    layerGroups = _.object(_.map(layerGroups, function(x) {
         return [x.name, x.layer];
     }));
     //map.scrollWheelZoom.disable();
-    map.on('mousedown', function () {
+    map.on('mousedown', function() {
         if (activeFeatures.length) {
             resetHighlight(activeFeatures)
         }
@@ -627,9 +635,9 @@ var recordsSetMap = function (context, data) {
     var legend = L.control({
         position: 'bottomleft'
     });
-    legend.onAdd = function (map) {
+    legend.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'info legend');
-        mapPoints.forEach(function (d) {
+        mapPoints.forEach(function(d) {
             div.innerHTML += '<div class="statLegend"><div class="small">' + d.text + '</div><div class="fa-marker ' + d.bg + '"></div></div>';
         });
         return div;
@@ -659,8 +667,8 @@ var recordsSetMap = function (context, data) {
             }
         });
     }
-    data.forEach(function (d) {
-        mapPoints.forEach(function (feature) {
+    data.forEach(function(d) {
+        mapPoints.forEach(function(feature) {
             var coords = d.coords[feature.val];
             if (coords) {
                 layerGroups[feature.val].addData({
@@ -680,7 +688,7 @@ var recordsSetMap = function (context, data) {
             }
         });
     });
-    var bounds = _.reduce(layerGroups, function (d, e) {
+    var bounds = _.reduce(layerGroups, function(d, e) {
         if (e.getBounds) {
             return e.getBounds();
         };

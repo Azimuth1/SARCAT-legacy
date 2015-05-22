@@ -2,7 +2,6 @@
     <div class="travelDir form-group mar2x knob">
     </div>
 </template>
-
 <template name="form">
     <div id="formPage">
         <table class="recordRecordInfoTable table table-bordered mar00">
@@ -12,63 +11,56 @@
                     <th>Mission #</th>
                     <th>Name</th>
                     <th>Incident Type</th>
-               
                     <th>Status</th>
                     <th>Subject</th>
                     {{#if currentRecord.subjectSubCategory}}
-                        <th>Sub/Cat.</th>
+                    <th>Sub/Cat.</th>
                     {{/if}}
                     <th></th>
                 </tr>
             </thead>
             <tbody class="white-bg">
                 {{#if editRecordInfo 'edit'}}
-                    <tr class="text-left text-default">
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidentType"}}</td>
-               
-
-
-
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideLabel hideSubmit" template="plain" id='zformdId6' autosave=true type='update' label=false fields="recordInfo.subjectCategory"}}</td>
-                        {{#if currentRecord.subjectSubCategory}}
-                            <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.subjectSubCategory"}}</td>
-                        {{/if}}
-                        <td>
-                            <button type="button" class="btn btn-sm mar00 btn-success editRecordInfo" data="list">
-                                <span class="glyphicon glyphicon-edit" data="list" aria-hidden="true"></span>Done
-                            </button>
-                        </td>
-                    </tr>
+                <tr class="text-left text-default">
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidentType"}}</td>
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideLabel hideSubmit" template="plain" id='zformdId6' autosave=true type='update' label=false fields="recordInfo.subjectCategory"}}</td>
+                    {{#if currentRecord.subjectSubCategory}}
+                    <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.subjectSubCategory"}}</td>
+                    {{/if}}
+                    <td>
+                        <button type="button" class="btn btn-sm mar00 btn-success editRecordInfo" data="list">
+                            <span class="glyphicon glyphicon-edit" data="list" aria-hidden="true"></span>Done
+                        </button>
+                    </td>
+                </tr>
                 {{else}}
-                    <tr class="text-left text-default">
-                        <td>{{record.recordInfo.incidentnum}}</td>
-                        <td>{{record.recordInfo.missionnum}}</td>
-                        <td>{{record.recordInfo.name}}</td>
-                        <td>{{record.recordInfo.incidentType}}</td>
-            
-                        <td>{{record.recordInfo.status}}</td>
-                        <td>{{record.recordInfo.subjectCategory}}</td>
-                        {{#if currentRecord.subjectSubCategory}}
-                            <td>{{record.recordInfo.subjectSubCategory}}</td>
-                        {{/if}}
-                        <td class="text-center">
-                            <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
-                                <span class="glyphicon glyphicon-edit" aria-hidden="true" data="edit"></span>Edit
-                            </button>
-                        </td>
-                    </tr>
+                <tr class="text-left text-default">
+                    <td>{{record.recordInfo.incidentnum}}</td>
+                    <td>{{record.recordInfo.missionnum}}</td>
+                    <td>{{record.recordInfo.name}}</td>
+                    <td>{{record.recordInfo.incidentType}}</td>
+                    <td>{{record.recordInfo.status}}</td>
+                    <td>{{record.recordInfo.subjectCategory}}</td>
+                    {{#if currentRecord.subjectSubCategory}}
+                    <td>{{record.recordInfo.subjectSubCategory}}</td>
+                    {{/if}}
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true" data="edit"></span>Edit
+                        </button>
+                    </td>
+                </tr>
                 {{/if}}
             </tbody>
         </table>
-
         <div class="text-center mar0">
             {{#each schemas}}
-                <button type="button" data="{{this.field}}" class="formNav btn-default btn mar1yb pad0 {{this.klass}}">{{this.field}}
-                    <br><small>{{this.sum}} </small></button>
+            <button type="button" data="{{this.field}}" class="formNav btn-default btn mar1yb pad0 {{this.klass}}">{{this.field}}
+                <br><small>{{this.sum}} </small></button>
             {{/each}}
         </div>
         <div class="panel panel-default" style="min-height:400px">
@@ -130,190 +122,172 @@
                 </div>
                 <div id='formMap' class="mar1y"></div>
                 {{#autoForm collection='Records' doc=record id='_formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
-                    <div class="col-md-6" style="font-size: .8em;">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Incident Location/IPP</h3>
+                <div class="col-md-6" style="font-size: .8em;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Incident Location/IPP</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="mar1y">
+                                <span class="text-uppercase strong text-default">Initial Planning Point</span>
                             </div>
-                            <div class="panel-body">
-                                <div class="mar1y">
-                                    <span class="text-uppercase strong text-default">Initial Planning Point</span>
+                            {{> afQuickField name="coords.ippCoordinates.lat"}} {{> afQuickField name="coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
+                            <hr>
+                            <div class="mar1y">
+                                <span class="text-uppercase strong text-default">Initial Direction of Travel</span>
+                            </div>
+                            {{> afQuickField name="incidentOperations.initialDirectionofTravel_Boolean"}}
+                            <!--{{#if afFieldValueIs name="incidentOperations.initialDirectionofTravel_Boolean" value="Yes" }}-->
+                            <div class="{{initialDirectionofTravelClass}}">
+                                <div class="small"><em>Drag arrow towards initial direction of travel</em>
                                 </div>
-                                {{> afQuickField name="coords.ippCoordinates.lat"}} {{> afQuickField name="coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
-                                <hr>
-                                <div class="mar1y">
-                                    <span class="text-uppercase strong text-default">Initial Direction of Travel</span>
-                                </div>
-                                {{> afQuickField name="incidentOperations.initialDirectionofTravel_Boolean"}}
-
-                                <!--{{#if afFieldValueIs name="incidentOperations.initialDirectionofTravel_Boolean" value="Yes" }}-->
-                               
-                                <div class="{{initialDirectionofTravelClass}}">
-                                    <div class="small"><em>Drag arrow towards initial direction of travel</em>
-
-                                    </div>
-                                    <div class="text-default mar0y"><span class="knobVal"></span> degrees</div>
-
-                                        <div class="travelDir form-group mar2x knob"></div>
-
-                                    {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}} {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
-                                </div>
-                      
-
-                                <hr>
-                                <div class="mar1y">
-                                    <span class="text-uppercase strong text-default">Last Known Point/Point Last Seen</span>
-                                </div>
-                                {{> afQuickField name="incidentOperations.lkp_pls_Boolean"}}
-                                {{#if afFieldValueIs name="incidentOperations.lkp_pls_Boolean" value="Yes" }}
-                                    <br> {{> afQuickField name="coords.revisedLKP_PLS.lat"}} {{> afQuickField name="coords.revisedLKP_PLS.lng"}}
-                                    <button type="button" class="btn btn-danger text-black" data="revisedLKP_PLS" style="display:block">
-                                        <input type="checkbox" autocomplete="off" class="hide"> &nbsp; Revised LKP/PLS
-
-
-
-                <span class="fa-stack _pull-right">
+                                <div class="text-default mar0y"><span class="knobVal"></span> degrees</div>
+                                <div class="travelDir form-group mar2x knob"></div>
+                                {{> afQuickField class="hide hideLabel" name="incidentOperations.initialDirectionofTravel"}} {{> afQuickField name='incidentOperations.DOTHowdetermined' options="allowed"}}
+                            </div>
+                            <hr>
+                            <div class="mar1y">
+                                <span class="text-uppercase strong text-default">Revised Last Known Point/Point Last Seen</span>
+                            </div>
+                            {{> afQuickField name="incidentOperations.lkp_pls_Boolean"}} {{#if afFieldValueIs name="incidentOperations.lkp_pls_Boolean" value="Yes" }}
+                            <br> {{> afQuickField name="coords.revisedLKP_PLS.lat"}} {{> afQuickField name="coords.revisedLKP_PLS.lng"}}
+                            <button type="button" class="btn btn-danger text-black" data="revisedLKP_PLS" style="display:block">
+                                <input type="checkbox" autocomplete="off" class="hide"> &nbsp; Revised LKP/PLS
+                                <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-black"></i>
                                         </span>
-
-
-
-                                    </button>
-                                {{/if}}
-                            </div>
+                            </button>
+                            {{/if}}
                         </div>
                     </div>
-                    <div class="col-md-6" style="font-size: .8em;">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Coordinates</h3>
+                </div>
+                <div class="col-md-6" style="font-size: .8em;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Coordinates</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div _class="{{hideCoord 'decisionPointCoord'}}">
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Decision Point</span>
+                                </div>
+                                {{> afQuickField name="coords.decisionPointCoord.lat"}} {{> afQuickField name="coords.decisionPointCoord.lng"}}
+                                <div class="{{hideCoord 'decisionPointCoord'}}">
+                                    {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}}
+                                    <br> {{> afQuickField name="incidentOperations.decisionPointFactor"}}
+                                </div>
                             </div>
-                            <div class="panel-body">
-                                <div _class="{{hideCoord 'decisionPointCoord'}}">
-                                    <div class="mar1y">
-                                        <span class="text-uppercase strong text-default">Decision Point</span>
-                                    </div>
-                                    {{> afQuickField name="coords.decisionPointCoord.lat"}} {{> afQuickField name="coords.decisionPointCoord.lng"}}
-                                    <div class="{{hideCoord 'decisionPointCoord'}}">
-                                        {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}}
-                                        <br> {{> afQuickField name="incidentOperations.decisionPointFactor"}}
-                                    </div>
+                            <hr>
+                            <div _class="{{hideCoord 'destinationCoord'}}">
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Intended Destination</span>
                                 </div>
+                                {{> afQuickField name="coords.destinationCoord.lat"}} {{> afQuickField name="coords.destinationCoord.lng"}}
                                 <hr>
-                                <div _class="{{hideCoord 'destinationCoord'}}">
-                                    <div class="mar1y">
-                                        <span class="text-uppercase strong text-default">Intended Destination</span>
-                                    </div>
-                                    {{> afQuickField name="coords.destinationCoord.lat"}} {{> afQuickField name="coords.destinationCoord.lng"}}
-                                    <hr>
+                            </div>
+                            <div _class="{{hideCoord 'findCoord'}}">
+                                <div class="mar1y">
+                                    <span class="text-uppercase strong text-default">Find Location</span>
                                 </div>
-                                <div _class="{{hideCoord 'findCoord'}}">
-                                    <div class="mar1y">
-                                        <span class="text-uppercase strong text-default">Find Location</span>
-                                    </div>
-                                    {{> afQuickField name="coords.findCoord.lat"}} {{> afQuickField name="coords.findCoord.lng"}}
-                                    <!--
+                                {{> afQuickField name="coords.findCoord.lat"}} {{> afQuickField name="coords.findCoord.lng"}}
+                                <!--
                                 <hr> {{> afQuickField name="incidentOperations.distanceIPP"}} {{> afQuickField name="incidentOperations.dispersionAngle"}} {{> afQuickField name="incidentOperations.findBearing"}} {{> afQuickField name="incidentOperations.trackOffset"}} {{> afQuickField name="incidentOperations.elevationChange"}}
 -->
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="hide">
-                        {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
-                    </div>
+                </div>
+                <div class="hide">
+                    {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
+                </div>
                 {{/autoForm}}
             </div>
         </div>
         <!--END MAP-->
-
         {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="timeLog" validation="none" resetOnSuccess=false}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" validation="none" resetOnSuccess=false}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" validation="none" resetOnSuccess=false}}
         <!--Subject Info-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Subject Info
-<div class="subjectTableView btn-group pull-right" data-toggle="buttons">
-   <label class="btn btn-primary active">
-    <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
-  </label>
-
-   <label class="btn btn-primary">
-    <input type="radio" data="Rescue" name="subjectTableRadio" autocomplete="off"> Rescue
-  </label>
-
-   <label class="btn btn-primary">
-    <input type="radio" data="Personal" name="subjectTableRadio" autocomplete="off"> Personal 
-    <i class="glyphicon glyphicon-lock"></i>
-  </label>
-</div>
-</h3>
+                <h3 class="panel-title" style="display:inline; margin-left: 300px;">Subject Info</h3>
+                <div class="subjectTableView btn-group pull-right" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                        <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" data="Rescue" name="subjectTableRadio" autocomplete="off"> Rescue
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" data="Personal" name="subjectTableRadio" autocomplete="off"> Personal
+                        <i class="glyphicon glyphicon-lock"></i>
+                    </label>
+                </div>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
                 {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
-                    <table class="mar1yb table table-bordered table-condensed {{subjectTableView 'Description'}}" style="table-layout: fixed;">
-                        <thead class='lightBlue-bg'>
-                            <tr>
-                                {{#each subjectKeysDesc}}
-                                    <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                {{/each}}
-                                <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Subject</th>
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#each getSubjectsArrayDesc}}
-                                <tr class="_noBorder">
-                                    {{#each this.value}}
-                                        <td class="pad00 _noBorder">
-                                            {{> afQuickField name=this.name options=this.options }}
-                                        </td>
-                                    {{/each}}
-                                    <td class="padsm">
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
-                                    </td>
-                                </tr>
+                <table class="mar1yb table table-bordered table-condensed {{subjectTableView 'Description'}}" style="table-layout: fixed;">
+                    <thead class='_lightBlue-bg'>
+                        <tr>
+                            {{#each subjectKeysDesc}}
+                            <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
                             {{/each}}
-                        </tbody>
-                    </table>
-                    <table class="mar1yb table _table-bordered table-condensed {{subjectTableView 'Rescue'}}" style="table-layout: fixed;">
-                        <thead class='lightBlue-bg'>
-                            <tr>
-                                {{#each subjectKeysRescue}}
-                                    <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                {{/each}}
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#each getSubjectsArrayRescue}}
-                                <tr class="subjectRescueRow" data-index="{{this.index}}">
-                                    {{#each this.value}}
-                                        <td class="pad00">
-                                            {{> afQuickField name=this.name options=this.options }}
-                                        </td>
-                                    {{/each}}
-                                </tr>
+                            <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody class='white-bg'>
+                        {{#each getSubjectsArrayDesc}}
+                        <tr class="_noBorder">
+                            {{#each this.value}}
+                            <td class="pad00 _noBorder">
+                                {{> afQuickField name=this.name options=this.options }}
+                            </td>
                             {{/each}}
-                        </tbody>
-                    </table>
-                    <table class="mar1yb table _table-bordered table-condensed {{subjectTableView 'Personal'}}" style="table-layout: fixed;">
-                        <thead class='lightBlue-bg'>
-                            <tr>
-                                {{#each subjectKeysPersonal}}
-                                    <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                {{/each}}
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#each getSubjectsArrayPersonal}}
-                                <tr>
-                                    {{#each this.value}}
-                                        <td class="pad00">
-                                            {{> afQuickField name=this.name options=this.options }}
-                                        </td>
-                                    {{/each}}
-                                </tr>
+                            <td class="padsm">
+                                <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                <table class="mar1yb table _table-bordered table-condensed {{subjectTableView 'Rescue'}}" style="table-layout: fixed;">
+                    <thead class='_lightBlue-bg'>
+                        <tr>
+                            {{#each subjectKeysRescue}}
+                            <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
                             {{/each}}
-                        </tbody>
-                    </table>
+                        </tr>
+                    </thead>
+                    <tbody class='white-bg'>
+                        {{#each getSubjectsArrayRescue}}
+                        <tr class="subjectRescueRow" data-index="{{this.index}}">
+                            {{#each this.value}}
+                            <td class="pad00">
+                                {{> afQuickField name=this.name options=this.options }}
+                            </td>
+                            {{/each}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                <table class="mar1yb table _table-bordered table-condensed {{subjectTableView 'Personal'}}" style="table-layout: fixed;">
+                    <thead class='lightBlue-bg'>
+                        <tr>
+                            {{#each subjectKeysPersonal}}
+                            <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody class='white-bg'>
+                        {{#each getSubjectsArrayPersonal}}
+                        <tr>
+                            {{#each this.value}}
+                            <td class="pad00">
+                                {{> afQuickField name=this.name options=this.options }}
+                            </td>
+                            {{/each}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
                 {{/autoForm}}
                 <button type="submit" class="newSubject btn btn-primary mar0">New Subject</button>
             </div>
@@ -324,11 +298,10 @@
             </div>
             <div class="panel-body">
                 {{#if config.forecastAPI}}
-                    <button type="button" class="btn btn-primary mar0y" id="weatherBtn">
-                        <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via Web
-                    </button>
-                    <span class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span> {{/if}}
-                {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}} {{> afQuickField name="weather" options=this.options }} {{/autoForm}}
+                <button type="button" class="btn btn-primary mar0y" id="weatherBtn">
+                    <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via Web
+                </button>
+                <span class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span> {{/if}} {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}} {{> afQuickField name="weather" options=this.options }} {{/autoForm}}
             </div>
         </div>
         <div class="panel panel-default _text-center">
@@ -336,13 +309,12 @@
                 <h3 class="panel-title">Find Location</h3>
             </div>
             <div class="panel-body">
-                {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" validation="none" resetOnSuccess=false}}
-                    {{#if disableFindLocation}}
-                        <span class="small em mar0y text-default">*Drop Find Location Point to activate fields</span> {{else}}
-                        <button type="button" class="btn btn-primary mar0y" id="mapCalcBtn" style="display:block">
-                            <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate Measurements
-                        </button>
-                    {{/if}} {{> afQuickField name="findLocation" options=this.options }} {{/autoForm}}
+                {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" validation="none" resetOnSuccess=false}} {{#if disableFindLocation}}
+                <span class="small em mar0y text-default">*Drop Find Location Point to activate fields</span> {{else}}
+                <button type="button" class="btn btn-primary mar0y" id="mapCalcBtn" style="display:block">
+                    <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate Measurements
+                </button>
+                {{/if}} {{> afQuickField name="findLocation" options=this.options }} {{/autoForm}}
             </div>
         </div>
         {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incidentOutcome" buttonContent= "Save" }}
@@ -363,30 +335,30 @@
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
                 {{#autoForm id="editSubjectForm2" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
-                    <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
-                        <thead class='lightBlue-bg'>
-                            <tr>
-                                {{#each resourceKeys}}
-                                    <th class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0; font-size: .7em;">{{this}}</th>
-                                {{/each}}
-                                <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Resource</th>
-                            </tr>
-                        </thead>
-                        <tbody class='white-bg'>
-                            {{#each getResourceArray2}}
-                                <tr class="_noBorder">
-                                    {{#each this.value}}
-                                        <td class="pad00 _noBorder">
-                                            {{> afQuickField name=this.name options=this.options }}
-                                        </td>
-                                    {{/each}}
-                                    <td class="padsm">
-                                        <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
-                                    </td>
-                                </tr>
+                <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
+                    <thead class='lightBlue-bg'>
+                        <tr>
+                            {{#each resourceKeys}}
+                            <th class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
                             {{/each}}
-                        </tbody>
-                    </table>
+                            <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Resource</th>
+                        </tr>
+                    </thead>
+                    <tbody class='white-bg'>
+                        {{#each getResourceArray2}}
+                        <tr class="_noBorder">
+                            {{#each this.value}}
+                            <td class="pad00 _noBorder">
+                                {{> afQuickField name=this.name options=this.options }}
+                            </td>
+                            {{/each}}
+                            <td class="padsm">
+                                <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
                 {{/autoForm}}
                 <button type="submit" class="newResource btn btn-primary mar0">New Resource</button>
                 <div class="col-md-12">
@@ -394,25 +366,16 @@
                 </div>
             </div>
         </div>
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
-        {{#with record}}
-            {{#if customQuestions}}
-                {{#if customQuestions}}
-                    <div class="panel panel-default _text-center">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Custom Questions</h3>
-                        </div>
-                        <div class="panel-body">
-                            {{#autoForm collection='Records' validation="submit" doc=this id='formdId' autosave=true type=formType resetOnSuccess='false' }}
-                                {{#if customQuestions.q1}} {{> afFormGroup name="customQuestions.a1" label=customQuestions.q1}}{{/if}}
-                                {{#if customQuestions.q2}} {{> afFormGroup name="customQuestions.a2" label=customQuestions.q2}}{{/if}}
-                                {{#if customQuestions.q3}} {{> afFormGroup name="customQuestions.q3" label=customQuestions.q3}}{{/if}}
-                            {{/autoForm}}
-                        </div>
-                    </div>
-                {{/if}}
-            {{/if}}
-        {{/with}}
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }} {{#with record}} {{#if customQuestions}} {{#if customQuestions}}
+        <div class="panel panel-default _text-center">
+            <div class="panel-heading">
+                <h3 class="panel-title">Custom Questions</h3>
+            </div>
+            <div class="panel-body">
+                {{#autoForm collection='Records' validation="submit" doc=this id='formdId' autosave=true type=formType resetOnSuccess='false' }} {{#if customQuestions.q1}} {{> afFormGroup name="customQuestions.a1" label=customQuestions.q1}}{{/if}} {{#if customQuestions.q2}} {{> afFormGroup name="customQuestions.a2" label=customQuestions.q2}}{{/if}} {{#if customQuestions.q3}} {{> afFormGroup name="customQuestions.q3" label=customQuestions.q3}}{{/if}} {{/autoForm}}
+            </div>
+        </div>
+        {{/if}} {{/if}} {{/with}}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Saved Incident Files</h3>
@@ -420,10 +383,9 @@
             <div class="panel-body afBody">
                 <div class="list-group">
                     {{#if fileUploads.length}}
-                        <label class="control-label">Click File to View:</label>
-                    {{/if}}
-                    {{#each fileUploads}}
-                        <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a> {{/each}}
+                    <label class="control-label">Click File to View:</label>
+                    {{/if}} {{#each fileUploads}}
+                    <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a> {{/each}}
                 </div>
                 <label class="control-label">Upload Files</label>
                 {{> upload_bootstrap formData=record multiple=true}} </div>
@@ -435,4 +397,3 @@
         </div>
     </div>
 </template>
-

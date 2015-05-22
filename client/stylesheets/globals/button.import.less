@@ -4,20 +4,30 @@
     padding: 1em 1.25em; // 48px tall
 }
 
-[class*="btn-primary"] {
-    background-color: @color-lightBlue;
-    border-color: @color-lightBlue;
-    color: @color-empty;
-    &:hover {
-        background-color: darken(@color-primary, 5%);
-    }
-    &:active {
-        box-shadow: rgba(0, 0, 0, .3) 0 1px 3px 0 inset;
-    }
-    &[class*="active"] {
-        background-color: #30BCC8;
-        border-color: #30BCC8;
-        
+.wrapper-auth {
+    [class*="btn-primary"] {
+        text-transform: uppercase;
+        background-color: @color-orange;
+        border-color: @color-orange2;
+        color: @color-navyBlue;
+        &:hover {
+            background-color: @color-orange;
+            color: @color-light
+        }
+        &:active {
+            box-shadow: rgba(0, 0, 0, .3) 0 1px 3px 0 inset;
+            background-color: @color-orange;
+            color: @color-white
+        }
+        &:focus {
+            box-shadow: rgba(0, 0, 0, .3) 0 1px 3px 0 inset;
+            background-color: @color-orange;
+            color: @color-white
+        }
+        &[class*="active"] {
+            background-color: @color-orange;
+            color: @color-white
+        }
     }
 }
 
@@ -47,15 +57,16 @@
         }
         &[class*="secondary"] {
             .transition( all 300ms ease-in);
-            box-shadow: lighten(@color-light, 5%) 0 0 0 1px inset;
+            box-shadow: lighten(@color-white, 5%) 0 0 0 1px inset;
             color: @color-empty;
-            background:@color-blue;
+            background: @color-dark;
             &:hover {
                 color: @color-rare;
             }
             &:active,
             &.active {
-                box-shadow: lighten(@color-light, 25%) 0 0 0 1px inset;
+                box-shadow: lighten(@color-white, 25%) 0 0 0 1px inset;
+                background: @color-blue;
             }
         }
         &[disabled] {

@@ -116,7 +116,7 @@ dateChart = function (records) {
                     div.select(".title").append("a")
                         .attr("href", "javascript:reset(" + id + ")")
                         .attr("class", "reset")
-                        .text("reset")
+                        .text(" reset")
                         .style("display", "none");
                     g = div.append("svg")
                         .attr("width", width + margin.left + margin.right)

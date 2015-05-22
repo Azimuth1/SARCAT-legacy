@@ -30,8 +30,8 @@ Template.records.helpers({
             return d.tableList;
         }).map(function (d) {
             return {
-                headerClass: 'lightBlue-bg',
-                cellClass: 'white-bg',
+                //headerClass: 'lightBlue-bg',
+                //cellClass: 'white-bg',
                 key: d.field,
                 fieldId: d.field,
                 label: function () {
@@ -42,8 +42,8 @@ Template.records.helpers({
             };
         }).value();
         fields.unshift({
-            headerClass: 'lightBlue-bg text-center',
-            cellClass: 'white-bg recordSel text-center pointer',
+            //headerClass: 'text-center',
+            cellClass: 'recordSel',
             fieldId: 'recordSel',
             key: 'cb',
             sortable: false,
