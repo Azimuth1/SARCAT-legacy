@@ -38,7 +38,7 @@ Template.userhome.helpers({
             return d.tableVisible;
         }).map(function (d) {
             return {
-                headerClass: 'default-bg',
+                headerClass: 'lightBlue-bg',
                 cellClass: 'white-bg',
                 key: d.field,
                 fieldId: d.field,
