@@ -490,7 +490,7 @@ insertSampleRecords = function () {
     data = [];
 
 
-    var length = 200;
+    var length = 50;
 
     var rand = function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;

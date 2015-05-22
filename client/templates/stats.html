@@ -1,46 +1,33 @@
 <template name="stats">
-    <div class="tab-content admin pad1 ">
-        <div class="panel panel-default">
-            <div class="panel-body pad1 greenish-bg">
-                <div class=" col-md-12 pad00">
-                    <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
-                    <div id='recordsMap' style="width:100%;height:300px">
-                    </div>
-                    <div class="col-md-12 pad00 mar0y">
-                        {{#each stats}}
-                        <div class="col-md-12 noBorder pad00 white-bg">
-                            <div class="panel panel-default noBorder">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title text-center text-uppercase">{{this.field}}</h3>
-                                </div>
-                                <div class="panel-body afBody pad0 _white-bg">
-                                    <div class="row">
-                                        {{#each this.data}}
-                                        <div class="col-md-4">
-                                            <span class="strong text-default text-uppercase">{{this.key}}</span>
-                                            <span class="text-orange em">{{this.val}}</span>
-                                        </div>
-                                        {{/each}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                    </div>
+    <div class="content-scrollable pad2">
+        <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
+        <div id='recordsMap' style="width:100%;height:300px">
+        </div>
+        <div class="white-border">
+        {{#each stats}}
+        <div class="statInfo">
+            <div class="chartTitle">{{this.field}}</div>
+            <div class="cont">
+                {{#each this.data}}
+                <div class="_col-md-4 chartBody">
+                    <div class="stronger">{{this.key}}: </div>
+                    <div class="bod">{{this.val}}</div>
                 </div>
+                {{/each}}
             </div>
         </div>
-        <div id="dateChart">
-            <div id="charts">
-
-                <div id="date-chart" class="chart col-md-12">
-                    <div class="title text-center text-orange">Incident Date Range Slider</div>
+        {{/each}}
+        </div>
+        <hr>
+        <div class="col-md-12 mar2y">
+            <div id="dateChart" class="panel-body pad1 greenish-bg white-border">
+                <div id="charts">
+                    <div id="date-chart" class="chart col-md-12">
+                        <div class="title text-center text-orange">Incident Date Range Slider</div>
+                    </div>
+                    <div id="totals" class="text-light text-right mar2x"><span id="Active">{{currentRecords}}</span> of <span id="total">-</span> records selected.</div>
                 </div>
-
-  <div id="totals" class="text-light text-right mar2x"><span id="Active">{{currentRecords}}</span> of <span id="total">-</span> records selected.</div>
-
             </div>
-          
         </div>
         <!--  <h4 class="text-center">Incident Date Calender View</h4>-->
         <div id="d3Calender" class="renderedChart"></div>

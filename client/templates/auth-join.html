@@ -12,9 +12,9 @@
             <div class="wrapper-auth">
                 <div class="title">
                     <h2 class="h1 mar00">SARCAT</h2>
-                    <p>Search & Rescue Incident Database</p>
+                    <p class="text-lightBlue">Search & Rescue Incident Database</p>
                 </div>
-                <h3 class="h3 mar0y em">Sign-in</h3>
+               
                 <form>
                     {{#if errorMessages}}
                     <div class="list-errors">
@@ -44,7 +44,7 @@
                         <input type="password" name="confirm" placeholder="Confirm Password" />
                         <span class="tmp-icon-lock" title="Confirm Password"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                    <button type="submit" class="btn-primary btn-pad">
                         <span class="tmp-icon-user-add" aria-hidden="true"></span>Join Now</button>
                     <a href="{{pathFor 'signin'}}" class="link-auth-alt">Have an account? Sign in</a>
                 </form>
