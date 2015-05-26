@@ -4,9 +4,10 @@
 </template>
 <template name="form">
     <div id="formPage">
+    <div class="headerTable">
         <table class="recordRecordInfoTable table table-bordered mar00">
             <thead>
-                <tr>
+                <tr class="white">
                     <th>Incident #</th>
                     <th>Mission #</th>
                     <th>Name</th>
@@ -57,10 +58,13 @@
                 {{/if}}
             </tbody>
         </table>
-        <div class="text-center mar0">
+        </div>
+        <div class="formNav1">
             {{#each schemas}}
-            <button type="button" data="{{this.field}}" class="formNav btn-default btn mar1yb pad0 {{this.klass}}">{{this.field}}
-                <br><small>{{this.sum}} </small></button>
+            <div data="{{this.field}}" class="formNav btn btn-sm pad0 btn-default_btn {{this.klass}}">
+                <div class="stronger">{{this.field}}</div>
+                <div class="bod">{{this.sum}}</div>
+            </div>
             {{/each}}
         </div>
         <div class="panel panel-default" style="min-height:400px">
@@ -90,14 +94,14 @@
                             <div class="btn-group-vertical btn-vertical btn-block" data-toggle="buttons">
                                 <button type="button" class="btn btn-primary {{activeLayer 'destinationCoord'}}" data="destinationCoord">
                                     <input type="checkbox" autocomplete="off"> &nbsp; Intended Destination
-                                    <span class="fa-stack _pull-right">
-                                          <i class="fa fa-flag-checkered fa-2x fa-fw text-primary"></i>
+                                    <span class="fa-stack ">
+                                          <i class="fa fa-flag-checkered fa-2x fa-fw text-blue"></i>
                                         </span>
                                 </button>
                                 <button type="button" class="btn btn-primary {{activeLayer 'intendedRoute'}}" data="intendedRoute">
                                     <input type="checkbox" autocomplete="off"> &nbsp; Intended Route
                                     <span class="fa-stack">
-                                          <i class="fa fa-long-arrow-right fa-2x fa-fw text-primary"></i>
+                                          <i class="fa fa-long-arrow-right fa-2x fa-fw text-blue"></i>
                                         </span>
                                 </button>
                             </div>
@@ -190,9 +194,6 @@
                                     <span class="text-uppercase strong text-default">Find Location</span>
                                 </div>
                                 {{> afQuickField name="coords.findCoord.lat"}} {{> afQuickField name="coords.findCoord.lng"}}
-                                <!--
-                                <hr> {{> afQuickField name="incidentOperations.distanceIPP"}} {{> afQuickField name="incidentOperations.dispersionAngle"}} {{> afQuickField name="incidentOperations.findBearing"}} {{> afQuickField name="incidentOperations.trackOffset"}} {{> afQuickField name="incidentOperations.elevationChange"}}
--->
                             </div>
                         </div>
                     </div>
@@ -204,59 +205,65 @@
             </div>
         </div>
         <!--END MAP-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="timeLog" validation="none" resetOnSuccess=false}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" validation="none" resetOnSuccess=false}} {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" validation="none" resetOnSuccess=false}}
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="timeLog" validation="none" resetOnSuccess=false}}
+        <!--Incident Location-->
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" validation="none" resetOnSuccess=false}}
+        <!--/Incident Location-->
+        <!--Incident-->
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" validation="none" resetOnSuccess=false}}
+        <!--/Incident-->
         <!--Subject Info-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title" style="display:inline; margin-left: 300px;">Subject Info</h3>
-                <div class="subjectTableView btn-group pull-right" data-toggle="buttons">
-                    <label class="btn btn-primary active">
-                        <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="radio" data="Rescue" name="subjectTableRadio" autocomplete="off"> Rescue
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="radio" data="Personal" name="subjectTableRadio" autocomplete="off"> Personal
-                        <i class="glyphicon glyphicon-lock"></i>
-                    </label>
-                </div>
+                <h3 class="panel-title">Subject Info</h3>
+            </div>
+            <div class="subjectTableView btn-group" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" data="Rescue" name="subjectTableRadio" autocomplete="off"> Outcome
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" data="Personal" name="subjectTableRadio" autocomplete="off"> Personal
+                    <i class="glyphicon glyphicon-lock"></i>
+                </label>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
                 {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
-                <table class="mar1yb table table-bordered table-condensed {{subjectTableView 'Description'}}" style="table-layout: fixed;">
-                    <thead class='_lightBlue-bg'>
+                <table class="table table-bordered table-condensed {{subjectTableView 'Description'}}" style="table-layout: fixed;">
+                    <thead>
                         <tr>
                             {{#each subjectKeysDesc}}
-                            <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
+                            <th data-subjectTable="{{this}}" class='text-capitalize'>{{this}}</th>
                             {{/each}}
-                            <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Subject</th>
+                            <th style="font-size: .8em;width:'9.09%'">Remove Subject</th>
                         </tr>
                     </thead>
-                    <tbody class='white-bg'>
+                    <tbody>
                         {{#each getSubjectsArrayDesc}}
-                        <tr class="_noBorder">
+                        <tr>
                             {{#each this.value}}
-                            <td class="pad00 _noBorder">
+                            <td class="pad00">
                                 {{> afQuickField name=this.name options=this.options }}
                             </td>
                             {{/each}}
-                            <td class="padsm">
-                                <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                            <td>
+                                <button data="{{this._key}}" type="button" class="btn btn-warning btn-sm _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
                             </td>
                         </tr>
                         {{/each}}
                     </tbody>
                 </table>
-                <table class="mar1yb table _table-bordered table-condensed {{subjectTableView 'Rescue'}}" style="table-layout: fixed;">
-                    <thead class='_lightBlue-bg'>
+                <table class="table table-bordered table-condensed {{subjectTableView 'Rescue'}}" style="table-layout: fixed;">
+                    <thead>
                         <tr>
                             {{#each subjectKeysRescue}}
-                            <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
+                            <th data-subjectTable="{{this}}" class='text-capitalize'>{{this}}</th>
                             {{/each}}
                         </tr>
                     </thead>
-                    <tbody class='white-bg'>
+                    <tbody>
                         {{#each getSubjectsArrayRescue}}
                         <tr class="subjectRescueRow" data-index="{{this.index}}">
                             {{#each this.value}}
@@ -268,15 +275,15 @@
                         {{/each}}
                     </tbody>
                 </table>
-                <table class="mar1yb table _table-bordered table-condensed {{subjectTableView 'Personal'}}" style="table-layout: fixed;">
-                    <thead class='lightBlue-bg'>
+                <table class="table table-bordered table-condensed {{subjectTableView 'Personal'}}" style="table-layout: fixed;">
+                    <thead>
                         <tr>
                             {{#each subjectKeysPersonal}}
-                            <th data-subjectTable="{{this}}" class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
+                            <th data-subjectTable="{{this}}" class='text-capitalize'>{{this}}</th>
                             {{/each}}
                         </tr>
                     </thead>
-                    <tbody class='white-bg'>
+                    <tbody>
                         {{#each getSubjectsArrayPersonal}}
                         <tr>
                             {{#each this.value}}
@@ -292,19 +299,40 @@
                 <button type="submit" class="newSubject btn btn-primary mar0">New Subject</button>
             </div>
         </div>
-        <div class="panel panel-default _text-center">
+        <!--/Subject Info-->
+        <!--Weather-->
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Weather</h3>
             </div>
+
+
+
+
             <div class="panel-body">
+
+
                 {{#if config.forecastAPI}}
                 <button type="button" class="btn btn-primary mar0y" id="weatherBtn">
                     <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via Web
                 </button>
-                <span class="forecastio small em mar0y text-default">*Powered by <a class="em" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span> {{/if}} {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}} {{> afQuickField name="weather" options=this.options }} {{/autoForm}}
+                <span class="forecastio small em mar0y">*Powered by <a class="em text-lightBlue" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span> 
+                <!---->
+                {{/if}} 
+
+
+                <!---->
+                {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}} 
+                 <!---->
+                {{> afQuickField name="weather" options=this.options }} 
+                <!---->
+                {{/autoForm}}
+                <!---->
             </div>
         </div>
-        <div class="panel panel-default _text-center">
+        <!--/Weather-->
+        <!--Find Location-->
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Find Location</h3>
             </div>
@@ -317,17 +345,9 @@
                 {{/if}} {{> afQuickField name="findLocation" options=this.options }} {{/autoForm}}
             </div>
         </div>
+        <!--/Find Location-->
+        <!--Resources Use-->
         {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incidentOutcome" buttonContent= "Save" }}
-        <!--
-        <div class="panel panel-default _text-center">
-            <div class="panel-heading">
-                <h3 class="panel-title">Rescue Details</h3>
-            </div>
-            <div class="panel-body">
-                {{#autoForm collection='Records' validation="submit" doc=current id='formdId' autosave=true type=formType fields="rescueDetails" buttonContent="Save" }} {{> afQuickField name="rescueDetails.signalling" options="allowed"}} {{> afQuickField name="rescueDetails.injuredSearcher" options="allowed"}} {{#if afFieldValueIs name="rescueDetails.injuredSearcher" value="Yes" }} {{> afQuickField name="rescueDetails.injuredSearcherDetails"}} {{/if}} {{/autoForm}}
-            </div>
-        </div>
--->
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Resources Used
@@ -366,7 +386,12 @@
                 </div>
             </div>
         </div>
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }} {{#with record}} {{#if customQuestions}} {{#if customQuestions}}
+        <!--/Resources Use-->
+        <!--Comment-->
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
+        <!--Comment-->
+        <!--Custom Questions-->
+        {{#with record}} {{#if customQuestions}} {{#if customQuestions}}
         <div class="panel panel-default _text-center">
             <div class="panel-heading">
                 <h3 class="panel-title">Custom Questions</h3>
@@ -376,6 +401,7 @@
             </div>
         </div>
         {{/if}} {{/if}} {{/with}}
+        <!--Custom Questions-->
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Saved Incident Files</h3>
@@ -390,6 +416,7 @@
                 <label class="control-label">Upload Files</label>
                 {{> upload_bootstrap formData=record multiple=true}} </div>
         </div>
+        <!--/Custom Questions-->
         <div class="col-md-12 mar1y">
             <a href="{{pathFor 'records'}}" class="btn btn-primary btn-lg btn-block">
                 <i class="glyphicon glyphicon-check"></i> Done

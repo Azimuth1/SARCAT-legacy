@@ -26,7 +26,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Custom Settings
+                    <h3 class="panel-title">Custom Settings/Preferences
                     </h3>
                 </div>
                 <div class="panel-body afBody">
@@ -62,10 +62,7 @@
                 </div>
                 <div class="panel-body afBody pad00 mar1">
                     <div id='adminMap' style="width:100%;height:500px">
-
-                    <h3 id='geolocate' class="map-ui-button text-uppercase text-light">Geolocate my position!</h3>
-
-
+                        <h3 id='geolocate' class="map-ui-button text-uppercase text-light">Geolocate my position!</h3>
                         <a href='#' id='geolocate' class='map-ui-button'>Geolocate my position!</a>
                         <div class="mapCrosshair">+</div>
                     </div>
@@ -82,7 +79,7 @@
             <div class="fullScreen strong text-center">
             </div>
             <div class="strong userAlert text-capitalize {{userAlertClass}}">
-               {{userAlert.text}}
+                {{userAlert.text}}
             </div>
             {{/if}}
             <div class="afTablePane">
@@ -92,7 +89,8 @@
                             <th class='afTable'>Username</th>
                             <th class='afTable'>Roles</th>
                             <th class='afTable'>Email</th>
-                            <th class='afTable'>Action</th>
+                            <th class='afTable'>Remove</th>
+                            <th class='afTable'>Reset Password</th>
                         </tr>
                     </thead>
                     <tbody class='white-bg'>
@@ -118,7 +116,10 @@
                             </td>
                             <td>{{userEmail}}</td>
                             <td>
-                                <button data="{{this._id}}" type="button" class="pull-right btn btn-primary btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                                <button data="{{this._id}}" type="button" class="pull-right btn btn-danger btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                            </td>
+                            <td>
+                                <button data="{{this._id}}" type="button" class="pull-right btn btn-default btn-xs resetPassword btn-block">Reset</button>
                             </td>
                         </tr>
                         {{/each}}

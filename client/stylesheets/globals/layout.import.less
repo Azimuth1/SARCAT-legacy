@@ -7,6 +7,7 @@ body {
 }
 
 #container {
+
     .position(absolute, 0, 0, 0, 0);
     @media screen and (min-width: 60em) {
         _left: @column;
@@ -14,7 +15,7 @@ body {
     }
     @media screen and (min-width: 80em) {
         _left: 2*@column;
-        right: 2*@column;
+        right: 1*@column;
     }
     // Hide anything offscreen
     overflow: hidden;
@@ -29,6 +30,7 @@ body {
 }
 
 #content-container {
+background-color: @color-navyBlue;
     @media print {
         *, *:before, *:after {
             color: initial !important;

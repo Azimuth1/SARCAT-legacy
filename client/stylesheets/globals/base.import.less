@@ -181,102 +181,20 @@ em {
     display: none;
 }
 
-#editSubjectForm th {
-    border: 1px solid #01717C;
+#editSubjectForm,#editSubjectForm2 {
+    font-size: 70%;
 }
+
+/*
+
 
 #editSubjectForm .form-group {
     margin-bottom: -10px !important;
 }
-/*
-#editSubjectForm select {
-    align-items: center;
-    font-size: 11px;
-    height: 38px;
-    -webkit-appearance: none;
-
-    border-radius: 0;
-}
-
-#editSubjectForm input {
-    height: 38px;
-    line-height: 30px;
-    border-radius: 0;
-}
-
-#editSubjectForm button {
-    font-size: 11px;
-}
-
-#editSubjectForm .panel-default {
-    border: none;
-    margin-bottom: 35px;
-    margin: 0;
-}
-
-#editSubjectForm .panel-body {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-inline-flexbox;
-    display: -webkit-inline-flex;
-    display: inline-flex;
-    -webkit-box-direction: normal;
-    -moz-box-direction: normal;
-    -webkit-box-orient: horizontal;
-    -moz-box-orient: horizontal;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-align-content: stretch;
-    -ms-flex-line-pack: stretch;
-    align-content: stretch;
-    -webkit-box-align: center;
-    -moz-box-align: center;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0;
-}
-
-#editSubjectForm .panel-body .form-group {
-    width: 9.09%;
-    -webkit-box-ordinal-group: 1;
-    -moz-box-ordinal-group: 1;
-    -webkit-order: 0;
-    -ms-flex-order: 0;
-    order: 0;
-    -webkit-box-flex: 0;
-    -moz-box-flex: 0;
-    -webkit-flex: 0 1 auto;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    align-self: auto;
-    margin-bottom: 0;
-}
-
-#editSubjectForm .help-block {
-    display: none;
-}
-
-#editSubjectForm table tbody tr td button {
-    height: 35px;
-    margin: 0;
-}
-
 
 
 */
-
+/*
 #updateResourceForm {
     display: -webkit-box;
     display: -moz-box;
@@ -330,7 +248,7 @@ em {
     font-size: 11px;
     padding: 0 2px;
     -webkit-appearance: none;
-    /*border-color: #018996;*/
+   
 }
 
 #updateResourceForm .form-group button {
@@ -447,6 +365,7 @@ em {
     margin: 20px 10px;
     display: initial;
 }
+*/
 
 .w2x {
     width: 200% !important;
@@ -497,7 +416,6 @@ em {
     color: #FFF;
     border-color: #018996;
 }
-
 
 .recordForm0 .form-group {
     float: left;
@@ -580,7 +498,6 @@ em {
     margin-bottom: 0px;
 }
 
-
 .btnBlock .form-group button {
     width: 100%;
 }
@@ -624,7 +541,7 @@ em {
 
 .mapBtns .btn {
     font-size: 12px;
-    border: 1px solid #E2E2E2;
+    border: 1px solid @color-light !important;
     text-transform: uppercase;
     height: 36px;
     min-width: 223px;
@@ -640,6 +557,7 @@ em {
 
 .mapBtns .btn:not(.active) {
     background-color: #fff !important;
+    color: @color-dark !important;
 }
 
 .mapBtns .btn.active {
@@ -1121,8 +1039,8 @@ a {
     margin-top: -18px;
 }
 
-.recordRecordInfoTable thead {
-    border-color: #018996 !important;
+.headerTable {
+    margin: -10px -10px 10px;
 }
 
 .recordRecordInfoTable th {
@@ -1561,10 +1479,10 @@ table .hideInTable {
     display: none;
 }
 
-._btn-info {
+.btn-info {
     color: @color-white !important;
-    background-color: @color-lightBlue;
-    border-color: @color-lightBlue;
+    background-color: @color-turq;
+    border-color: @color-turq;
 }
 
 .btn.btn-danger {
@@ -1600,6 +1518,7 @@ btn.btn-success {
 
 .contentNav {
     border-bottom: 1px solid @color-light;
+    background: @color-navyBlue;
     img {
         max-height: 42px;
         border: 1px solid #fff;
@@ -1611,15 +1530,18 @@ table.reactive-table,
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
     color: @color-greenish;
     text-align: center;
-    border-color: @color-navyBlue;
+    border-color: @color-light;
     .sortable {
-        color: @color-orange;
+        color: @color-light;
     }
     thead th {
-        color: @color-orange;
-        background: @color-greenish;
+        i {
+            font-style: normal;
+        }
+        background: @color-blue;
+        color:@color-white;
         text-align: center;
-        border-color: @color-navyBlue;
+        border-color: @color-light;
         font-weight: bold;
         font-size: 1.1em;
     }
@@ -1628,10 +1550,14 @@ table.reactive-table,
     }
     tbody td {
         background-color: @color-white;
-        color: @color-greenish;
-        //background-color:@color-light;
+        color: @color-blue;
         border-color: @color-light;
-        font-weight: bold
+        padding: 1px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .form-group {
+        margin: 0;
     }
 }
 
@@ -1717,6 +1643,10 @@ table.reactive-table,
 
 .text-navyBlue {
     color: @color-navyBlue !important;
+}
+
+.text-blue {
+    color: @color-blue !important;
 }
 
 .text-black {
@@ -1824,33 +1754,35 @@ table.reactive-table,
 }
 
 .panel-default {
-    border-color: @color-light;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
-}
-
-.panel-title {
-    font-size: 24px !important;
-}
-
-.panel-default > .panel-heading {
-    padding-top: 0.5em;
-    color: @color-orange;
-    text-align: center;
-    font-weight: bolder;
-    font-size: 1.5em;
-    text-transform: uppercase;
+    border-color: @color-greenish;
     background: @color-greenish;
+    .panel-title {
+        font-size: 24px !important;
+    }
+    .panel-heading {
+        padding-top: 0.5em;
+        text-align: center;
+        font-weight: bolder;
+        font-size: 1.5em;
+        text-transform: uppercase;
+        background: @color-greenish;
+        color: @color-white;
+        border: none;
+    }
+    .panel-body {
+        padding-top: 0.5em;
+        color: @color-blue;
+        background: @color-white;
+    }
+    textarea.form-control,
+    input.form-control,
+    number .form-control,
+    option.form-control {
+        color: @color-turq;
+    }
 }
-
-.panel-default > .panel-body {
-    padding-top: 0.5em;
-    color: @color-greenish;
-    background: @color-white;
-}
-
-
-
-/*
+/*/////////
 form {
     background: @color-greenish!important;
     .panel {
@@ -1881,4 +1813,36 @@ form {
 
     }
 }
-*/
+//////*/
+
+.formNav1 {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    font-size: .8em;
+    .formNav {
+        flex-shrink: 1;
+        flex-grow: 1;
+        margin: 2px;
+        text-align: center;
+        color: @color-navyBlue;
+        background: @color-white;
+        white-space: normal;
+        line-height: 1;
+    }
+    .stronger {
+        // text-transform: uppercase;
+        font-weight: bold;
+    }
+}
+
+.title p.acr {
+    color: @color-white;
+    font-variant: small-caps;
+}
+
+p.acr b {
+    font-size: 120%;
+    margin-left: 0.2em;
+    text-transform: uppercase;
+}
