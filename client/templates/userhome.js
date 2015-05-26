@@ -38,8 +38,8 @@ Template.userhome.helpers({
             return d.tableVisible;
         }).map(function (d) {
             return {
-                headerClass: 'lightBlue-bg',
-                cellClass: 'white-bg',
+                //headerClass: 'lightBlue-bg',
+                //cellClass: 'white-bg',
                 key: d.field,
                 fieldId: d.field,
                 label: function () {

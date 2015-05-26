@@ -229,6 +229,7 @@ Template.form.helpers({
     },
     customQuestions: function () {
         var record = Session.get('record');
+        if(!record.customQuestions){return;}
         var keys = Object.keys(record.customQuestions)
             return keys && keys.length;
     },
@@ -513,11 +514,13 @@ Template.form.events({
     'click .mapPoints .btn': function (event, template) {
         var context = template.$(event.target);
         var pointType = context.attr('data');
-        var active = context.hasClass('active')
+        var active = context.hasClass('active');
+       // console.log(active,pointType,this.record)
         var coords = getCoords(this.record);
         var item = _.findWhere(coords, {
             val: pointType
         });
+        console.log(pointType,item)
         if (!item) {
             return;
         };
@@ -564,10 +567,12 @@ Template.form.events({
         if (val === "Injured" || val === 'DOA') {
             $('.subjectRescueRow[data-index="' + ind + '"] select')
                 .not('[name*="status"]')
+                .not('[name*="evacuationMethod"]')
                 .attr('disabled', false);
         } else {
             $('.subjectRescueRow[data-index="' + ind + '"] select')
                 .not('[name*="status"]')
+                .not('[name*="evacuationMethod"]')
                 .attr('disabled', true);
         }
     },

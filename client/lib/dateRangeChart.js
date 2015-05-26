@@ -1,11 +1,18 @@
 dateChart = function (records) {
+    records = _.chain(records).filter(function (d, i) {
+        return d.timeLog && d.timeLog.lastSeenDateTime;
+    }).map(function (d) {
+        d.date = parseDate(d.timeLog.lastSeenDateTime);
+        return d;
+    }).compact().value();
     var dates = records
-    var maxYear = d3.max(records, function (d) {
-        return new Date(d.timeLog.lastSeenDateTime);
+    var extent = d3.extent(records, function (d) {
+        if (d.timeLog && d.timeLog.lastSeenDateTime) {
+            return new Date(d.timeLog.lastSeenDateTime);
+        }
     });
-    var minYear = d3.min(records, function (d) {
-        return new Date(d.timeLog.lastSeenDateTime);
-    });
+    var minYear = extent[0];
+    var maxYear = extent[1];
     // Various formatters.
     var formatNumber = d3.format(",d");
     var formatChange = d3.format("+,d");
@@ -15,9 +22,6 @@ dateChart = function (records) {
         .key(function (d) {
             return d3.time.day(d.date);
         });
-    records.forEach(function (d, i) {
-        d.date = parseDate(d.timeLog.lastSeenDateTime);
-    });
     // Create the crossfilter for the relevant dimensions and groups.
     record = crossfilter(records);
     var all = record.groupAll();
@@ -80,7 +84,6 @@ dateChart = function (records) {
         console.log()
         charts[i].filter(null);
         renderAll();
-
         stats.redrawRecords(records);
     };
 

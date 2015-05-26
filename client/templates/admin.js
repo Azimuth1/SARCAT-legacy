@@ -4,9 +4,10 @@ Template.admin.onCreated(function (a) {
 });
 Template.admin.onRendered(function (a) {
     $('label:contains("Forecast API Key")')
-        .append('<span class="forecastio small em mar0y text-default">*Auto-calculate weather by getting a key from <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a></span>');
+   // Click on Register to set up API account
+        .append('<span class="forecastio small em mar0y text-default">*Register at <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a> to obtain a user key</span>');
     $('label:contains("MapQuest API Key")')
-        .append('<span class="forecastio small em mar0y text-default">*Auto-calculate elevation by getting a key from <a class="em" href="http://open.mapquestapi.com/elevation/" target="_blank">MapQuest</a></span>');
+        .append('<span class="forecastio small em mar0y text-default">*Register at <a class="em" href="http://open.mapquestapi.com/elevation/" target="_blank">MapQuest</a> to obtain a user key</span>');
     var logo = document.getElementById('agencyLogo');
     logo.src = 'uploads/logo/' + Session.get('logo');
     logo.style.display = 'inline';

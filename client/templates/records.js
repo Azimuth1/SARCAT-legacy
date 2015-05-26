@@ -163,7 +163,6 @@ Template.records.events({
                     .length;
                 Session.set('selectedRecords', checked);
                 $('.recordSelAll').prop('checked', false)
-
             });
         }
     },
@@ -253,7 +252,6 @@ Template.records.events({
                     alert("Invalid data");
                     return;
                 }
-            
                 var fileName = ReportTitle.replace(/ /g, "_");
                 var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
                 var link = document.createElement("a");
@@ -292,8 +290,10 @@ AutoForm.hooks({
         beginSubmit: function () {},
         endSubmit: function () {},
         onSuccess: function (formType, result) {
-            $('#createRecordModal')
-                .modal('hide');
+            return Router.go('form', {
+                _id: result
+            });
+            //$('#createRecordModal').modal('hide');
         },
         onError: function (formType, error) {
             console.log(error);
