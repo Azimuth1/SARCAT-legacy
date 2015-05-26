@@ -1,9 +1,9 @@
 var mapDrawn;
-Template.records.onCreated(function (a) {
+Template.records.onCreated(function(a) {
     Session.set('activeRecord', false);
     Session.set('selectedRecords', 0);
 });
-Template.records.onRendered(function () {
+Template.records.onRendered(function() {
     var records = Records.find().fetch();
     r = records
     Session.set('userView', 'records');
@@ -14,7 +14,7 @@ Template.records.onRendered(function () {
         "text": "Incident Location"
     });
     $('#createRecordModal')
-        .on('shown.bs.modal', function (e) {
+        .on('shown.bs.modal', function(e) {
             AutoForm.resetForm('createRecordModalFormId');
             $('[name="recordInfo.incidentEnvironment"]').val('Land')
             $('[name="recordInfo.incidentType"]').val('Search')
@@ -25,16 +25,16 @@ Template.records.onRendered(function () {
         .after('<span class="small em mar0y text-default"><a class="em" href="/profiles" target="_blank"}}"> *info</span>');
 });
 Template.records.helpers({
-    settings: function () {
-        var fields = _.chain(allInputs).filter(function (d) {
+    settings: function() {
+        var fields = _.chain(allInputs).filter(function(d) {
             return d.tableList;
-        }).map(function (d) {
+        }).map(function(d) {
             return {
                 //headerClass: 'lightBlue-bg',
                 //cellClass: 'white-bg',
                 key: d.field,
                 fieldId: d.field,
-                label: function () {
+                label: function() {
                     return new Spacebars.SafeString('<span class="hideInTable strong">' + d.parent + ' - </span><i>' + d.label + '</i>');
                 },
                 hidden: d.tableVisible ? false : true,
@@ -48,10 +48,10 @@ Template.records.helpers({
             key: 'cb',
             sortable: false,
             hideToggle: true,
-            label: function () {
+            label: function() {
                 return new Spacebars.SafeString('<input type="checkbox" class="recordSelAll">');
             },
-            fn: function (value, obj) {
+            fn: function(value, obj) {
                 if (!obj.recordInfo) {
                     return;
                 }
@@ -71,43 +71,43 @@ Template.records.helpers({
             showNavigationRowsPerPage: false,
         };
     },
-    Records: function () {
+    Records: function() {
         return Records;
     },
-    userView: function (name) {
+    userView: function(name) {
         console.log(Session.equals('userView', name))
         return Session.equals('userView', name);
     },
-    allRecords: function () {
+    allRecords: function() {
         return Records.find({}, {
             sort: {
                 'recordInfo.incidentnum': -1
             }
         });
     },
-    isAdmin: function () {
+    isAdmin: function() {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    noRecords: function () {
+    noRecords: function() {
         return !Records.find()
             .count()
     },
-    createNewBtn: function () {
+    createNewBtn: function() {
         var agencyProfile = Session.get('agencyProfile');
-        var profile = _.compact(_.map(agencyProfile, function (d) {
+        var profile = _.compact(_.map(agencyProfile, function(d) {
                 return d;
             }))
             .length;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile && role;
     },
-    selectedRecords: function () {
+    selectedRecords: function() {
         return Session.get('selectedRecords');
     },
-    recordMap: function () {
+    recordMap: function() {
         return Session.get('recordMap');
     },
-    summary: function () {
+    summary: function() {
         var ar = [];
         arr.push({
             name: 'Total Incidents',
@@ -117,7 +117,7 @@ Template.records.helpers({
     }
 });
 Template.records.events({
-    'click .reactive-table tr': function (event) {
+    'click .reactive-table tr': function(event) {
         if (!this._id || _.contains(event.target.classList, "recordSel")) {
             return;
         }
@@ -126,10 +126,10 @@ Template.records.events({
             _id: this._id
         });
     },
-    'click .createSampleRecords': function (event) {
+    'click .createSampleRecords': function(event) {
         insertSampleRecords()
     },
-    'click .openRecord': function (event, template) {
+    'click .openRecord': function(event, template) {
         if (event.target.className === 'recordSel') {
             return;
         }
@@ -137,14 +137,14 @@ Template.records.events({
             _id: event.currentTarget.id
         });
     },
-    'click .deleteRecord': function (event, template) {
+    'click .deleteRecord': function(event, template) {
         var toDelete = $('.recordSel:checked')
-            .map(function () {
+            .map(function() {
                 return this.value
             })
             .toArray();
         var names = $('.recordSel:checked')
-            .map(function () {
+            .map(function() {
                 return this.name;
             })
             .toArray();
@@ -154,7 +154,7 @@ Template.records.events({
         var message = 'Are you sure you want to delete the following records: ' + names.join(',')
         if (confirm(message)) {
             console.log('!!!')
-            Meteor.call('removeRecord', toDelete, function (error, d) {
+            Meteor.call('removeRecord', toDelete, function(error, d) {
                 console.log(error, d)
                 if (error) {
                     return console.log(error);
@@ -166,7 +166,7 @@ Template.records.events({
             });
         }
     },
-    'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {
+    'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function(event, template) {
         var lat = template.$('[name="coords.ippCoordinates.lat"]')
             .val();
         var lng = template.$('[name="coords.ippCoordinates.lng"]')
@@ -177,15 +177,15 @@ Template.records.events({
         console.log(lat, lng);
         mapDrawn.editPoint(lat, lng);
     },
-    'change .recordSel': function (event, template) {
+    'change .recordSel': function(event, template) {
         var checked = $('.recordSel:checked')
-            .map(function () {
+            .map(function() {
                 return this.value
             })
             .toArray();
         Session.set('selectedRecords', checked.length);
     },
-    'change .recordSelAll': function (event, template) {
+    'change .recordSelAll': function(event, template) {
         var checked = event.target.checked;
         if (checked) {
             $('.recordSel')
@@ -196,20 +196,21 @@ Template.records.events({
         }
         Session.set('selectedRecords', checked);
     },
-    'click #viewMap': function (event, template) {
+    'click #viewMap': function(event, template) {
         var currentMap = Session.get('recordMap');
         Session.set('recordMap', !currentMap);
         var newMap = !currentMap;
         if (newMap) {
-            setTimeout(function () {
+            setTimeout(function() {
                 recordsSetMap('recordsMap', Records.find()
                     .fetch());
             }, 100);
         }
     },
-    'click #downloadRecords': function (event, template) {
+    'click .uploadISRID': function(event, template) {
+
         var checked = $('.recordSel:checked')
-            .map(function () {
+            .map(function() {
                 return this.value;
             })
             .toArray();
@@ -222,7 +223,35 @@ Template.records.events({
                 }
             })
             .fetch();
-        allRecordsFlat = allRecords.map(function (d) {
+        var toUpload = {
+            data: allRecords,
+            profile:Meteor.settings.public.config
+        };
+       // return toUpload;
+        Meteor.call('uploadISRID', {data:toUpload}, function(error, d) {
+            console.log(error, d)
+
+        });
+
+
+
+    },
+    'click #downloadRecords': function(event, template) {
+        var checked = $('.recordSel:checked')
+            .map(function() {
+                return this.value;
+            })
+            .toArray();
+        if (!checked.length) {
+            return;
+        }
+        var allRecords = Records.find({
+                '_id': {
+                    $in: checked
+                }
+            })
+            .fetch();
+        allRecordsFlat = allRecords.map(function(d) {
             return flatten(d, {});
         })
         if (navigator.appName != 'Microsoft Internet Explorer') {
@@ -287,15 +316,15 @@ Template.records.events({
 });
 AutoForm.hooks({
     createRecordModalFormId: {
-        beginSubmit: function () {},
-        endSubmit: function () {},
-        onSuccess: function (formType, result) {
+        beginSubmit: function() {},
+        endSubmit: function() {},
+        onSuccess: function(formType, result) {
             return Router.go('form', {
                 _id: result
             });
             //$('#createRecordModal').modal('hide');
         },
-        onError: function (formType, error) {
+        onError: function(formType, error) {
             console.log(error);
         },
     }

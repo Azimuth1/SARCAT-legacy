@@ -10,7 +10,8 @@
             "state-province": "",
             "county": "",
             "phoneNum": ""
-        }
+        },
+        "sarcatServer":"http://spa.tial.ly:5000"
     },
     "private": {
         "_forecastAPI": "",
