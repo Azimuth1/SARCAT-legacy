@@ -9,7 +9,7 @@ Template.stats.onRendered(function() {
     //r = records;
     //drawAllGraphs(records);
     stats = chartStats(records);
-    dateChart(records);
+    //dateChart(records);
     Session.set('activeRecord', null);
     var recordMap = recordsSetMap('recordsMap', records);
 })
@@ -667,9 +667,12 @@ var recordsSetMap = function(context, data) {
             }
         });
     }
+
     data.forEach(function(d) {
+
         mapPoints.forEach(function(feature) {
             var coords = d.coords[feature.val];
+            if(!coords){return;}
             if (coords) {
                 layerGroups[feature.val].addData({
                     "type": "Feature",
@@ -688,11 +691,15 @@ var recordsSetMap = function(context, data) {
             }
         });
     });
+
     var bounds = _.reduce(layerGroups, function(d, e) {
-        if (e.getBounds) {
+ if (!_.keys(e.layers).length) {return}
+        if (_.keys(e.layers).length) {
             return e.getBounds();
         };
+       
         return d.extend(e);
+
     });
     map.fitBounds(bounds);
     return obj;

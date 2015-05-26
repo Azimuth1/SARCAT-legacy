@@ -143,7 +143,7 @@
                             {{> afQuickField name="incidentOperations.initialDirectionofTravel_Boolean"}}
                             <!--{{#if afFieldValueIs name="incidentOperations.initialDirectionofTravel_Boolean" value="Yes" }}-->
                             <div class="{{initialDirectionofTravelClass}}">
-                                <div class="small"><em>Drag arrow towards initial direction of travel</em>
+                                <div class="small"><em>Rotate arrow towards direction of initial direction of travel</em>
                                 </div>
                                 <div class="text-default mar0y"><span class="knobVal"></span> degrees</div>
                                 <div class="travelDir form-group mar2x knob"></div>
@@ -217,7 +217,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Subject Info</h3>
             </div>
-            <div class="subjectTableView btn-group" data-toggle="buttons">
+            <div class="subjectTableView btn-group mar1yb" data-toggle="buttons">
                 <label class="btn btn-primary active">
                     <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
                 </label>
@@ -312,7 +312,7 @@
             <div class="panel-body">
 
 
-                {{#if config.forecastAPI}}
+                {{#if config.internet}}
                 <button type="button" class="btn btn-primary mar0y" id="weatherBtn">
                     <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via Web
                 </button>
