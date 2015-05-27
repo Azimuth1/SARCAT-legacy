@@ -91,12 +91,19 @@ Meteor.methods({
         var update = Records.update(id, {
             $set: obj
         });
-        RecordsAudit.insert({
+        /*RecordsAudit.insert({
             docId: id,
             userId: Meteor.userId(),
             update: name,
             value: val
-        });
+        });*/
+        RecordsAudit.insert({
+            'Record Id': id,
+            userId: Meteor.userId(),
+            'User Name': Meteor.user().username,
+            'field': name,
+            'value': val
+        })
         return update;
     },
     defaultAdmin: function() {
