@@ -1,13 +1,15 @@
 var map;
 var rr;
-Session.setDefault('subjectTableView', 'Description');
 //Template.registerHelper("Schemas", Schemas);
 Template.form.onCreated(function() {
+    Session.set('subjectTableView', 'Description');
     var record = this.data.record;
-    r=record;
-    Tracker.autorun(function() {
-        Session.set('record', Records.findOne(record._id));
-    });
+    Session.set('record', record);
+    // console.log(this.data.record)
+    r = record;
+    //Tracker.autorun(function() {
+    // Session.set('record', Records.findOne(record._id));
+    // });
     Session.set('editRecordInfo', 'list');
     Session.set('userView', this.data.record._id);
 });
@@ -15,12 +17,16 @@ Template.form.onRendered(function() {
     var record = this.data.record;
     map = formSetMap('formMap', record._id);
     var coords = getCoords(record);
+
     coords.forEach(function(d) {
+        //console.log(d)
         if (d.coords) {
             map.add(d);
         }
     });
+    
     map.fitBounds();
+  
     Meteor.call('getFilesInPublicFolder', this.data.record._id, function(err, d) {
         Session.set('fileUploads', d)
     });
@@ -39,6 +45,7 @@ Template.form.onRendered(function() {
         .html(degree);
     if (!record.incidentLocation.ecoregionDomain || !record.incidentLocation.ecoregionDivision) {
         Meteor.call('setEcoRegion', record._id, function(err, d) {
+            //console.log(err, d)
             if (err) {
                 return;
             }
@@ -100,6 +107,14 @@ Template.form.onRendered(function() {
             .parent()
             .addClass('hide')
     }
+    $('[name="timeLog.totalMissingHours"]').prop('disabled', true);
+    $('[name="timeLog.totalSearchHours"]').prop('disabled', true);
+    // $('.bsDateInput').prop('disabled', true);
+    $('.bsDateInput').datetimepicker({
+        use24hours: true,
+        format: 'MM/DD/YYYY HH:mm',
+        sideBySide: true
+    });
 });
 Template.form.helpers({
     activeLayer: function(name) {
@@ -500,17 +515,60 @@ Template.form.events({
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'change [name="timeLog.lastSeenDateTime"]': function(event, template) {
-        console.log(event)
+    'change .bsDateInput': function(event, template) {
+        var record = Session.get('record');
+        var name = event.target.name;
+        if (name === 'timeLog.lastSeenDateTime' || name === 'timeLog.subjectLocatedDateTime' || name === 'timeLog.SARNotifiedDatetime') {
+            var startTime = $('[name="timeLog.lastSeenDateTime"]').val();
+            var startTimeSAR = $('[name="timeLog.SARNotifiedDatetime"]').val();
+            var endTime = $('[name="timeLog.subjectLocatedDateTime"]').val();
+            if (startTime && endTime) {
+                var duration = moment.duration(moment(endTime)
+                    .diff(moment(startTime)));
+                var elapsedTime = Math.round(duration.asHours());
+                console.log(elapsedTime);
+                Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', elapsedTime, function(err, d) {
+                    console.log(d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+            } else if ($('[name="timeLog.totalMissingHours"]').val()) {
+                Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', '', function(err, d) {
+                    console.log(d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+            }
+            if (startTimeSAR && endTime) {
+                var duration = moment.duration(moment(endTime)
+                    .diff(moment(startTimeSAR)));
+                var elapsedTime = Math.round(duration.asHours());
+                Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', elapsedTime, function(err, d) {
+                    console.log(d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+            } else if ($('[name="timeLog.totalSearchHours"]').val()) {
+                Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', '', function(err, d) {
+                    console.log(d);
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+            }
+        }
+        return
         var record = Session.get('record');
         if (!record || record.weather) {
             return;
         }
-        console.log('!!')
         Meteor.call('setWeather', record._id, {
             unset: true
         }, function(err, d) {
-            console.log(err,d)
+            console.log(err, d)
             if (err) {
                 $('.panel-title:contains("Weather")')
                     .parent()
@@ -556,10 +614,13 @@ Template.form.events({
         Session.set('subjectTableView', dataAttr);
     },
     'blur #formIdMap input': function(event, template) {
+        var record = Session.get('record');
         var name = event.target.name;
         var value = event.target.value;
+        console.log(name,value)
         if (name.indexOf('coords.') !== -1) {
             val = name.split('.');
+            console.log(val)
             if (val.length !== 3) {
                 return;
             }
@@ -586,17 +647,17 @@ Template.form.events({
         }
     },
     'click #weatherBtn': function(event, template) {
-        var id = Session.get('record')
-            ._id;
+        var id = Session.get('record')._id;
         Meteor.call('setWeather', id, function(err, d) {
             console.log(err, d)
             if (err) {
                 console.log(err);
-                Meteor.call('updateConfig', {
+                /*Meteor.call('updateConfig', {
                     weatherAPI: false
                 }, function(err, d) {})
                 $(event.target)
                     .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
+                */
                 return console.log(err);
             } else {}
         });
@@ -604,40 +665,35 @@ Template.form.events({
     'click #mapCalcBtn': function(event, template) {
         var recordId = Session.get('record')._id;
         Meteor.call('setDistance', recordId, function(err, d) {
-            console.log(d);
             if (err) {
                 return console.log(err);
             }
         });
         Meteor.call('setBearing', recordId, 'findLocation.findBearing', function(err, d) {
-            console.log(d);
             if (err) {
                 return console.log(err);
             }
         });
         Meteor.call('setDispersionAngle', recordId, function(err, d) {
-            console.log(d);
             if (err) {
                 return console.log(err);
             }
         });
         Meteor.call('setEcoRegion', recordId, function(err, d) {
             if (err) {
-                return;
+                return console.log(err);
             }
         });
         Meteor.call('setElevation', recordId, function(err, d) {
-            console.log(d);
             if (err) {
                 return console.log(err);
             }
         });
-        Meteor.call('setLocale', recordId, function(err, d) {
-            console.log(d);
+        /*Meteor.call('setLocale', recordId, function(err, d) {
             if (err) {
                 return console.log(err);
             }
-        });
+        });*/
     },
     'change [name="incidentOperations.lkp_pls_Boolean"]': function(event) {
         var val = event.target.value;
@@ -704,5 +760,22 @@ AutoForm.hooks({
                 .find('input,select')
                 .val('');
         }
+    }
+});
+/*
+AutoForm.hooks({
+    formdIdtimeLog: {
+        onSuccess: function(formType, result) {
+            console.log(this,formType, result);
+
+            //RecordsAudit.insert({docId:this.docId,userId:Meteor.userId()})
+        }
+    }
+});*/
+AutoForm.addHooks(null, {
+    onSuccess: function(formType, result, c) {
+        //console.log(this,this.updateDoc['$set']);
+        if(!this || !this.autoSaveChangedElement){return;}
+       // RecordsAudit.insert({'Record Id':this.docId,userId:Meteor.userId(),'User Name':Meteor.user().username,'field':this.autoSaveChangedElement.name,'value':this.autoSaveChangedElement.value})
     }
 });

@@ -10,55 +10,58 @@ Session.setDefault(SHOW_CONNECTION_ISSUE_KEY, false);
 var CONNECTION_ISSUE_TIMEOUT = 5000;
 
 settings = Meteor.settings.public;
-Template.appBody.onCreated(function () {});
-Template.appBody.onRendered(function () {});
+Template.appBody.onCreated(function() {});
+Template.appBody.onRendered(function() {});
 Template.appBody.helpers({
 
-    cordova: function () {
+    cordova: function() {
         return Meteor.isCordova && 'cordova';
     },
 
-    userMenuOpen: function () {
+    userMenuOpen: function() {
         return Session.get(USER_MENU_KEY);
     },
 
-    email: function (view) {
+    email: function(view) {
         return Meteor.user()
             .emails[0].address.split('@')[0];
     },
-    logo: function (view) {
+    logo: function(view) {
         return Session.get('logo');
     },
-    logoSrc: function () {
+    logoSrc: function() {
         return 'uploads/logo/' + Session.get('logo');
     },
-    isUserView: function (view) {
-        view = view || this._id;
+    isUserView: function(view) {
+        //console.log(Session.get('userView'))
+        //return
+        // console.log(view,this)
+        //view = view || this._id;
         var active = Session.equals('userView', view);
         return active ? 'active strong' : '';
     },
-    isAdmin: function () {
+    isAdmin: function() {
         return Roles.userIsInRole(Meteor.userId(), ['admin']);
     },
-    thisArray: function () {
+    thisArray: function() {
         return [this];
     },
-    menuOpen: function () {
+    menuOpen: function() {
         return Session.get(MENU_KEY) && 'menu-open';
     },
-    cordova: function () {
+    cordova: function() {
         return Meteor.isCordova && 'cordova';
     },
-    lists: function () {
+    lists: function() {
         return Records.find();
     },
-    activeListClass: function () {
+    activeListClass: function() {
         var current = Router.current();
         if (current.params._id === this._id) {
             return 'active';
         }
     },
-    connected: function () {
+    connected: function() {
         if (Session.get(SHOW_CONNECTION_ISSUE_KEY)) {
             return Meteor.status()
                 .connected;
@@ -66,35 +69,35 @@ Template.appBody.helpers({
             return true;
         }
     },
-    samplerecords: function () {
+    samplerecords: function() {
         return sampleRecords.find();
     }
 });
 Template.appBody.events({
-    'click .js-menu': function () {
+    'click .js-menu': function() {
         Session.set(MENU_KEY, !Session.get(MENU_KEY));
     },
 
-    'click .content-overlay': function (event) {
+    'click .content-overlay': function(event) {
         Session.set(MENU_KEY, false);
         event.preventDefault();
     },
 
-    'click .js-user-menu': function (event) {
+    'click .js-user-menu': function(event) {
         Session.set(USER_MENU_KEY, !Session.get(USER_MENU_KEY));
         // stop the menu from closing
         event.stopImmediatePropagation();
     },
 
-    'click #menu a': function () {
+    'click #menu a': function() {
         Session.set(MENU_KEY, false);
     },
-    'click .content-overlay': function (event) {
+    'click .content-overlay': function(event) {
         Session.set(MENU_KEY, false);
         event.preventDefault();
     },
-    'click .js-logout': function () {
-        Meteor.logout(function () {
+    'click .js-logout': function() {
+        Meteor.logout(function() {
             Session.set('adminRole', false);
             Router.go('signin');
         });

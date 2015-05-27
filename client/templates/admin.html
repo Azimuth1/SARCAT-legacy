@@ -3,6 +3,7 @@
     <ul class="nav nav-tabs contentNav" role="tablist">
         <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
         <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
+        <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Edit History</a> </li>
         <li class="pull-right">
             <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
         </li>
@@ -37,17 +38,13 @@
                         <span class="btn text-danger deleteLogo btn-xs">
                                     <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span> {{/if}} {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
                     </div>
-
-                  
-                    {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="_recordForm2" resetOnSuccess=false}} 
+                    {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="_recordForm2" resetOnSuccess=false}}
                     <!--
                     {{> afQuickField name="mapQuestAPI" }} 
 
                     {{> afQuickField name="forecastAPI" }} 
                     -->
                     {{> afQuickField name="measureUnits"}}
-
-
                     <div class="col-md-12 pad00">
                         <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
                     </div>
@@ -137,15 +134,9 @@
                 </table>
             </div>
         </div>
-        <!--<div role="tabpanel" class="tab-pane pad0 scroll" id="options">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Data Form Type</h3> </div>
-                    <div class="panel-body">
-                         {{#autoForm collection='Config' doc=configs id='dataEditsion' class="_recordForm _form-inline _hideSubmit" type='update' noselect=true autosave=true _validation='keyup' }} {{> afQuickField name="formEditions.type"}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.recordInfo" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incident" options="allowed" noselect=true}} {{> afQuickField name="formEditions.subjects" options="allowed" noselect=true}} {{> afQuickField name="formEditions.timeLog" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOperations" options="allowed" noselect=true}} {{> afQuickField name="formEditions.incidentOutcome" options="allowed" noselect=true}} {{> afQuickField name="formEditions.rescueDetails" options="allowed" noselect=true}} {{/autoForm}}
-                    </div>
-                </div>
-            </div>-->
+        <div role="tabpanel" class="tab-pane pad0 scroll white" id="history">
+            {{> reactiveTable settings=RecordsAudit}}
+        </div>
     </div>
     {{/if}}
 </template>

@@ -176,6 +176,7 @@ Template.records.events({
         }
         console.log(lat, lng);
         mapDrawn.editPoint(lat, lng);
+        mapDrawn.fitBounds();
     },
     'change .recordSel': function(event, template) {
         var checked = $('.recordSel:checked')
@@ -208,7 +209,6 @@ Template.records.events({
         }
     },
     'click .uploadISRID': function(event, template) {
-
         var checked = $('.recordSel:checked')
             .map(function() {
                 return this.value;
@@ -225,16 +225,14 @@ Template.records.events({
             .fetch();
         var toUpload = {
             data: allRecords,
-            profile:Meteor.settings.public.config
+            profile: Meteor.settings.public.config
         };
-       // return toUpload;
-        Meteor.call('uploadISRID', {data:toUpload}, function(error, d) {
+        // return toUpload;
+        Meteor.call('uploadISRID', {
+            data: toUpload
+        }, function(error, d) {
             console.log(error, d)
-
         });
-
-
-
     },
     'click #downloadRecords': function(event, template) {
         var checked = $('.recordSel:checked')

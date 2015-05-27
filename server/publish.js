@@ -13,6 +13,16 @@ Meteor.publish('item', function (id) {
         this.ready();
     }
 });
+
+Meteor.publish('audit', function (id) {
+    if (this.userId) {
+        return RecordsAudit.find({});
+    } else {
+        this.ready();
+    }
+});
+
+
 Meteor.publish('privateLists', function () {
     if (this.userId) {
         return Records.find({

@@ -5,12 +5,14 @@ dateChart = function(records) {
         d.date = parseDate(d.timeLog.lastSeenDateTime);
         return d;
     }).compact().value();
+     if(!records.length){return false;}
     var dates = records
     var extent = d3.extent(records, function(d) {
         if (d.timeLog && d.timeLog.lastSeenDateTime) {
             return new Date(d.timeLog.lastSeenDateTime);
         }
     });
+
     var minYear = extent[0];
     var maxYear = extent[1];
     // Various formatters.
@@ -133,7 +135,11 @@ dateChart = function(records) {
                         .attr("class", "reset")
                         .text(" reset")
                         .style("display", "none");
-                    console.log(width + margin.left + margin.right)
+
+
+
+
+                 
                     g = div.append("svg")
                         .attr("width", width + margin.left + margin.right)
                         .attr("height", height + margin.top + margin.bottom)
