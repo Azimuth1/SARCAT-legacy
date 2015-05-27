@@ -1,8 +1,8 @@
 var map;
-Template.admin.onCreated(function (a) {
+Template.admin.onCreated(function(a) {
     Session.set('userView', 'admin');
 });
-Template.admin.onRendered(function (a) {
+Template.admin.onRendered(function(a) {
     /*$('label:contains("Forecast API Key")')
    // Click on Register to set up API account
         .append('<span class="forecastio small em mar0y text-default">*Register at <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a> to obtain a user key</span>');
@@ -15,7 +15,7 @@ Template.admin.onRendered(function (a) {
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
     map = setAdminMap('adminMap', bounds);
-    this.data.users.forEach(function (d) {
+    this.data.users.forEach(function(d) {
         var role = d.roles[0];
         var id = d._id;
         $('input[name="role_' + id + '"][value="' + role + '"]')
@@ -23,67 +23,86 @@ Template.admin.onRendered(function (a) {
     });
 });
 Template.admin.helpers({
-    userAlert: function (a, b) {
-        setTimeout(function () {
-            $('.userAlert').fadeOut(500, function () {
+    RecordsAudit: function(a, b) {
+        /*var audits = RecordsAudit.find().fetch();
+        fields = _.map(audits[0], function(d, e) {
+            return {
+                key: e,
+                fieldId: e,
+            };
+        });*/
+        return {
+            //showColumnToggles: true,
+            collection: RecordsAudit,
+            //rowsPerPage: 500,
+            //showFilter: true,
+            class: "table table-hover table-bordered table-condensed pointer",
+            //fields: fields,
+            //showNavigation: 'auto',
+            //showNavigationRowsPerPage: false,
+        };
+    },
+    userAlert: function(a, b) {
+        setTimeout(function() {
+            $('.userAlert').fadeOut(500, function() {
                 Session.set('userAlert', null);
             })
         }, 500)
         return Session.get('userAlert');
     },
-    userAlertClass: function () {
+    userAlertClass: function() {
         return Session.get('userAlert').error ? 'bg-danger text-danger' : 'bg-success text-success';
     },
-    errorMessages: function () {
+    errorMessages: function() {
         return _.values(Session.get(ERRORS_KEY));
     },
-    errorClass: function (key) {
+    errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    profileIncomplete: function () {
+    profileIncomplete: function() {
         var agencyProfile = Session.get('agencyProfile');
-        var done = _.compact(_.map(agencyProfile, function (d) {
+        var done = _.compact(_.map(agencyProfile, function(d) {
                 return d;
             }))
             .length;
         return done ? '' : 'afPanel warning mar00 noBorder';
     },
-    configs: function () {
+    configs: function() {
         return Session.get('config');
     },
-    userEmail: function () {
+    userEmail: function() {
         return this.emails[0].address;
     },
-    removeUser: function (a) {
-        Meteor.call('removeUser', this._id, function (err) {
+    removeUser: function(a) {
+        Meteor.call('removeUser', this._id, function(err) {
             console.log(err);
         });
     },
-    userRoleList: function () {
+    userRoleList: function() {
         var users = this.users.fetch()
-            .filter(function (d) {
+            .filter(function(d) {
                 return d._id !== Meteor.userId()
             });
         return users.length ? users : false;
     },
-    noUsers: function () {
+    noUsers: function() {
         var users = this.users.fetch()
-            .filter(function (d) {
+            .filter(function(d) {
                 return d._id !== Meteor.userId()
             });
         return !users.length;
     },
-    UploadImgFormData: function (a, b) {
+    UploadImgFormData: function(a, b) {
         return {
             type: 'logo'
         };
     },
-    uploadLogo: function (a, b) {
+    uploadLogo: function(a, b) {
         return {
-            finished: function (index, fileInfo, context) {
+            finished: function(index, fileInfo, context) {
                 Meteor.call('updateConfig', {
                     agencyLogo: fileInfo.name
-                }, function (err) {
+                }, function(err) {
                     if (err) {
                         return console.log(err);
                     }
@@ -94,44 +113,44 @@ Template.admin.helpers({
     },
 });
 Template.admin.events({
-    'click .deleteLogo': function (event, template) {
+    'click .deleteLogo': function(event, template) {
         var r = confirm("Are you sure you want to delete your custom logo?");
         if (!r) {
             return;
         }
-        Meteor.call('removeLogo', function (err) {
+        Meteor.call('removeLogo', function(err) {
             console.log(err);
         });
         Meteor.call('updateConfig', {
             agencyLogo: ''
-        }, function (err) {
+        }, function(err) {
             if (err) {
                 return console.log(err);
             }
             //Meteor._reload.reload();
         });
     },
-    'click .removeUser': function (event, template) {
+    'click .removeUser': function(event, template) {
         if (Meteor.userId() === this._id) {
             alert('You cannot remove your own account!');
             return;
         }
         var r = confirm("Are you sure you want to delete user: " + this.username);
         if (r == true) {
-            Meteor.call('removeUser', this._id, function (err) {
+            Meteor.call('removeUser', this._id, function(err) {
                 console.log(err);
             });
         } else {
             return;
         }
     },
-    'change .adminUserRoles': function (event) {
+    'change .adminUserRoles': function(event) {
         var user = this._id;
         var origRole = this.roles[0];
         var username = this.username;
         var val = $('input[name="role_' + user + '"]:checked')
             .val();
-        Meteor.call('changeRole', user, val, function (err) {
+        Meteor.call('changeRole', user, val, function(err) {
             if (err) {
                 console.log(err);
             } else {
@@ -144,7 +163,7 @@ Template.admin.events({
     }
 });
 var hooksObject = {
-    onSuccess: function (insertDoc, updateDoc, currentDoc) {
+    onSuccess: function(insertDoc, updateDoc, currentDoc) {
         context = $(this.event.target)
             .find('[type="submit"]');
         text = context.html();
@@ -152,7 +171,7 @@ var hooksObject = {
         context.delay(1000)
             .animate({
                 opacity: 0
-            }, function () {
+            }, function() {
                 context.html(text)
                     .animate({
                         opacity: 1

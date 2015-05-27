@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div id='formMap' class="mar1y"></div>
-                {{#autoForm collection='Records' doc=record id='_formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
+                {{#autoForm collection='Records' doc=record id='formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
                 <div class="col-md-6" style="font-size: .8em;">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -175,7 +175,9 @@
                                 <div class="mar1y">
                                     <span class="text-uppercase strong text-default">Decision Point</span>
                                 </div>
-                                {{> afQuickField name="coords.decisionPointCoord.lat"}} {{> afQuickField name="coords.decisionPointCoord.lng"}}
+                                {{> afQuickField name="coords.decisionPointCoord.lat"}} 
+
+                                {{> afQuickField name="coords.decisionPointCoord.lng"}}
                                 <div class="{{hideCoord 'decisionPointCoord'}}">
                                     {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}}
                                     <br> {{> afQuickField name="incidentOperations.decisionPointFactor"}}
@@ -205,12 +207,16 @@
             </div>
         </div>
         <!--END MAP-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="timeLog" validation="none" resetOnSuccess=false}}
+
+
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 hideSubmit" id='formdIdtimeLog' autosave=true type=formType fields="timeLog" resetOnSuccess=false}}
+
+
         <!--Incident Location-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" validation="none" resetOnSuccess=false}}
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" resetOnSuccess=false}}
         <!--/Incident Location-->
         <!--Incident-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" validation="none" resetOnSuccess=false}}
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" resetOnSuccess=false}}
         <!--/Incident-->
         <!--Subject Info-->
         <div class="panel panel-default">
@@ -337,7 +343,7 @@
                 <h3 class="panel-title">Find Location</h3>
             </div>
             <div class="panel-body">
-                {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" validation="none" resetOnSuccess=false}} {{#if disableFindLocation}}
+                {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" resetOnSuccess=false}} {{#if disableFindLocation}}
                 <span class="small em mar0y text-default">*Drop Find Location Point to activate fields</span> {{else}}
                 <button type="button" class="btn btn-primary mar0y" id="mapCalcBtn" style="display:block">
                     <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate Measurements

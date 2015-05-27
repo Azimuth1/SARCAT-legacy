@@ -91,6 +91,12 @@ Meteor.methods({
         var update = Records.update(id, {
             $set: obj
         });
+        RecordsAudit.insert({
+            docId: id,
+            userId: Meteor.userId(),
+            update: name,
+            value: val
+        });
         return update;
     },
     defaultAdmin: function() {
@@ -175,11 +181,17 @@ Meteor.methods({
         coord = [coord.lng, coord.lat];
         var result = pip(coord);
         if (!result || !result.length) {
-            return result;
+            Records.update(id, {
+                $set: {
+                    'incidentLocation.ecoregionDomain': 'Unknown',
+                    'incidentLocation.ecoregionDivision': 'Unknown'
+                }
+            });
+            return;
         }
         var val = result[0].properties;
-        var ecoregiondomain = val.DOM_DESC ? val.DOM_DESC : null;
-        var ecoregionDivision = (val.DIV_NUM && val.DIV_DESC) ? (val.DIV_NUM + '-' + val.DIV_DESC) : null;
+        var ecoregiondomain = val.DOM_DESC ? val.DOM_DESC : 'Unknown';
+        var ecoregionDivision = (val.DIV_NUM && val.DIV_DESC) ? (val.DIV_NUM + '-' + val.DIV_DESC) : 'Unknown';
         Records.update(id, {
             $set: {
                 'incidentLocation.ecoregionDomain': ecoregiondomain,
@@ -211,12 +223,12 @@ Meteor.methods({
         }
         var coords = record.coords.ippCoordinates;
         var date = record.timeLog.lastSeenDateTime;
+        if (!coords || !date) {
+            return;
+        }
         date = new Date(date)
             .toISOString()
             .split('T')[0];
-        if (!date || !coords) {
-            return;
-        }
         var latlng = [coords.lat, coords.lng].join(',');;
         var time = 'T12:00:00-0400';
         var dateTime = [date, time].join('');
@@ -226,9 +238,6 @@ Meteor.methods({
         //var url = 'http://api.forecast.io/forecast/' + forecastAPI + '/';
         url += latlngDate + '?';
         url += units;
-
-
-
         console.log(url)
         var result = HTTP.get(url);
         if (!result.data) {
@@ -301,11 +310,10 @@ Meteor.methods({
         });
         var initialDirectionofTravel = record.incidentOperations.initialDirectionofTravel;
         var findBearing = record.findLocation.findBearing;
-        if (!initialDirectionofTravel && !findBearing) {
-            return;
+        if (!initialDirectionofTravel || !findBearing) {
+            return false;
         }
-        var val = findBearing - initialDirectionofTravel
-
+        var val = parseInt(findBearing) - parseInt(initialDirectionofTravel)
         var obj = {};
         obj[field] = val;
         Records.update(id, {
@@ -321,11 +329,6 @@ Meteor.methods({
         return result;
     },
     setElevation: function(id) {
-        var mapQuestAPI = Config.findOne()
-            .mapQuestAPI;
-        if (!mapQuestAPI) {
-            return;
-        }
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
@@ -411,7 +414,7 @@ Meteor.methods({
         });
         return val;
     },
-    setLocale: function(id) {
+    /*setLocale: function(id) {
         var googleAPI = Config.findOne()
             .googleAPI;
         if (!googleAPI) {
@@ -457,18 +460,27 @@ Meteor.methods({
             admin1: admin1,
             county: admin2
         };
-    },
+    },*/
 });
 Records.allow({
     remove: function() {
         return true;
     },
-    update: function() {
+    update: function(a, b) {
+        console.log(a, b, this)
         return true;
     },
     insert: function() {
         return true;
     }
+});
+RecordsAudit.allow({
+    insert: function() {
+        return true;
+    },
+    remove: function() {
+        return true;
+    },
 });
 Config.allow({
     'update': function() {

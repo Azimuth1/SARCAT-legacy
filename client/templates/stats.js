@@ -17,6 +17,9 @@ Template.stats.helpers({
     currentRecords: function() {
         return Session.get('currentRecords').length;
     },
+    hasRecords: function() {
+        return Session.get('currentRecords').length ? 'show' : 'hide';
+    },
     stats: function() {
         var data = Session.get('activeRecord');
         if (!data) {
@@ -171,6 +174,10 @@ chartStats = function(records) {
             },
             "count": pluckDeepLinear(data, 'resourcesUsed', 'resource', 'hours'),
         };
+  
+        var etc = [ages, sexes, resType, resHours].filter(function(d){return d.count.length;})
+
+
         var flattenedRecords = makeFlat(data);
         var grouped = _.chain(flattenedRecords)
             .reduce(function(acc, obj) {
@@ -235,7 +242,12 @@ chartStats = function(records) {
             })
             .reverse()
             .value();
-        var result = _.flatten([ages, sexes, resType, resHours, count]);
+        
+
+        console.log(ages, sexes, resType, resHours)
+        
+
+        var result = _.flatten([etc, count]);
         a = result;
         return result;
     };
@@ -296,7 +308,7 @@ chartStats = function(records) {
             .orient("left")
             // .tickFormat(d3.format("d"))
             .ticks(4)
-            .tickSize(-width,0,0)
+            .tickSize(-width, 0, 0)
             .tickFormat("");
         x.domain(data.map(function(d) {
             return d.name;
@@ -329,7 +341,7 @@ chartStats = function(records) {
             .text(options.xLabel);
         var barColorIndex = 0;
         var barColors = function() {
-            var colors = ['#b46928','#cb812a'];
+            var colors = ['#b46928', '#cb812a'];
             barColorIndex++;
             return colors[barColorIndex % 2];
         }
@@ -351,7 +363,7 @@ chartStats = function(records) {
             .attr("height", function(d) {
                 return height - y(d.data);
             });
-     
+
         bar.append("text")
             .attr('class', 'barText')
             //.attr("dy", "1.75em")
@@ -667,12 +679,14 @@ var recordsSetMap = function(context, data) {
             }
         });
     }
-
+    a = data
     data.forEach(function(d) {
 
         mapPoints.forEach(function(feature) {
             var coords = d.coords[feature.val];
-            if(!coords){return;}
+            if (!coords) {
+                return;
+            }
             if (coords) {
                 layerGroups[feature.val].addData({
                     "type": "Feature",
@@ -692,15 +706,18 @@ var recordsSetMap = function(context, data) {
         });
     });
 
-    var bounds = _.reduce(layerGroups, function(d, e) {
- if (!_.keys(e.layers).length) {return}
-        if (_.keys(e.layers).length) {
-            return e.getBounds();
-        };
-       
-        return d.extend(e);
 
-    });
+
+    var bounds = _.reduce(layerGroups, function(sum, el) {
+        if (sum === 0) {
+            return el.getBounds();
+        }
+        return sum.extend(el.getBounds());
+
+    }, 0);
     map.fitBounds(bounds);
     return obj;
 };
+
+
+
