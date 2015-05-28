@@ -1,6 +1,6 @@
 var map;
 Template.userhome.onCreated(function (a) {
-    Session.set('editUserInfo',false);
+    Session.set('editUserInfo', false);
     Session.set('userView', 'userhome');
 });
 Template.admin.onRendered(function (a) {});
@@ -25,10 +25,9 @@ Template.userhome.helpers({
     userEmail: function () {
         return this.emails[0].address;
     },
-    editUserInfo: function(){
+    editUserInfo: function () {
         return Session.get('editUserInfo');
     },
-
     btnTextDisabled: function () {
         var current = Session.get('editUserInfo');
         return current ? 'Cancel' : 'Edit Username/Email';
@@ -49,13 +48,11 @@ Template.userhome.helpers({
                 parent: d.parent
             };
         }).value();
-
-
-
-
         return {
             showColumnToggles: false,
-            collection: Records.find({'admin.userId':Meteor.userId()}),
+            collection: Records.find({
+                'admin.userId': Meteor.userId()
+            }),
             rowsPerPage: 50,
             showFilter: false,
             class: "table table-hover table-bordered table-condensed pointer",
@@ -66,22 +63,29 @@ Template.userhome.helpers({
     },
 });
 Template.userhome.events({
-    'click .removeUser': function (event, template) {
-        Meteor.call('changeRole', user, val, function (err) {
+    'click .resetUserPassword': function (event, template) {
+        Meteor.call('setPassword', Meteor.userId(), null, true, true, function (err, d) {
+            console.log(err, d)
             if (err) {
                 console.log(err);
             } else {
-                Session.set('userAlert', {
-                    error: false,
-                    text: username + ' Successfully Changed from ' + origRole + ' To ' + val + '!'
+                Meteor.logout(function () {
+                    Session.set('adminRole', false);
+                    Session.set('passwordReset', false);
+                    Router.go('signin');
                 });
             }
         });
+        /*Meteor.logout(function () {
+            Session.set('adminRole', false);
+            Session.set('passwordReset', false);
+            Router.go('signin');
+        });*/
     },
     'click .editUserInfo': function (event, template) {
-        console.log('!')
         var current = Session.get('editUserInfo');
         Session.set('editUserInfo', !current);
+        event.target.blur();
     },
     'click .reactive-table tr': function (event) {
         if (!this._id || _.contains(event.target.classList, "recordSel")) {

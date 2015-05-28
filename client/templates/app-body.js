@@ -99,6 +99,7 @@ Template.appBody.events({
     'click .js-logout': function() {
         Meteor.logout(function() {
             Session.set('adminRole', false);
+            Session.set('passwordReset', false);
             Router.go('signin');
         });
     },

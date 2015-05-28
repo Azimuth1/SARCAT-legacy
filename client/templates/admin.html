@@ -3,13 +3,13 @@
     <ul class="nav nav-tabs contentNav" role="tablist">
         <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
         <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-        <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Edit History</a> </li>
+        <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
         <li class="pull-right">
             <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
         </li>
     </ul>
     <div class="tab-content admin pad1">
-        <div role="tabpanel" class="tab-pane active pad0" id="profile">
+        <div role="tabpanel" class="tab-pane active pad00" id="profile">
             <div class="_panel {{profileIncomplete}}">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -17,7 +17,19 @@
                     </h3>
                     </div>
                     <div class="panel-body afBody">
-                        {{#autoForm collection='Config' resetOnSuccess=false doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2" }} {{> afQuickField name="agencyProfile.organization"}} {{> afQuickField name="agencyProfile.phoneNum"}} {{> afQuickField name="agencyProfile.country"}} {{> afQuickField name="agencyProfile.state-province"}} {{> afQuickField name="agencyProfile.street"}} {{> afQuickField name="agencyProfile.city"}}
+                        {{#autoForm collection='Config' resetOnSuccess=false doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2" validation="blur"}}
+                        <!---->
+                        {{> afQuickField name="agencyProfile.organization"}}
+                        <!---->
+                        {{> afQuickField name="agencyProfile.phoneNum"}}
+                        <!---->
+                        {{> afQuickField name="agencyProfile.country"}}
+                        <!---->
+                        {{> afQuickField name="agencyProfile.state-province"}}
+                        <!---->
+                        {{> afQuickField name="agencyProfile.street"}}
+                        <!---->
+                        {{> afQuickField name="agencyProfile.city"}}
                         <div class="col-md-12 pad00">
                             <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>{{#if profileIncomplete}} Submit {{else}} Edit{{/if}}</button>
                         </div>
@@ -35,15 +47,21 @@
                         <label for="syNWDsq4rJiyL5WrZ" class="control-label">Organization Logo - jpg/png
                         </label>
                         {{#if configs.agencyLogo}}
+                        <!---->
                         <span class="btn text-danger deleteLogo btn-xs">
-                                    <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span> {{/if}} {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
+                                    <i class="fa fa-trash-o fa-lg text-danger"></i> Reset</span>
+                        <!---->
+                        {{/if}}
+                        <!---->
+                        {{> upload_bootstrap fileTypes=".jpg,.png" formData=UploadImgFormData callbacks=uploadLogo}}
+                        <!---->
                     </div>
                     {{#autoForm id="formIdConfig" collection='Config' doc=configs type='update' buttonContent="Save" afFieldInput-placeholder="schemaLabel" templates="plain" class="_recordForm2" resetOnSuccess=false}}
-                    <!--
-                    {{> afQuickField name="mapQuestAPI" }} 
-
-                    {{> afQuickField name="forecastAPI" }} 
-                    -->
+                    <!---->
+                    {{#unless internet}}
+                    <p class="small text-warning">No internet connection</p>
+                    {{/unless}} {{> afQuickField name="internet" type="boolean-radios" class="select-radio-inline" trueLabel="Yes" falseLabel="No"}}
+                    <!---->
                     {{> afQuickField name="measureUnits"}}
                     <div class="col-md-12 pad00">
                         <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Submit</button>
@@ -57,7 +75,13 @@
                   </h3>
                 </div>
                 <div class="panel-body">
-                    {{#autoForm collection='Config' doc=configs id='adminCustomQuestionsId' type="update" fields="customQuestions" resetOnSuccess=false}} {{> afQuickField name="customQuestions.q1"}} {{> afQuickField name="customQuestions.q2"}} {{> afQuickField name="customQuestions.q3"}}
+                    {{#autoForm collection='Config' doc=configs id='adminCustomQuestionsId' type="update" fields="customQuestions" resetOnSuccess=false}}
+                    <!---->
+                    {{> afQuickField name="customQuestions.q1"}}
+                    <!---->
+                    {{> afQuickField name="customQuestions.q2"}}
+                    <!---->
+                    {{> afQuickField name="customQuestions.q3"}}
                     <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>Submit</button>
                     {{/autoForm}}
                 </div>
@@ -69,8 +93,11 @@
                 </div>
                 <div class="panel-body afBody pad00 mar1">
                     <div id='adminMap' style="width:100%;height:500px">
-                        <h3 id='geolocate' class="map-ui-button text-uppercase text-light">Geolocate my position!</h3>
+                        {{#if internet}}
+                        <!---->
                         <a href='#' id='geolocate' class='map-ui-button'>Geolocate my position!</a>
+                        <!---->
+                        {{/if}}
                         <div class="mapCrosshair">+</div>
                     </div>
                     <div class="col-md-12 mar1y">
@@ -81,7 +108,7 @@
                 </div>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane pad0 scroll" id="roles">
+        <div role="tabpanel" class="tab-pane pad00 scroll" id="roles">
             {{#if userAlert}}
             <div class="fullScreen strong text-center">
             </div>
@@ -94,20 +121,21 @@
                     <thead class='lightBlue-bg'>
                         <tr>
                             <th class='afTable'>Username</th>
-                            <th class='afTable'>Roles</th>
                             <th class='afTable'>Email</th>
-                            <th class='afTable'>Remove</th>
+                            <th class='afTable'>Roles</th>
                             <th class='afTable'>Reset Password</th>
+                            <th class='afTable'>Remove User</th>
                         </tr>
                     </thead>
                     <tbody class='white-bg'>
                         {{#if noUsers}}
                         <tr>
-                            <td colspan="4" class="text-center text-default">You are the only user!</td>
+                            <td colspan="5" class="text-center text-default">You are the only user!</td>
                         </tr>
                         {{/if}} {{#each userRoleList}}
                         <tr>
                             <td>{{this.username}}</td>
+                            <td>{{userEmail}}</td>
                             <td>
                                 <div class="admin_ChangeRole">
                                     <label class="radio-inline">
@@ -121,12 +149,11 @@
                                     </label>
                                 </div>
                             </td>
-                            <td>{{userEmail}}</td>
                             <td>
-                                <button data="{{this._id}}" type="button" class="pull-right btn btn-danger btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                                <button data="{{this._id}}" type="button" class="pull-right btn btn-warning btn-xs resetPassword btn-block">Reset</button>
                             </td>
                             <td>
-                                <button data="{{this._id}}" type="button" class="pull-right btn btn-default btn-xs resetPassword btn-block">Reset</button>
+                                <button data="{{this._id}}" type="button" class="pull-right btn btn-danger btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
                             </td>
                         </tr>
                         {{/each}}
@@ -134,8 +161,8 @@
                 </table>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane pad0 scroll white" id="history">
-            {{> reactiveTable settings=RecordsAudit}}
+        <div role="tabpanel" class="tab-pane pad00 scroll white" id="history">
+            {{#if hasHistory}} {{> reactiveTable settings=RecordsAudit}} {{/if}}
         </div>
     </div>
     {{/if}}

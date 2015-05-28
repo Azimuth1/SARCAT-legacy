@@ -7,6 +7,9 @@ node_modules
 
 main_logo
 /uploads/records/**
-/uploads/logo/**
+/uploads/logo/*.png
+/uploads/logo/*.jpg
+/uploads/logo/tmp**
+
 settings.dev.json
 npm-debug.log

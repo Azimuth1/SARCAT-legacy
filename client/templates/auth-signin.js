@@ -1,27 +1,30 @@
 var ERRORS_KEY = 'signinErrors';
-/*
-Accounts.ui.config({
-  passwordSignupFields: "USERNAME_ONLY"
-});*/
+var passwordReset = function () {
+    var user = Meteor.user() || {};
+    var profile = user.profile || {};
+    var reset = profile.passwordReset ? true : false;
+    return reset;
+};
 Template.signin.onCreated(function () {
     Session.set(ERRORS_KEY, {});
-    if (Meteor.user()) {
+    var reset = Session.get('passwordReset'); //passwordReset();
+    //Session.set('passwordReset', reset);
+    if (Meteor.user() && !reset) {
         Router.go('home');
     }
 });
-
 Template.signin.onRendered(function () {
     //var logo = document.getElementById('agencyLogo');
     //logo.src = 'uploads/logo/' + Session.get('logo');
     //logo.style.display = 'inline';
 });
-
 Template.signin.helpers({
     logoSrc: function (event, template) {
         return Session.get('logoSrc');
     },
     defaultEmail: function () {
-        return Meteor.settings.public.email;
+        return Session.get('defaultEmail');
+        //return Meteor.settings.public.email;
     },
     errorMessages: function () {
         return _.values(Session.get(ERRORS_KEY));
@@ -31,10 +34,42 @@ Template.signin.helpers({
     },
     initConfig: function () {
         return Session.get('initConfig');
-    }
+    },
+    resetPassword: function () {
+        return Session.get('passwordReset');
+    },
 });
 Template.signin.events({
-    'submit': function (event, template) {
+    'click #resetPassword': function (event, template) {
+        event.preventDefault();
+        var password = template.$('[name=password]')
+            .val();
+        var confirm = template.$('[name=confirm]')
+            .val();
+        // alert(password,confirm)
+        var errors = {};
+        if (confirm !== password) {
+            errors.confirm = 'Please confirm your password';
+        }
+        Session.set(ERRORS_KEY, errors);
+        if (_.keys(errors)
+            .length) {
+            return;
+        }
+        Meteor.call('setPassword', Meteor.userId(), password, false, function (err, d) {
+            console.log(err, d)
+            if (err) {
+                console.log(err);
+            } else {
+                var reset = passwordReset();
+                Session.set('passwordReset', reset);
+                if (Meteor.user() && !reset) {
+                    Router.go('home');
+                }
+            }
+        });
+    },
+    'click #signin': function (event, template) {
         event.preventDefault();
         var email = template.$('[name=email]')
             .val();
@@ -52,13 +87,22 @@ Template.signin.events({
             .length) {
             return;
         }
-        Meteor.loginWithPassword(email, password, function (error) {
+        Meteor.loginWithPassword(email, password, function (error, result) {
             if (error) {
                 return Session.set(ERRORS_KEY, {
                     'none': error.reason
                 });
             }
-            Router.go('home', Meteor.user());
+            Session.set('defaultEmail', email);
+            var roles = Roles.getRolesForUser(Meteor.userId());
+            var reset = passwordReset();
+            Session.set('passwordReset', email);
+            if (Meteor.user() && !reset) {
+                Router.go('home');
+            }
+            //var passwordReset = Meteor.user().profile.passwordReset;
+            //if(passwordReset){}
+            //Router.go('home', Meteor.user());
         });
     }
 });
