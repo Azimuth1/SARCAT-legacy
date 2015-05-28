@@ -64,7 +64,7 @@ Template.userhome.helpers({
 });
 Template.userhome.events({
     'click .resetUserPassword': function (event, template) {
-        Meteor.call('setPassword', Meteor.userId(), null, true, true, function (err, d) {
+        Meteor.call('setPassword', Meteor.userId(), null, true, function (err, d) {
             console.log(err, d)
             if (err) {
                 console.log(err);
@@ -72,7 +72,7 @@ Template.userhome.events({
                 Meteor.logout(function () {
                     Session.set('adminRole', false);
                     Session.set('passwordReset', false);
-                    Router.go('signin');
+                    //Router.go('signin');
                 });
             }
         });

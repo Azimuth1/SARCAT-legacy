@@ -1,4 +1,4 @@
-Meteor.publish('records', function () {
+Meteor.publish('records', function() {
     if (this.userId) {
         return Records.find({});
         //return Records.find({},{fields: {recordInfo: 1}});
@@ -6,76 +6,40 @@ Meteor.publish('records', function () {
         this.ready();
     }
 });
-Meteor.publish('_item', function (id) {
+Meteor.publish('_item', function(id) {
     if (this.userId) {
         return Records.find(id, {
             fields: {
-                //'subjects.subject': 1
+                'subjects.subject': 1
             }
         });
     } else {
         this.ready();
     }
 });
-//Publishing and decrypting
-Meteor.publish('xitem', function (filter) {
-    var self = this;
-    var subHandle = Records.find(filter || {}).observeChanges({
-        added: function (id, fields) {
-            var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-            var allFields = fields.subjects.subject;
-            allFields.forEach(function (d) {
-                _.each(d, function (e, f) {
-                    if (_.contains(hide, f)) {
-                        console.log(f)
-                        d[f] = CryptoJS.AES
-                            .decrypt(d[f], encryptionKey)
-                            .toString(CryptoJS.enc.Utf8);
-                    }
-                })
-            });
-            self.added("records", id, fields);
-        },
-        changed: function (id, fields) {
-            if (fields.subjects) {
-                var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-                var allFields = fields.subjects.subject;
-                allFields.forEach(function (d) {
-                    _.each(d, function (e, f) {
-                        if (_.contains(hide, f)) {
-                            console.log(f)
-                            d[f] = CryptoJS.AES
-                                .decrypt(d[f], encryptionKey)
-                                .toString(CryptoJS.enc.Utf8);
-                        }
-                    })
-                });
-            }
-            self.changed("records", id, fields);
-        },
-        removed: function (id) {
-            self.removed("records", id);
+Meteor.publish('records-current-user', function publishFunction() {
+    return Records.find({
+        'admin.userId': this.userId
+    }, {
+        sort: {
+            'timelog.lastSeenDateTime': -1
         }
     });
-    self.ready();
-    self.onStop(function () {
-        subHandle.stop();
-    });
-});
-Meteor.publish('item', function (filter) {
+})
+Meteor.publish('item', function(filter) {
     encryptionKey = Meteor.settings.public.config.encryptionKey
-    console.log(Meteor.settings.public.config.encryptionKey)
+        //console.log(Meteor.settings.public.config.encryptionKey)
     check(filter, String);
     if (this.userId) {
         var self = this;
         var subHandle = Records.find(filter || {});
         var handle = subHandle.observeChanges({
-            added: function (id, fields) {
+            added: function(id, fields) {
                 if (self.userId === subHandle.fetch()[0].admin.userId) {
                     var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                     var allFields = fields.subjects.subject;
-                    allFields.forEach(function (d) {
-                        _.each(d, function (e, f) {
+                    allFields.forEach(function(d) {
+                        _.each(d, function(e, f) {
                             if (_.contains(hide, f)) {
                                 //console.log(f)
                                 d[f] = CryptoJS.AES
@@ -87,12 +51,12 @@ Meteor.publish('item', function (filter) {
                 }
                 self.added("records", id, fields);
             },
-            changed: function (id, fields) {
+            changed: function(id, fields) {
                 if (fields.subjects) {
                     var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                     var allFields = fields.subjects.subject;
-                    allFields.forEach(function (d, ind) {
-                        _.each(d, function (e, f) {
+                    allFields.forEach(function(d, ind) {
+                        _.each(d, function(e, f) {
                             if (_.contains(hide, f)) {
                                 var dec = CryptoJS.AES
                                     .decrypt(allFields[ind][f], encryptionKey)
@@ -106,17 +70,17 @@ Meteor.publish('item', function (filter) {
                 self.changed("records", id, fields);
                 //}
             },
-            removed: function (id) {
+            removed: function(id) {
                 self.removed("records", id);
             }
         });
         self.ready();
-        self.onStop(function () {
+        self.onStop(function() {
             handle.stop();
         });
     }
 });
-Meteor.publish('__item', function (id) {
+Meteor.publish('__item', function(id) {
     check(id, String);
     var cursor = Records.find(id, {});
     var self = this;
@@ -132,7 +96,7 @@ Meteor.publish('__item', function (id) {
                 .toString(CryptoJS.enc.Utf8);
             self.added('item', id, fields);
         },*/
-        changed: function (id, fields) {
+        changed: function(id, fields) {
             console.log(fields)
                 /*if (fields.text) {
                     fields.text = CryptoJS.AES
@@ -145,19 +109,19 @@ Meteor.publish('__item', function (id) {
             self.removed('item', id);
         }*/
     });
-    self.onStop(function () {
+    self.onStop(function() {
         handle.stop();
     });
     self.ready();
 });
-Meteor.publish('audit', function (id) {
+Meteor.publish('audit', function(id) {
     if (this.userId) {
         return RecordsAudit.find({});
     } else {
         this.ready();
     }
 });
-Meteor.publish('privateLists', function () {
+Meteor.publish('privateLists', function() {
     if (this.userId) {
         return Records.find({
             userId: this.userId
@@ -169,7 +133,7 @@ Meteor.publish('privateLists', function () {
         //this.ready();
     }
 });
-Meteor.publish('userData', function () {
+Meteor.publish('userData', function() {
     if (Roles.userIsInRole(this.userId, ['admin'])) {
         return Meteor.users.find();
     } else if (this.userId) {
@@ -184,10 +148,10 @@ Meteor.publish('userData', function () {
         this.ready();
     }
 });
-Meteor.publish('roles', function () {
+Meteor.publish('roles', function() {
     return Meteor.roles.find()
 })
-Meteor.publish('config', function () {
+Meteor.publish('config', function() {
     return Config.find({}, {
         fields: {
             /*'forecastAPI': 0,
@@ -195,7 +159,7 @@ Meteor.publish('config', function () {
         }
     });
 });
-Meteor.publish('adminDefault', function () {
+Meteor.publish('adminDefault', function() {
     return Meteor.users.find({
         emails: {
             $elemMatch: {

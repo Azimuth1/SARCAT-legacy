@@ -57,11 +57,14 @@ Template.signin.events({
             return;
         }
         Meteor.call('setPassword', Meteor.userId(), password, false, function (err, d) {
+            console.log('!!')
             console.log(err, d)
+            console.log('??')
             if (err) {
                 console.log(err);
             } else {
                 var reset = passwordReset();
+                console.log(reset)
                 Session.set('passwordReset', reset);
                 if (Meteor.user() && !reset) {
                     Router.go('home');
@@ -94,9 +97,9 @@ Template.signin.events({
                 });
             }
             Session.set('defaultEmail', email);
-            var roles = Roles.getRolesForUser(Meteor.userId());
+            //var roles = Roles.getRolesForUser(Meteor.userId());
             var reset = passwordReset();
-            Session.set('passwordReset', email);
+            Session.set('passwordReset', reset);
             if (Meteor.user() && !reset) {
                 Router.go('home');
             }
