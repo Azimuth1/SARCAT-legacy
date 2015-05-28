@@ -11,7 +11,6 @@
             </div>
             <div class="wrapper-auth">
                 <div class="title">
-                   <!-- <h2 class="h1 mar00">SARCAT</h2>-->
                     <p class="acr"><b>s</b>earch<b>a</b>nd<b>r</b>escue<b>c</b>ollection &<b>a</b>nalysis<b>t</b>ool</p>
                 </div>
                 <form>
@@ -21,20 +20,43 @@
                         <div class="list-item">{{this}}</div>
                         {{/each}}
                     </div>
-                    {{/if}}
+                    {{/if}} {{#unless resetPassword}}
                     <div class="input-symbol {{errorClass 'email'}}">
                         <input type="email" name="email" placeholder="Your Email" value="{{defaultEmail}}" />
                         <span class="tmp-icon-email" title="Your Email"></span>
                     </div>
                     <div class="input-symbol {{errorClass 'password'}}">
-                        <input type="password" name="password" placeholder="Password" value="admin" />
+                        <input type="password" name="password" placeholder="Password" _value="admin" />
                         <span class="tmp-icon-lock" title="Password"></span>
                     </div>
-                    <button type="submit" class="btn-primary btn-pad">Sign in</button>
+                    <button type="submit" id="signin" class="btn-primary btn-pad">Sign in</button>
+                    {{/unless}}
+                    <!---->
+                    {{#if resetPassword}}
+                    <div class="mar1yt input-symbol  {{errorClass 'password'}}">
+                        <input type="password" name="password" placeholder="New Password" />
+                        <span class="tmp-icon-lock" title="Password"></span>
+                    </div>
+                    <div class="input-symbol {{errorClass 'confirm'}}">
+                        <input type="password" name="confirm" placeholder="Confirm New Password" />
+                        <span class="tmp-icon-lock" title="Confirm Password"></span>
+                    </div>
+                    <button type="submit" id="resetPassword" class="btn-primary btn-pad">Update Password</button>
+                    <!---->
+                    {{/if}}
                 </form>
                 <a href="{{pathFor 'join'}}" class="link-auth-alt">Need an account? Join Now.</a>
             </div>
-            {{#if production}} {{Meteor.settings.public.productionStripePublishableKey}} {{else}} {{Meteor.settings.public.stagingStripePublishableKey}} {{/if}}
+            {{#if production}}
+            <!---->
+            {{Meteor.settings.public.productionStripePublishableKey}}
+            <!---->
+            {{else}}
+            <!---->
+            {{Meteor.settings.public.stagingStripePublishableKey}}
+            <!---->
+            {{/if}}
+            <!---->
         </div>
     </div>
 </template>

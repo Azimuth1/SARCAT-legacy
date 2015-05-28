@@ -1,4 +1,4 @@
-.sarcatLogo{
+.sarcatLogo {
     border: 4px solid @color-orange;
 }
 
@@ -185,10 +185,10 @@ em {
     display: none;
 }
 
-#editSubjectForm,#editSubjectForm2 {
+#editSubjectForm,
+#editSubjectForm2 {
     font-size: 70%;
 }
-
 /*
 
 
@@ -840,7 +840,7 @@ a {
     width: auto;
     height: auto;
     overflow: scroll;
-    //background: @color-light;
+    padding-right: 0;
 }
 
 #formPage {
@@ -1025,8 +1025,9 @@ a {
 }
 
 .leaflet-container a.map-ui-button:hover {
-    background: #3074a4;
-    color: #fff;
+    background: @color-light;
+    color: @color-greenish;
+    border-color: @color-greenish;
 }
 
 .leaflet-control-locate {
@@ -1501,21 +1502,34 @@ btn.btn-success {
     border-color: @color-green;
 }
 
-
 .btn.btn-warning {
     color: #FFF;
     background-color: @color-orange;
     border-color: @color-orange;
 }
 
-
 .btn.btn-primary {
     color: @color-white;
     border-color: @color-orange;
     background: @color-orange;
     &:hover, active, focus {
-        color: @color-turq;
+        color: @color-orange2;
         background: @color-light;
+        outline-color: @color-orange;
+    }
+}
+
+#mapTools {
+    .btn.btn-primary {
+        color: @color-white;
+        border-color: @color-blue;
+        background: @color-blue;
+        &:hover, active, focus {
+            color: @color-white;
+            border-color: @color-blue;
+            background: @color-blue;
+            outline-color: @color-blue;
+        }
     }
 }
 

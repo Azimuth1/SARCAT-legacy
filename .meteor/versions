@@ -34,6 +34,14 @@ iron:location@1.0.7
 iron:middleware-stack@1.0.7
 iron:router@1.0.7
 iron:url@1.0.7
+jparker:crypto-aes@0.1.0
+jparker:crypto-base64@0.1.0
+jparker:crypto-cipher-core@0.1.1
+jparker:crypto-core@0.1.0
+jparker:crypto-evpkdf@0.1.1
+jparker:crypto-md5@0.1.1
+jparker:crypto-mode@0.1.1
+jparker:crypto-padding@0.1.0
 jquery@1.11.3_2
 json@1.0.3
 launch-screen@1.0.2
@@ -41,6 +49,7 @@ less@1.0.14
 livedata@1.0.13
 localstorage@1.0.3
 logging@1.0.7
+matb33:collection-hooks@0.7.13
 meteor@1.1.6
 meteor-platform@1.2.2
 minifiers@1.1.5

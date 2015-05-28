@@ -25,3 +25,5 @@ mrt:moment
 tsega:bootstrap3-datetimepicker@=3.1.3_3
 aslagle:reactive-table
 twbs:bootstrap@3.3.2
+jparker:crypto-aes
+matb33:collection-hooks

@@ -27,7 +27,19 @@ Meteor.startup(function () {
         password: 'admin',
         username: 'default'
     };
+    Accounts.config({
+        loginExpirationInDays: null
+    })
     if (!config) {
+        function makeid() {
+                var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                for (var i = 0; i < 23; i++)
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+                return text;
+            }
+            //encryptionKey = "adsffe534tryertrrtweGe";
+        encryptionKey = makeid();
         // if (!Meteor.users.find().count()) {
         console.log('Creating default admin user.');
         var admin = Accounts.createUser({
@@ -36,11 +48,14 @@ Meteor.startup(function () {
             username: defaultUser.username
         });
         Roles.addUsersToRoles(admin, ['admin']);
-        console.log('saving settings.config to mongodb')
+        console.log('saving settings.config to mongodb');
+        settings.config.encryptionKey = encryptionKey;
         Config.insert(settings.config);
     }
     Meteor.settings.public.email = defaultUser.email;
+
     Meteor.settings.public.config = config || settings.config;
+    Meteor.settings.private.encryptionKey = Meteor.settings.public.config.encryptionKey;
     UploadServer.init({
         tmpDir: process.env.PWD + '/public/uploads/tmp',
         uploadDir: process.env.PWD + '/public/uploads/',
@@ -49,6 +64,7 @@ Meteor.startup(function () {
                 return '/records/' + formData._id;
             }
             if (formData.type === 'logo') {
+                console.log('!!!')
                 return '/logo';
             }
         },

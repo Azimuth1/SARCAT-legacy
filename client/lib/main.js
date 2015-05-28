@@ -1,6 +1,6 @@
-flatten = function(x, result, prefix) {
+flatten = function (x, result, prefix) {
     if (_.isObject(x)) {
-        _.each(x, function(v, k) {
+        _.each(x, function (v, k) {
             flatten(v, result, prefix ? prefix + '.' + k : k)
         })
     } else {
@@ -8,7 +8,7 @@ flatten = function(x, result, prefix) {
     }
     return result
 }
-labelUnits = function(currentUnit, type) {
+labelUnits = function (currentUnit, type) {
     var unitType = {
         height: {
             Metric: 'cm',
@@ -45,12 +45,12 @@ labelUnits = function(currentUnit, type) {
     };
     return unitType[type][currentUnit]
 };
-boundsString2Array = function(bounds) {
+boundsString2Array = function (bounds) {
     if (!bounds) {
         return;
     }
     bounds = bounds.split(',')
-        .map(function(d) {
+        .map(function (d) {
             return +d;
         });
     return [
@@ -58,11 +58,11 @@ boundsString2Array = function(bounds) {
         [bounds[3], bounds[2]]
     ];
 };
-newMap = function(context, bounds) {
+newMap = function (context, bounds) {
     var bounds = bounds || boundsString2Array(Session.get('bounds'));
     var map = L.map(context, {});
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function(x, e) {
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -72,78 +72,12 @@ newMap = function(context, bounds) {
     map.scrollWheelZoom.disable();
     map.fitBounds(bounds);
 };
-setAdminMap = function(context) {
-    var bounds = bounds || boundsString2Array(Session.get('bounds'));
-    var map = L.map(context, {});
-    var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function(x, e) {
-        return [e, L.tileLayer(x)];
-    }));
-    var firstLayer = Object.keys(layers)[0];
-    layers[firstLayer].addTo(map);
-    L.control.layers(layers)
-        .addTo(map);
-    map.scrollWheelZoom.disable();
-    map.fitBounds(bounds);
-    var lc = L.control.locate({
-            drawCircle: false,
-            markerStyle: {
-                fillOpacity: 0,
-                opacity: 0
-            },
-            onLocationError: function(err) {
-                alert(err.message);
-            },
-            onLocationOutsideMapBounds: function(context) {
-                alert(context.options.strings.outsideMapBoundsMsg);
-            },
-            locateOptions: {
-                maxZoom: 13,
-            }
-        })
-        .addTo(map);
-    var searching;
-    if (!navigator.geolocation) {
-        $('#geolocate')
-            .html('Geolocation is not available');
-    } else {
-        geolocate.onclick = function(e) {
-            if (searching) {
-                return;
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            $('#geolocate')
-                .html('Locating.....');
-            searching = true;
-            lc.start();
-        };
-    }
-    map.on('locationfound', function(e) {
-        $('#geolocate')
-            .remove();
-        $('.mapCrosshair')
-            .css('color', '#00CB00');
-    });
-    map.on('locationerror', function() {
-        $('#geolocate')
-            .html('Position could not be found - Drag map to set extent');
-    });
-    map.on('moveend', function() {
-        var bnds = map.getBounds()
-            .toBBoxString();
-        $('[name="bounds"]')
-            .val(bnds)
-            .trigger("change");
-    });
-    return map;
-}
-newProjectSetMap = function(context, bounds, points) {
+newProjectSetMap = function (context, bounds, points) {
     var obj = {};
     var marker;
     var map = L.map(context, {});
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function(x, e) {
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -152,10 +86,10 @@ newProjectSetMap = function(context, bounds, points) {
         .addTo(map);
     var latLngBounds = L.latLngBounds(bounds);
     var center = latLngBounds.getCenter();
-    obj.editPoint = function(lat, lng) {
+    obj.editPoint = function (lat, lng) {
         marker.setLatLng([lat, lng]);
     };
-    obj.reset = function() {
+    obj.reset = function () {
         map.fitBounds(bounds);
         marker.setLatLng(center);
         $('[name="' + points.name + '.lng"]')
@@ -194,7 +128,7 @@ newProjectSetMap = function(context, bounds, points) {
         val: ipp.val,
     });
     marker.addTo(map);
-    marker.on('dragend', function(event) {
+    marker.on('dragend', function (event) {
         var marker = event.target;
         var position = marker.getLatLng();
         $('[name="' + points.name + '.lng"]')
@@ -204,13 +138,13 @@ newProjectSetMap = function(context, bounds, points) {
             .val(position.lat)
             .trigger("change");
     });
-    obj.fitBounds = function() {
+    obj.fitBounds = function () {
         map.panTo(marker.getLatLng())
     };
     return obj;
 };
 //<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa a-stack-1x fa-inverse text-red">R</i></span>
-getCoords = function(record) {
+getCoords = function (record) {
     var mapPoints = [{
         val: "ippCoordinates",
         name: "coords.ippCoordinates",
@@ -258,258 +192,31 @@ getCoords = function(record) {
             weight: 8
         }
     }];
-    mapPoints = _.object(_.map(mapPoints, function(x) {
+    mapPoints = _.object(_.map(mapPoints, function (x) {
         return [x.val, x];
     }));
     if (!record.coords) {
         return mapPoints;
     }
     var coords = record.coords;
-    _.each(mapPoints, function(d, e) {
+    _.each(mapPoints, function (d, e) {
         mapPoints[e].coords = coords[e];
     });
-    return _.map(mapPoints, function(d) {
+    return _.map(mapPoints, function (d) {
         return d;
     });
 };
-formSetMap = function(context, recordId) {
-    var markers = {};
-    var paths = {};
-    var coords = {};
-    var obj = {};
-    var map = L.map(context);
-    var units = (Session.get('measureUnits') === 'Metric') ? true : false;
-    L.Control.measureControl({
-            metric: units
-        })
-        .addTo(map);
-    var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function(x, e) {
-        return [e, L.tileLayer(x)];
-    }));
-    var firstLayer = Object.keys(layers)[0];
-    layers[firstLayer].addTo(map);
-    L.control.layers(layers)
-        .addTo(map);
-    var bounds = boundsString2Array(Session.get('bounds'));
-    map.fitBounds(bounds);
-    drawnPaths = new L.FeatureGroup()
-        //.addTo(map);
-    drawnPoints = new L.FeatureGroup()
-        //.addTo(map);
-    map.scrollWheelZoom.disable();
-    /*map.on('moveend', function() {
-        var bounds = map.getBounds()
-            .toBBoxString();
-        $('[name="coords.bounds"]')
-            .val(bounds)
-            .trigger("change");
-    });*/
-    obj.add = function(d) {
-        var val = d.val;
-        if (!d.path) {
-            coords[val] = d;
-            if (d.coords.lat && d.coords.lng) {
-                obj.addPoint(d);
-            }
-        }
-        if (val === 'intendedRoute' || val === 'actualRoute') {
-            coords[d.val] = d;
-            if (d.coords) {
-                obj.addPoly(d, JSON.parse(d.coords));
-                return;
-            }
-            var start = coords.ippCoordinates.layer.getLatLng();
-            var end;
-            var dest = (val === 'intendedRoute') ? 'destinationCoord' : 'findCoord';
-            if (coords[dest]) {
-                end = coords[dest].layer.getLatLng()
-            } else {
-                var ne = map.getBounds()
-                    ._northEast;
-                var center = map.getCenter();
-                end = {
-                    lat: center.lat,
-                    lng: (center.lng + (ne.lng - center.lng) / 2)
-                }
-            }
-            var latlngs = [
-                [start.lat, start.lng],
-                [end.lat, end.lng]
-            ];
-            obj.addPoly(d, latlngs);
-        }
-    };
-    obj.remove = function(d) {
-        if (d.path) {
-            obj.removePoly(d);
-        } else {
-            obj.removePoint(d);
-            return;
-        }
-    };
-    obj.addPoly = function(d, latlngs) {
-        color = d.path.stroke;
-        var polyline = L.polyline(latlngs, {
-            color: color,
-            opacity: 0.9,
-            name: d.name,
-            val: d.val,
-            //editable: true
-        });
-        drawnPaths.addLayer(polyline);
-        marker.setZIndexOffset(4);
-        coords[d.val].layer = polyline;
-        var lineString = JSON.stringify(latlngs);
-        $('[name="' + d.name + '"]')
-            .val(lineString)
-            .trigger("change");
-        polyline.on('click', function(d) {
-            polyline.editing.enable();
-        });
-        polyline.on('dblclick', function(d) {
-            polyline.editing.disable();
-        });
-        $('#formMap')
-            .on('mouseup', '.leaflet-editing-icon', function(d) {
-                drawnPaths.eachLayer(function(layer) {
-                    var name = layer.options.name;
-                    if (layer._path) {
-                        latlngs = layer.getLatLngs()
-                            .map(function(d) {
-                                return [d.lat, d.lng]
-                            });
-                        var lineString = JSON.stringify(latlngs);
-                        $('[name="' + name + '"]')
-                            .val(lineString)
-                            .trigger("change");
-                        return;
-                    }
-                });
-            })
-            //var lineString = JSON.stringify(layer.toGeoJSON());
-    };
-    obj.removePoly = function(d) {
-        var path = coords[d.val].layer;
-        $('[name="' + d.name + '"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(path);
-        delete coords[d.val];
-    };
-    obj.removePoint = function(d) {
-        var marker = coords[d.val].layer;
-        if (!marker) {
-            return;
-        }
-        $('[name="' + d.name + '.lng"]')
-            .val('')
-            .trigger("change");
-        $('[name="' + d.name + '.lat"]')
-            .val('')
-            .trigger("change");
-        drawnPoints.removeLayer(marker);
-        delete coords[d.val];
-    };
-    obj.editPoint = function(name) {
-        var coords = Records.findOne(recordId)
-            .coords[name];
-        var layer = drawnPoints.getLayers()
-            .filter(function(d) {
-                return d.options.name === 'coords.' + name;
-            });
-        if (!layer.length) {
-            return;
-        }
-        layer[0].setLatLng([coords.lat, coords.lng]);
-        obj.fitBounds();
-    };
-    obj.addPoint = function(d) {
-        //console.log(_coords)
-        var _coords = d.coords; // || map.getCenter();
-        //console.log(d,_coords)
-        if (!d.coords) {
-            var ne = map.getBounds()
-                ._northEast;
-            var center = map.getCenter();
-            _coords = {
-                lat: center.lat,
-                lng: (center.lng + (ne.lng - center.lng) / 2)
-            }
-        }
-        //if(!_coords.lat || !coords.lng){return;}
-        var myIcon = L.AwesomeMarkers.icon({
-            icon: d.icon,
-            prefix: 'fa',
-            markerColor: d.color,
-            iconColor: d.tColor || '#fff',
-            extraClasses: d.extraClasses
-        });
-        var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
-        //console.log(_coords)
-        marker = L.marker(_coords, {
-            draggable: draggable,
-            icon: myIcon,
-            name: d.name,
-            val: d.val,
-        });
-        var text = d.text;
-        coords[d.val].layer = marker;
-        drawnPoints.addLayer(marker);
-        if (!$('[name="' + d.name + '.lng"]').val()) {
-            Meteor.call('updateRecord', recordId, d.name + '.lng', _coords.lng, function(err, d) {
-                //console.log(d);
-                if (err) {
-                    return console.log(err);
-                }
-            });
-            Meteor.call('updateRecord', recordId, d.name + '.lat', _coords.lat, function(err, d) {
-                //console.log(d);
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        }
-        /*
-                $('[name="' + d.name + '.lng"]')
-                    .val(_coords.lng)
-                    .trigger("change");
-                $('[name="' + d.name + '.lat"]')
-                    .val(_coords.lat)
-                    .trigger("change");
-
-        */
-        marker.on('dragend', function(event) {
-            var marker = event.target;
-            var position = marker.getLatLng();
-            Meteor.call('updateRecord', recordId, d.name, position, function(err, res) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-            });
-        });
-        return marker;
-    }
-    obj.fitBounds = function() {
-        map.fitBounds(drawnPoints.getBounds()
-            .pad(0.5));
-        drawnPaths.addTo(map);
-        drawnPoints.addTo(map);
-    };
-    return obj;
-}
-insertSampleRecords = function() {
+insertSampleRecords = function () {
     function randomDate(start, end) {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
     data = [];
     var length = 50;
-    var rand = function(min, max) {
+    var rand = function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
     existing = {};
-    var generateWeighedList = function(list, name) {
+    var generateWeighedList = function (list, name) {
         var f = name + [list[1]];
         var weight
         if (existing[f]) {
@@ -519,7 +226,7 @@ insertSampleRecords = function() {
             //var _weight = [.2, .1, .7, .1, .1,.01,.05,.1];
             //weightb=a.slice(0,3);
             //weight = _.shuffle(weight);
-            weight = list.map(function(d) {
+            weight = list.map(function (d) {
                 return Math.random() * 0.2;
             });
             if (weight.length > 8) {
@@ -698,13 +405,13 @@ insertSampleRecords = function() {
         record.timeLog.subjectLocatedDateTime = moment(record.timeLog.SARNotifiedDatetime).add(Math.floor(Math.random() * 6), 'd').format('MM/DD/YYYY HH:mm');
         record.timeLog.incidentClosedDateTime = moment(record.timeLog.subjectLocatedDateTime).add(Math.floor(Math.random() * 10), 'h').format('MM/DD/YYYY HH:mm');
         //console.log(Schemas)
-        _.each(record, function(d, name) {
+        _.each(record, function (d, name) {
             if (!isNaN(d)) {
                 d = 500;
                 record[name] = Math.floor(Math.abs((Math.random() * ((d * 2) - (d / 5)) + (d / 5))))
             }
             if (_.isObject(d)) {
-                _.each(d, function(e, name2) {
+                _.each(d, function (e, name2) {
                     if (!isNaN(e)) {
                         e = 500;
                         record[name][name2] = Math.floor(Math.abs((Math.random() * ((e * 2) - (e / 5)) + (e / 5))))
@@ -721,8 +428,8 @@ insertSampleRecords = function() {
             record.recordInfo.incidentnum = 'inc-' + i;
             record.recordInfo.missionnum = '#2015' + i;
         });
-        _.each(record.subjects.subject, function(e, ind) {
-            _.each(e, function(d, name) {
+        _.each(record.subjects.subject, function (e, ind) {
+            _.each(e, function (d, name) {
                 var allowed = Schemas.subjects._schema['subject.$.' + name].allowedValues;
                 if (allowed) {
                     var sample = _.sample(allowed, 1)[0];
@@ -738,7 +445,7 @@ insertSampleRecords = function() {
             .toFixed(4);
         record.coords.ippCoordinates.lat = lat;
         record.coords.ippCoordinates.lng = lng;
-        _.each(record.coords, function(d, name) {
+        _.each(record.coords, function (d, name) {
             if (name === 'ippCoordinates') {
                 return;
             }
@@ -752,7 +459,7 @@ insertSampleRecords = function() {
         data[i] = record;
         //console.log(record.recordInfo.name)
     }
-    data.forEach(function(d) {
+    data.forEach(function (d) {
         // console.log(d)
         Records.insert(d);
     });
