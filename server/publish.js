@@ -62,30 +62,29 @@ Meteor.publish('xitem', function (filter) {
         subHandle.stop();
     });
 });
-
 Meteor.publish('item', function (filter) {
-
-encryptionKey = Meteor.settings.public.config.encryptionKey
-console.log(Meteor.settings.public.config.encryptionKey)
-
+    encryptionKey = Meteor.settings.public.config.encryptionKey
+    console.log(Meteor.settings.public.config.encryptionKey)
     check(filter, String);
     if (this.userId) {
         var self = this;
         var subHandle = Records.find(filter || {});
         var handle = subHandle.observeChanges({
             added: function (id, fields) {
-                var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-                var allFields = fields.subjects.subject;
-                allFields.forEach(function (d) {
-                    _.each(d, function (e, f) {
-                        if (_.contains(hide, f)) {
-                            //console.log(f)
-                            d[f] = CryptoJS.AES
-                                .decrypt(d[f], encryptionKey)
-                                .toString(CryptoJS.enc.Utf8);
-                        }
-                    })
-                });
+                if (self.userId === subHandle.fetch()[0].admin.userId) {
+                    var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
+                    var allFields = fields.subjects.subject;
+                    allFields.forEach(function (d) {
+                        _.each(d, function (e, f) {
+                            if (_.contains(hide, f)) {
+                                //console.log(f)
+                                d[f] = CryptoJS.AES
+                                    .decrypt(d[f], encryptionKey)
+                                    .toString(CryptoJS.enc.Utf8);
+                            }
+                        })
+                    });
+                }
                 self.added("records", id, fields);
             },
             changed: function (id, fields) {

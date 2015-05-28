@@ -151,7 +151,7 @@ Meteor.methods({
         Roles.setUserRoles(targetUserId, [], group);
     },
     changeRole: function (user, val) {
-        RecordsAudit.remove({})
+        //RecordsAudit.remove({})
         if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
             Meteor.users.update(user, {
                 $set: {
