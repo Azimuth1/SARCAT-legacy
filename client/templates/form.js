@@ -173,6 +173,7 @@ Template.form.helpers({
         return true;
     },
     schemas: function () {
+     
         var record = this
         var schemas = [{
             "name": "incidentLocation",

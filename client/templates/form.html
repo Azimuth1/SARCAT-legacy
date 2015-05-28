@@ -38,16 +38,19 @@
                             </button>
                         </td>
                     </tr>
+
                     {{else}}
+                    {{#with record}}{{json recordInfo}}{{/with}}
                     <tr class="text-left text-default">
-                        <td>{{record.recordInfo.incidentnum}}</td>
-                        <td>{{record.recordInfo.missionnum}}</td>
-                        <td>{{record.recordInfo.name}}</td>
-                        <td>{{record.recordInfo.incidentType}}</td>
-                        <td>{{record.recordInfo.status}}</td>
-                        <td>{{record.recordInfo.subjectCategory}}</td>
+                        <td>{{recordInfo.incidentnum}}</td>
+                        <td>{{recordInfo.missionnum}}</td>
+                        <td>{{recordInfo.name}}</td>
+                        <td>{{recordInfo.incidentType}}</td>
+                        <td>{{recordInfo.status}}</td>
+                        <td>{{recordInfo.subjectCategory}}</td>
                         {{#if currentRecord.subjectSubCategory}}
-                        <td>{{record.recordInfo.subjectSubCategory}}</td>
+                        <td>{{recordInfo.subjectSubCategory}}</td>
+                        
                         {{/if}}
                         <td class="text-center">
                             <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
@@ -306,7 +309,7 @@
                 <h3 class="panel-title">Weather</h3>
             </div>
             <!---->
-            {{#if config.internet}} {{#if record.timeLog.lastSeenDateTime}}
+            {{#if config.internet}} {{#if timeLog.lastSeenDateTime}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="weatherBtn">
                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via SARCAT Server
