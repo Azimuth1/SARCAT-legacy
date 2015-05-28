@@ -38,9 +38,7 @@
                             </button>
                         </td>
                     </tr>
-
-                    {{else}}
-                    {{#with record}}{{json recordInfo}}{{/with}}
+                    {{else}} {{#with record}}{{json recordInfo}}{{/with}}
                     <tr class="text-left text-default">
                         <td>{{recordInfo.incidentnum}}</td>
                         <td>{{recordInfo.missionnum}}</td>
@@ -50,7 +48,6 @@
                         <td>{{recordInfo.subjectCategory}}</td>
                         {{#if currentRecord.subjectSubCategory}}
                         <td>{{recordInfo.subjectSubCategory}}</td>
-                        
                         {{/if}}
                         <td class="text-center">
                             <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
@@ -128,7 +125,7 @@
                     </div>
                 </div>
                 <div id='formMap' class="mar1y"></div>
-                {{#autoForm collection='Records' doc=record id='formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
+                {{#autoForm collection='Records' doc=this id='formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
                 <div class="col-md-6" style="font-size: .8em;">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -220,7 +217,8 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Subject Info</h3>
             </div>
-            <div class="subjectTableView btn-group mar1yb" data-toggle="buttons">
+            <hr class="mar0 mar2x">
+            <div class="subjectTableView btn-group mar0 mar2x" data-toggle="buttons">
                 <label class="btn btn-primary active">
                     <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
                 </label>
@@ -233,7 +231,7 @@
                 </label>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
-                {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
+                {{#autoForm id="editSubjectForm" type=formType collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
                 <table class="table table-bordered table-condensed {{subjectTableView 'Description'}}" style="table-layout: fixed;">
                     <thead>
                         <tr>
@@ -309,17 +307,26 @@
                 <h3 class="panel-title">Weather</h3>
             </div>
             <!---->
-            {{#if config.internet}} {{#if timeLog.lastSeenDateTime}}
+            {{#if config.internet}}
+            <!---->
+            {{#if timeLog.lastSeenDateTime}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="weatherBtn">
                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via SARCAT Server
             </button>
             <span class="forecastio small em mar0y white">*Powered by <a class="em text-lightBlue" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span>
             <!---->
-            {{/if}} {{/if}}
+            {{/if}}
+            <!---->
+            {{/if}}
             <div class="panel-body pad00">
                 <!---->
-                {{#autoForm collection='Records' doc=record id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}}
+              
+
+                {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=formType fields="weather" resetOnSuccess=false}}
+
+
+
                 <!---->
                 {{> afQuickField name="weather" options=this.options }}
                 <!---->
@@ -335,17 +342,20 @@
             </div>
             {{#if disableFindLocation}}
             <span class="small em mar0y white">*Drop Find Location Point to activate fields</span>
+            {{/if}}
             <!---->
             <!---->
             {{#if config.internet}}
+            {{#unless disableFindLocation}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="mapCalcBtn" style="display:block">
                 <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate Measurements
             </button>
             <!---->
+            {{/unless}}
             {{/if}}
             <!---->
-            {{/if}}
+            
             <div class="panel-body pad00">
                 {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" resetOnSuccess=false}}
                 <!---->
@@ -363,7 +373,7 @@
                     </h3>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
-                {{#autoForm id="editSubjectForm2" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
+                {{#autoForm id="editSubjectForm2" type=formType collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
                 <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
                     <thead class='lightBlue-bg'>
                         <tr>
@@ -400,7 +410,7 @@
         {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
         <!--Comment-->
         <!--Custom Questions-->
-        {{#with record}} {{#if customQuestions_}} 
+        {{#with record}} {{#if customQuestions_}}
         <div class="panel panel-default _text-center">
             <div class="panel-heading">
                 <h3 class="panel-title">Custom Questions</h3>
