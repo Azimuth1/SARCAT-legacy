@@ -2,8 +2,11 @@ var map;
 Template.userhome.onCreated(function (a) {
     Session.set('editUserInfo', false);
     Session.set('userView', 'userhome');
+    t = this
 });
-Template.admin.onRendered(function (a) {});
+Template.admin.onRendered(function (a) {
+    t = this
+});
 Template.userhome.helpers({
     currentUser: function () {
         return Meteor.user();
@@ -37,8 +40,6 @@ Template.userhome.helpers({
             return d.tableVisible;
         }).map(function (d) {
             return {
-                //headerClass: 'lightBlue-bg',
-                //cellClass: 'white-bg',
                 key: d.field,
                 fieldId: d.field,
                 label: function () {
@@ -52,6 +53,10 @@ Template.userhome.helpers({
             showColumnToggles: false,
             collection: Records.find({
                 'admin.userId': Meteor.userId()
+            }, {
+                sort: {
+                    'timelog.lastSeenDateTime': -1
+                }
             }),
             rowsPerPage: 50,
             showFilter: false,

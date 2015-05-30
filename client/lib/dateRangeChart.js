@@ -1,8 +1,7 @@
-dateChart = function(records) {
-    console.log(records)
-    records = _.chain(records).filter(function(d, i) {
+dateChart = function (records) {
+    records = _.chain(records).filter(function (d, i) {
         return d.timeLog && d.timeLog.lastSeenDateTime;
-    }).map(function(d) {
+    }).map(function (d) {
         d.date = parseDate(d.timeLog.lastSeenDateTime);
         return d;
     }).compact().value();
@@ -10,7 +9,7 @@ dateChart = function(records) {
         return false;
     }
     var dates = records
-    var extent = d3.extent(records, function(d) {
+    var extent = d3.extent(records, function (d) {
         if (d.timeLog && d.timeLog.lastSeenDateTime) {
             return new Date(d.timeLog.lastSeenDateTime);
         }
@@ -23,13 +22,13 @@ dateChart = function(records) {
     var formatDate = d3.time.format("%B %d, %Y");
     var formatTime = d3.time.format("%I:%M %p");
     var nestByDate = d3.nest()
-        .key(function(d) {
+        .key(function (d) {
             return d3.time.day(d.date);
         });
     // Create the crossfilter for the relevant dimensions and groups.
     record = crossfilter(records);
     var all = record.groupAll();
-    var date = record.dimension(function(d) {
+    var date = record.dimension(function (d) {
         return d.date;
     });
     dates = date.group(d3.time.day);
@@ -61,7 +60,7 @@ dateChart = function(records) {
     ];
     var chart = d3.selectAll(".chart")
         .data(charts)
-        .each(function(chart) {
+        .each(function (chart) {
             chart.on("brush", renderAll).on("brushend", renderAll);
         });
     // Render the total.
@@ -86,13 +85,13 @@ dateChart = function(records) {
             d.substring(4, 6),
             d.substring(6, 8));
     }
-    window.filter = function(filters) {
-        filters.forEach(function(d, i) {
+    window.filter = function (filters) {
+        filters.forEach(function (d, i) {
             charts[i].filter(d);
         });
         renderAll();
     };
-    window.reset = function(i) {
+    window.reset = function (i) {
         console.log('!')
         console.log()
         charts[i].filter(null);
@@ -119,7 +118,7 @@ dateChart = function(records) {
             var width = x.range()[1];
             var height = y.range()[0];
             y.domain([0, group.top(1)[0].value]);
-            div.each(function() {
+            div.each(function () {
                 var div = d3.select(this),
                     g = div.select("g");
                 if (g.empty()) {
@@ -141,7 +140,7 @@ dateChart = function(records) {
                     g.selectAll(".bar")
                         .data(["background", "foreground"])
                         .enter().append("path")
-                        .attr("class", function(d) {
+                        .attr("class", function (d) {
                             return d + " bar";
                         })
                         .datum(group.all());
@@ -192,15 +191,15 @@ dateChart = function(records) {
                 return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
             }
         }
-        brush.on("brushstart.chart", function() {
+        brush.on("brushstart.chart", function () {
             var div = d3.select(this.parentNode.parentNode.parentNode);
             div.select(".title a").style("display", null);
         });
-        brush.on("brush.chart", function() {
+        brush.on("brush.chart", function () {
             extent = brush.extent();
         });
-        brush.on("brushend.chart", function() {
-            var dateRange = records.filter(function(d) {
+        brush.on("brushend.chart", function () {
+            var dateRange = records.filter(function (d) {
                 return new Date(d.date) >= extent[0] && new Date(d.date) <= extent[1]
             });
             if (!dateRange.length) {
@@ -214,29 +213,29 @@ dateChart = function(records) {
                 dimension.filterAll();
             }
         });
-        chart.margin = function(_) {
+        chart.margin = function (_) {
             if (!arguments.length) return margin;
             margin = _;
             return chart;
         };
-        chart.x = function(_) {
+        chart.x = function (_) {
             if (!arguments.length) return x;
             x = _;
             axis.scale(x);
             brush.x(x);
             return chart;
         };
-        chart.y = function(_) {
+        chart.y = function (_) {
             if (!arguments.length) return y;
             y = _;
             return chart;
         };
-        chart.dimension = function(_) {
+        chart.dimension = function (_) {
             if (!arguments.length) return dimension;
             dimension = _;
             return chart;
         };
-        chart.filter = function(_) {
+        chart.filter = function (_) {
             if (_) {
                 brush.extent(_);
                 dimension.filterRange(_);
@@ -247,12 +246,12 @@ dateChart = function(records) {
             brushDirty = true;
             return chart;
         };
-        chart.group = function(_) {
+        chart.group = function (_) {
             if (!arguments.length) return group;
             group = _;
             return chart;
         };
-        chart.round = function(_) {
+        chart.round = function (_) {
             if (!arguments.length) return round;
             round = _;
             return chart;
@@ -260,7 +259,7 @@ dateChart = function(records) {
         return d3.rebind(chart, brush, "on");
     }
 }
-beta_dateChart = function(data) {
+beta_dateChart = function (data) {
     var toMap = [{
         "field": "timeLog.lastSeenDateTime",
         "count": [],
@@ -308,7 +307,7 @@ beta_dateChart = function(data) {
         number: true
     }];
     var toGraph = _.chain(toMap)
-        .map(function(d) {
+        .map(function (d) {
             if (d.stats) {
                 return d;
             }
@@ -316,19 +315,19 @@ beta_dateChart = function(data) {
         .compact()
         .value();
     var records = _.chain(data)
-        .map(function(d, e) {
+        .map(function (d, e) {
             var flat = flatten(d, {});
-            return _.pick(flat, toMap.map(function(key) {
+            return _.pick(flat, toMap.map(function (key) {
                 return key.field;
             }));
         })
         .value();
     //records = data;
     var dates = records
-    var maxYear = d3.max(records, function(d) {
+    var maxYear = d3.max(records, function (d) {
         return new Date(d['timeLog.lastSeenDateTime']);
     });
-    var minYear = d3.min(records, function(d) {
+    var minYear = d3.min(records, function (d) {
         return new Date(d['timeLog.lastSeenDateTime']);
     });
     // Various formatters.
@@ -340,11 +339,11 @@ beta_dateChart = function(data) {
     //moment(d.name).format('YYYY-MM-DD')
     // A nest operator, for grouping the record list.
     var nestByDate = d3.nest()
-        .key(function(d) {
+        .key(function (d) {
             return d3.time.day(d.date);
         });
     // A little coercion, since the CSV is untyped.
-    records.forEach(function(d, i) {
+    records.forEach(function (d, i) {
         //d.index = i;
         //d.date = parseDate(d.date);
         //d.delay = +d.delay;
@@ -358,37 +357,37 @@ beta_dateChart = function(data) {
     // Create the crossfilter for the relevant dimensions and groups.
     record = crossfilter(records);
     var all = record.groupAll();
-    var date = record.dimension(function(d) {
+    var date = record.dimension(function (d) {
         return d.date;
     });
     dates = date.group(d3.time.day);
-    var hour = record.dimension(function(d) {
+    var hour = record.dimension(function (d) {
         return d.date.getHours() + d.date.getMinutes() / 60;
     });
     var hours = hour.group(Math.floor);
-    var delay = record.dimension(function(d) {
+    var delay = record.dimension(function (d) {
         return d.delay;
         //return Math.max(-60, Math.min(149, d.delay));
     });
-    var delays = delay.group(function(d) {
+    var delays = delay.group(function (d) {
         return Math.floor(d / 10) * 10;
     });
-    var distance = record.dimension(function(d) {
+    var distance = record.dimension(function (d) {
         return Math.min(d.distance);
         //return Math.min(1999, d.findLocation.distanceIPP);
     });
-    var distances = distance.group(function(d) {
+    var distances = distance.group(function (d) {
         return Math.floor(d / 50) * 50;
     });
-    data = _.chain(toGraph).map(function(d) {
+    data = _.chain(toGraph).map(function (d) {
         var delay;
         var delays;
         //if (d.number) {
-        delay = record.dimension(function(e) {
+        delay = record.dimension(function (e) {
             return e[d.field];
             //return Math.max(-60, Math.min(149, d.delay));
         });
-        delays = delay.group(function(e) {
+        delays = delay.group(function (e) {
             return Math.floor(e / 10) * 10;
         });
         if (d.number) {
@@ -399,7 +398,7 @@ beta_dateChart = function(data) {
                     .dimension(delay)
                     .group(delays)
                     .x(d3.scale.linear()
-                        .domain([0, d3.max(records, function(e) {
+                        .domain([0, d3.max(records, function (e) {
                             return e[d.field];
                         })])
                         .rangeRound([0, 10 * 21]))
@@ -449,9 +448,9 @@ beta_dateChart = function(data) {
         }*/
     }).compact().value();
     var container = d3.select('#charts').append('div').selectAll('div').data(data);
-    container.enter().append('div').attr('id', function(d) {
+    container.enter().append('div').attr('id', function (d) {
             return d.field.replace('.', '-')
-        }).attr('class', 'chart').append('div').attr('class', 'title').text(function(d) {
+        }).attr('class', 'chart').append('div').attr('class', 'title').text(function (d) {
             return d.label;
         })
         //timeLog.totalSearchHours
@@ -469,7 +468,7 @@ beta_dateChart = function(data) {
                 .dimension(delay)
                 .group(delays)
                 .x(d3.scale.linear()
-                    .domain([0, d3.max(records, function(d) {
+                    .domain([0, d3.max(records, function (d) {
                         return d['timeLog.totalMissingHours'];
                     })])
                     .rangeRound([0, 10 * 21]))
@@ -479,7 +478,7 @@ beta_dateChart = function(data) {
                 .dimension(distance)
                 .group(distances)
                 .x(d3.scale.linear()
-                    .domain([0, d3.max(records, function(d) {
+                    .domain([0, d3.max(records, function (d) {
                         return d['findLocation.distanceIPP'];
                     })])
                     .rangeRound([0, 10 * 40]))
@@ -502,10 +501,10 @@ beta_dateChart = function(data) {
     // .chart elements in the DOM, bind the charts to the DOM and render them.
     // We also listen to the chart's brush events to update the display.
     var chart = d3.selectAll(".chart")
-        .data(charts.map(function(d) {
+        .data(charts.map(function (d) {
             return d.chart;
         }))
-        .each(function(chart) {
+        .each(function (chart) {
             chart.on("brush", renderAll).on("brushend", renderAll);
         });
     d3.selectAll("#total")
@@ -530,13 +529,13 @@ beta_dateChart = function(data) {
             d.substring(4, 6),
             d.substring(6, 8));
     }
-    window.filter = function(filters) {
-        filters.forEach(function(d, i) {
+    window.filter = function (filters) {
+        filters.forEach(function (d, i) {
             charts[i].filter(d);
         });
         renderAll();
     };
-    window.reset = function(i) {
+    window.reset = function (i) {
         charts[i].filter(null);
         renderAll();
     };
@@ -566,7 +565,7 @@ beta_dateChart = function(data) {
             var width = x.range()[1],
                 height = y.range()[0];
             y.domain([0, group.top(1)[0].value]);
-            div.each(function() {
+            div.each(function () {
                 var div = d3.select(this),
                     g = div.select("g");
                 // Create the skeletal chart.
@@ -589,7 +588,7 @@ beta_dateChart = function(data) {
                     g.selectAll(".bar")
                         .data(["background", "foreground"])
                         .enter().append("path")
-                        .attr("class", function(d) {
+                        .attr("class", function (d) {
                             return d + " bar";
                         })
                         .datum(group.all());
@@ -642,11 +641,11 @@ beta_dateChart = function(data) {
                 return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
             }
         }
-        brush.on("brushstart.chart", function() {
+        brush.on("brushstart.chart", function () {
             var div = d3.select(this.parentNode.parentNode.parentNode);
             div.select(".title a").style("display", null);
         });
-        brush.on("brush.chart", function() {
+        brush.on("brush.chart", function () {
             var g = d3.select(this.parentNode),
                 extent = brush.extent();
             if (round) g.select(".brush")
@@ -662,9 +661,9 @@ beta_dateChart = function(data) {
             e = extent;
             rr = records
         });
-        brush.on("brushend.chart", function() {
+        brush.on("brushend.chart", function () {
             var extent = Session.get('dateExtent');
-            var dateRange = records.filter(function(d) {
+            var dateRange = records.filter(function (d) {
                 return new Date(d.date) >= extent[0] && new Date(d.date) <= extent[1]
             });
             Session.set('dateRange', dateRange);
@@ -676,29 +675,29 @@ beta_dateChart = function(data) {
                 dimension.filterAll();
             }
         });
-        chart.margin = function(_) {
+        chart.margin = function (_) {
             if (!arguments.length) return margin;
             margin = _;
             return chart;
         };
-        chart.x = function(_) {
+        chart.x = function (_) {
             if (!arguments.length) return x;
             x = _;
             axis.scale(x);
             brush.x(x);
             return chart;
         };
-        chart.y = function(_) {
+        chart.y = function (_) {
             if (!arguments.length) return y;
             y = _;
             return chart;
         };
-        chart.dimension = function(_) {
+        chart.dimension = function (_) {
             if (!arguments.length) return dimension;
             dimension = _;
             return chart;
         };
-        chart.filter = function(_) {
+        chart.filter = function (_) {
             if (_) {
                 brush.extent(_);
                 dimension.filterRange(_);
@@ -709,12 +708,12 @@ beta_dateChart = function(data) {
             brushDirty = true;
             return chart;
         };
-        chart.group = function(_) {
+        chart.group = function (_) {
             if (!arguments.length) return group;
             group = _;
             return chart;
         };
-        chart.round = function(_) {
+        chart.round = function (_) {
             if (!arguments.length) return round;
             round = _;
             return chart;
@@ -722,7 +721,7 @@ beta_dateChart = function(data) {
         return d3.rebind(chart, brush, "on");
     }
 }
-var d3Calender = function(context, data1) {
+var d3Calender = function (context, data1) {
     d = data1;
     dd = d;
     var width = 735,
@@ -735,15 +734,15 @@ var d3Calender = function(context, data1) {
     var color = d3.scale.quantize()
         .domain([-.05, .05])
         .range(d3.range(11)
-            .map(function(d) {
+            .map(function (d) {
                 return "q" + d + "-11";
             }));
-    var maxYear = +moment(_.max(data1, function(e) {
+    var maxYear = +moment(_.max(data1, function (e) {
                 return moment(e.name)
             })
             .name)
         .format('YYYY') + 1;
-    var minYear = +moment(_.min(data1, function(e) {
+    var minYear = +moment(_.min(data1, function (e) {
                 return moment(e.name)
             })
             .name)
@@ -761,11 +760,11 @@ var d3Calender = function(context, data1) {
     svg.append("text")
         .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
         .style("text-anchor", "middle")
-        .text(function(d) {
+        .text(function (d) {
             return d;
         });
     var rect = svg.selectAll(".day")
-        .data(function(d) {
+        .data(function (d) {
             return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
         })
         .enter()
@@ -773,19 +772,19 @@ var d3Calender = function(context, data1) {
         .attr("class", "day")
         .attr("width", cellSize)
         .attr("height", cellSize)
-        .attr("x", function(d) {
+        .attr("x", function (d) {
             return week(d) * cellSize;
         })
-        .attr("y", function(d) {
+        .attr("y", function (d) {
             return day(d) * cellSize;
         })
         .datum(format);
     rect.append("title")
-        .text(function(d) {
+        .text(function (d) {
             return d;
         });
     svg.selectAll(".month")
-        .data(function(d) {
+        .data(function (d) {
             return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
         })
         .enter()
@@ -804,48 +803,48 @@ var d3Calender = function(context, data1) {
     d3.select(self.frameElement)
         .style("height", "2910px");
     var data = d3.nest()
-        .key(function(d) {
+        .key(function (d) {
             return moment(d.name)
                 .format('YYYY-MM-DD')
         })
-        .rollup(function(d) {
+        .rollup(function (d) {
             return -0.003689859718846812;
             return Math.random() * 1000;
             return d[0].data
         })
         .map(data1);
-    rect.filter(function(d) {
+    rect.filter(function (d) {
             return d in data;
         })
-        .attr("class", function(d) {
+        .attr("class", function (d) {
             return "day q7-11";
         })
         .select("title")
-        .text(function(d) {
+        .text(function (d) {
             return d + ": " + percent(data[d]);
         });
 };
-var stackedBar = function(d, color, context) {
+var stackedBar = function (d, color, context) {
     z = d;
     var data = _.chain(d.count)
-        .map(function(e, name) {
+        .map(function (e, name) {
             var _data = e.data;
             var keys = _.keys(_data);
             if (keys.length > 20) {
                 return;
             }
             var sortedData = _.chain(_data)
-                .map(function(f, name2) {
+                .map(function (f, name2) {
                     return {
                         name: name2,
                         data: f
                     };
                 })
-                .sortBy(data, function(a, b) {
+                .sortBy(data, function (a, b) {
                     return a.length;
                 })
                 .value();
-            var newData = _.object(_.map(sortedData, function(x) {
+            var newData = _.object(_.map(sortedData, function (x) {
                 return [x.name, x.data];
             }));
             newData.name = e.name;
@@ -903,17 +902,17 @@ var stackedBar = function(d, color, context) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     colorCont = {};
-    data.forEach(function(d, i) {
+    data.forEach(function (d, i) {
         var color = d3.scale.ordinal()
             .range(["#5D2E2C", "#6E3B49", "#744F6A", "#6B6788", "#53819D", "#3799A2", "#3AB098", "#67C283", "#A1D06B", "#E2D85D"]);
         color.domain(d3.keys(d)
-            .filter(function(key) {
+            .filter(function (key) {
                 return key;
             }));
         colorCont[d.name] = color;
         var y0 = 0;
         d.ages = color.domain()
-            .map(function(name) {
+            .map(function (name) {
                 return {
                     name: name,
                     y0: y0,
@@ -922,7 +921,7 @@ var stackedBar = function(d, color, context) {
             });
         d.total = d.ages[d.ages.length - 1].y1;
     });
-    data.sort(function(a, b) {
+    data.sort(function (a, b) {
         return b.total - a.total;
     });
     /*data.forEach(function (e) {
@@ -930,10 +929,10 @@ var stackedBar = function(d, color, context) {
             return b.total;
         });
     });*/
-    x.domain(data.map(function(d) {
+    x.domain(data.map(function (d) {
         return d.name;
     }));
-    y.domain([0, d3.max(data, function(d) {
+    y.domain([0, d3.max(data, function (d) {
         return d.total;
     })]);
     svg.append("g")
@@ -954,29 +953,29 @@ var stackedBar = function(d, color, context) {
         .enter()
         .append("g")
         .attr("class", "g")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + x(d.name) + ",0)";
         });
     rect = state.selectAll("rect")
-        .data(function(d) {
+        .data(function (d) {
             return d.ages;
         })
         .enter()
         .append("rect")
         .attr("width", x.rangeBand())
-        .attr("y", function(d) {
+        .attr("y", function (d) {
             return y(d.y1);
         })
-        .attr("height", function(d) {
+        .attr("height", function (d) {
             return y(d.y0) - y(d.y1);
         })
-        .style("fill", function(d) {
+        .style("fill", function (d) {
             var parent = d3.select(this.parentNode)
                 .datum()
                 .name;
             return colorCont[parent](d.name);
         })
-        .on("mouseover", function(d) {
+        .on("mouseover", function (d) {
             //console.log(this);
             self = d3.select(this);
             var parent = d3.select(this.parentNode)
@@ -989,14 +988,14 @@ var stackedBar = function(d, color, context) {
                 .attr("x", xPos + 3)
                 .attr("y", yPos + 3)
                 .attr("class", "tooltips")
-                .text(function(d) {
+                .text(function (d) {
                     var name = self.datum().name;
                     var count = parent.datum()[name];
                     return name + '-' + count.length;
                 });
             // }
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             var self = d3.select(this);
             svg.select(".tooltips")
                 .remove();
@@ -1005,11 +1004,11 @@ var stackedBar = function(d, color, context) {
     svg.selectAll(".x.axis .tick text")
         .style("text-anchor", "end")
         .attr("dx", "-.5em")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "rotate(-15)";
         });
 };
-var _drawGraph = function(d, color, context) {
+var _drawGraph = function (d, color, context) {
     console.log(d)
     var data = d.count;
     var options = d.options || {};
@@ -1047,7 +1046,7 @@ var _drawGraph = function(d, color, context) {
     var y = d3.scale.linear()
         .rangeRound([width, 0]);
     var svg1 = container.append("svg")
-        .style('background', function(d) {
+        .style('background', function (d) {
             return color
         })
         .attr("width", width + margin.left + margin.right)
@@ -1069,10 +1068,10 @@ var _drawGraph = function(d, color, context) {
         }])
         .enter()
         .append("stop")
-        .attr("offset", function(d) {
+        .attr("offset", function (d) {
             return d.offset;
         })
-        .attr("stop-color", function(d) {
+        .attr("stop-color", function (d) {
             return d.color;
         });
     svg1.append('g')
@@ -1084,10 +1083,10 @@ var _drawGraph = function(d, color, context) {
         .attr('fill', brighter2);
     var svg = svg1.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    x.domain(data.map(function(d) {
+    x.domain(data.map(function (d) {
         return d.name;
     }));
-    y.domain([0, d3.max(data, function(d) {
+    y.domain([0, d3.max(data, function (d) {
         return d.data;
     })]);
     bar = svg.selectAll(".bar")
@@ -1095,13 +1094,13 @@ var _drawGraph = function(d, color, context) {
         .enter()
         .append("g")
         .attr("class", "bar")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + 0 + "," + x(d.name) + ")";
         });
     bar.append("rect")
         .attr("class", "_bar")
         .attr("height", x.rangeBand())
-        .attr("width", function(d) {
+        .attr("width", function (d) {
             return width - y(d.data);
         })
         .attr('stroke', brighter)
@@ -1110,11 +1109,11 @@ var _drawGraph = function(d, color, context) {
         .attr('fill', brighter2)
         .attr("dy", ".75em")
         .attr("y", x.rangeBand() / 2)
-        .attr("x", function(d) {
+        .attr("x", function (d) {
             return width / 2;
         })
         .attr("text-anchor", "middle")
-        .text(function(d) {
+        .text(function (d) {
             return d.name + ' (' + d.data + ')';
         });
 }

@@ -14,24 +14,20 @@
                         <th>Incident Type</th>
                         <th>Status</th>
                         <th>Subject</th>
-                        {{#if currentRecord.subjectSubCategory}}
                         <th>Sub/Cat.</th>
-                        {{/if}}
                         <th></th>
                     </tr>
                 </thead>
                 <tbody class="white-bg">
                     {{#if editRecordInfo 'edit'}}
                     <tr class="text-left text-default">
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidentType"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideLabel hideSubmit" template="plain" id='zformdId6' autosave=true type='update' label=false fields="recordInfo.subjectCategory"}}</td>
-                        {{#if currentRecord.subjectSubCategory}}
-                        <td> {{> quickForm collection='Records' validation="submit" doc=record class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.subjectSubCategory"}}</td>
-                        {{/if}}
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidentType"}}</td>
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideLabel hideSubmit" template="plain" id='zformdId6' autosave=true type='update' label=false fields="recordInfo.subjectCategory"}}</td>
+                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.subjectSubCategory"}}</td>
                         <td>
                             <button type="button" class="btn btn-sm mar00 btn-success editRecordInfo" data="list">
                                 <span class="glyphicon glyphicon-edit" data="list" aria-hidden="true"></span>Done
@@ -46,13 +42,13 @@
                         <td>{{recordInfo.incidentType}}</td>
                         <td>{{recordInfo.status}}</td>
                         <td>{{recordInfo.subjectCategory}}</td>
-                        {{#if currentRecord.subjectSubCategory}}
                         <td>{{recordInfo.subjectSubCategory}}</td>
-                        {{/if}}
                         <td class="text-center">
+                            {{#if isInRole 'admin,editor'}}
                             <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true" data="edit"></span>Edit
                             </button>
+                            {{/if}}
                         </td>
                     </tr>
                     {{/if}}
@@ -125,7 +121,7 @@
                     </div>
                 </div>
                 <div id='formMap' class="mar1y"></div>
-                {{#autoForm collection='Records' doc=this id='formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
+                {{#autoForm collection='Records' doc=current id='formIdMap' template="plain" class="_recordForm4 form-inline hideSubmit _hideHeader" template="plain" type=formType autosave=true template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9" }}
                 <div class="col-md-6" style="font-size: .8em;">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -217,8 +213,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Subject Info</h3>
             </div>
-            <hr class="mar0 mar2x">
-            <div class="subjectTableView btn-group mar0 mar2x" data-toggle="buttons">
+            <div class="subjectTableView btn-group mar1yb" data-toggle="buttons">
                 <label class="btn btn-primary active">
                     <input type="radio" data="Description" name="subjectTableRadio" autocomplete="off"> Description
                 </label>
@@ -231,7 +226,7 @@
                 </label>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
-                {{#autoForm id="editSubjectForm" type=formType collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
+                {{#autoForm id="editSubjectForm" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
                 <table class="table table-bordered table-condensed {{subjectTableView 'Description'}}" style="table-layout: fixed;">
                     <thead>
                         <tr>
@@ -250,7 +245,9 @@
                             </td>
                             {{/each}}
                             <td>
+                                {{#if isInRole 'admin,editor'}}
                                 <button data="{{this._key}}" type="button" class="btn btn-warning btn-sm _glyphicon _glyphicon-remove removeSubject btn-block btn-sm">Remove</button>
+                                {{/if}}
                             </td>
                         </tr>
                         {{/each}}
@@ -296,8 +293,9 @@
                         {{/each}}
                     </tbody>
                 </table>
-                {{/autoForm}}
+                {{/autoForm}} {{#if isInRole 'admin,editor'}}
                 <button type="submit" class="newSubject btn btn-primary mar0">New Subject</button>
+                {{/if}}
             </div>
         </div>
         <!--/Subject Info-->
@@ -307,26 +305,17 @@
                 <h3 class="panel-title">Weather</h3>
             </div>
             <!---->
-            {{#if config.internet}}
-            <!---->
-            {{#if timeLog.lastSeenDateTime}}
+            {{#if config.internet}} {{#if current.timeLog.lastSeenDateTime}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="weatherBtn">
                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via SARCAT Server
             </button>
             <span class="forecastio small em mar0y white">*Powered by <a class="em text-lightBlue" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span>
             <!---->
-            {{/if}}
-            <!---->
-            {{/if}}
+            {{/if}} {{/if}}
             <div class="panel-body pad00">
                 <!---->
-              
-
-                {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=formType fields="weather" resetOnSuccess=false}}
-
-
-
+                {{#autoForm collection='Records' doc=current id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}}
                 <!---->
                 {{> afQuickField name="weather" options=this.options }}
                 <!---->
@@ -340,22 +329,17 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Find Location</h3>
             </div>
-            {{#if disableFindLocation}}
-            <span class="small em mar0y white">*Drop Find Location Point to activate fields</span>
-            {{/if}}
+            {{#unless showFindLocation}}
+            <span class="small em mar0y white">*Drop Find Location Point to activate fields</span> {{/unless}}
             <!---->
             <!---->
-            {{#if config.internet}}
-            {{#unless disableFindLocation}}
+             {{#if showFindLocation}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="mapCalcBtn" style="display:block">
                 <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate Measurements
             </button>
             <!---->
-            {{/unless}}
-            {{/if}}
-            <!---->
-            
+            {{/if}} 
             <div class="panel-body pad00">
                 {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" resetOnSuccess=false}}
                 <!---->
@@ -373,7 +357,7 @@
                     </h3>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
-                {{#autoForm id="editSubjectForm2" type=formType collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
+                {{#autoForm id="editSubjectForm2" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
                 <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
                     <thead class='lightBlue-bg'>
                         <tr>
@@ -392,14 +376,17 @@
                             </td>
                             {{/each}}
                             <td class="padsm">
+                                {{#if isInRole 'admin,editor'}}
                                 <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
+                                {{/if}}
                             </td>
                         </tr>
                         {{/each}}
                     </tbody>
                 </table>
-                {{/autoForm}}
+                {{/autoForm}} {{#if isInRole 'admin,editor'}}
                 <button type="submit" class="newResource btn btn-primary mar0">New Resource</button>
+                {{/if}}
                 <div class="col-md-12">
                     <hr> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideHeader recordForm2" id='formdId' autosave=true type=formType fields="resourcesUsed.numTasks,resourcesUsed.totalPersonnel,resourcesUsed.totalManHours,resourcesUsed.distanceTraveled,resourcesUsed.totalCost"}}
                 </div>
@@ -455,7 +442,8 @@
                     <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a> {{/each}}
                 </div>
                 <label class="control-label">Upload Files</label>
-                {{> upload_bootstrap formData=record multiple=true}} </div>
+                {{#if isInRole 'admin,editor'}} {{> upload_bootstrap formData=record multiple=true}} {{/if}}
+            </div>
         </div>
         <!--/Custom Questions-->
         <div class="col-md-12 mar1y">
