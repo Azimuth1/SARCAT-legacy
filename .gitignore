@@ -11,5 +11,5 @@ main_logo
 /uploads/logo/*.jpg
 /uploads/logo/tmp**
 
-settings.dev.json
+//settings.dev.json
 npm-debug.log
