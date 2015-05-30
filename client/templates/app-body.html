@@ -6,29 +6,44 @@
             </div>
             {{#if currentUser}}
             <div class="btns-group-vertical btns-userHome">
-<!--
-<a href="{{pathFor 'userhome'}}" class="strong default-bg btn-pad js-sharedRecords btn-secondary {{isUserView 'userhome'}}" data="records">{{email}}</a>
--->
                 <a href="{{pathFor 'userhome'}}" class="strong btn-pad js-sharedRecords btn-secondary {{isUserView 'userhome'}}" data="records">{{email}}</a>
-
                 <a class="btn-pad js-logout btn-secondary">Logout</a>
             </div>
-
             <div class="btns-group-vertical btns-userHome">
                 <a href="{{pathFor 'records'}}" class="btn-pad js-sharedRecords btn-secondary records {{isUserView 'records'}}" data="records">Incident Records</a>
                 <a href="{{pathFor 'stats'}}" class="btn-pad js-sharedRecords btn-secondary {{isUserView 'stats'}}" data="stats">SARCAT Stats</a> {{#if isAdmin}}
                 <a href="{{pathFor 'admin'}}" class="btn-pad js-dashboard btn-secondary {{isUserView 'admin'}}" data='admin'>Admin Tools</a> {{/if}}
                 <a href="{{pathFor 'about'}}" class="btn-pad js-dashboard btn-secondary {{isUserView 'about'}}" data='about'>About</a>
             </div>
-
-
             {{else}}
             <div class="btns-group"> <a href="{{pathFor 'signin'}}" class="btn-pad btn-secondary">Sign In</a> <a href="{{pathFor 'join'}}" class="btn-secondary btn-pad">Register</a> </div>
             {{/if}}
+            <div>
+
+
+{{#if lists}}
+                <div class="quickDash">
+                    <!--<div class="quickTitle">Quick DashBoard
+                    </div>-->
+                    {{#each summary}}
+                    <div>
+                        <span class="quickName">
+                    {{this.name}}: 
+                </span>
+                        <span class="quickVal">
+                    {{this.val}}
+                </span>
+                    </div>
+                    {{/each}}
+                </div>
+{{/if}}
+
+
+            </div>
         </section>
         <div class="content-overlay"></div>
         <div id="content-container">
-        <!--
+            <!--
                 <nav>
             <div class="nav-group">
                 <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered"></span></a>

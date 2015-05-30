@@ -1,18 +1,11 @@
 @menu-width: 270px;
-@column: 2.55555%;
+@column: 5.55555%;
 body {
-    //background-color: @color-navyBlue;
-    //color: @color-navyBlue;
-    //background-color: #315481;
-    //font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
-
     .position(absolute, 0, 0, 0, 0);
-  background-color: @color-navyBlue;
-  .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%) );
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-
-
+    background-color: @color-navyBlue;
+    .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 #container {
@@ -38,36 +31,18 @@ body {
 }
 
 #content-container {
-    //background-color: @color-navyBlue;
-    @media print {
-        *, *:before, *:after {
-            color: initial !important;
-            text-shadow: none !important;
-            background-color: @color-navyBlue !important;
-            -webkit-box-shadow: none !important;
-            box-shadow: none !important;
-        }
-    }
     .position(absolute, 0, 0, 0, 0);
     .transition(all 200ms ease-out);
     .transform(translate3d(0, 0, 0));
-    //background: @color-navyBlue;
     opacity: 1;
     @media screen and (min-width: 40em) {
         left: @menu-width;
-        _right: 0
     }
     .content-scrollable {
         .position(absolute, 0, 0, 0, 0);
         .transform(translate3d(0, 0, 0));
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        color: @color-light;
-        //background: @color-navyBlue;
-          background-color: @color-navyBlue;
-  .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%) );
-  background-repeat: no-repeat;
-  background-attachment: fixed;
     }
     // Toggle menu on mobile
     .menu-open & {
@@ -83,9 +58,7 @@ body {
     }
 }
 
-// Transparent screen to prevent interactions on content when menu is open
 .content-overlay {
-    background-color: @color-navyBlue;
     .position(absolute, 0, 0, 0, 0);
     cursor: pointer;
     .menu-open & {
@@ -96,13 +69,6 @@ body {
     @media screen and (min-width: 40em) {
         display: none;
     }
-}
-
-.sarcat-bg {
-    background: url(mt.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
 }
 
 .title {

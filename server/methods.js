@@ -102,11 +102,11 @@ Meteor.methods({
         var update = Records.update(id, {
             $push: obj
         });
-        console.log(update);
+        //console.log(update);
         return update;
     },
     updateRecord: function(id, name, val) {
-        console.log(id, name, val)
+        //console.log(id, name, val)
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
