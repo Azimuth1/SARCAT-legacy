@@ -1,7 +1,6 @@
 node_modules
 .tmp
 .DS_Store
-*.db
 .ignore
 *.log
 
@@ -13,3 +12,4 @@ main_logo
 
 //settings.dev.json
 npm-debug.log
+/build

@@ -4,39 +4,33 @@
         <div id='recordsMap' style="width:100%;height:300px">
         </div>
         <div class="white-border">
-        {{#each stats}}
-        <div class="statInfo">
-            <div class="chartTitle">{{this.field}}</div>
-            <div class="cont">
-                {{#each this.data}}
-                <div class="_col-md-4 chartBody">
-                    <div class="stronger">{{this.key}}: </div>
-                    <div class="bod">{{this.val}}</div>
+            {{#each stats}}
+            <div class="statInfo">
+                <div class="chartTitle">{{this.field}}</div>
+                <div class="cont">
+                    {{#each this.data}}
+                    <div class="_col-md-4 chartBody">
+                        <div class="stronger">{{this.key}}: </div>
+                        <div class="bod">{{this.val}}</div>
+                    </div>
+                    {{/each}}
                 </div>
-                {{/each}}
             </div>
-        </div>
-        {{/each}}
+            {{/each}}
         </div>
         <hr>
-        <div class="col-md-12 mar2y">
+        <div class="col-xs-12 mar2y">
             <div id="dateChart" class="panel-body pad1 greenish-bg white-border">
-
-
-
                 <div id="charts">
                     <div id="date-chart" class="chart col-md-12">
                         <div class="title text-center text-orange">Incident Date Range Slider</div>
                     </div>
                     <div id="totals" class="text-light text-right mar2x"><span id="Active">{{currentRecords}}</span> of <span id="total">-</span> records selected.</div>
                 </div>
-
-
-
             </div>
         </div>
         <!--  <h4 class="text-center">Incident Date Calender View</h4>-->
-        <div id="d3Calender" class="renderedChart"></div>
+     
         <div id="recordsResource" class="renderedChart"></div>
         <div id="recordsSubject" class="renderedChart"></div>
         <div id="recordss" class="renderedChart"></div>

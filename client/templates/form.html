@@ -58,7 +58,7 @@
         <div class="formNav1">
             {{#each schemas}}
             <div data="{{this.field}}" class="formNav btn btn-sm pad0 btn-default_btn {{this.klass}}">
-                <div class="stronger">{{this.field}}</div>
+                {{this.field}}
                 <div class="bod">{{this.sum}}</div>
             </div>
             {{/each}}
@@ -72,7 +72,7 @@
                     <div class="mapBtns mapPoints">
                         <div class="col-md-4 pad00">
                             <div class="btn-group-vertical btn-group btn-block" data-toggle="buttons">
-                                <button type="button" class="btn btn-danger active" data="_ippCoordinates">
+                                <button type="button" class="btn btn-danger active" data="ippCoordinates">
                                     <input type="checkbox" autocomplete="off"> &nbsp; Incident Location/IPP
                                     <span class="fa-stack _pull-right">
                                           <i class="fa fa-times-circle-o fa-2x fa-fw text-danger"></i>
