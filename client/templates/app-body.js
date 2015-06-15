@@ -48,9 +48,9 @@ Template.appBody.helpers({
         var yearCount = _.chain(records).filter(function (d) {
             return d.timeLog && d.timeLog.lastSeenDateTime
         }).filter(function (d) {
-            return moment(d.timeLog.lastSeenDateTime).year()>2013;
+            return moment(new Date(d.timeLog.lastSeenDateTime)).year()>2013;
         }).map(function (d) {
-            return moment(d.timeLog.lastSeenDateTime).year()
+            return moment(new Date(d.timeLog.lastSeenDateTime)).year()
         }).groupBy().map(function (d, e) {
             return {
                 name: e + ' # of incidents ',

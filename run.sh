@@ -1,1 +1,2 @@
-meteor --settings settings.dev.json --port 4000
+meteor reset
+meteor run --settings settings.json

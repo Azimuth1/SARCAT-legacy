@@ -211,7 +211,7 @@ insertSampleRecords = function () {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
     data = [];
-    var length = 50;
+    var length = 200;
     var rand = function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
@@ -425,7 +425,7 @@ insertSampleRecords = function () {
                 });
             }
             record.recordInfo.name = 'Record-' + i;
-            record.recordInfo.incidentnum = 'inc-' + i;
+            record.recordInfo.incidentnum = 'record-' + i;
             record.recordInfo.missionnum = '#2015' + i;
         });
         _.each(record.subjects.subject, function (e, ind) {
