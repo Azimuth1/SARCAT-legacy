@@ -2,11 +2,11 @@
 
 
 
-meteor build --directory ../build
+meteor build --directory /build
 #cd ../build/bundle
 (cd ../build/bundle/programs/server && npm install)
 
-MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.dev.json) node ../build/bundle/main.js
+MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.json) node ../build/bundle/main.js
 #meteor --port 4000 --settings settings.json
 # or bundle and prepare it as if you're running in production
 # and specify a settings file
@@ -35,4 +35,4 @@ MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METE
 #export METEOR_SETTINGS=$(cat settings.dev.json)
 #node main.js
 
-MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.dev.json) node main.js
+#MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.dev.json) node main.js

@@ -38,7 +38,8 @@ dateChart = function (records) {
         bottom: 20,
         left: 20
     };
-    var rangeW = parseInt($("#dateChart").width() * .95)
+    var rangeW = parseInt($("#dateChart").width() * .95);
+    console.log(rangeW)
     charts = [
         barChart()
         .dimension(date)
@@ -128,7 +129,7 @@ dateChart = function (records) {
                         .text(" reset")
                         .style("display", "none");
                     g = div.append("svg")
-                        .attr("width", width + margin.left + margin.right)
+                        .attr("width", width - margin.left - margin.right)
                         .attr("height", height + margin.top + margin.bottom)
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");

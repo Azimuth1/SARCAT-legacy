@@ -21,7 +21,6 @@ Template.form.onRendered(function () {
     map = formSetMap('formMap', record._id);
     var coords = getCoords(record);
     coords.forEach(function (d) {
-        //console.log(d)
         if (d.coords) {
             map.add(d);
         }
@@ -479,7 +478,6 @@ Template.form.events({
     },
     'click .editRecordInfo': function (event) {
         var item = event.target.getAttribute('data');
-        console.log(event.target)
         return Session.set('editRecordInfo', item);
     },
     'click .formNav': function (event, template) {
@@ -582,15 +580,20 @@ Template.form.events({
         });
     },
     'click .mapPoints .btn': function (event, template) {
-        var context = template.$(event.target);
+        e = event
+        var context = template.$(event.currentTarget);
         var pointType = context.attr('data');
         var active = context.hasClass('active');
-        // console.log(active,pointType,this)
-        var coords = getCoords(this);
+        console.log(pointType)
+        if (!map || pointType === 'ippCoordinates') {
+            event.stopPropagation();
+            return;
+        }
+        var coords = getCoords(Session.get('record'));
         var item = _.findWhere(coords, {
             val: pointType
         });
-        console.log(pointType, item)
+        //console.log(active, item)
         if (!item) {
             return;
         };
@@ -791,7 +794,7 @@ var keys = d.split('.');
 var encryptionKey = Meteor.settings.public.config.encryptionKey;
 Records.before.update(function (userId, doc, fieldNames, modifier, options) {
     mm = modifier;
-    console.log(Object.keys(modifier.$set))
+    //console.log(Object.keys(modifier.$set))
     if (modifier && modifier.$set && Object.keys(modifier.$set).length) {
         var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
         var fields = Object.keys(modifier.$set).map(function (d) {
@@ -810,7 +813,7 @@ Records.before.update(function (userId, doc, fieldNames, modifier, options) {
 });
 AutoForm.addHooks(null, {
     onSuccess: function (formType, result, c) {
-        console.log(this, formType, result, c);
+        //.log(this, formType, result, c);
         var autoSaveChangedElement = this.autoSaveChangedElement || {};
         var field;
         var value;
@@ -837,6 +840,7 @@ formSetMap = function (context, recordId) {
     var markers = {};
     var paths = {};
     var coords = {};
+    c = coords;
     var obj = {};
     var map = L.map(context);
     var units = (Session.get('measureUnits') === 'Metric') ? true : false;
@@ -870,15 +874,15 @@ formSetMap = function (context, recordId) {
         var val = d.val;
         if (!d.path) {
             coords[val] = d;
-            //if (d.coords.lat && d.coords.lng) {
             obj.addPoint(d);
-            //}
+            return;
         }
         if (val === 'intendedRoute' || val === 'actualRoute') {
+            console.log(d.coords)
             coords[d.val] = d;
+            //console.log(coords);
             if (d.coords) {
-                obj.addPoly(d, JSON.parse(d.coords));
-                return;
+                return obj.addPoly(d, JSON.parse(d.coords));
             }
             var start = coords.ippCoordinates.layer.getLatLng();
             var end;
@@ -886,13 +890,27 @@ formSetMap = function (context, recordId) {
             if (coords[dest]) {
                 end = coords[dest].layer.getLatLng()
             } else {
-                var ne = map.getBounds()
-                    ._northEast;
-                var center = map.getCenter();
-                end = {
-                    lat: center.lat,
-                    lng: (center.lng + (ne.lng - center.lng) / 2)
+                var bounds = map.getBounds();
+                var north = bounds._northEast;
+                var south = bounds._southWest
+                latDiff = ((north.lat - south.lat) / 1);
+                lngDiff = ((south.lng - north.lng) / 1);
+                console.log(latDiff, lngDiff)
+                north = {
+                    lat: north.lat - latDiff,
+                    lng: north.lng + lngDiff
+                };
+                south = {
+                    lat: south.lat + latDiff,
+                    lng: south.lng - lngDiff
                 }
+                var lat = Math.random() * (north.lat - south.lat) + south.lat;
+                var lng = Math.random() * (south.lng - north.lng) + north.lng;
+                end = {
+                    lat: lat,
+                    lng: lng
+                };
+                console.log(end)
             }
             var latlngs = [
                 [start.lat, start.lng],
@@ -955,14 +973,24 @@ formSetMap = function (context, recordId) {
             //var lineString = JSON.stringify(layer.toGeoJSON());
     };
     obj.removePoly = function (d) {
-        var path = coords[d.val].layer;
-        $('[name="' + d.name + '"]')
-            .val('')
-            .trigger("change");
-        drawnPaths.removeLayer(path);
-        delete coords[d.val];
+        if (!d || !d.val) {
+            return;
+        }
+        console.log($('[name="coords.' + d.name + '"]')
+            .val())
+        Meteor.call('updateRecord', recordId, d.name, null, function (err, result) {
+            if (err) {
+                return console.log(err);
+            }
+            var path = coords[d.val].layer;
+            drawnPaths.removeLayer(path);
+            delete coords[d.val];
+        });
     };
     obj.removePoint = function (d) {
+        if (!d || !d.val) {
+            return;
+        }
         var marker = coords[d.val].layer;
         if (!marker) {
             return;
@@ -989,17 +1017,32 @@ formSetMap = function (context, recordId) {
         layer[0].setLatLng([coords.lat, coords.lng]);
         obj.fitBounds();
     };
+    var addLocations = ['_southWest', '_northEast'];
+    //m = map
     obj.addPoint = function (d) {
-        //console.log(_coords)
+        console.log(d)
+            //console.log(_coords)
         var _coords = d.coords; // || map.getCenter();
-        //console.log(d,_coords)
         if (!d.coords) {
-            var ne = map.getBounds()
-                ._northEast;
-            var center = map.getCenter();
-            _coords = {
-                lat: center.lat,
-                lng: (center.lng + (ne.lng - center.lng) / 2)
+            var bounds = map.getBounds();
+            var north = bounds._northEast;
+            var south = bounds._southWest
+            latDiff = ((north.lat - south.lat) / 4);
+            lngDiff = ((south.lng - north.lng) / 4);
+            console.log(latDiff, lngDiff)
+            north = {
+                lat: north.lat - latDiff,
+                lng: north.lng + lngDiff
+            };
+            south = {
+                lat: south.lat + latDiff,
+                lng: south.lng - lngDiff
+            }
+            var lat = Math.random() * (north.lat - south.lat) + south.lat;
+            var lng = Math.random() * (south.lng - north.lng) + north.lng;
+            var _coords = {
+                lat: lat,
+                lng: lng
             }
         }
         //if(!_coords.lat || !coords.lng){return;}

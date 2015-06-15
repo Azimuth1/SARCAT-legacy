@@ -1,9 +1,8 @@
-Meteor.startup(function () {
-    if (Meteor.isClient) {
+
         Tracker.autorun(function () {
             var config = Config.findOne();
             if (config) {
-                Session.set('records',Records.find().fetch())
+                Session.set('records', Records.find().fetch())
                 Session.set('config', config);
                 Session.set('agencyProfile', config.agencyProfile);
                 Session.set('bounds', config.bounds);
@@ -18,8 +17,7 @@ Meteor.startup(function () {
         settings = Meteor.settings.public;
         //config = Meteor.settings.public.config;
         //insertSampleRecords()
-    }
-});
+
 Handlebars.registerHelper('json', function (context) {
     return JSON.stringify(context);
 });

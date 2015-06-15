@@ -237,11 +237,7 @@ Meteor.methods({
     },
     setWeather: function(id, options) {
         var options = options || {};
-        /*var forecastAPI = Config.findOne()
-            .forecastAPI;
-        if (!forecastAPI) {
-            return;
-        }*/
+
         var internet = Config.findOne()
             .internet;
         if (!internet) {
