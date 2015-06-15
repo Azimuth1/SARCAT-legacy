@@ -6,65 +6,9 @@ Meteor.publish('records', function () {
         this.ready();
     }
 });
-Meteor.publish('_item', function (id) {
-    if (this.userId) {
-        return Records.find(id, {
-            fields: {
-                //'subjects.subject': 1
-            }
-        });
-    } else {
-        this.ready();
-    }
-});
-//Publishing and decrypting
-Meteor.publish('xitem', function (filter) {
-    var self = this;
-    var subHandle = Records.find(filter || {}).observeChanges({
-        added: function (id, fields) {
-            var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-            var allFields = fields.subjects.subject;
-            allFields.forEach(function (d) {
-                _.each(d, function (e, f) {
-                    if (_.contains(hide, f)) {
-                        console.log(f)
-                        d[f] = CryptoJS.AES
-                            .decrypt(d[f], encryptionKey)
-                            .toString(CryptoJS.enc.Utf8);
-                    }
-                })
-            });
-            self.added("records", id, fields);
-        },
-        changed: function (id, fields) {
-            if (fields.subjects) {
-                var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-                var allFields = fields.subjects.subject;
-                allFields.forEach(function (d) {
-                    _.each(d, function (e, f) {
-                        if (_.contains(hide, f)) {
-                            console.log(f)
-                            d[f] = CryptoJS.AES
-                                .decrypt(d[f], encryptionKey)
-                                .toString(CryptoJS.enc.Utf8);
-                        }
-                    })
-                });
-            }
-            self.changed("records", id, fields);
-        },
-        removed: function (id) {
-            self.removed("records", id);
-        }
-    });
-    self.ready();
-    self.onStop(function () {
-        subHandle.stop();
-    });
-});
+
 Meteor.publish('item', function (filter) {
-    encryptionKey = Meteor.settings.public.config.encryptionKey
-    console.log(Meteor.settings.public.config.encryptionKey)
+    var encryptionKey = Meteor.settings.private.encryptionKey
     check(filter, String);
     if (this.userId) {
         var self = this;
@@ -77,7 +21,7 @@ Meteor.publish('item', function (filter) {
                     allFields.forEach(function (d, ind) {
                         _.each(d, function (e, f) {
                             if (_.contains(hide, f)) {
-                                //console.log(f)
+
                                 allFields[ind][f] = CryptoJS.AES
                                     .decrypt(allFields[ind][f], encryptionKey)
                                     .toString(CryptoJS.enc.Utf8);
@@ -98,7 +42,7 @@ Meteor.publish('item', function (filter) {
                                     var dec = CryptoJS.AES
                                         .decrypt(allFields[ind][f], encryptionKey)
                                         .toString(CryptoJS.enc.Utf8);
-                                    //console.log(f,dec);
+
                                     allFields[ind][f] = dec;
                                 }
                             })
@@ -106,7 +50,7 @@ Meteor.publish('item', function (filter) {
                     }
                 }
                 self.changed("records", id, fields);
-                //}
+
             },
             removed: function (id) {
                 self.removed("records", id);
@@ -116,42 +60,11 @@ Meteor.publish('item', function (filter) {
         self.onStop(function () {
             handle.stop();
         });
+    } else {
+        this.ready();
     }
 });
-Meteor.publish('__item', function (id) {
-    check(id, String);
-    var cursor = Records.find(id, {});
-    var self = this;
-    encryptionKey = "adsffe534tryertrrtweGe";
-    console.log('!!!!!')
-    console.log(cursor)
-    console.log('????????')
-    var handle = cursor.observeChanges({
-        /*added: function (id, fields) {
-            console.log(fields)
-            fields.text = CryptoJS.AES
-                .decrypt(fields.text, encryptionKey)
-                .toString(CryptoJS.enc.Utf8);
-            self.added('item', id, fields);
-        },*/
-        changed: function (id, fields) {
-            console.log(fields)
-                /*if (fields.text) {
-                    fields.text = CryptoJS.AES
-                        .decrypt(fields.text, encryptionKey)
-                        .toString(CryptoJS.enc.Utf8);
-                }*/
-            self.changed('item', id, fields);
-        },
-        /*removed: function (id) {
-            self.removed('item', id);
-        }*/
-    });
-    self.onStop(function () {
-        handle.stop();
-    });
-    self.ready();
-});
+
 Meteor.publish('audit', function (id) {
     if (this.userId) {
         return RecordsAudit.find({});
@@ -192,8 +105,7 @@ Meteor.publish('roles', function () {
 Meteor.publish('config', function () {
     return Config.find({}, {
         fields: {
-            /*'forecastAPI': 0,
-            'googleAPI': 0*/
+            'encryptionKey': 0
         }
     });
 });
@@ -206,3 +118,4 @@ Meteor.publish('adminDefault', function () {
         }
     });
 });
+

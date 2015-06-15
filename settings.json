@@ -11,15 +11,22 @@
             "county": "",
             "phoneNum": ""
         }
+    },
+    "private": {
+        "sarcatServer": "http://spa.tial.ly:5000",
+        "port": 3000
 
     },
     "private": {
-        "_forecastAPI": "",
-        "_googleAPI": "",
-        "sarcatServer": "http://spa.tial.ly:5000"
+        "defaultUser": {
+            "email": "admin@sarcat",
+            "password": "admin",
+            "username": "Kyle K"
+        },
+        "sarcatServer": "http://spa.tial.ly:5000",
+        "port": 4000
     },
     "public": {
-        "environment": "production",
         "layers": {
             "MapQuest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
             "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -34,3 +41,4 @@
         }
     }
 }
+

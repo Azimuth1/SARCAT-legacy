@@ -1,15 +1,13 @@
 var map;
-var rr;
-//Template.registerHelper("Schemas", Schemas);
 Template.form.onCreated(function (a, b) {
+    r = record
+    if (!Object.keys(this.data)
+        .length) {
+        return Router.go('records');
+    }
     Session.set('subjectTableView', 'Description');
     var record = this.data;
     Session.set('record', record);
-    // console.log(this.data.record)
-    r = record;
-    t = this;
-    aa = a;
-    bb = b
     Tracker.autorun(function () {
         Session.set('record', Records.findOne(record._id));
     });
@@ -42,9 +40,15 @@ Template.form.onRendered(function () {
         });
     $('.knobVal')
         .html(degree);
+    //if (!record.incidentLocation['state-province']) {
+        Meteor.call('setStateProvince', record._id, function (err, d) {
+            if (err) {
+                return;
+            }
+        });
+    //}
     if (!record.incidentLocation.ecoregionDomain || !record.incidentLocation.ecoregionDivision) {
         Meteor.call('setEcoRegion', record._id, function (err, d) {
-            //console.log(err, d)
             if (err) {
                 return;
             }
@@ -106,14 +110,17 @@ Template.form.onRendered(function () {
             .parent()
             .addClass('hide')
     }
-    $('[name="timeLog.totalMissingHours"]').prop('disabled', true);
-    $('[name="timeLog.totalSearchHours"]').prop('disabled', true);
+    $('[name="timeLog.totalMissingHours"]')
+        .prop('disabled', true);
+    $('[name="timeLog.totalSearchHours"]')
+        .prop('disabled', true);
     // $('.bsDateInput').prop('disabled', true);
-    $('.bsDateInput').datetimepicker({
-        use24hours: true,
-        format: 'MM/DD/YYYY HH:mm',
-        sideBySide: true
-    });
+    $('.bsDateInput')
+        .datetimepicker({
+            use24hours: true,
+            format: 'MM/DD/YYYY HH:mm',
+            sideBySide: true
+        });
 });
 Template.form.helpers({
     activeLayer: function (name) {
@@ -161,9 +168,6 @@ Template.form.helpers({
     Records: function () {
         return Records;
     },
-    currentRecord: function () {
-        return Session.get('currentRecord');
-    },
     hasRevisedPLS: function () {
         var record = this;
         return record.coords && record.coords['revisedLKP_PLS'];
@@ -172,7 +176,10 @@ Template.form.helpers({
         return true;
     },
     schemas: function () {
-        var record = this
+        var record = this;
+        if (!record) {
+            return;
+        }
         var schemas = [{
             "name": "incidentLocation",
         }, {
@@ -520,9 +527,12 @@ Template.form.events({
         var record = Session.get('record');
         var name = event.target.name;
         if (name === 'timeLog.lastSeenDateTime' || name === 'timeLog.subjectLocatedDateTime' || name === 'timeLog.SARNotifiedDatetime') {
-            var startTime = $('[name="timeLog.lastSeenDateTime"]').val();
-            var startTimeSAR = $('[name="timeLog.SARNotifiedDatetime"]').val();
-            var endTime = $('[name="timeLog.subjectLocatedDateTime"]').val();
+            var startTime = $('[name="timeLog.lastSeenDateTime"]')
+                .val();
+            var startTimeSAR = $('[name="timeLog.SARNotifiedDatetime"]')
+                .val();
+            var endTime = $('[name="timeLog.subjectLocatedDateTime"]')
+                .val();
             if (startTime && endTime) {
                 var duration = moment.duration(moment(endTime)
                     .diff(moment(startTime)));
@@ -534,7 +544,8 @@ Template.form.events({
                         return console.log(err);
                     }
                 });
-            } else if ($('[name="timeLog.totalMissingHours"]').val()) {
+            } else if ($('[name="timeLog.totalMissingHours"]')
+                .val()) {
                 Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', '', function (err, d) {
                     console.log(d);
                     if (err) {
@@ -552,7 +563,8 @@ Template.form.events({
                         return console.log(err);
                     }
                 });
-            } else if ($('[name="timeLog.totalSearchHours"]').val()) {
+            } else if ($('[name="timeLog.totalSearchHours"]')
+                .val()) {
                 Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', '', function (err, d) {
                     console.log(d);
                     if (err) {
@@ -653,7 +665,8 @@ Template.form.events({
         }
     },
     'click #weatherBtn': function (event, template) {
-        var id = Session.get('record')._id;
+        var id = Session.get('record')
+            ._id;
         Meteor.call('setWeather', id, function (err, d) {
             console.log(err, d)
             if (err) {
@@ -669,7 +682,8 @@ Template.form.events({
         });
     },
     'click #mapCalcBtn': function (event, template) {
-        var recordId = Session.get('record')._id;
+        var recordId = Session.get('record')
+            ._id;
         Meteor.call('setDistance', recordId, function (err, d) {
             if (err) {
                 return console.log(err);
@@ -690,7 +704,8 @@ Template.form.events({
                 return console.log(err);
             }
         });
-        if (!Session.get('config').internet) {
+        if (!Session.get('config')
+            .internet) {
             return;
         }
         Meteor.call('setElevation', recordId, function (err, d) {
@@ -754,7 +769,6 @@ Template.form.events({
         var record = Session.get('record');
         if (val) {} else {
             Meteor.call('updateRecord', record._id, 'incidentOperations.initialDirectionofTravel', null, function (err, d) {
-                console.log(d);
                 if (err) {
                     return console.log(err);
                 }
@@ -771,38 +785,18 @@ AutoForm.hooks({
         }
     }
 });
-/*AutoForm.hooks({
-    editSubjectForm: {
-        onSubmit: function (insertDoc, updateDoc, currentDoc) {
-            console.log(insertDoc, updateDoc, currentDoc)
-            this.done();
-            if (customHandler(insertDoc)) {
-                this.done();
-            } else {
-                this.done(new Error("Submission failed"));
-            }
-            return false;
-        }
-    }
-});
-var keys = d.split('.');
-            var val = _.reduce(keys, function (d, e) {
-                console.log(d, e);
-                return d[e]
-            }, r);
-            */
-var encryptionKey = Meteor.settings.public.config.encryptionKey;
+var encryptionKey = Meteor.settings.public.encryptionKey;
 Records.before.update(function (userId, doc, fieldNames, modifier, options) {
-    mm = modifier;
-    //console.log(Object.keys(modifier.$set))
-    if (modifier && modifier.$set && Object.keys(modifier.$set).length) {
+    if (modifier && modifier.$set && Object.keys(modifier.$set)
+        .length) {
         var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-        var fields = Object.keys(modifier.$set).map(function (d) {
-            return {
-                field: d.substr(d.lastIndexOf('.') + 1),
-                name: d
-            }
-        });
+        var fields = Object.keys(modifier.$set)
+            .map(function (d) {
+                return {
+                    field: d.substr(d.lastIndexOf('.') + 1),
+                    name: d
+                }
+            });
         _.each(fields, function (d) {
             if (_.contains(hide, d.field)) {
                 modifier.$set[d.name] = CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
@@ -829,10 +823,12 @@ AutoForm.addHooks(null, {
             'type': formType,
             'recordId': this.docId,
             'userId': Meteor.userId(),
-            'userName': Meteor.user().username,
+            'userName': Meteor.user()
+                .username,
             'field': field,
             'value': value,
-            'date': moment().format('MM/DD/YYYY HH:mm')
+            'date': moment()
+                .format('MM/DD/YYYY HH:mm')
         });
     }
 });
@@ -878,9 +874,7 @@ formSetMap = function (context, recordId) {
             return;
         }
         if (val === 'intendedRoute' || val === 'actualRoute') {
-            console.log(d.coords)
             coords[d.val] = d;
-            //console.log(coords);
             if (d.coords) {
                 return obj.addPoly(d, JSON.parse(d.coords));
             }
@@ -895,7 +889,6 @@ formSetMap = function (context, recordId) {
                 var south = bounds._southWest
                 latDiff = ((north.lat - south.lat) / 1);
                 lngDiff = ((south.lng - north.lng) / 1);
-                console.log(latDiff, lngDiff)
                 north = {
                     lat: north.lat - latDiff,
                     lng: north.lng + lngDiff
@@ -910,7 +903,6 @@ formSetMap = function (context, recordId) {
                     lat: lat,
                     lng: lng
                 };
-                console.log(end)
             }
             var latlngs = [
                 [start.lat, start.lng],
@@ -940,7 +932,8 @@ formSetMap = function (context, recordId) {
         marker.setZIndexOffset(4);
         coords[d.val].layer = polyline;
         var lineString = JSON.stringify(latlngs);
-        if (!$('[name="' + d.name + '"]').val()) {
+        if (!$('[name="' + d.name + '"]')
+            .val()) {
             Meteor.call('updateRecord', recordId, d.name, lineString, function (err, d) {
                 if (err) {
                     return console.log(err);
@@ -976,8 +969,6 @@ formSetMap = function (context, recordId) {
         if (!d || !d.val) {
             return;
         }
-        console.log($('[name="coords.' + d.name + '"]')
-            .val())
         Meteor.call('updateRecord', recordId, d.name, null, function (err, result) {
             if (err) {
                 return console.log(err);
@@ -1020,8 +1011,6 @@ formSetMap = function (context, recordId) {
     var addLocations = ['_southWest', '_northEast'];
     //m = map
     obj.addPoint = function (d) {
-        console.log(d)
-            //console.log(_coords)
         var _coords = d.coords; // || map.getCenter();
         if (!d.coords) {
             var bounds = map.getBounds();
@@ -1029,7 +1018,6 @@ formSetMap = function (context, recordId) {
             var south = bounds._southWest
             latDiff = ((north.lat - south.lat) / 4);
             lngDiff = ((south.lng - north.lng) / 4);
-            console.log(latDiff, lngDiff)
             north = {
                 lat: north.lat - latDiff,
                 lng: north.lng + lngDiff
@@ -1045,7 +1033,6 @@ formSetMap = function (context, recordId) {
                 lng: lng
             }
         }
-        //if(!_coords.lat || !coords.lng){return;}
         var myIcon = L.AwesomeMarkers.icon({
             icon: d.icon,
             prefix: 'fa',
@@ -1054,7 +1041,6 @@ formSetMap = function (context, recordId) {
             extraClasses: d.extraClasses
         });
         var draggable = (Roles.userIsInRole(Meteor.userId(), ['editor', 'admin'])) ? true : false;
-        //console.log(_coords)
         marker = L.marker(_coords, {
             draggable: draggable,
             icon: myIcon,
@@ -1064,7 +1050,8 @@ formSetMap = function (context, recordId) {
         var text = d.text;
         coords[d.val].layer = marker;
         drawnPoints.addLayer(marker);
-        if (!$('[name="' + d.name + '.lng"]').val()) {
+        if (!$('[name="' + d.name + '.lng"]')
+            .val()) {
             Meteor.call('updateRecord', recordId, d.name + '.lng', _coords.lng, function (err, d) {
                 if (err) {
                     return console.log(err);
@@ -1096,3 +1083,4 @@ formSetMap = function (context, recordId) {
     };
     return obj;
 }
+

@@ -305,14 +305,20 @@
                 <h3 class="panel-title">Weather</h3>
             </div>
             <!---->
-            {{#if config.internet}} {{#if current.timeLog.lastSeenDateTime}}
+            {{#if config.internet}}
+            <!---->
+            {{#if current.timeLog.lastSeenDateTime}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="weatherBtn">
                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via SARCAT Server
             </button>
             <span class="forecastio small em mar0y white">*Powered by <a class="em text-lightBlue" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span>
             <!---->
-            {{/if}} {{/if}}
+            {{else}}
+            <span class="forecastio small em mar0y white"> *Add Incident Last Seen Date/Time to auto-calculate</span>
+            {{/if}}
+            <!---->
+            {{/if}}
             <div class="panel-body pad00">
                 <!---->
                 {{#autoForm collection='Records' doc=current id='_formIdWeather' class="hideHeader recordForm3" type=formType autosave=true}}
@@ -330,16 +336,16 @@
                 <h3 class="panel-title">Find Location</h3>
             </div>
             {{#unless showFindLocation}}
-            <span class="small em mar0y white">*Drop Find Location Point to activate fields</span> {{/unless}}
+            <span class="small em mar0y white"> *Drop Find Location Point to activate fields</span> {{/unless}}
             <!---->
             <!---->
-             {{#if showFindLocation}}
+            {{#if showFindLocation}}
             <hr class="mar0 mar2x">
             <button type="button" class="btn btn-primary mar0 mar2x" id="mapCalcBtn" style="display:block">
                 <span class="glyphicon glyphicon-calculator" aria-hidden="true"></span> Calculate Measurements
             </button>
             <!---->
-            {{/if}} 
+            {{/if}}
             <div class="panel-body pad00">
                 {{#autoForm collection='Records' validation="submit" doc=current class="hideHeader recordForm3" id='formdIdIncident' autosave=true type=disableFindLocationForm fields="findLocation" resetOnSuccess=false}}
                 <!---->

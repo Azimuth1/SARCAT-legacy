@@ -26,14 +26,6 @@
         <a type="button" class="btn btn-default mar0" data-target="#createRecordModal" data-toggle="modal">
             <i class="glyphicon glyphicon-plus"></i> New Record
         </a>
-
-
-
-
-
-
-
-
         <!---->
         {{#if isInRole 'admin'}}
         <!---->
@@ -45,12 +37,7 @@
         <!---->
         {{/if}}
         <!---->
-
-
-
-
         <div id="toolbar" class="btn-group pull-right mar0y">
-            {{#if selectedRecords}}
             {{#if isInRole 'admin'}}
             <a type="button" class="btn btn-default uploadISRID" style="margin-y=-12px">
                 Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
@@ -58,6 +45,7 @@
             <!---->
             {{/if}}
             <!-- Single button -->
+            {{#if hasRecords}}
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <i class="glyphicon glyphicon-save-file"></i> Download <span class="caret"></span>
@@ -67,13 +55,9 @@
                     <li><a id="downloadRecordsJSON" href="#">JSON</a></li>
                 </ul>
             </div>
-            <!---->
             {{/if}}
+            <!---->
         </div>
-
-
-
-
         {{/if}}
     </ul>
     <div class="tab-content admin pad1">
@@ -83,9 +67,7 @@
         <div class="strong userAlert text-capitalize {{userAlertClass}}">
             {{userAlert.text}}
         </div>
-        {{/if}}
-
-        {{#if hasRecords}}
+        {{/if}} {{#if hasRecords}}
         <!---->
         {{> reactiveTable settings=settings}}
         <!---->

@@ -1,22 +1,22 @@
+Meteor.startup(function () {
+    Tracker.autorun(function () {
+        var config = Config.findOne();
 
-        Tracker.autorun(function () {
-            var config = Config.findOne();
-            if (config) {
-                Session.set('records', Records.find().fetch())
-                Session.set('config', config);
-                Session.set('agencyProfile', config.agencyProfile);
-                Session.set('bounds', config.bounds);
-                Session.set('bounds', config.bounds);
-                Session.set('logo', config.agencyLogo);
-                if (config.agencyLogo) {
-                    Session.set('logoSrc', 'uploads/logo/' + config.agencyLogo);
-                }
-                Session.set('measureUnits', config.measureUnits);
+        if (config) {
+            Session.set('records', Records.find()
+                .fetch());
+            Session.set('config', config);
+            Session.set('agencyProfile', config.agencyProfile);
+            Session.set('bounds', config.bounds);
+            Session.set('bounds', config.bounds);
+            Session.set('logo', config.agencyLogo);
+            if (config.agencyLogo) {
+                Session.set('logoSrc', 'uploads/logo/' + config.agencyLogo);
             }
-        });
-        settings = Meteor.settings.public;
-        //config = Meteor.settings.public.config;
-        //insertSampleRecords()
+            Session.set('measureUnits', config.measureUnits);
+        }
+    });
+});
 
 Handlebars.registerHelper('json', function (context) {
     return JSON.stringify(context);
@@ -30,7 +30,7 @@ Router.configure({
     loadingTemplate: 'appLoading',
     waitOn: function () {
         return [
-            //Meteor.subscribe('records'),
+            Meteor.subscribe('records'),
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
             Meteor.subscribe('roles'),
@@ -59,7 +59,6 @@ Router.route('home', {
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
                 Router.go('admin');
             } else {
-                //Router.go('records', Meteor.user());
                 Router.go('userhome', Meteor.user());
             }
         } else {
@@ -88,8 +87,7 @@ Router.route('signin');
 Router.route('appLoading');
 Router.route('profiles');
 Router.route('about');
-//Router.route('userhome');
-//Router.route('forgot-password');
+
 Router.route('userhome', {
     path: '/userhome',
     waitOn: function () {
@@ -118,6 +116,30 @@ Router.route('records', {
         }
     }
 });
+
+Router.route('form', {
+    path: '/form/:_id',
+    waitOn: function () {
+        return this.subscribe('item', this.params._id);
+    },
+    data: function () {
+        var params = this.params;
+
+        return Records.findOne({
+            _id: params._id
+        });
+    },
+    action: function () {
+
+        if (!Meteor.userId()) {
+            Router.go('home');
+        }
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});
+
 Router.route('stats', {
     path: '/stats',
     waitOn: function () {
@@ -141,7 +163,7 @@ Router.route('admin', {
         var obj = {};
         obj.users = Meteor.users.find();
         obj.records = Records.find();
-        obj.title = 'ddd'
+        obj.title = 'ddd';
         return obj;
     },
     action: function () {
@@ -153,31 +175,7 @@ Router.route('admin', {
         }
     }
 });
-Router.route('form', {
-    path: '/form/:_id',
-    waitOn: function () {
-        return this.subscribe('item', this.params._id);
-    },
-    data: function () {
-        var params = this.params;
-        //console.log(params)
-        //var obj = {};
-        //obj.record = Records.find({_id:this.params._id});
-        //console.log(obj.record)
-        //return obj;
-        return Records.findOne({
-            _id: params._id
-        })
-    },
-    action: function () {
-        if (!Meteor.userId()) {
-            Router.go('home');
-        }
-        if (this.ready()) {
-            this.render();
-        }
-    }
-});
+
 /*
 meteor add insecure
 meteor add autopublish
@@ -185,3 +183,4 @@ meteor remove insecure
 meteor remove autopublish
 Resource Responses
 */
+
