@@ -4,57 +4,11 @@
 </template>
 <template name="form">
     <div id="formPage">
-        <div class="headerTable">
-            <table class="recordRecordInfoTable table table-bordered mar00">
-                <thead>
-                    <tr class="white">
-                        <th>Incident #</th>
-                        <th>Mission #</th>
-                        <th>Name</th>
-                        <th>Incident Type</th>
-                        <th>Status</th>
-                        <th>Subject</th>
-                        <th>Sub/Cat.</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody class="white-bg">
-                    {{#if editRecordInfo 'edit'}}
-                    <tr class="text-left text-default">
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId1' autosave=true type='update' fields="recordInfo.incidentnum"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId2' autosave=true type='update' fields="recordInfo.missionnum"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId3' autosave=true type='update' fields="recordInfo.name"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideLabel" id='zformdId4' autosave=true type='update' fields="recordInfo.incidentType"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.status"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideLabel hideSubmit" template="plain" id='zformdId6' autosave=true type='update' label=false fields="recordInfo.subjectCategory"}}</td>
-                        <td> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit" template="plain" id='zformdId6' autosave=true type='update' fields="recordInfo.subjectSubCategory"}}</td>
-                        <td>
-                            <button type="button" class="btn btn-sm mar00 btn-success editRecordInfo" data="list">
-                                <span class="glyphicon glyphicon-edit" data="list" aria-hidden="true"></span>Done
-                            </button>
-                        </td>
-                    </tr>
-                    {{else}} {{#with record}}{{json recordInfo}}{{/with}}
-                    <tr class="text-left text-default">
-                        <td>{{recordInfo.incidentnum}}</td>
-                        <td>{{recordInfo.missionnum}}</td>
-                        <td>{{recordInfo.name}}</td>
-                        <td>{{recordInfo.incidentType}}</td>
-                        <td>{{recordInfo.status}}</td>
-                        <td>{{recordInfo.subjectCategory}}</td>
-                        <td>{{recordInfo.subjectSubCategory}}</td>
-                        <td class="text-center">
-                            {{#if isInRole 'admin,editor'}}
-                            <button type="button" class="btn btn-sm mar00 btn-warning editRecordInfo" data="edit">
-                                <span class="glyphicon glyphicon-edit" aria-hidden="true" data="edit"></span>Edit
-                            </button>
-                            {{/if}}
-                        </td>
-                    </tr>
-                    {{/if}}
-                </tbody>
-            </table>
-        </div>
+        <ul class="nav nav-tabs contentNav">
+            <button type="button" class="btn btn-default deleteRecord mar0">
+                <i class="glyphicon glyphicon-trash"></i> View Report
+            </button>
+        </ul>
         <div class="formNav1">
             {{#each schemas}}
             <div data="{{this.field}}" class="formNav btn btn-sm pad0 btn-default_btn {{this.klass}}">
@@ -131,7 +85,13 @@
                             <div class="mar1y">
                                 <span class="text-uppercase strong text-default">Initial Planning Point</span>
                             </div>
-                            {{> afQuickField name="coords.ippCoordinates.lat"}} {{> afQuickField name="coords.ippCoordinates.lng"}} {{> afQuickField name="incidentOperations.ipptype" options="allowed"}} {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
+                            {{> afQuickField name="coords.ippCoordinates.lat"}}
+                            <!---->
+                            {{> afQuickField name="coords.ippCoordinates.lng"}}
+                            <!---->
+                            {{> afQuickField name="incidentOperations.ipptype" options="allowed"}}
+                            <!---->
+                            {{> afQuickField name="incidentOperations.ippclassification" options="allowed"}}
                             <hr>
                             <div class="mar1y">
                                 <span class="text-uppercase strong text-default">Initial Direction of Travel</span>
@@ -139,7 +99,7 @@
                             {{> afQuickField name="incidentOperations.initialDirectionofTravel_Boolean"}}
                             <!--{{#if afFieldValueIs name="incidentOperations.initialDirectionofTravel_Boolean" value="Yes" }}-->
                             <div class="{{initialDirectionofTravelClass}}">
-                                <div class="small"><em>Rotate arrow towards direction of initial direction of travel</em>
+                                <div class="small"><em>Rotate arrow clockwise towards direction of initial direction of travel</em>
                                 </div>
                                 <div class="text-default mar0y"><span class="knobVal"></span> degrees</div>
                                 <div class="travelDir form-group mar2x knob"></div>
@@ -149,8 +109,15 @@
                             <div class="mar1y">
                                 <span class="text-uppercase strong text-default">Revised Last Known Point/Point Last Seen</span>
                             </div>
-                            {{> afQuickField name="incidentOperations.lkp_pls_Boolean"}} {{#if afFieldValueIs name="incidentOperations.lkp_pls_Boolean" value="Yes" }}
-                            <br> {{> afQuickField name="coords.revisedLKP_PLS.lat"}} {{> afQuickField name="coords.revisedLKP_PLS.lng"}}
+                            {{> afQuickField name="incidentOperations.lkp_pls_Boolean"}}
+                            <!---->
+                            {{#if afFieldValueIs name="incidentOperations.lkp_pls_Boolean" value="Yes" }}
+                            <!---->
+                            <br>
+                            <!---->
+                            {{> afQuickField name="coords.revisedLKP_PLS.lat"}}
+                            <!---->
+                            {{> afQuickField name="coords.revisedLKP_PLS.lng"}}
                             <button type="button" class="btn btn-danger text-black" data="revisedLKP_PLS" style="display:block">
                                 <input type="checkbox" autocomplete="off" class="hide"> &nbsp; Revised LKP/PLS
                                 <span class="fa-stack _pull-right">
@@ -167,47 +134,89 @@
                             <h3 class="panel-title">Coordinates</h3>
                         </div>
                         <div class="panel-body">
-                            <div _class="{{hideCoord 'decisionPointCoord'}}">
+                            <div class="{{hideCoord 'decisionPointCoord'}}">
                                 <div class="mar1y">
                                     <span class="text-uppercase strong text-default">Decision Point</span>
                                 </div>
-                                {{> afQuickField name="coords.decisionPointCoord.lat"}} {{> afQuickField name="coords.decisionPointCoord.lng"}}
+                                {{> afQuickField name="coords.decisionPointCoord.lat"}}
+                                <!---->
+                                {{> afQuickField name="coords.decisionPointCoord.lng"}}
                                 <div class="{{hideCoord 'decisionPointCoord'}}">
                                     {{> afQuickField name="incidentOperations.typeofDecisionPoint" options="allowed"}}
-                                    <br> {{> afQuickField name="incidentOperations.decisionPointFactor"}}
+                                    <br>
+                                    <!---->
+                                    {{> afQuickField name="incidentOperations.decisionPointFactor"}}
                                 </div>
                             </div>
                             <hr>
-                            <div _class="{{hideCoord 'destinationCoord'}}">
+                            <div class="{{hideCoord 'destinationCoord'}}">
                                 <div class="mar1y">
                                     <span class="text-uppercase strong text-default">Intended Destination</span>
                                 </div>
-                                {{> afQuickField name="coords.destinationCoord.lat"}} {{> afQuickField name="coords.destinationCoord.lng"}}
+                                {{> afQuickField name="coords.destinationCoord.lat"}}
+                                <!---->
+                                {{> afQuickField name="coords.destinationCoord.lng"}}
                                 <hr>
                             </div>
-                            <div _class="{{hideCoord 'findCoord'}}">
+                            <div class="{{hideCoord 'findCoord'}}">
                                 <div class="mar1y">
                                     <span class="text-uppercase strong text-default">Find Location</span>
                                 </div>
-                                {{> afQuickField name="coords.findCoord.lat"}} {{> afQuickField name="coords.findCoord.lng"}}
+                                {{> afQuickField name="coords.findCoord.lat"}}
+                                <!---->
+                                {{> afQuickField name="coords.findCoord.lng"}}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="hide">
-                    {{> afQuickField name='coords.intendedRoute' }} {{> afQuickField name='coords.actualRoute' }}
+                    {{> afQuickField name='coords.intendedRoute' }}
+                    <!---->
+                    {{> afQuickField name='coords.actualRoute' }}
                 </div>
                 {{/autoForm}}
             </div>
         </div>
         <!--END MAP-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 hideSubmit" id='formdIdtimeLog' autosave=true type=formType fields="timeLog" resetOnSuccess=false}}
-        <!--Incident Location-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" resetOnSuccess=false}}
+        <!--Record Info-->
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 hideSubmit" id='formdIdRecordInfo' autosave=true type=formType fields="recordInfo" resetOnSuccess=false}}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Incident Location/Details
+                    </h3>
+            </div>
+            <div class="panel-body">
+                <!--Incident Location-->
+                {{#autoForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incidentLocation" resetOnSuccess=false }}
+                <!---->
+                {{> afQuickField name="incidentLocation.country" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.state-province" options=allowedStates}}
+                <!---->
+                {{> afQuickField name="incidentLocation.county-region"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.landOwner" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.ecoregionDomain" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.ecoregionDivision" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.populationDensity" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.terrain" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.landCover" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.contactmethod" options="allowed"}}
+                <!---->
+                {{> afQuickField name="incidentLocation.leadagency"}}
+                <!---->
+                {{/autoForm}}
+            </div>
+        </div>
         <!--/Incident Location-->
-        <!--Incident-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdIncident' autosave=true type=formType fields="incident" resetOnSuccess=false}}
-        <!--/Incident-->
+        <!--Timelog-->
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm2 hideSubmit" id='formdIdtimeLog' autosave=true type=formType fields="timeLog" resetOnSuccess=false}}
         <!--Subject Info-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -312,11 +321,10 @@
             <button type="button" class="btn btn-primary mar0 mar2x" id="weatherBtn">
                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Download Via SARCAT Server
             </button>
-            <span class="forecastio small em mar0y white">*Powered by <a class="em text-lightBlue" href="http://forecast.io/">Forecast</a> based on Incident Date & Location</span>
+            <span class="forecastio small em mar0y white">*Powered by <a class="em text-lightBlue" href="http://forecast.io/">Forecast</a> based on Incident Date & Last Seen Location</span>
             <!---->
             {{else}}
-            <span class="forecastio small em mar0y white"> *Add Incident Last Seen Date/Time to auto-calculate</span>
-            {{/if}}
+            <span class="forecastio small em mar0y white"> *Add Incident Last Seen Date/Time to auto-calculate</span> {{/if}}
             <!---->
             {{/if}}
             <div class="panel-body pad00">
@@ -356,7 +364,7 @@
         </div>
         <!--/Find Location-->
         <!--Resources Use-->
-        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="incidentOutcome" buttonContent= "Save" }}
+        {{> quickForm collection='Records' validation="submit" doc=current class="recordForm3 _form-inline hideSubmit" id='formdIdincidentOutcome' autosave=true type=formType fields="incidentOutcome" buttonContent= "Save" }}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Resources Used
@@ -394,7 +402,7 @@
                 <button type="submit" class="newResource btn btn-primary mar0">New Resource</button>
                 {{/if}}
                 <div class="col-md-12">
-                    <hr> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideHeader recordForm2" id='formdId' autosave=true type=formType fields="resourcesUsed.numTasks,resourcesUsed.totalPersonnel,resourcesUsed.totalManHours,resourcesUsed.distanceTraveled,resourcesUsed.totalCost"}}
+                    <hr> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideHeader recordForm2" id='formdIdResources' autosave=true type=formType fields="resourcesUsed.numTasks,resourcesUsed.totalPersonnel,resourcesUsed.totalManHours,resourcesUsed.distanceTraveled,resourcesUsed.totalCost"}}
                 </div>
             </div>
         </div>
@@ -403,6 +411,7 @@
         {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
         <!--Comment-->
         <!--Custom Questions-->
+
         {{#with record}} {{#if customQuestions_}}
         <div class="panel panel-default _text-center">
             <div class="panel-heading">

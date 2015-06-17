@@ -18,15 +18,18 @@ body {
         _left: 2*@column;
         right: 1*@column;
     }
-    // Hide anything offscreen
-    overflow: hidden;
+     @media print {
+        left: 0;
+        right:0;
+        width:100%;
+    }
 }
 
 #menu {
     .position(absolute, 0, 0, 0, 0, @menu-width);
     border-right: 1px solid @color-light;
     @media print {
-        display: none !important;
+        display: none;
     }
 }
 
@@ -38,10 +41,14 @@ body {
     @media screen and (min-width: 40em) {
         left: @menu-width;
     }
+    @media print {
+        left: 0;
+        right:0;
+        width:100%;
+    }
     .content-scrollable {
         .position(absolute, 0, 0, 0, 0);
-        .transform(translate3d(0, 0, 0));
-        overflow-y: auto;
+        //overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         background-color: @color-navyBlue;
         .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));

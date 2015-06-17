@@ -3,12 +3,8 @@ Template.admin.onCreated(function (a) {
     Session.set('userView', 'admin');
 });
 Template.admin.onRendered(function (a) {
-    /*$('label:contains("Forecast API Key")')
-   // Click on Register to set up API account
-        .append('<span class="forecastio small em mar0y text-default">*Register at <a class="em" href="https://developer.forecast.io/" target="_blank">Forecast</a> to obtain a user key</span>');
-    $('label:contains("MapQuest API Key")')
-        .append('<span class="forecastio small em mar0y text-default">*Register at <a class="em" href="http://open.mapquestapi.com/elevation/" target="_blank">MapQuest</a> to obtain a user key</span>');
-    */
+    var country = $('[name="agencyProfile.country"]').val();
+    Session.set('country', $('[name="agencyProfile.country"]').val());
     var logo = document.getElementById('agencyLogo');
     logo.src = 'uploads/logo/' + Session.get('logo');
     logo.style.display = 'inline';
@@ -23,6 +19,11 @@ Template.admin.onRendered(function (a) {
     });
 });
 Template.admin.helpers({
+    allowedStates: function () {
+        var country = Session.get('country');
+        var states = allowedStates(country);
+        return states;
+    },
     internet: function () {
         return navigator.onLine;
     },
@@ -32,41 +33,31 @@ Template.admin.helpers({
     },
     RecordsAudit: function (a, b) {
         var audits = RecordsAudit.find().fetch();
-        /*fields = _.map(audits[0], function (d, e) {
-            return {
-                key: e,
-                fieldId: e,
-            };
-        });*/
+
         var fields = [{
-            "key": "type",
-            "label": "type",
-            "fieldId": "type"
-        },/* {
-            "key": "recordId",
-            "label": "recordId",
-            "fieldId": "recordId"
-        }, {
-            "key": "userId",
-            "label": "userId",
-            "fieldId": "userId"
-        },*/ {
-            "key": "userName",
-            "label": "userName",
-            "fieldId": "userName"
-        }, {
-            "key": "field",
-            "label": "field",
-            "fieldId": "field"
-        }, {
-            "key": "value",
-            "label": "value",
-            "fieldId": "value"
-        }, {
-            "key": "date",
-            "label": "date",
-            "fieldId": "date"
-        }];
+                "key": "type",
+                "label": "type",
+                "fieldId": "type"
+            },
+
+            {
+                "key": "userName",
+                "label": "userName",
+                "fieldId": "userName"
+            }, {
+                "key": "field",
+                "label": "field",
+                "fieldId": "field"
+            }, {
+                "key": "value",
+                "label": "value",
+                "fieldId": "value"
+            }, {
+                "key": "date",
+                "label": "date",
+                "fieldId": "date"
+            }
+        ];
         return {
             //showColumnToggles: true,
             collection: RecordsAudit,
@@ -96,12 +87,13 @@ Template.admin.helpers({
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
     profileIncomplete: function () {
+        var profileKeys=Object.keys(Session.get('agencyProfile'));
         var agencyProfile = Session.get('agencyProfile');
         var done = _.compact(_.map(agencyProfile, function (d) {
                 return d;
             }))
-            .length;
-        return done ? '' : 'afPanel warning mar00 noBorder';
+            ;
+        return done.length===profileKeys.length ? '' : 'afPanel warning mar00 noBorder';
     },
     configs: function () {
         return Session.get('config');
@@ -144,6 +136,9 @@ Template.admin.helpers({
     },
 });
 Template.admin.events({
+    'change [name="agencyProfile.country"]': function (event, template) {
+        return Session.set('country', event.currentTarget.value);
+    },
     'click .deleteLogo': function (event, template) {
         var r = confirm("Are you sure you want to delete your custom logo?");
         if (!r) {

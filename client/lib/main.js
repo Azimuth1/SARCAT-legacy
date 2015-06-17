@@ -1,6 +1,22 @@
-flatten = function (x, result, prefix) {
+allowedStates = function(country) {
+    if (!country) {
+        return [];
+    }
+    var vals = _.findWhere(countryList, {
+        country: country
+    }).states;
+    vals = vals.map(function(d) {
+        return {
+            label: d,
+            value: d
+        }
+    });
+    Session.set('allowedStates', vals);
+    return vals;
+};
+flatten = function(x, result, prefix) {
     if (_.isObject(x)) {
-        _.each(x, function (v, k) {
+        _.each(x, function(v, k) {
             flatten(v, result, prefix ? prefix + '.' + k : k)
         })
     } else {
@@ -8,7 +24,7 @@ flatten = function (x, result, prefix) {
     }
     return result
 }
-labelUnits = function (currentUnit, type) {
+labelUnits = function(currentUnit, type) {
     var unitType = {
         height: {
             Metric: 'cm',
@@ -45,12 +61,12 @@ labelUnits = function (currentUnit, type) {
     };
     return unitType[type][currentUnit]
 };
-boundsString2Array = function (bounds) {
+boundsString2Array = function(bounds) {
     if (!bounds) {
         return;
     }
     bounds = bounds.split(',')
-        .map(function (d) {
+        .map(function(d) {
             return +d;
         });
     return [
@@ -58,11 +74,11 @@ boundsString2Array = function (bounds) {
         [bounds[3], bounds[2]]
     ];
 };
-newMap = function (context, bounds) {
+newMap = function(context, bounds) {
     var bounds = bounds || boundsString2Array(Session.get('bounds'));
     var map = L.map(context, {});
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function (x, e) {
+    var layers = _.object(_.map(defaultLayers, function(x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -72,12 +88,12 @@ newMap = function (context, bounds) {
     map.scrollWheelZoom.disable();
     map.fitBounds(bounds);
 };
-newProjectSetMap = function (context, bounds, points) {
+newProjectSetMap = function(context, bounds, points) {
     var obj = {};
     var marker;
     var map = L.map(context, {});
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function (x, e) {
+    var layers = _.object(_.map(defaultLayers, function(x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -86,10 +102,10 @@ newProjectSetMap = function (context, bounds, points) {
         .addTo(map);
     var latLngBounds = L.latLngBounds(bounds);
     var center = latLngBounds.getCenter();
-    obj.editPoint = function (lat, lng) {
+    obj.editPoint = function(lat, lng) {
         marker.setLatLng([lat, lng]);
     };
-    obj.reset = function () {
+    obj.reset = function() {
         map.fitBounds(bounds);
         marker.setLatLng(center);
         $('[name="' + points.name + '.lng"]')
@@ -128,7 +144,7 @@ newProjectSetMap = function (context, bounds, points) {
         val: ipp.val,
     });
     marker.addTo(map);
-    marker.on('dragend', function (event) {
+    marker.on('dragend', function(event) {
         var marker = event.target;
         var position = marker.getLatLng();
         $('[name="' + points.name + '.lng"]')
@@ -138,13 +154,13 @@ newProjectSetMap = function (context, bounds, points) {
             .val(position.lat)
             .trigger("change");
     });
-    obj.fitBounds = function () {
+    obj.fitBounds = function() {
         map.panTo(marker.getLatLng())
     };
     return obj;
 };
 //<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa a-stack-1x fa-inverse text-red">R</i></span>
-getCoords = function (record) {
+getCoords = function(record) {
     var mapPoints = [{
         val: "ippCoordinates",
         name: "coords.ippCoordinates",
@@ -192,31 +208,31 @@ getCoords = function (record) {
             weight: 8
         }
     }];
-    mapPoints = _.object(_.map(mapPoints, function (x) {
+    mapPoints = _.object(_.map(mapPoints, function(x) {
         return [x.val, x];
     }));
     if (!record.coords) {
         return mapPoints;
     }
     var coords = record.coords;
-    _.each(mapPoints, function (d, e) {
+    _.each(mapPoints, function(d, e) {
         mapPoints[e].coords = coords[e];
     });
-    return _.map(mapPoints, function (d) {
+    return _.map(mapPoints, function(d) {
         return d;
     });
 };
-insertSampleRecords = function () {
+insertSampleRecords = function() {
     function randomDate(start, end) {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
     data = [];
-    var length = 200;
-    var rand = function (min, max) {
+    var length = 20;
+    var rand = function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
     existing = {};
-    var generateWeighedList = function (list, name) {
+    var generateWeighedList = function(list, name) {
         var f = name + [list[1]];
         var weight
         if (existing[f]) {
@@ -226,7 +242,7 @@ insertSampleRecords = function () {
             //var _weight = [.2, .1, .7, .1, .1,.01,.05,.1];
             //weightb=a.slice(0,3);
             //weight = _.shuffle(weight);
-            weight = list.map(function (d) {
+            weight = list.map(function(d) {
                 return Math.random() * 0.2;
             });
             if (weight.length > 8) {
@@ -314,12 +330,11 @@ insertSampleRecords = function () {
                 "landOwner": "Commercial",
                 "populationDensity": "Suburban",
                 "terrain": "Hilly",
-                "landCover": "Light"
-            },
-            "incident": {
+                "landCover": "Light",
                 "leadagency": "Fairfax County Police",
                 "contactmethod": "Reported Missing"
             },
+
             "weather": {},
             "findLocation": {
                 "distanceIPP": "1.97",
@@ -405,13 +420,13 @@ insertSampleRecords = function () {
         record.timeLog.subjectLocatedDateTime = moment(record.timeLog.SARNotifiedDatetime).add(Math.floor(Math.random() * 6), 'd').format('MM/DD/YYYY HH:mm');
         record.timeLog.incidentClosedDateTime = moment(record.timeLog.subjectLocatedDateTime).add(Math.floor(Math.random() * 10), 'h').format('MM/DD/YYYY HH:mm');
         //console.log(Schemas)
-        _.each(record, function (d, name) {
+        _.each(record, function(d, name) {
             if (!isNaN(d)) {
                 d = 500;
                 record[name] = Math.floor(Math.abs((Math.random() * ((d * 2) - (d / 5)) + (d / 5))))
             }
             if (_.isObject(d)) {
-                _.each(d, function (e, name2) {
+                _.each(d, function(e, name2) {
                     if (!isNaN(e)) {
                         e = 500;
                         record[name][name2] = Math.floor(Math.abs((Math.random() * ((e * 2) - (e / 5)) + (e / 5))))
@@ -428,8 +443,8 @@ insertSampleRecords = function () {
             record.recordInfo.incidentnum = 'record-' + i;
             record.recordInfo.missionnum = '#2015' + i;
         });
-        _.each(record.subjects.subject, function (e, ind) {
-            _.each(e, function (d, name) {
+        _.each(record.subjects.subject, function(e, ind) {
+            _.each(e, function(d, name) {
                 var allowed = Schemas.subjects._schema['subject.$.' + name].allowedValues;
                 if (allowed) {
                     var sample = _.sample(allowed, 1)[0];
@@ -445,7 +460,7 @@ insertSampleRecords = function () {
             .toFixed(4);
         record.coords.ippCoordinates.lat = lat;
         record.coords.ippCoordinates.lng = lng;
-        _.each(record.coords, function (d, name) {
+        _.each(record.coords, function(d, name) {
             if (name === 'ippCoordinates') {
                 return;
             }
@@ -459,7 +474,7 @@ insertSampleRecords = function () {
         data[i] = record;
         //console.log(record.recordInfo.name)
     }
-    data.forEach(function (d) {
+    data.forEach(function(d) {
         // console.log(d)
         Records.insert(d);
     });
