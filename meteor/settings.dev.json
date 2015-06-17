@@ -1,0 +1,40 @@
+{
+    "config": {
+        "measureUnits": "US",
+        "agencyProfile": {
+            "organization": "Azimuth1",
+            "country": "United States",
+            "street": "123 Main St",
+            "city": "Vienna",
+            "state-province": "VA",
+            "phoneNum": "7036290113"
+        },
+        "initSetup": false,
+        "agencyLogo": "main_logo.png",
+        "bounds": "-77.20178604125977,38.92603032348312,-77.0309829711914,38.992771545293564",
+        "measureUnits": "US"
+    },
+    "private": {
+        "defaultUser": {
+            "email": "admin@sarcat",
+            "password": "admin",
+            "username": "Kyle K"
+        },
+        "sarcatServer":"http://spa.tial.ly:5000",
+        "port":4000
+    },
+    "public": {
+        "layers": {
+            "MapQuest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
+            "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "MapQuest Aerial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg"
+        },
+        "package": {
+            "name": "SARCAT",
+            "description": "Search and Rescue Incident Database.",
+            "owner": "Azimuth1",
+            "repo": "https://github.com/Azimuth1/SARCAT"
+        }
+    }
+}
+

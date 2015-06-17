@@ -1,0 +1,27 @@
+{
+  "name": "sarcat",
+  "version": "1.0.0",
+  "description": "SAR",
+  "engineStrict": true,
+  "engines": {
+    "node": "0.10.x || 0.12.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Azimuth1/SARCAT.git"
+  },
+  "bin": {
+    "sarcats": "./bin/sarcats",
+    "jshint":"./libs/jshint"
+  },
+  "scripts": {
+    "start": "./index.js",
+    "preinstall": "node scripts/run.js scripts/vendor-node.sh"
+  },
+  "author": "Azimuth1",
+  "license": "ISC",
+  "dependencies": {
+    "mup": "^0.10.7",
+    "path": "^0.11.14"
+  }
+}
