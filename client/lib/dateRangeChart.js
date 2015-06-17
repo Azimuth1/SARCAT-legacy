@@ -36,9 +36,9 @@ dateChart = function (records) {
         top: 10,
         right: 10,
         bottom: 20,
-        left: 20
+        left: 10
     };
-    var rangeW = parseInt($("#dateChart").width() * .95);
+    var rangeW = parseInt($("#date-chart").width() * 1);
     console.log(rangeW)
     charts = [
         barChart()

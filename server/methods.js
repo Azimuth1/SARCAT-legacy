@@ -222,11 +222,33 @@ Meteor.methods({
             }
     },
     //["Maine", "Massachusetts", "Michigan", "Montana", "Nevada", "New Jersey", "New York", "North Carolina", "Ohio", "Pennsylvania", "Rhode Island", "Tennessee", "Texas", "Utah", "Washington", "Wisconsin", "Puerto Rico", "Maryland", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Minnesota", "Mississippi", "Missouri", "Nebraska", "New Hampshire", "New Mexico", "North Dakota", "Oklahoma", "Oregon", "South Carolina", "South Dakota", "Vermont", "Virginia", "West Virginia", "Wyoming"]
+    setCountry: function (id) {
+        var record = Records.findOne(id);
+        var coord = record.coords.ippCoordinates;
+        coord = [coord.lng, coord.lat];
+        var result = pip(countryGeojson, coord);
+        if (!result || !result.length) {
+            Records.update(id, {
+                $set: {
+                    'incidentLocation.country': 'Unknown',
+                }
+            });
+            return;
+        }
+        var val = result[0].properties;
+        var stateProvince = val.name ? val.name : 'Unknown';
+        Records.update(id, {
+            $set: {
+                'incidentLocation.country': stateProvince,
+            }
+        });
+        return result;
+    },
     setStateProvince: function (id) {
         var record = Records.findOne(id);
         var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
-        var result = pipState(coord);
+        var result = pip(USAStatesGeojson, coord);
         if (!result || !result.length) {
             Records.update(id, {
                 $set: {
@@ -248,7 +270,7 @@ Meteor.methods({
         var record = Records.findOne(id);
         var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
-        var result = pip(coord);
+        var result = pip(EcoRegionGeojson, coord);
         if (!result || !result.length) {
             Records.update(id, {
                 $set: {
@@ -565,4 +587,3 @@ Meteor.users.allow({
         }
     }
 });
-

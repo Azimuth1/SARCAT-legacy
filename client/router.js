@@ -154,6 +154,24 @@ Router.route('stats', {
         }
     }
 });
+
+
+Router.route('report', {
+    path: '/report',
+    waitOn: function () {
+        return this.subscribe('records');
+    },
+    action: function () {
+        if (!Meteor.userId()) {
+            Router.go('home');
+        }
+        if (this.ready()) {
+            this.render();
+        }
+    }
+});
+
+
 Router.route('admin', {
     path: '/admin',
     waitOn: function () {

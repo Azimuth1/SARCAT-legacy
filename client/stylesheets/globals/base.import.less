@@ -846,7 +846,7 @@ a {
     left: 0;
     width: auto;
     height: auto;
-    overflow: scroll;
+    //overflow: scroll;
     padding-right: 0;
 }
 
@@ -858,7 +858,7 @@ a {
     left: 0;
     width: auto;
     height: auto;
-    overflow-y: auto;
+    //overflow-y: auto;
     //background: @color-light;
     padding: 10px;
 }
@@ -898,6 +898,12 @@ a {
     border: none!important;
 }
 
+#recordss .col-md-6 {
+    @media print {
+        width: 100%
+    }
+}
+
 .statInfo,
 #dateChart,
 #recordss svg,
@@ -918,8 +924,11 @@ a {
         stroke: #666;
     }
     text {
-        font-size: 1.2em;
+        font-size: 1em;
         fill: #A2D9E7;
+        @media print {
+            fill: #000 !important;
+        }
     }
     .axis {
         font: 10px sans-serif;
@@ -939,25 +948,40 @@ a {
     }
     .x.axis text {
         fill: #a2d9e7;
+        @media print {
+            fill: #000 !important;
+        }
     }
     .barText {
         fill: #a2d9e7;
+        @media print {
+            fill: #000 !important;
+        }
     }
     .title {
         font-size: 14px;
         font-weight: bold;
         fill: #cb812a;
         text-transform: uppercase;
+        @media print {
+            fill: #000 !important;
+        }
     }
     .x_label {
         font-size: 1.4em;
         fill: #A2D9E7;
         font-family: Verdana, Geneva, sans-serif;
+        @media print {
+            fill: #000 !important;
+        }
     }
     .y_label {
         font-size: 1.4em;
         fill: #A2D9E7;
         font-family: Verdana, Geneva, sans-serif;
+        @media print {
+            fill: #000 !important;
+        }
     }
     .tooltips {
         text-anchor: middle;
@@ -965,6 +989,9 @@ a {
         font-size: 12px;
         font-weight: bold;
         fill: #fff;
+    }
+    @media print {
+        fill: #000 !important;
     }
 }
 
@@ -1808,10 +1835,10 @@ table.reactive-table,
         color: @color-blue;
         background: @color-white;
     }
+    .form-control,
     textarea.form-control,
     input.form-control,
-    number .form-control,
-    option.form-control {
+    number .form-control {
         color: @color-turq;
     }
 }
