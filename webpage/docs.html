@@ -1,0 +1,126 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>SARCAT</title>
+    <link href="styles/styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">SARCAT</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="download.html">Download</a></li>
+                    <li><a href="hosting.html">Plans</a></li>
+                    <li><a href="docs.html">Docs</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="https://twitter.com/sarcat">Twitter
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Azimuth1/SARCAT">Github
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <p><em>This documentation is a work in progress. Many parts are incomplete at the moment. Additional documentation is coming very soon.</em></p>
+        <h1 id="sarcat">SARCAT Documentation</h1>
+        <p>Search and Rescue Collection &amp; Analysis Tool (SARCAT) is a web-hosted application that simplifies the collection and analysis of your team’s or agencies SAR data. Its goal is simple; make the collection of data easy, accurate, and standardized. This is accomplished with smartforms, auto-calculations, and an intuitive user inter- face. The user then reaps the benefits with built in data analysis, reporting, mapping, and the ability to contribute to ISRID. In this way, all SAR providers help each other.</p>
+        <h2 id="key-features">Key Features</h2>
+        <ul>
+            <li>
+                <p><em>World-wide map interface with topographic, street, and aerial imagery. Simply drag icons onto the map to mark key locations (Initial Planning Point, Incident Location, Find Location, decision points, revised PLS/LKP, intended and actual route). </em></p>
+            </li>
+            <li>
+                <p><em>Smartforms adapts to information being entered, reducing the amount of data entry.</em></p>
+            </li>
+            <li>
+                <p><em>“Auto-calculation” based upon previous data; weather, ecoregion, elevation, dispersion, and spatial data automatically entered and calculated.</em></p>
+            </li>
+            <li>
+                <p><em>Browser interface can be opened from any desktop, laptop, or tablet.</em></p>
+            </li>
+            <li>
+                <p><em>Administrative functions provide user control, customization of data fields, and preferences.</em></p>
+            </li>
+            <li>
+                <p><em>Security features include user authentication with password encryption, NOSQL database logs all data entry, versioned database in case of accidental deletion, event log,optional personally identifiable information, if enabled, is encrypted</em></p>
+            </li>
+            <li>
+                <p><em>Visualize your data with built in dashboards, analysis tools, maps, and reports.</em></p>
+            </li>
+            <li>
+                <p><em>Download your data into other programs. Export your data easily into ISRID.</em></p>
+            </li>
+            <li>
+                <p><em>Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams.</em></p>
+            </li>
+        </ul>
+        <h2 id="download-latest-release">Download Latest Release</h2>
+        <p><em><em>Coming Soon - Easily download the latest release for your platform.</em></em>
+        </p>
+        <h2 id="install-from-source-">Install From Source:</h2>
+        <ul>
+            <li>Install <a href="https://nodejs.org/download/">Node.js v0.10.x</a></li>
+            <li>Install <a href="http://docs.meteor.com/#/basic/quickstart">Meteor</a> git clone <a href="https://github.com/Azimuth1/SARCAT.git">https://github.com/Azimuth1/SARCAT.git</a></li>
+            <li>Install <a href="https://www.mongodb.org/">MongoDB</a></li>
+        </ul>
+        <p> Download Latest From Repo:</p>
+        <pre><code class="lang-bash">$ git clone https://github.com/Azimuth1/SARCAT.git
+</code></pre>
+        <p> Install dependencies:</p>
+        <pre><code class="lang-bash">$ <span class="hljs-built_in">cd</span> SARCAT
+$ npm install
+</code></pre>
+        <p>Run as a Meteor app:</p>
+        <pre><code class="lang-bash">$ meteor --settings settings.json
+</code></pre>
+        <p>Or run as a node app:</p>
+        <pre><code class="lang-bash">$ meteor build --directory /build
+$ (<span class="hljs-built_in">cd</span> ../build/bundle/programs/server &amp;&amp; npm install)
+$ MONGO_URL=mongodb://<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">27017</span> ROOT_URL=http://localhost.com PORT=<span class="hljs-number">3000</span> METEOR_SETTINGS=$(cat settings.json) node ../build/bundle/main.js
+</code></pre>
+        <h2 id="license">License</h2>
+        <p>
+            The MIT License (MIT) Copyright (c) 2015 Azimuth1 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        </p>
+    </div>
+    <!-- Site footer -->
+    <footer class="footer">
+        <p>&copy; Azimuth1 2015</p>
+    </footer>
+    </div>
+</body>
+
+</html>
