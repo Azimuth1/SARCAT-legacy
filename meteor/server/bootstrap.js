@@ -13,7 +13,7 @@ Meteor.startup(function () {
         }
         console.log("Using [ " + environment + " ] Meteor.settings");
     */
-
+console.log('starting mongo')
     var METEOR_SETTINGS = JSON.parse(process.env.METEOR_SETTINGS);
     //console.log(Object.keys(METEOR_SETTINGS));
     //var environment = process.env.NODE_ENV; // || "development";
