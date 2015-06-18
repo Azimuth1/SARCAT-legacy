@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "./index.js",
-    "preinstall": "node scripts/run.js scripts/vendor-node.sh"
+    "preinstall": "build.sh"
   },
   "author": "Azimuth1",
   "license": "ISC",
