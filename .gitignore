@@ -13,3 +13,4 @@ main_logo
 //settings.dev.json
 npm-debug.log
 /build
+/dist

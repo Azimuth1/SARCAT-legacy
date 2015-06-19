@@ -8,9 +8,8 @@ if (process.platform !== 'win32') runscript();
 function runscript() {
     var execFile = require('child_process').execFile;
     var path = require('path');
-
     var file = path.resolve(process.argv[2]);
-
+    console.log('Running %s', file);
     execFile(file, [], {}, function(err, stdout, stderr) {
         console.log(stdout);
         console.warn(stderr);
