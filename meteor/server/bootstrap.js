@@ -1,4 +1,4 @@
-aa = 'kyle'
+
 Meteor.startup(function () {
     /*
         var environment = process.env.METEOR_ENV || "development";
@@ -13,9 +13,8 @@ Meteor.startup(function () {
         }
         console.log("Using [ " + environment + " ] Meteor.settings");
     */
-console.log('starting mongo')
+    console.log('starting mongo');
     var METEOR_SETTINGS = JSON.parse(process.env.METEOR_SETTINGS);
-    //console.log(Object.keys(METEOR_SETTINGS));
     //var environment = process.env.NODE_ENV; // || "development";
     //console.log('NODE_ENV: ' + environment);
     //var settings = METEOR_SETTINGS[environment];
@@ -23,7 +22,6 @@ console.log('starting mongo')
     //console.log(Object.keys(settings));
     //return
     config = Config.findOne();
-
     if (!config) {
         console.log('config:false')
         var makeEncryptionID = function () {
@@ -42,12 +40,10 @@ console.log('starting mongo')
         console.log('saving settings.config to mongodb');
         Meteor.settings.config.encryptionKey = encryptionKey;
         Config.insert(Meteor.settings.config);
-        config = Meteor.settings.config
+        config = Meteor.settings.config;
     }
-
     Meteor.settings.public.encryptionKey = config.encryptionKey;
     Meteor.settings.private.encryptionKey = config.encryptionKey;
-
     Accounts.config({
         loginExpirationInDays: null
     });
@@ -59,12 +55,10 @@ console.log('starting mongo')
                 return '/records/' + formData._id;
             }
             if (formData.type === 'logo') {
-
                 return '/logo';
             }
         },
         cacheTime: 100,
     });
-
 });
 

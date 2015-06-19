@@ -1,10 +1,10 @@
 {
   "name": "sarcat",
   "version": "1.0.0",
-  "description": "SAR",
-  "engineStrict": true,
+  "description": "SAR data management tool",
+  "author": "Azimuth1",
   "engines": {
-    "node": "0.10.x || 0.12.x"
+    "node": ">=0.10.36"
   },
   "repository": {
     "type": "git",
@@ -12,16 +12,29 @@
   },
   "bin": {
     "sarcats": "./bin/sarcats",
-    "jshint":"./libs/jshint"
+    "jshint": "./libs/jshint"
   },
+  "main": "./main.js",
   "scripts": {
-    "start": "./index.js",
-    "preinstall": "build.sh"
+    "test": "cd meteor && meteor --settings settings.json",
+    "preinstall": "",
+    "start": "node main.js dist/bundle/main.js",
+    "postinstall": "",
+    "build": "node scripts/run.js scripts/build.sh",
+    "mrt-run": "./scripts/run-mrt.sh"
   },
-  "author": "Azimuth1",
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Azimuth1/SARCAT/issues"
+  },
+  "keywords": [
+    "sar",
+    "search and rescue"
+  ],
+  "license": "MIT",
   "dependencies": {
-    "mup": "^0.10.7",
-    "path": "^0.11.14"
-  }
+    "minimist": "^1.1.1",
+    "mongodb": "^2.0.34"
+  },
+  "preferGlobal": true,
+  "private": true
 }
