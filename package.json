@@ -4,7 +4,7 @@
   "description": "SAR data management tool",
   "author": "Azimuth1",
   "engines": {
-    "node": ">=0.10.36"
+    "node": "~0.10.36"
   },
   "repository": {
     "type": "git",
@@ -12,16 +12,17 @@
   },
   "bin": {
     "sarcats": "./bin/sarcats",
-    "jshint": "./libs/jshint"
+    "mongod": "dist/.bin/mongodb"
   },
   "main": "./main.js",
   "scripts": {
     "test": "cd meteor && meteor --settings settings.json",
-    "preinstall": "",
+    "preinstall": "(cd dist/bundle/programs/server && npm install)",
     "start": "node main.js dist/bundle/main.js",
     "postinstall": "",
     "build": "node scripts/run.js scripts/build.sh",
-    "mrt-run": "./scripts/run-mrt.sh"
+    "mrt-run": "./scripts/run-mrt.sh",
+    "g":"./dist/g.sh"
   },
   "bugs": {
     "url": "https://github.com/Azimuth1/SARCAT/issues"
@@ -32,9 +33,11 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "fibers": "^1.0.5",
     "minimist": "^1.1.1",
     "mongodb": "^2.0.34"
   },
   "preferGlobal": true,
   "private": true
 }
+

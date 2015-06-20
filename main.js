@@ -84,7 +84,7 @@ var startSARCAT = spawn('node', [file], {
     env: env
 });
 
-
+/*
 startDB.stdout.on('data', function (data) {
     console.log('stdout: ' + data);
 });
@@ -94,7 +94,7 @@ startDB.stderr.on('data', function (data) {
 startDB.on('close', function (code) {
     console.log('child process exited with code ' + code);
 });
-
+*/
 
 startSARCAT.stdout.on('data', function (data) {
     console.log('stdout: ' + data);
