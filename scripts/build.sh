@@ -3,6 +3,48 @@
 set -e -u
 set -o pipefail
 
+
+
+
+home=$(pwd)
+cwd=$(pwd)"/dist"
+
+
+
+echo "installing node dependencies"
+cd $cwd/app/programs/server
+npm install
+
+
+cd $home
+#$cwd/bin/mongodb/bin/mongod --dbpath $cwd/sarcatdb
+#node index.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exit
+
+
+
+
+
+
+#!/bin/bash
+
+set -e -u
+set -o pipefail
+
 cwd=$(pwd)
 
 rm -rf dist
@@ -35,13 +77,5 @@ echo "creating mongodb"
 mkdir dist/sarcatdb
 
 
-
-
-
-
-
-
-#meteor build --architecture os.osx.x86_64 ../build/os.osx.x86_64
-#meteor build --architecture os.windows.x86_32 ../build/os.windows.x86_32
-#meteor build --architecture os.linux.x86_64 ../build/os.linux.x86_64
-#meteor build --architecture os.linux.x86_32 ../build/os.linux.x86_32
+echo "installing node dependencies"
+(cd dist/bundle/programs/server && npm install)

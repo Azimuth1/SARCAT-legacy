@@ -1,14 +1,10 @@
-var config = require('./config/config.json');
-
-var path = require('path');
-var spawn = require('child_process')
-    .spawn;
-
-METEOR_SETTINGS
+var config = require('./config.json');
+var METEOR_SETTINGS = require('./settings.json');
+var spawn = require('child_process').spawn;
 
 
 
-var METEOR_SETTINGS = require('./dist/settings.json');
+
 
 //var config = require('minimist')(process.argv.slice(2));
 /*
@@ -57,54 +53,80 @@ var kill = function (pid, signal, callback) {
 // ... somewhere in the code of Yez!
 kill(child.pid);
 */
-process.title = 'sarcat';
-//mongod --dbpath=/data --port 27017
-//cd dist
-//mongod --dbpath=/sarcatdb --port 27017
-//var env = Object.create(process.env); 
-var envDB = Object.create(process.env);
-envDB.dbpath = 'dist/sarcatdb';
-envDB.port = 27017;
-var startDB = spawn('mongod', [], {
-    env: envDB
-});
 
+//mongod --dbpath=/sarcatdb --port 27017
 var env = Object.create(process.env);
 var meteorENV = config.env;
-env.MONGO_URL = meteorENV.MONGO_URL + '/' + config.database;
+env.MONGO_URL = meteorENV.MONGO_URL + '/' + config.databaseName;
 env.ROOT_URL = meteorENV.ROOT_URL || 'http://localhost.com';
 env.PORT = meteorENV.PORT || 3000;
-
-
 env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
 
 
-var file = path.resolve(process.argv[2]);
-var startSARCAT = spawn('node', [file], {
-    env: env
+
+var dbRunning;
+var appRunning;
+//var file = path.resolve(process.argv[2]);
+function runapp() {
+
+    var startSARCAT = spawn(__dirname + '/' + 'bin/node/bin/node', [__dirname + '/app/main.js'], {
+        env: env
+    });
+    startSARCAT.stdout.on('data', function(data) {
+        console.log('stdout: ' + data);
+    });
+    startSARCAT.stderr.on('data', function(data) {
+        startDB.kill('SIGINT');
+        console.log('stderr: ' + data);
+    });
+    startSARCAT.on('close', function(code) {
+        startDB.kill('SIGINT');
+        console.log('child process exited with code ' + code);
+    });
+}
+
+
+
+
+var startDB = spawn(__dirname + '/' + 'bin/mongodb/bin/mongod', ['--dbpath', __dirname + '/' + config.databaseName]);
+
+startDB.stdout.on('data', function(data) {
+    console.log('stdout: ' + data);
+
+});
+startDB.stderr.on('data', function(data) {
+    console.log('stderr: ' + data);
+    //startDB.kill('SIGINT');
+});
+startDB.on('close', function(code) {
+    dbRunning = false;
+    console.log('child process exited with code ' + code);
+    process.exit()
+
 });
 
-/*
-startDB.stdout.on('data', function (data) {
-    console.log('stdout: ' + data);
-});
-startDB.stderr.on('data', function (data) {
-    console.log('stderr: ' + data);
-});
-startDB.on('close', function (code) {
-    console.log('child process exited with code ' + code);
-});
-*/
 
-startSARCAT.stdout.on('data', function (data) {
-    console.log('stdout: ' + data);
-});
-startSARCAT.stderr.on('data', function (data) {
-    console.log('stderr: ' + data);
-});
-startSARCAT.on('close', function (code) {
-    console.log('child process exited with code ' + code);
-});
+var trys = 0
+
+
+var interval = setInterval(function() {
+    tryapp()
+}, 2000);
+
+function tryapp() {
+    console.log(trys)
+    if (trys > 5) {
+        return clearInterval(interval)
+    }
+    if (!startDB.pid) {
+        return trys++;
+
+    }
+
+    runapp();
+    return clearInterval(interval)
+
+}
 
 
 
@@ -114,4 +136,3 @@ startSARCAT.on('close', function (code) {
 //show dbs
 //use myproject
 //show collections
-

@@ -11,18 +11,13 @@
     "url": "git://github.com/Azimuth1/SARCAT.git"
   },
   "bin": {
-    "sarcats": "./bin/sarcats",
-    "mongod": "dist/.bin/mongodb"
   },
-  "main": "./main.js",
+  "main": "./index.js",
   "scripts": {
-    "test": "cd meteor && meteor --settings settings.json",
-    "preinstall": "(cd dist/bundle/programs/server && npm install)",
-    "start": "node main.js dist/bundle/main.js",
-    "postinstall": "",
-    "build": "node scripts/run.js scripts/build.sh",
-    "mrt-run": "./scripts/run-mrt.sh",
-    "g":"./dist/g.sh"
+    "start": "node index.js dist/app/main.js",
+    "postinstall": "node scripts/run.js scripts/build.sh",
+    "build-platforms": "scripts/build-platforms.sh",
+    "meteor-run": "./scripts/run-mrt.sh"
   },
   "bugs": {
     "url": "https://github.com/Azimuth1/SARCAT/issues"
@@ -33,9 +28,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "fibers": "^1.0.5",
-    "minimist": "^1.1.1",
-    "mongodb": "^2.0.34"
   },
   "preferGlobal": true,
   "private": true

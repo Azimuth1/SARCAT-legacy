@@ -35,8 +35,7 @@ Currently, SARCAT is officially supported on the following platforms:
 
 *** 
 
-
-_*Coming Soon - Easily download the latest release, with all dependencies for your platform.*_
+Download the SARCAT source code or a pre-built installer for your platform.
 
 # Install From Source:
 

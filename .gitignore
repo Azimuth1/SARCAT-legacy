@@ -14,3 +14,5 @@ main_logo
 npm-debug.log
 /build
 /dist
+*.tar.gz
+*/.old

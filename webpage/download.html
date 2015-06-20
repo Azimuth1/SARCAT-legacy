@@ -57,20 +57,51 @@
         </div>
     </nav>
     <div class="container">
-        <div class="col-md-12 text-center">
-            <a class="btn btn-lg btn-success" href="#">
-                <i class="fa fa-flag fa-2x pull-left" id="appVer"></i> Download Now
-                <br>Version 0.1.0</a>
+        <div class='clearfix space-bottom1'>
+            <div class='col5 space-top2 row2 contain clip fill-green round'>
+                <a href='https://mapbox.s3.amazonaws.com/mapbox-studio/mapbox-studio-linux-x64-{{site.release}}.zip' class='pin-top button row2 pad2 fill-green space clip on-linux'>
+                    <div class='align-top inline row1 icon big down dot fill-darken1'></div>
+                    <span class='inline row1 text-left'>
+            <h3>mapbox-studio-linux-x64-{{site.release}}.zip</h3>
+            <small>160MB download for Linux</small>
+        </span>
+                </a>
+                <a href='https://mapbox.s3.amazonaws.com/mapbox-studio/mapbox-studio-darwin-x64-{{site.release}}.zip' class='pin-top button row2 pad2 fill-green space clip on-darwin'>
+                    <div class='align-top inline row1 icon big down dot fill-darken1'></div>
+                    <span class='inline row1 text-left'>
+            <h3>mapbox-studio-darwin-x64-{{site.release}}.zip</h3>
+            <small>150MB download for OS X</small>
+        </span>
+                </a>
+                <a href='https://mapbox.s3.amazonaws.com/mapbox-studio/mapbox-studio-win32-x86-{{site.release}}.exe' class='pin-top button row2 pad2 fill-green space clip on-win32'>
+                    <div class='align-top inline row1 icon big down dot fill-darken1'></div>
+                    <span class='inline row1 text-left'>
+            <h3>mapbox-studio-win32-x86-{{site.release}}.exe</h3>
+            <small>100MB download for Windows</small>
+        </span>
+                </a>
+                <a href='https://mapbox.s3.amazonaws.com/mapbox-studio/mapbox-studio-win32-x64-{{site.release}}.exe' class='pin-top button row2 pad2 fill-green space clip on-win64'>
+                    <div class='align-top inline row1 icon big down dot fill-darken1'></div>
+                    <span class='inline row1 text-left'>
+            <h3>mapbox-studio-win32-x64-{{site.release}}.exe</h3>
+            <small>100MB download for Windows</small>
+        </span>
+                </a>
+            </div>
+            <div class="col-md-12 text-center">
+                <a class="btn btn-lg btn-success" href="#">
+                    <i class="fa fa-flag fa-2x pull-left" id="appVer"></i> Download Now
+                    <br>Version 0.1.0</a>
+            </div>
+            <script>
+            var OSName = "unknown OS";
+            if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
+            if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
+            if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+            if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
+            document.getElementById('appVer').innerText = OSName
+            </script>
         </div>
-        <script>
-        var OSName = "unknown OS";
-        if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
-        if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
-        if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
-        if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
-        document.getElementById('appVer').innerText = OSName
-        </script>
-    </div>
 </body>
 
 </html>

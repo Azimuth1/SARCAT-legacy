@@ -1,9 +1,11 @@
 {
     "env": {
-        "MONGO_URL": "mongodb://localhost:27017",
+        "MONGO_URL": "mongodb://localhost:27017/sarcatdb",
         "ROOT_URL": "http://localhost.com",
         "PORT": 3000
     },
-    "database": "sarcatdb"
-}
+    "database": "dist/sarcatdb",
+    "databaseName":"sarcatdb",
+    "dest": "dist"
 
+}
