@@ -1,7 +1,7 @@
 _This documentation is a work in progress. Many parts are incomplete at the moment. Additional documentation is coming very soon._
 
 
-![alt tag](https://raw.github.com/azimuth1/SARCAT/master/public/icon.png)
+![alt tag](https://github.com/Azimuth1/SARCAT/blob/master/meteor/public/icon.png?raw=true)
 
 #SARCAT
 Search and Rescue Collection & Analysis Tool (SARCAT) is a web-hosted application that simplifies the collection and analysis of your team’s or agencies SAR data. Its goal is simple; make the collection of data easy, accurate, and standardized. This is accomplished with smartforms, auto-calculations, and an intuitive user inter-
@@ -24,40 +24,67 @@ face. The user then reaps the benefits with built in data analysis, reporting, m
 
 * _Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams._
 
+*** 
+##Officially supported platforms
 
-## Download Latest Release
-_*Coming Soon - Easily download the latest release for your platform.*_
+Currently, SARCAT is officially supported on the following platforms:
+
+* Mac: OS X 10.7 and above
+* Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012
+* Linux: x86 and x86_64 systems
+
+*** 
 
 
-## Install From Source:
+_*Coming Soon - Easily download the latest release, with all dependencies for your platform.*_
 
-* Install [Node.js v0.10.x](https://nodejs.org/download/)
-* Install [Meteor](http://docs.meteor.com/#/basic/quickstart)
-    git clone https://github.com/Azimuth1/SARCAT.git
-* Install [MongoDB](https://www.mongodb.org/)
+# Install From Source:
 
-   
+# 1. Install [Node.js](https://nodejs.org) v0.10.6<br>
+SARCAT is built with Meteor - which makes it fast and reliable. Meteor has been tested up to [node](https://nodejs.org/) version 0.10.36 
 
-  Download Latest From Repo:
+*For Easy download, Just click the link and follow install instructions for your platform.*
+* Windows: [node.exe](http://nodejs.org/dist/v0.10.36/node.exe)
+* Mac: [node-v0.10.36.pkg](http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg)
+* Linux: [node-v0.10.36-linux-x64.tar.gz](http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz)
+
+
+## 2. Install [MongoDB](https://www.mongodb.org/)
+Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo!<br>
+
+* [Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)
+* [Mac](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
+* [Linux](http://docs.mongodb.org/manual/administration/install-on-linux/)
+
+
+
+## 3. Open Your Shell<br>
+* For Windows, click ```start```>```run``` and type ```cmd```<br>
+* For Mac, search "Terminal" to open.<br>
+
+
+## Download SARCAT
+
+ 
+_* Quick download will soon be provided from the website._
 ```bash
 $ git clone https://github.com/Azimuth1/SARCAT.git
 ```
+
+
   Install dependencies:
 ```bash
-$ cd SARCAT
 $ npm install
 ```
 
 Run as a Meteor app:
 ```bash
-$ meteor --settings settings.json
+$ npm test
 ```
 
 Or run as a node app:
 ```bash
-$ meteor build --directory /build
-$ (cd ../build/bundle/programs/server && npm install)
-$ MONGO_URL=mongodb://127.0.0.1:27017 ROOT_URL=http://localhost.com PORT=3000 METEOR_SETTINGS=$(cat settings.json) node ../build/bundle/main.js
+$ npm start
 ```
     
 ## Hosted Options

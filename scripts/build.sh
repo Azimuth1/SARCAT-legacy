@@ -12,16 +12,30 @@ echo "resetting meteor"
 meteor reset
 echo "building meteor for node"
 meteor build --directory $cwd/dist
-echo "copying settings.json to /dist"
-cp settings.json ../dist
 
-echo "install node dependencies"
-(cd ../dist/bundle/programs/server && npm install)
-echo "creating mongodb"
-mkdir ../dist/sarcatdb
+
+
 
 
 cd "$cwd"
+
+echo "copying settings.json to /dist"
+cp meteor/settings.json dist
+
+
+
+
+
+
+echo "creating mongodb"
+#tar -zxvf pkg/mongodb-osx-x86_64-3.0.4.tgz
+#mkdir -p dist/mongodb
+#cp -R -n mongodb-osx-x86_64-3.0.4/bin/. dist/mongodb
+#rm -rf mongodb-osx-x86_64-3.0.4
+mkdir dist/sarcatdb
+
+
+
 
 
 
