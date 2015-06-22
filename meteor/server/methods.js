@@ -61,7 +61,7 @@ Meteor.methods({
         Roles.addUsersToRoles(id, [role]);
     },
     updateConfig: function (val) {
-        console.log(val)
+     
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -184,7 +184,7 @@ Meteor.methods({
         })
     },
     removeResource: function (recordId, resourceId) {
-        console.log(recordId, resourceId);
+       
         var newResource = Records.findOne(recordId)
             .resourcesUsed.resource.filter(function (d) {
                 return d._key !== resourceId;
@@ -324,7 +324,7 @@ Meteor.methods({
         //var url = 'http://api.forecast.io/forecast/' + forecastAPI + '/';
         url += latlngDate + '?';
         url += units;
-        console.log(url)
+       
         var result = HTTP.get(url);
         if (!result.data) {
             return;
@@ -410,7 +410,7 @@ Meteor.methods({
     uploadISRID: function (toUpload) {
         this.unblock();
         var url = Meteor.settings.private.sarcatServer + '/uploadISRID'
-        console.log(url, toUpload);
+     
         return HTTP.post(url, toUpload);
     },
     setElevation: function (id) {
@@ -552,7 +552,7 @@ Records.allow({
         return true;
     },
     update: function (a, b) {
-        console.log(a, b, this)
+      
         return true;
     },
     insert: function () {

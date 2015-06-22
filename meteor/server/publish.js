@@ -15,13 +15,17 @@ Meteor.publish('item', function (filter) {
         var subHandle = Records.find(filter || {});
         var handle = subHandle.observeChanges({
             added: function (id, fields) {
+                console.log('added')
                 var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                 var allFields = fields.subjects.subject;
                 if (self.userId === subHandle.fetch()[0].admin.userId) {
+                 
                     allFields.forEach(function (d, ind) {
                         _.each(d, function (e, f) {
                             if (_.contains(hide, f)) {
-
+console.log(allFields[ind][f], encryptionKey,CryptoJS.AES
+                                    .decrypt(allFields[ind][f], encryptionKey)
+                                    .toString(CryptoJS.enc.Utf8))
                                 allFields[ind][f] = CryptoJS.AES
                                     .decrypt(allFields[ind][f], encryptionKey)
                                     .toString(CryptoJS.enc.Utf8);
@@ -32,17 +36,19 @@ Meteor.publish('item', function (filter) {
                 self.added("records", id, fields);
             },
             changed: function (id, fields) {
+                console.log('changed')
                 if (fields.subjects) {
                     var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                     var allFields = fields.subjects.subject;
                     if (self.userId === subHandle.fetch()[0].admin.userId) {
+                   
                         allFields.forEach(function (d, ind) {
                             _.each(d, function (e, f) {
                                 if (_.contains(hide, f)) {
                                     var dec = CryptoJS.AES
                                         .decrypt(allFields[ind][f], encryptionKey)
                                         .toString(CryptoJS.enc.Utf8);
-
+console.log(allFields[ind][f], encryptionKey)
                                     allFields[ind][f] = dec;
                                 }
                             })

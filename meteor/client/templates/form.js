@@ -125,7 +125,7 @@ Template.form.onRendered(function() {
         });
 });
 Template.form.helpers({
-    record: function(){
+    record: function() {
         return Session.get('record')
     },
     allowedStates: function(a, b) {
@@ -225,13 +225,13 @@ Template.form.helpers({
 
                 var total = toCount ? null : Schemas[d]._firstLevelSchemaKeys.length;
                 total = field.newTotal || total;
-                total=total>count ? count : total;
+                total = total > count ? count : total;
                 var count = toCount ? field.total : Object.keys(recordSamp)
                     .length;
-              
+
                 var label = Schemas.SARCAT._schema[d].label;
-                  //console.log(d, count, total,field.newTotal)
-                
+                //console.log(d, count, total,field.newTotal)
+
                 var klass = (count === total || (!total && count)) ? 'primary-bg' : '';
                 total = total ? '/' + total : null;
                 var sum = [count, total].join('');
@@ -522,25 +522,33 @@ Template.form.events({
     'click .newSubject': function(event, template) {
         var record = Session.get('record');
         Meteor.call('pushArray', record._id, 'subjects.subject', function(err, d) {
-            console.log(d);
+            if (err) {
+                console.log(err);
+            }
         });
     },
     'click .removeSubject': function(event, template) {
         var record = Session.get('record');
         Meteor.call('removeSubject', record._id, event.target.getAttribute('data'), function(err) {
-            console.log(err);
+            if (err) {
+                console.log(err);
+            }
         });
     },
     'click .newResource': function(event, template) {
         var record = Session.get('record');
         Meteor.call('pushArray', record._id, 'resourcesUsed.resource', function(err, d) {
-            console.log(d);
+            if (err) {
+                console.log(err);
+            }
         });
     },
     'click .removeResource': function(event, template) {
         var record = Session.get('record');
         Meteor.call('removeResource', record._id, event.target.getAttribute('data'), function(err) {
-            console.log(err);
+            if (err) {
+                console.log(err);
+            }
         });
     },
     'change .formNav': function(event, template) {
@@ -813,8 +821,10 @@ AutoForm.hooks({
 });
 var encryptionKey = Meteor.settings.public.encryptionKey;
 Records.before.update(function(userId, doc, fieldNames, modifier, options) {
+    //console.log(userId, doc, fieldNames, modifier, options)
     if (modifier && modifier.$set && Object.keys(modifier.$set)
         .length) {
+        console.log(modifier)
         var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
         var fields = Object.keys(modifier.$set)
             .map(function(d) {
@@ -823,8 +833,12 @@ Records.before.update(function(userId, doc, fieldNames, modifier, options) {
                     name: d
                 }
             });
+            console.log(fields)
         _.each(fields, function(d) {
             if (_.contains(hide, d.field)) {
+                console.log(d)
+                /*console.log(d.name,CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
+                    .toString())*/
                 modifier.$set[d.name] = CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
                     .toString();
             }
