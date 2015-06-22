@@ -11,8 +11,29 @@ set -o pipefail
 #meteor admin get-machine os.linux.x86_64
 # Linux on 32-bit Intel
 #meteor admin get-machine os.linux.x86_32
+# Windows on 32-bit
+#os.windows.x86_32
 
-architecture=os.osx.x86_64
+
+#architecture=os.osx.x86_64
+#platformMongoName=mongodb-osx-x86_64-3.0.4
+#platformMongo=$platformMongoName.tgz
+#platformNodeName=node-v0.10.36-darwin-x64
+#platformNode=$platformNodeName.tar.gz
+
+
+
+architecture=os.windows.x86_32
+platformMongoName=mongodb-win32-i386-3.0.4
+platformMongo=$platformMongoName.zip
+platformNodeName=node-v0.10.36-darwin-x64
+platformNode=$platformNodeName.tar.gz
+
+
+
+
+
+
 
 #Root directory
 home=$(pwd)
@@ -52,18 +73,20 @@ cp run.sh $dest
 
 
 echo "creating mongodb"
-tar -zxvf $build/mongodb-osx-x86_64-3.0.4.tgz
+tar -zxvf $build/$platformMongo
+#unzip $build/$platformMongo
 mkdir -p $dest/bin/mongodb
-cp -R -n mongodb-osx-x86_64-3.0.4/. $dest/bin/mongodb
-rm -rf mongodb-osx-x86_64-3.0.4
+cp -R -n $platformMongoName/. $dest/bin/mongodb
+rm -rf $platformMongoName
 
 
 
 echo "creating node"
-tar -zxvf $build/node-v0.10.36-darwin-x64.tar.gz
+tar -zxvf $build/$platformNode
+#unzip $build/node-v0.10.36-darwin-x64.tar.gz
 mkdir -p $dest/bin/node
-cp -R -n node-v0.10.36-darwin-x64/. $dest/bin/node
-rm -rf node-v0.10.36-darwin-x64
+cp -R -n $platformNodeName/. $dest/bin/node
+rm -rf $platformNodeName
 node=$dest/bin/node/bin/node
 npm=$dest/bin/node/bin/npm
 
