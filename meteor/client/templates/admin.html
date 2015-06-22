@@ -151,6 +151,9 @@
                             <td>
                                 <div class="admin_ChangeRole">
                                     <label class="radio-inline">
+                                        <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="pending" checked="{{rolekIsChecked}}">Pending
+                                    </label>
+                                    <label class="radio-inline">
                                         <input class='adminUserRoles' data-user="{{this._id}}" type="radio" name="role_{{this._id}}" value="viewer" checked="{{rolekIsChecked}}">Viewer
                                     </label>
                                     <label class="radio-inline">

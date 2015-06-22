@@ -1,22 +1,18 @@
 <template name="report">
     <div class="content-scrollable pad2">
         <h3 class="panel-title text-center text-uppercase text-light">Record Report</h3>
-     
         <div class="row">
-            {{#each stats}}
-            
-            
-            <div class="white-border col-sm-12 pad00 mar2y">
-            
-<div id='{{this._id}}' style="width:100%;height:300px"></div>
+            {{#if hasStats}} 
 
+            {{#each stats}}
+            <div class="white-border col-sm-12 pad00 mar2y">
+                <div id='{{this._id}}' style="width:100%;height:300px"></div>
                 {{#each this.data}}
                 <div class="statInfo">
                     <div class="chartTitle">{{this.field}}</div>
                     <div class="cont">
                         {{#each this.data}}
-                        <div class="_col-md-4 cha
-rtBody pad0x">
+                        <div class="_col-md-4 chartBody pad0x">
                             <div class="stronger">{{this.key}}:</div>
                             <div class="bod">{{this.val}}</div>
                         </div>
@@ -25,7 +21,9 @@ rtBody pad0x">
                 </div>
                 {{/each}}
             </div>
-            {{/each}}
+            {{/each}} 
+
+            {{/if}}
         </div>
         <hr>
     </div>

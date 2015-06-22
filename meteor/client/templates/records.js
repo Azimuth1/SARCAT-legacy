@@ -115,7 +115,7 @@ Template.records.helpers({
             }))
             .length;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
-        return profile && role;
+        return profile > 5 && role;
     },
     canCreateNewRecords: function() {
         var profileKeys = Object.keys(Session.get('agencyProfile'));
@@ -271,6 +271,28 @@ Template.records.events({
             });
         });
     },
+    'click #genReport': function() {
+        var checked = $('.recordSel:checked')
+            .map(function() {
+                return this.value;
+            })
+            .toArray();
+
+        if (!checked.length) {
+            var con = confirm('No Records Selected - Generate report for all records?');
+            if (!con) {
+                return;
+            } else {
+                checked = Session.get('records')
+                    .map(function(d) {
+                        return d._id;
+                    });
+            }
+        }
+        return Router.go('report', {
+            ids: checked.join('.')
+        });
+    },
     'click #downloadRecords': function() {
         var checked = $('.recordSel:checked')
             .map(function() {
@@ -310,9 +332,9 @@ Template.records.events({
                 for (var index in arrData[i]) {
                     row += '' + arrData[i][index] + ',';
                 }
-                //console.log(row)
+
                 row.slice(0, row.length - 2);
-                //console.log(row)
+
                 CSV += row + '\r\n';
             }
             if (CSV === '') {

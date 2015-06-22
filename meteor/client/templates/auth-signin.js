@@ -1,11 +1,11 @@
 var ERRORS_KEY = 'signinErrors';
-var passwordReset = function () {
+var passwordReset = function() {
     var user = Meteor.user() || {};
     var profile = user.profile || {};
     var reset = profile.passwordReset ? true : false;
     return reset;
 };
-Template.signin.onCreated(function () {
+Template.signin.onCreated(function() {
     Session.set(ERRORS_KEY, {});
     var reset = Session.get('passwordReset'); //passwordReset();
     //Session.set('passwordReset', reset);
@@ -13,34 +13,34 @@ Template.signin.onCreated(function () {
         Router.go('home');
     }
 });
-Template.signin.onRendered(function () {
+Template.signin.onRendered(function() {
     //var logo = document.getElementById('agencyLogo');
     //logo.src = 'uploads/logo/' + Session.get('logo');
     //logo.style.display = 'inline';
 });
 Template.signin.helpers({
-    logoSrc: function (event, template) {
+    logoSrc: function(event, template) {
         return Session.get('logoSrc');
     },
-    defaultEmail: function () {
+    defaultEmail: function() {
         return Session.get('defaultEmail');
         //return Meteor.settings.public.email;
     },
-    errorMessages: function () {
+    errorMessages: function() {
         return _.values(Session.get(ERRORS_KEY));
     },
-    errorClass: function (key) {
+    errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    initConfig: function () {
+    initConfig: function() {
         return Session.get('initConfig');
     },
-    resetPassword: function () {
+    resetPassword: function() {
         return Session.get('passwordReset');
     },
 });
 Template.signin.events({
-    'click #resetPassword': function (event, template) {
+    'click #resetPassword': function(event, template) {
         event.preventDefault();
         var password = template.$('[name=password]')
             .val();
@@ -56,7 +56,7 @@ Template.signin.events({
             .length) {
             return;
         }
-        Meteor.call('setPassword', Meteor.userId(), password, false, function (err, d) {
+        Meteor.call('setPassword', Meteor.userId(), password, false, function(err, d) {
             console.log('!!')
             console.log(err, d)
             console.log('??')
@@ -72,7 +72,7 @@ Template.signin.events({
             }
         });
     },
-    'click #signin': function (event, template) {
+    'click #signin': function(event, template) {
         event.preventDefault();
         var email = template.$('[name=email]')
             .val();
@@ -90,7 +90,15 @@ Template.signin.events({
             .length) {
             return;
         }
-        Meteor.loginWithPassword(email, password, function (error, result) {
+        Meteor.loginWithPassword(email, password, function(error, result) {
+
+            if (Roles.userIsInRole(Meteor.userId(), ['pending'])) {
+                Meteor.logout();
+                template.$('form :input[type="password"]').val('');
+                return Session.set(ERRORS_KEY, {
+                    confirm: 'Awaiting Account Approval'
+                });
+            }
             if (error) {
                 return Session.set(ERRORS_KEY, {
                     'none': error.reason

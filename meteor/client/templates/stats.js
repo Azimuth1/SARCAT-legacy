@@ -8,7 +8,7 @@ Template.stats.onRendered(function() {
 
     var records = Records.find().fetch();
     var stats = chartStats(records);
-    dateChart(records);
+    dateChart(records,stats);
     recordsSetMap('recordsMap', records);
 });
 Template.stats.helpers({
@@ -432,6 +432,7 @@ var subjectArrayForm = function(flatData, name, parent) {
             return d.key.substr(d.key.lastIndexOf('.') + 1);
         })
         .map(function(d, e) {
+            var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                if (_.contains(hide, e)) {
                 return [];
             }

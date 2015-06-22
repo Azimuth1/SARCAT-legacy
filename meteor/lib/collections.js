@@ -109,8 +109,8 @@ Schemas.User = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['viewer', 'editor', 'admin'],
-        defaultValue: ['viewer'],
+        allowedValues: ['pending','viewer', 'editor', 'admin'],
+        defaultValue: ['pending'],
         optional: true,
     },
     'roles.$': {

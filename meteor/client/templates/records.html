@@ -4,6 +4,8 @@
             <div class="modal-content">
                 <div class="modal-header primary-bg">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+
+
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div class="col-md-12 text-left">
@@ -47,9 +49,9 @@
             <!-- Single button -->
             {{#if hasRecords}}
             <div class="btn-group">
-                <a href="{{pathFor 'report'}}" type="button" class="btn btn-default">
+               <button type="button" class="btn btn-default" id="genReport">
                     <i class="glyphicon glyphicon-folder-close"></i> Report <span></span>
-                </a>
+                </button>
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <i class="glyphicon glyphicon-save-file"></i> Download <span class="caret"></span>
                 </button>
@@ -83,6 +85,6 @@
         {{#unless canCreateNewRecords}}
         <p class="text-center text-warning">Agency Profile must be setup by Admin to begin creating records</p>
         {{/unless}}
-        <button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>
+        {{#if createNewBtn}}<button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>{{/if}}
     </div>
 </template>
