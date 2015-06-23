@@ -197,10 +197,6 @@ em {
     font-size: 70%;
 }
 
-
-
-
-
 .w2x {
     width: 200% !important;
 }
@@ -217,7 +213,6 @@ em {
     margin: 1%;
     font-size: .7em;
     min-width: 210px;
- 
 }
 
 #formId3334 .form-group {
@@ -637,7 +632,6 @@ input[type="text"]:focus {
     align-self: auto;
 }
 
-
 @-moz-document url-prefix() {
     .flex-container {
         width: 100%;
@@ -718,9 +712,7 @@ a {
 }
 
 #recordss .col-md-6 {
-    @media print {
-        width: 100%
-    }
+
 }
 
 .statInfo,
@@ -745,9 +737,7 @@ a {
     text {
         font-size: 1em;
         fill: #A2D9E7;
-        @media print {
-            fill: #000 !important;
-        }
+  
     }
     .axis {
         font: 10px sans-serif;
@@ -767,40 +757,30 @@ a {
     }
     .x.axis text {
         fill: #a2d9e7;
-        @media print {
-            fill: #000 !important;
-        }
+       
     }
     .barText {
         fill: #a2d9e7;
-        @media print {
-            fill: #000 !important;
-        }
+      
     }
     .title {
         font-size: 14px;
         font-weight: bold;
         fill: #cb812a;
         text-transform: uppercase;
-        @media print {
-            fill: #000 !important;
-        }
+       
     }
     .x_label {
         font-size: 1.4em;
         fill: #A2D9E7;
         font-family: Verdana, Geneva, sans-serif;
-        @media print {
-            fill: #000 !important;
-        }
+       
     }
     .y_label {
         font-size: 1.4em;
         fill: #A2D9E7;
         font-family: Verdana, Geneva, sans-serif;
-        @media print {
-            fill: #000 !important;
-        }
+       
     }
     .tooltips {
         text-anchor: middle;
@@ -809,9 +789,7 @@ a {
         font-weight: bold;
         fill: #fff;
     }
-    @media print {
-        fill: #000 !important;
-    }
+   
 }
 
 #recordsResources svg {
@@ -933,7 +911,6 @@ a {
     background: #DDD;
 }
 
-
 .centered {
     position: absolute;
     top: 45%;
@@ -976,7 +953,6 @@ a {
     height: 21px;
     background: #fff;
 }
-
 
 .info {
     padding: 6px 8px;
@@ -1164,7 +1140,26 @@ btn.btn-success {
     }
 }
 
+.navbar-inverse .navbar-nav > li > a {
+    color: @color-light;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+    color: #FFF;
+    background-color: @color-navyBlue;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+    color: @color-navyBlue;
+    background-color: @color-light;
+}
+
 .contentNav {
+    border: none;
     border-bottom: 1px solid @color-light;
     background: @color-navyBlue;
     img {
@@ -1431,8 +1426,7 @@ table.reactive-table,
     }
 }
 
-
-.formNav1 {
+._formNav1 {
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
@@ -1448,7 +1442,6 @@ table.reactive-table,
         line-height: 1;
     }
     .stronger {
-       
         font-weight: bold;
     }
 }

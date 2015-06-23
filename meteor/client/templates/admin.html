@@ -1,14 +1,75 @@
 <template name="admin">
     {{#if isInRole 'admin'}}
-    <ul class="nav nav-tabs contentNav hidden-print" role="tablist">
-        <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
-        <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-        <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
-        <li class="pull-right">
-            <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
-        </li>
-    </ul>
-    <div class="tab-content admin pad1">
+
+
+
+
+
+
+
+    <nav class="navbar navbar-inverse contentNav">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+
+                <ul class="nav navbar-nav" role="tablist">
+                    <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
+                    <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
+                    <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
+                    <li class="pull-right">
+                        <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
+                    </li>
+                </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
+
+<!--
+
+    <nav class="navbar navbar-fixed-top hidden-print" style="border-bottom:1px solid #fff">
+        <div class="fixed-container pad2x">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" role="tablist">
+                    <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
+                    <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
+                    <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
+                    <li class="pull-right">
+                        <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+-->
+
+    <div class="tab-content content-scrollable pad2" style="top:50px;">
         <div role="tabpanel" class="tab-pane active pad00" id="profile">
             <div class="_panel {{profileIncomplete}}">
                 <div class="panel panel-default">
@@ -18,29 +79,23 @@
                     </div>
                     <div class="panel-body afBody">
                         {{#autoForm collection='Config' resetOnSuccess=false doc=configs id='formIdAgencyProfile' type='update' fields="agencyProfile" buttonContent="Save" templates="plain" class="recordForm2" validation="blur"}}
-                        
                         <!---->
                         {{> afQuickField name="agencyProfile.contactPerson"}}
                         <!---->
                         {{> afQuickField name="agencyProfile.contactEmail"}}
                         <!---->
                         {{> afQuickField name="agencyProfile.organization"}}
-
                         <!---->
                         {{> afQuickField name="agencyProfile.phoneNum"}}
                         <!---->
                         {{> afQuickField name="agencyProfile.country" options="allowed"}}
                         <!---->
                         {{> afQuickField name="agencyProfile.street"}}
-                        
                         <!---->
                         {{> afQuickField name="agencyProfile.city"}}
-
-                        
                         <!---->
                         {{> afQuickField name="agencyProfile.state-province" options=allowedStates}}
-
-                    <!---->
+                        <!---->
                         {{> afQuickField name="agencyProfile.county-region"}}
                         <div class="col-md-12 pad00">
                             <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>Submit </button>
@@ -81,7 +136,7 @@
                     {{/autoForm}}
                 </div>
             </div>
-            <div class="panel panel-default mar1">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Create Customized Incident Questions For Your Team
                   </h3>
@@ -98,7 +153,7 @@
                     {{/autoForm}}
                 </div>
             </div>
-            <div class="panel panel-default mar1">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Default SAR Response Area
                   </h3>

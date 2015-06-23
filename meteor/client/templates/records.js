@@ -272,6 +272,7 @@ Template.records.events({
         });
     },
     'click #genReport': function() {
+         event.preventDefault();
         var checked = $('.recordSel:checked')
             .map(function() {
                 return this.value;
@@ -279,6 +280,7 @@ Template.records.events({
             .toArray();
 
         if (!checked.length) {
+            //alert ('No Records Selected - Select up to 5 records to view report');
             var con = confirm('No Records Selected - Generate report for all records?');
             if (!con) {
                 return;
@@ -289,7 +291,8 @@ Template.records.events({
                     });
             }
         }
-        return Router.go('report', {
+
+        Router.go('report', {
             ids: checked.join('.')
         });
     },
