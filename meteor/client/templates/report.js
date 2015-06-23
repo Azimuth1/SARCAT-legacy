@@ -68,14 +68,16 @@ var genList = function(records) {
 };
 
 Template.reportMap.onRendered(function() {
-    reportSetMap(this.data, $('.aa')[0]);
+    reportSetMap(this.data, this.$('.aa')[0]);
 });
 
 
 Template.report.onCreated(function() {
+
     Session.set('userView', 'report');
 });
 Template.report.onRendered(function() {
+
     var stats = genList(this.data);
     Session.set('stats', stats);
 });
@@ -83,9 +85,9 @@ Template.report.helpers({
     stats: function() {
         return Session.get('stats');
     },
-    hasStats: function() {
-        var _stats = Session.get('stats');
-        var hasStats = _stats && _stats.length ? true : false;
+    generateMap: function() {
+        var _stats = Session.get('stats') || [];
+        var hasStats = _stats.length<4 ? true : false;
 
         return hasStats;
     },

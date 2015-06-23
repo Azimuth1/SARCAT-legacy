@@ -3,20 +3,29 @@
     </div>
 </template>
 <template name="form">
-    <div id="formPage">
-        <ul class="nav nav-tabs contentNav">
-            <button type="button" class="btn btn-default deleteRecord mar0">
-                <i class="glyphicon glyphicon-trash"></i> View Report
-            </button>
-        </ul>
-        <div class="formNav1">
-            {{#each schemas}}
-            <div data="{{this.field}}" class="formNav btn btn-sm pad0 btn-default_btn {{this.klass}}">
-                {{this.field}}
-                <div class="bod">{{this.sum}}</div>
+    <!--    <nav class="contentNav hidden-print">
+        <div class="container-fluid">
+            <div class="formNav1">
+                {{#each schemas}}
+                <div data="{{this.field}}" class="formNav btn btn-sm pad0 btn-default_btn {{this.klass}}">
+                    {{this.field}}
+                    <div class="bod">{{this.sum}}</div>
+                </div>
+                {{/each}}
             </div>
+        </div>
+    </nav>
+-->
+    <nav class="contentNav hidden-print">
+        <div class="container-fluid text-center">
+            {{#each schemas}}
+            <button class="btn btn-default btn-sm {{this.klass}}" type="submit">{{this.field}}
+                <br>{{this.sum}}</button>
             {{/each}}
         </div>
+    </nav>
+    
+    <div class="tab-content content-scrollable pad2" style="top:72px;">
         <div class="panel panel-default" style="min-height:400px">
             <div class="panel-heading">
                 <h3 class="panel-title">Incident Map</h3>
@@ -412,7 +421,6 @@
         {{> quickForm collection='Records' validation="submit" doc=current class="recordForm0 _form-inline hideSubmit" id='formdId' autosave=true type=formType fields="xComments" buttonContent= "Save" resetOnSuccess='false' }}
         <!--Comment-->
         <!--Custom Questions-->
-
         {{#with record}} {{#if customQuestions_}}
         <div class="panel panel-default _text-center">
             <div class="panel-heading">

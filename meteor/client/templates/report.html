@@ -3,11 +3,15 @@
 </template>
 <template name="report">
     <div class="content-scrollable pad2">
-        <h3 class="panel-title text-center text-uppercase text-light">Record Report</h3>
+        <h3 class="panel-title text-center text-uppercase text-light">SARCAT Report</h3>
+        {{#unless generateMap}}
+        <p class="text-right small text-light em">Maps will not generate if more than 3 records are added to report</p>
+        {{/unless}} 
+
         <div class="row">
             {{#each stats}}
             <div class="white-border col-sm-12 pad00 mar2y white">
-                {{>reportMap this}} {{#each this.data}}
+                {{#if generateMap}} {{>reportMap this}} {{/if}} {{#each this.data}}
                 <div class="statInfo">
                     <div class="chartTitle">{{this.field}}</div>
                     <div class="cont">

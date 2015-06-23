@@ -1,3 +1,10 @@
+@media print {
+    .no-print,
+    .no-print * {
+        display: none !important;
+    }
+}
+
 @menu-width: 270px;
 @column: 5.55555%;
 body {
@@ -18,42 +25,26 @@ body {
         _left: 2*@column;
         right: 1*@column;
     }
-     @media print {
-        left: 0;
-        right:0;
-        width:100%;
-    }
 }
 
 #menu {
     .position(absolute, 0, 0, 0, 0, @menu-width);
     border-right: 1px solid @color-light;
-    @media print {
-        display: none;
-    }
 }
 
 #content-container {
-    background-color: @color-navyBlue;
-    .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));
+    background: linear-gradient(#022E38, #3D5C7F);
     .position(absolute, 0, 0, 0, 0);
-    .transition(all 200ms ease-out);
-    .transform(translate3d(0, 0, 0));
+    //.transition(all 200ms ease-out);
+    //.transform(translate3d(0, 0, 0));
     opacity: 1;
     @media screen and (min-width: 40em) {
         left: @menu-width;
     }
-    @media print {
-        left: 0;
-        right:0;
-        width:100%;
-    }
     .content-scrollable {
         .position(absolute, 0, 0, 0, 0);
-        //overflow-y: auto;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        //background-color: @color-navyBlue;
-        //.background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));
     }
     // Toggle menu on mobile
     .menu-open & {
@@ -100,6 +91,47 @@ body {
             border: 4px solid @color-light;
             max-width: 200px;
             max-height: 200px;
+        }
+    }
+}
+
+@media print {
+   /* *,
+    *:before,
+    *:after {
+        color: initial !important;
+        text-shadow: none !important;
+        background: initial !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }*/
+    #menu {
+        display: none;
+        width: 0 !important;
+    }
+    html,
+    body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    #container {
+        #content-container {
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            .content-scrollable {
+                color: initial !important;
+                background-color: #21465D !important;
+                background: #21465D !important;
+                size: letter !important;
+                position: relative;
+                counter-increment: myIndex;
+                page-break-after: always;
+                overflow-y: initial;
+            }
         }
     }
 }

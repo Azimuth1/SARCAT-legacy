@@ -4,8 +4,6 @@
             <div class="modal-content">
                 <div class="modal-header primary-bg">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
-
-
                     <h4 class="modal-title" id="myModalLabel">New Record</h4> </div>
                 <div class="modal-body">
                     <div class="col-md-12 text-left">
@@ -23,49 +21,46 @@
             </div>
         </div>
     </div>
-    <ul class="nav nav-tabs contentNav">
-        {{#if createNewBtn}}
-        <a type="button" class="btn btn-default mar0" data-target="#createRecordModal" data-toggle="modal">
-            <i class="glyphicon glyphicon-plus"></i> New Record
-        </a>
-        <!---->
-        {{#if isInRole 'admin'}}
-        <!---->
-        {{#if selectedRecords}}
-        <button type="button" class="btn btn-default deleteRecord mar0">
-            <i class="glyphicon glyphicon-trash"></i>
-        </button>
-        {{/if}}
-        <!---->
-        {{/if}}
-        <!---->
-        <div id="toolbar" class="btn-group pull-right mar0y">
-            {{#if isInRole 'admin'}} {{#if hasRecords}}
-            <a type="button" class="btn btn-default uploadISRID" style="margin-y=-12px">
-                Export to<i class="glyphicon"><img src="images/isridSmall.png" height="22px" style="margin-top: -5px;margin-left: 5px;"></i>
-            </a>
-            <!---->
-            {{/if}}{{/if}}
-            <!-- Single button -->
-            {{#if hasRecords}}
-            <div class="btn-group">
-               <button type="button" class="btn btn-default" id="genReport">
-                    <i class="glyphicon glyphicon-folder-close"></i> Report <span></span>
+    <nav class="navbar navbar-inverse contentNav">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <i class="glyphicon glyphicon-save-file"></i> Download <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a id="downloadRecords" href="#">CSV</a></li>
-                    <li><a id="downloadRecordsJSON" href="#">JSON</a></li>
-                </ul>
             </div>
-            {{/if}}
-            <!---->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                {{#if createNewBtn}}
+                <ul class="nav navbar-nav">
+                    <li><a href="#" data-target="#createRecordModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> New Record</a></li>
+
+
+                </ul>
+                
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> More<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" id="genReport"><i class="glyphicon glyphicon-folder-close"></i> View Report</a></li>
+                            <li role="separator" class="divider"></li>
+                         
+                            <li><a id="downloadRecords" href="#"><i class="fa fa-table"></i> Download CSV</a></li>
+                            <li><a id="downloadRecordsJSON" href="#"><i class="fa">{..}</i> Download JSON</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a class="uploadISRID" href="#"> <i class="glyphicon glyphicon-export"></i> Export to ISRID</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                {{/if}}
+            </div>
         </div>
-        {{/if}}
-    </ul>
-    <div class="tab-content admin pad1">
+    </nav>
+
+    <div class="tab-content content-scrollable pad2" style="top:50px;">
         {{#if userAlert}}
         <div class="fullScreen strong text-center">
         </div>
@@ -84,7 +79,7 @@
         <!---->
         {{#unless canCreateNewRecords}}
         <p class="text-center text-warning">Agency Profile must be setup by Admin to begin creating records</p>
-        {{/unless}}
-        {{#if createNewBtn}}<button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>{{/if}}
+        {{/unless}} {{#if createNewBtn}}
+        <button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>{{/if}}
     </div>
 </template>
