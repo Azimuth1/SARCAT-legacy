@@ -3,24 +3,16 @@
 set -e -u
 set -o pipefail
 
+architecture=os.windows.x86_32
+platformMongo=mongodb-win32-i386-3.0.4-signed.msi
+platformNode=node-v0.10.36-x86.msi
 
 
-# OS X
-#meteor admin get-machine os.osx.x86_64
-# Linux on 64-bit Intel
-#meteor admin get-machine os.linux.x86_64
-# Linux on 32-bit Intel
-#meteor admin get-machine os.linux.x86_32
-# Windows on 32-bit
-#os.windows.x86_32
 
 
-architecture=os.osx.x86_64
-platformMongo=mongodb-osx-x86_64-3.0.4.tgz
-platformNode=node-v0.10.36-darwin-x64.tar.gz
-#architecture=os.windows.x86_32
-#platformMongo=mongodb-win32-i386-3.0.4.zip
-#platformNode=node-v0.10.36-darwin-x64.tar.gz
+
+
+
 #Root directory
 home=$(pwd)
 
@@ -59,22 +51,19 @@ cp run.sh $dest
 
 
 echo "creating mongodb"
-tar -zxvf $build/$platformMongo
-#unzip $build/$platformMongo
 mkdir -p $dest/bin/mongodb
-cp -R -n $platformMongo/. $dest/bin/mongodb
-rm -rf $platformMongo
+cp -R -n $build/$platformMongo $dest/bin/mongodb
 
 
 
 echo "creating node"
-tar -zxvf $build/$platformNode
-#unzip $build/node-v0.10.36-darwin-x64.tar.gz
 mkdir -p $dest/bin/node
-cp -R -n node-v0.10.36-darwin-x64/. $dest/bin/node
-rm -rf node-v0.10.36-darwin-x64
-node=$dest/bin/node/bin/node
-npm=$dest/bin/node/bin/npm
+cp -R -n $build/$platformNode $dest/bin/node
+
+
+
+
+ 
 
 echo "creating sarcat from meteor"
 cd meteor
@@ -102,17 +91,10 @@ rm meteor.tar.gz
 echo "installing node dependencies"
 
 cd app/programs/server
-$npm install
+npm install
 
 chmod 777 *
 
 cd $home
 
-tar -zcvf $architecture.tar.gz dist
-mv $architecture.tar.gz build
-
-
-#$node dist/index.js
-
-
-
+zip -r build/$architecture.zip dist

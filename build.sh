@@ -4,32 +4,11 @@ set -e -u
 set -o pipefail
 
 
-
-# OS X
-#meteor admin get-machine os.osx.x86_64
-# Linux on 64-bit Intel
-#meteor admin get-machine os.linux.x86_64
-# Linux on 32-bit Intel
-#meteor admin get-machine os.linux.x86_32
-# Windows on 32-bit
-#os.windows.x86_32
-
-
-#architecture=os.osx.x86_64
-#platformMongoName=mongodb-osx-x86_64-3.0.4
-#platformMongo=$platformMongoName.tgz
-#platformNodeName=node-v0.10.36-darwin-x64
-#platformNode=$platformNodeName.tar.gz
-
-
-
-architecture=os.windows.x86_32
-platformMongoName=mongodb-win32-i386-3.0.4
-platformMongo=$platformMongoName.zip
+architecture=os.osx.x86_64
+platformMongoName=mongodb-osx-x86_64-3.0.4
+platformMongo=$platformMongoName.tgz
 platformNodeName=node-v0.10.36-darwin-x64
 platformNode=$platformNodeName.tar.gz
-
-
 
 
 
