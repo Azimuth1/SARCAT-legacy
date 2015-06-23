@@ -34,6 +34,8 @@ body {
 }
 
 #content-container {
+    background-color: @color-navyBlue;
+    .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));
     .position(absolute, 0, 0, 0, 0);
     .transition(all 200ms ease-out);
     .transform(translate3d(0, 0, 0));
@@ -50,8 +52,8 @@ body {
         .position(absolute, 0, 0, 0, 0);
         //overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        background-color: @color-navyBlue;
-        .background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));
+        //background-color: @color-navyBlue;
+        //.background-image( linear-gradient(top, @color-navyBlue, @color-blue 100%));
     }
     // Toggle menu on mobile
     .menu-open & {
@@ -93,11 +95,11 @@ body {
 
 .agencyLogo {
     @media screen and (min-width: 40em) {
-        float: right;
         margin-top: 10px;
         img {
             border: 4px solid @color-light;
-            max-width: 100%
+            max-width: 200px;
+            max-height: 200px;
         }
     }
 }

@@ -3,20 +3,25 @@ var genList = function(records) {
         return;
     }
     return records.map(function(data) {
-        d = data;
         if (!data) {
             return {};
         }
-        displayData = _.chain(d)
+        var displayData = _.chain(data)
             .map(function(val, schema1) {
-                var ignore = ['_id', ''];
+                var ignore = ['_id', 'subjects', 'resourcesUsed'];
                 if (ignore.indexOf(schema1) !== -1) {
                     return;
                 }
                 if (typeof(val) === 'string') {
                     return;
                 }
-                // if(schema1!=='findLocation'){return;}
+
+
+                //if(val.intendedRoute){return;}
+                //delete val.intendedRoute;
+
+
+
                 var check = Schemas[schema1] || {};
                 var schema = check._schema || {};
                 var sar = Schemas.SARCAT._schema || {};
@@ -24,6 +29,12 @@ var genList = function(records) {
                 var results = _.map(val, function(d, e) {
                     var labelCheck = schema[e] || {};
                     var label = labelCheck.label || e;
+
+                    if (typeof(d) === 'object') {
+                        d = _.map(d, function(d, e) {
+                            return e + ':' + d
+                        }).join(',');
+                    }
                     return {
                         key: label,
                         parent: parent,
@@ -36,9 +47,9 @@ var genList = function(records) {
             .compact()
             .value();
 
-        //var subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
-        //var resources2 = resourceArrayForm(data);
-        //displayData = _.flatten([subjects2, resources2, displayData]);
+        var subjects2 = subjectArrayForm(flatten(data, {}), 'subject', 'Subjects');
+        var resources2 = resourceArrayForm(data);
+        displayData = _.flatten([subjects2, resources2, displayData]);
         displayData2 = _.chain(displayData)
             .groupBy('parent')
             .map(function(d, e) {
@@ -55,33 +66,24 @@ var genList = function(records) {
         };
     });
 };
+
+Template.reportMap.onRendered(function() {
+    reportSetMap(this.data, $('.aa')[0]);
+});
+
+
 Template.report.onCreated(function() {
     Session.set('userView', 'report');
-
-
 });
 Template.report.onRendered(function() {
     var stats = genList(this.data);
     Session.set('stats', stats);
-    if (!stats || !stats.length) {
-      //  return;
-    }
-    stats.forEach(function(d) {
-        if (!$('#' + d._id)[0]) {
-            console.log('no')
-           // return;
-        }
-        reportSetMap(d);
-    });
 });
 Template.report.helpers({
     stats: function() {
-        //console.log( Session.get('stats'))
         return Session.get('stats');
     },
     hasStats: function() {
-        //console.log(hasStats);
-        //return false;
         var _stats = Session.get('stats');
         var hasStats = _stats && _stats.length ? true : false;
 
@@ -479,11 +481,12 @@ var subjectArrayForm = function(flatData, name, parent) {
         })
         .value();
 };
-var reportSetMap = function(record) {
+var reportSetMap = function(record, id) {
+
     var d = record.record;
     var geojson;
     var obj = {};
-    var map = L.map(record._id);
+    var map = L.map(id);
     obj.map = map;
     map.scrollWheelZoom.disable();
     var defaultLayers = Meteor.settings.public.layers;
@@ -496,7 +499,7 @@ var reportSetMap = function(record) {
         .addTo(map);
     var bounds = boundsString2Array(Session.get('bounds'));
     map.fitBounds(bounds);
-    
+
     var mapPoints = [{
         val: "ippCoordinates",
         name: "coords.ippCoordinates",
@@ -547,12 +550,9 @@ var reportSetMap = function(record) {
     layerGroup = L.featureGroup();
     layerGroups = mapPoints.map(function(d) {
         var geojson = L.geoJson(null, {
-            /*style: function() {
-                return d.style;
-            },*/
             pointToLayer: function(feature, latlng) {
                 if (feature.properties.field.type === 'path') {
-                    console.log(d)
+                    
                     color = d.path.stroke;
                     var polyline = L.polyline(latlng, {
                         color: color,
@@ -562,7 +562,7 @@ var reportSetMap = function(record) {
                     });
                     return polyline;
                 } else {
-                    //console.log(d)
+                
                     var myIcon = L.AwesomeMarkers.icon({
                         icon: d.icon,
                         prefix: 'fa',
@@ -610,7 +610,9 @@ var reportSetMap = function(record) {
             }
         });
     }
+
     mapPoints.forEach(function(feature) {
+
         var coords = d.coords[feature.val];
         if (coords && coords.lng && coords.lat) {
             layerGroups[feature.val].addData({
@@ -625,11 +627,13 @@ var reportSetMap = function(record) {
                     'coordinates': [coords.lng, coords.lat]
                 }
             });
-        } else if (feature.path) {
-            coords = JSON.parse(coords)
-                .map(function(item, i) {
-                    return [item[1], item[0]];
-                });
+        } else if (coords && feature.path) {
+
+            coords = JSON.parse(coords);
+
+            coords = coords.map(function(item, i) {
+                return [item[1], item[0]];
+            });
 
             layerGroups[feature.val].addData({
                 'type': 'Feature',
@@ -643,13 +647,17 @@ var reportSetMap = function(record) {
                     'coordinates': coords
                 }
             });
+        } else {
+           // console.log(feature.val)
+            return;
         }
     });
+
     //});
     var layerGroupBounds = layerGroup.getBounds();
     if (Object.keys(layerGroupBounds)
         .length) {
-        map.fitBounds(layerGroupBounds);
+        map.fitBounds(layerGroupBounds.pad(0.5));
     }
     layerGroup.addTo(map);
     return obj;
