@@ -1,18 +1,16 @@
 {
     "config": {
+        "bounds": "-143.61328125,11.350796722383684,106.34765625,62.99515845212052",
         "measureUnits": "US",
         "agencyProfile": {
-            "organization": "Azimuth1",
-            "country": "United States",
-            "street": "123 Main St",
-            "city": "Vienna",
-            "state-province": "VA",
-            "phoneNum": "7036290113"
-        },
-        "initSetup": false,
-        "agencyLogo": "main_logo.png",
-        "bounds": "-77.20178604125977,38.92603032348312,-77.0309829711914,38.992771545293564",
-        "measureUnits": "US"
+            "organization": "",
+            "country": "",
+            "street": "",
+            "city": "",
+            "state-province": "",
+            "county": "",
+            "phoneNum": ""
+        }
     },
     "private": {
         "defaultUser": {
@@ -20,14 +18,14 @@
             "password": "admin",
             "username": "Kyle K"
         },
-        "sarcatServer":"http://spa.tial.ly:5000",
-        "port":4000
+        "sarcatServer": "http://localhost:5000"
     },
     "public": {
         "layers": {
             "MapQuest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
             "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            "MapQuest Aerial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg"
+            "MapQuest Aerial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg",
+            "SARTOPO": "http://s3-us-west-1.amazonaws.com/caltopo/topo/{z}/{x}/{y}.png"
         },
         "package": {
             "name": "SARCAT",

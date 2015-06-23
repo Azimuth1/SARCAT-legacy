@@ -10,8 +10,7 @@
     "type": "git",
     "url": "git://github.com/Azimuth1/SARCAT.git"
   },
-  "bin": {
-  },
+  "bin": {},
   "main": "./index.js",
   "scripts": {
     "start": "node index.js dist/app/main.js",
@@ -28,8 +27,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "request": "^2.58.0"
   },
   "preferGlobal": true,
   "private": true
 }
-
