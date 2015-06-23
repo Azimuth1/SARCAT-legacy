@@ -1,13 +1,13 @@
+<template name="reportMap">
+    <div class="aa" style="width:100%;height:300px"></div>
+</template>
 <template name="report">
     <div class="content-scrollable pad2">
         <h3 class="panel-title text-center text-uppercase text-light">Record Report</h3>
         <div class="row">
-            {{#if hasStats}} 
-
             {{#each stats}}
-            <div class="white-border col-sm-12 pad00 mar2y">
-                <div id='{{this._id}}' style="width:100%;height:300px"></div>
-                {{#each this.data}}
+            <div class="white-border col-sm-12 pad00 mar2y white">
+                {{>reportMap this}} {{#each this.data}}
                 <div class="statInfo">
                     <div class="chartTitle">{{this.field}}</div>
                     <div class="cont">
@@ -21,9 +21,7 @@
                 </div>
                 {{/each}}
             </div>
-            {{/each}} 
-
-            {{/if}}
+            {{/each}}
         </div>
         <hr>
     </div>

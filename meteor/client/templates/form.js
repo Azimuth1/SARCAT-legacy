@@ -702,15 +702,12 @@ Template.form.events({
         var id = Session.get('record')
             ._id;
         Meteor.call('setWeather', id, function(err, d) {
-            console.log(err, d)
+
             if (err) {
-                console.log(err);
-                /*Meteor.call('updateConfig', {
-                    weatherAPI: false
-                }, function(err, d) {})
                 $(event.target)
                     .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
-                */
+
+
                 return console.log(err);
             } else {}
         });
@@ -833,12 +830,12 @@ Records.before.update(function(userId, doc, fieldNames, modifier, options) {
                     name: d
                 }
             });
-            console.log(fields)
+        console.log(fields)
         _.each(fields, function(d) {
             if (_.contains(hide, d.field)) {
                 console.log(d)
-                /*console.log(d.name,CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
-                    .toString())*/
+                    /*console.log(d.name,CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
+                        .toString())*/
                 modifier.$set[d.name] = CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
                     .toString();
             }

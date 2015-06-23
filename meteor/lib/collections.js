@@ -1,16 +1,6 @@
 Records = new Mongo.Collection('records');
 RecordsAudit = new Mongo.Collection('recordsAudit');
-/*Mongo.Collection.intercept.init(Records);
-Records._encrypted_fields({
-    'message': {
-        princ: 'roomprinc',
-        princtype: 'room',
-        auth: ['_id']
-    }
-});
-Records._immutable({
-    roomprinc: ['rID', 'roomTitle', '_id']
-});*/
+
 Config = new Mongo.Collection('config');
 Records.lastRecord = function(type) {
     var lastRecords = Records.find({}, {
@@ -158,21 +148,6 @@ Schemas.admin = new SimpleSchema({
             if (this.isInsert) {
                 return Meteor.user()
                     .emails[0].address;
-            }
-        }
-    },
-    phonenum: {
-        type: String,
-        label: 'Phone #',
-        optional: true,
-        autoform: {
-            omit: true
-        },
-        autoValue: function() {
-            if (this.isInsert) {
-                //var config = Config.findOne();
-                return Config.findOne()
-                    .agencyProfile.phoneNum;
             }
         }
     }
@@ -1453,14 +1428,14 @@ Schemas.agencyProfile = new SimpleSchema({
             return d.country;
         })
     },
-    street: {
-        type: String,
-        label: 'Street',
-        defaultValue: ''
-    },
     'city': {
         type: String,
         label: 'City',
+        defaultValue: ''
+    },
+    street: {
+        type: String,
+        label: 'Street',
         defaultValue: ''
     },
     'state-province': {
