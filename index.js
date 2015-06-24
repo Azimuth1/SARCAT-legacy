@@ -163,6 +163,7 @@ function tryapp() {
 
 
 //lsof -i -P | grep -i "listen"
+
 //kill -9
 //show dbs
 //use myproject
