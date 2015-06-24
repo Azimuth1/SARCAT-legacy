@@ -18,7 +18,7 @@
             "password": "admin",
             "username": "Kyle K"
         },
-        "sarcatServer": "http://spa.tial.ly:5000",
+        "sarcatServer": "http://spa.tial.ly:5000"
     },
     "public": {
         "layers": {

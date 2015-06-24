@@ -137,20 +137,6 @@ em {
     border-radius: 0;
 }
 
-.reactive-table thead .sortable,
-.reactive-table-add-column thead {
-    cursor: pointer;
-    color: @color-light;
-    text-transform: uppercase;
-}
-
-.reactive-table-navigation {
-    color: #fff;
-    .form-control {
-        padding: 5px;
-    }
-}
-
 .afTablePane table td {
     border: 1px solid #018996 !important;
     cursor: pointer;
@@ -711,9 +697,7 @@ a {
     border: none!important;
 }
 
-#recordss .col-md-6 {
-
-}
+#recordss .col-md-6 {}
 
 .statInfo,
 #dateChart,
@@ -737,7 +721,6 @@ a {
     text {
         font-size: 1em;
         fill: #A2D9E7;
-  
     }
     .axis {
         font: 10px sans-serif;
@@ -757,30 +740,25 @@ a {
     }
     .x.axis text {
         fill: #a2d9e7;
-       
     }
     .barText {
         fill: #a2d9e7;
-      
     }
     .title {
         font-size: 14px;
         font-weight: bold;
         fill: #cb812a;
         text-transform: uppercase;
-       
     }
     .x_label {
         font-size: 1.4em;
         fill: #A2D9E7;
         font-family: Verdana, Geneva, sans-serif;
-       
     }
     .y_label {
         font-size: 1.4em;
         fill: #A2D9E7;
         font-family: Verdana, Geneva, sans-serif;
-       
     }
     .tooltips {
         text-anchor: middle;
@@ -789,7 +767,6 @@ a {
         font-weight: bold;
         fill: #fff;
     }
-   
 }
 
 #recordsResources svg {
@@ -1162,13 +1139,46 @@ btn.btn-success {
     border: none;
     border-bottom: 1px solid @color-light;
     background: @color-navyBlue;
+    border-radius: 0;
     img {
         max-height: 42px;
         border: 1px solid #fff;
     }
 }
 
-table.reactive-table,
+.reactive-table-options,
+.reactive-table-filter {
+    padding: 0;
+}
+
+
+.btn-file {
+display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+  cursor:pointer;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+
 .table {
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
     color: @color-greenish;
@@ -1190,14 +1200,19 @@ table.reactive-table,
     }
     tbody tr {
         border-color: @color-navyBlue;
-    }
-    tbody td {
         background-color: @color-white;
         color: @color-blue;
+    }
+    tbody tr:hover {
+        background-color: @color-turq;
+        color: @color-white;
+        cursor: pointer;
+    }
+    tbody td {
         border-color: @color-light;
         padding: 1px;
         vertical-align: middle;
-        cursor: pointer;
+        
     }
     .form-group {
         margin: 0;

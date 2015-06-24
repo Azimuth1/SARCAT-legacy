@@ -1,49 +1,43 @@
 <template name="admin">
     {{#if isInRole 'admin'}}
 
-
-
-
-
-
-
     <nav class="navbar navbar-inverse contentNav">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+        <div class="container-fluid">
+       
+    <div class="page auth">
+        <nav class="hidden-print">
+            <div class="nav-group">
+                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
+            </div>
+        </nav>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-
-
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+         
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav" role="tablist">
                     <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
                     <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
                     <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
-                    <li class="pull-right">
-                        <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
-                    </li>
+                   
                 </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-
-
-
-
-<!--
+                <ul class="nav navbar-nav navbar-right">
+                 <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <!--
 
     <nav class="navbar navbar-fixed-top hidden-print" style="border-bottom:1px solid #fff">
         <div class="fixed-container pad2x">
@@ -68,7 +62,6 @@
         </div>
     </nav>
 -->
-
     <div class="tab-content content-scrollable pad2" style="top:50px;">
         <div role="tabpanel" class="tab-pane active pad00" id="profile">
             <div class="_panel {{profileIncomplete}}">

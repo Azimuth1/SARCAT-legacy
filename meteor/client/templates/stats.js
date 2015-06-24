@@ -259,7 +259,7 @@ var chartStats = function(records) {
             .append('div')
             .attr('class', klass)
             .append('div')
-            .attr('class', 'mar0x mar1y');
+            .attr('class', 'mar0x mar1y text-center');
         var width1 = parseInt(container.style('width'));
         width = width1 - margin.left - margin.right;
         height = 300 - margin.top - margin.bottom;

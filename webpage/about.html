@@ -5,110 +5,91 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <meta name="description" content="SARCAT">
+    <meta name="author" content="Azimuth1.com">
     <title>SARCAT</title>
-    <link href="styles/styles.css" rel="stylesheet">
+    <script src="libs/jquery.min.js"></script>
+    <script src="main.js"></script>
+    <script>
+    $(function() {
+        $("#header").load("templates/header.html");
+        $("#footer").load("templates/footer.html");
+    });
+    </script>
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">SARCAT</a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="download.html">Download</a></li>
-                    <li><a href="hosting.html">Plans</a></li>
-                    <li><a href="docs.html">Docs</a></li>
-                    <li><a href="about.html">About</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <!--<li>
-                        <a href="https://twitter.com/sarcat">Twitter
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>-->
-                    <li>
-                        <a href="https://github.com/Azimuth1/SARCAT">Github
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-                </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div id="header">
+    </div>
     <div class="container">
-        <h1>About SARCAT</h1>
-        <p class="lead">
-            <p>Search and Rescue Collection &amp; Analysis Tool (SARCAT) is a web-hosted application that simplifies the collection and analysis of your team’s or agencies SAR data. Its goal is simple; make the collection of data easy, accurate, and standardized. This is accomplished with smartforms, auto-calculations, and an intuitive user inter- face. The user then reaps the benefits with built in data analysis, reporting, mapping, and the ability to contribute to ISRID. In this way, all SAR providers help each other.</p>
-            <h2 id="key-features">Key Features</h2>
-            <ul>
-                <li>
-                    <p><em>World-wide map interface with topographic, street, and aerial imagery. Simply drag icons onto the map to mark key locations (Initial Planning Point, Incident Location, Find Location, decision points, revised PLS/LKP, intended and actual route). </em></p>
-                </li>
-                <li>
-                    <p><em>Smartforms adapts to information being entered, reducing the amount of data entry.</em></p>
-                </li>
-                <li>
-                    <p><em>“Auto-calculation” based upon previous data; weather, ecoregion, elevation, dispersion, and spatial data automatically entered and calculated.</em></p>
-                </li>
-                <li>
-                    <p><em>Browser interface can be opened from any desktop, laptop, or tablet.</em></p>
-                </li>
-                <li>
-                    <p><em>Administrative functions provide user control, customization of data fields, and preferences.</em></p>
-                </li>
-                <li>
-                    <p><em>Security features include user authentication with password encryption, NOSQL database logs all data entry, versioned database in case of accidental deletion, event log,optional personally identifiable information, if enabled, is encrypted</em></p>
-                </li>
-                <li>
-                    <p><em>Visualize your data with built in dashboards, analysis tools, maps, and reports.</em></p>
-                </li>
-                <li>
-                    <p><em>Download your data into other programs. Export your data easily into ISRID.</em></p>
-                </li>
-                <li>
-                    <p><em>Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams.</em></p>
-                </li>
-            </ul>
+        <p><em>This documentation is a work in progress. Many parts are incomplete at the moment. Additional documentation is coming very soon.</em></p>
+        <p>
+            <a href="https://github.com/Azimuth1/SARCAT/blob/master/meteor/public/icon.png?raw=true" target="_blank"><img src="https://github.com/Azimuth1/SARCAT/raw/master/meteor/public/icon.png?raw=true" alt="alt tag" style="max-width:100%;"></a>
         </p>
+        <h1><a id="user-content-sarcat" class="anchor" href="#sarcat" aria-hidden="true"><span class="octicon octicon-link"></span></a>SARCAT</h1>
+        <p>Search and Rescue Collection &amp; Analysis Tool (SARCAT) is a web-hosted application that simplifies the collection and analysis of your team’s or agencies SAR data. Its goal is simple; make the collection of data easy, accurate, and standardized. This is accomplished with smartforms, auto-calculations, and an intuitive user inter- face. The user then reaps the benefits with built in data analysis, reporting, mapping, and the ability to contribute to ISRID. In this way, all SAR providers help each other.</p>
+        <h2><a id="user-content-key-features" class="anchor" href="#key-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Features</h2>
+        <ul>
+            <li>
+                <p>World-wide map interface with topographic, street, and aerial imagery. Simply drag icons onto the map to mark key locations (Initial Planning Point, Incident Location, Find Location, decision points, revised PLS/LKP, intended and actual route). _</p>
+            </li>
+            <li>
+                <p><em>Smartforms adapts to information being entered, reducing the amount of data entry.</em></p>
+            </li>
+            <li>
+                <p><em>“Auto-calculation” based upon previous data; weather, ecoregion, elevation, dispersion, and spatial data automatically entered and calculated.</em></p>
+            </li>
+            <li>
+                <p><em>Browser interface can be opened from any desktop, laptop, or tablet.</em></p>
+            </li>
+            <li>
+                <p><em>Administrative functions provide user control, customization of data fields, and preferences.</em></p>
+            </li>
+            <li>
+                <p><em>Security features include user authentication with password encryption, NOSQL database logs all data entry, versioned database in case of accidental deletion, event log,optional personally identifiable information, if enabled, is encrypted</em></p>
+            </li>
+            <li>
+                <p><em>Visualize your data with built in dashboards, analysis tools, maps, and reports.</em></p>
+            </li>
+            <li>
+                <p><em>Download your data into other programs. Export your data easily into ISRID.</em></p>
+            </li>
+            <li>
+                <p><em>Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams.</em></p>
+            </li>
+        </ul>
+        <hr>
+      
         <div class="row">
             <div class="col-md-12 text-center">
                 <div class="section-title col-md-8 col-md-offset-2">
                     <h1 class=" title-heading fit-text " style="font-size: 30px;">Contact Us</h1>
                 </div>
             </div>
-            <div class="col-md-12 text-center">
-                <address>
-                    contact@azimuth1.com
-                    <br> 501 Church St, NE
-                    <br> Suite 300
-                    <br> Vienna, VA 22180
-                </address>
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <address>
+                        Azimuth1
+                        <br> contact@azimuth1.com
+                        <br> 501 Church St, NE
+                        <br> Suite 300
+                        <br> Vienna, VA 22180
+                    </address>
+                </div>
+                <div class="col-md-6 text-center">
+                    <address>
+                        dbS Productions info@dbs-sar.com
+                        <br>+1.434.293.5502
+                        <br> dbS Productions
+                        <br>P.O. Box 94
+                        <br>University Station, Charlottesville, VA
+                        <br> 22902
+                    </address>
+                </div>
             </div>
         </div>
-        <footer class="footer">
-            <p>&copy; Azimuth1 2015</p>
-        </footer>
+    </div>
+    <div id="footer">
     </div>
 </body>
 

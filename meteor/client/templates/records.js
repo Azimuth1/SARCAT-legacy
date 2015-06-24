@@ -1,4 +1,8 @@
 var mapDrawn;
+
+
+
+
 var getSelectedRecords = function() {
     return $('.recordSel:checked')
         .map(function() {
@@ -253,7 +257,7 @@ Template.records.events({
         });
         var toUpload = {
             data: allRecords,
-            profile: Session.get('config')
+            profile: Session.get('config').agencyProfile
         };
         var r = confirm('Are you sure you want to upload ' + allRecords.length + ' records to ISRID Database?');
         if (!r) {
@@ -261,9 +265,9 @@ Template.records.events({
         }
         Meteor.call('uploadISRID', {
             data: toUpload
-        }, function(err) {
+        }, function(err,d) {
             if (err) {
-                return alert('Oops - there seems to be a problem uploading your data. \nPlease try again later or you may email a downloaded JSON to data@sarcat.com.');
+                return alert('Oops - there seems to be a problem uploading your data. \nPlease try again later');
             }
             return Session.set('userAlert', {
                 error: false,
@@ -272,7 +276,7 @@ Template.records.events({
         });
     },
     'click #genReport': function() {
-         event.preventDefault();
+        event.preventDefault();
         var checked = $('.recordSel:checked')
             .map(function() {
                 return this.value;
@@ -357,6 +361,41 @@ Template.records.events({
         JSONToCSVConvertor(allRecordsFlat, 'SARCAT EXPORT-' + new Date()
             .toLocaleString());
     },
+
+
+
+
+    'change .btn-file :file': function(evt) {
+
+
+
+
+
+
+        i = this;
+
+
+
+        var files = evt.target.files; // FileList object
+        f = files[0];
+        var reader = new FileReader();
+        reader.onload = (function(theFile) {
+            return function(e) {
+                JsonObj = e.target.result
+                var parsedJSON = JSON.parse(JsonObj);
+
+
+                Meteor.call('importRecords', parsedJSON, function(error) {
+                    if (error) {
+                        return console.log(error);
+                    }
+                });
+            };
+        })(f);
+        reader.readAsText(f, 'UTF-8');
+
+
+    },
     'click #downloadRecordsJSON': function() {
         var checked = $('.recordSel:checked')
             .map(function() {
@@ -379,9 +418,7 @@ Template.records.events({
                 }
             })
             .fetch();
-        var allRecordsFlat = allRecords.map(function(d) {
-            return flatten(d, {});
-        });
+        var allRecordsFlat = allRecords
         var JSONConvertor = function(JSONData, ReportTitle) {
             var fileName = ReportTitle.replace(/ /g, '_');
             var uri = 'data:text/csv;charset=utf-8,' + escape(JSON.stringify(JSONData));

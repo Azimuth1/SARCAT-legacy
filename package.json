@@ -13,10 +13,12 @@
   "bin": {},
   "main": "./index.js",
   "scripts": {
-    "start": "node index.js dist/app/main.js",
-    "postinstall": "node scripts/run.js scripts/build.sh",
-    "build-platforms": "scripts/build-platforms.sh",
-    "meteor-run": "./scripts/run-mrt.sh"
+    "start": "node dist/app/main.js",
+    "postinstall":"./build.sh",
+    "startserver": "node scripts/server.js",
+    "build": "./build.sh",
+    "winbuild": "./winbuild.sh",
+    "linbuild": "./linbuild.sh"
   },
   "bugs": {
     "url": "https://github.com/Azimuth1/SARCAT/issues"
@@ -27,6 +29,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.13.1",
+    "express": "^4.13.0",
     "request": "^2.58.0"
   },
   "preferGlobal": true,

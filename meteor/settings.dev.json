@@ -1,15 +1,17 @@
 {
     "config": {
-        "bounds": "-143.61328125,11.350796722383684,106.34765625,62.99515845212052",
+        "bounds": "-77.1895980834961,38.92603032348312,-77.04317092895506,38.992771545293564",
         "measureUnits": "US",
         "agencyProfile": {
-            "organization": "",
-            "country": "",
-            "street": "",
-            "city": "",
-            "state-province": "",
-            "county": "",
-            "phoneNum": ""
+            "contactPerson": "Kyle Kalwarski",
+            "contactEmail": "kyle.kalwarski@azimuth1.com",
+            "organization": "Azimuth1",
+            "country": "United States",
+            "city": "Bethesda",
+            "street": "501 Church St Ne",
+            "state-province": "Virginia",
+            "phoneNum": "7030000000",
+            "county-region": "Fairfax"
         }
     },
     "private": {
@@ -35,4 +37,3 @@
         }
     }
 }
-
