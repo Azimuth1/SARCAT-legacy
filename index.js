@@ -1,7 +1,7 @@
 var config = require('./config.json');
 var METEOR_SETTINGS = require('./settings.json');
 var spawn = require('child_process').spawn;
-
+var fs = require('fs');
 
 
 
@@ -66,10 +66,42 @@ env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
 
 var dbRunning;
 var appRunning;
+
+
+
+function getUserHome() {
+    return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+
+var databaseDir = config.databaseDir || getUserHome();
+console.log(databaseDir)
+var databaseName = config.databaseName || 'sarcatdb';
+var sarcatdb = databaseDir + '/' + databaseName;
+console.log('creating sarcatDB: ' + sarcatdb);
+
+
+
+if (!fs.existsSync(sarcatdb)) {
+    fs.mkdirSync(sarcatdb);
+}
+var mongod = 'mongod';
+if (fs.existsSync(__dirname + '/' + 'bin/mongodb/bin/mongod')) {
+    mongod = __dirname + '/' + 'bin/mongodb/bin/mongod';
+}
+
+node = 'node';
+if (fs.existsSync(__dirname + '/' + 'bin/node/bin/node')) {
+    node = __dirname + '/' + 'bin/node/bin/node';
+}
+
+
+
+
 //var file = path.resolve(process.argv[2]);
 function runapp() {
 
-    var startSARCAT = spawn(__dirname + '/' + 'bin/node/bin/node', [__dirname + '/app/main.js'], {
+    var startSARCAT = spawn(node, [__dirname + '/app/main.js'], {
         env: env
     });
     startSARCAT.stdout.on('data', function(data) {
@@ -87,8 +119,7 @@ function runapp() {
 
 
 
-
-var startDB = spawn(__dirname + '/' + 'bin/mongodb/bin/mongod', ['--dbpath', __dirname + '/' + config.databaseName]);
+var startDB = spawn(mongod, ['--dbpath', sarcatdb]);
 
 startDB.stdout.on('data', function(data) {
     console.log('stdout: ' + data);
