@@ -16,5 +16,5 @@ npm-debug.log
 
 
 build/libs/*
-sarcat
-
+dist
+allbuilds

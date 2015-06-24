@@ -3,9 +3,11 @@
 set -e -u
 set -o pipefail
 
-architecture=os.windows.x86_32
-platformMongo=mongodb-win32-i386-3.0.4-signed.msi
-platformNode=node-v0.10.36-x86.msi
+architecture=os.windows.x86_64
+platformMeteor=os.windows.x86_32
+platformMongoName=mongodb-win32-x86_64-3.0.4
+platformMongo=$platformMongoName.zip
+platformNode=node.exe
 
 
 #Root directory
@@ -15,18 +17,16 @@ home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
 
 #dest folder
-dest=$(pwd)"/sarcat"
+dest=$(pwd)"/allbuilds/"$architecture"/"sarcat
 
 
 
 #clear dest folder if it exists
 rm -rf $dest
-
+rm -rf $home/build/sarcat-$architecture.zip
 
 #create new destination folder
-mkdir $dest
-
-
+mkdir -p $dest
 #creat /bin for mongo & node
 mkdir $dest/bin
 
@@ -34,29 +34,14 @@ mkdir $dest/bin
 
 #copy settings from meteor directory
 cp meteor/settings.json $dest
-
 #copy env config file
 cp config/config.json $dest
-
 #copy scripts to run sarcat
 cp index.js $dest
-cp run.sh $dest
+
+echo '%CD%/bin/node/bin/node index.js' >$dest/run.bat
 
 
-echo "creating mongodb"
-mkdir -p $dest/bin/mongodb
-cp -R -n $build/$platformMongo $dest/bin/mongodb
-
-
-
-echo "creating node"
-mkdir -p $dest/bin/node
-cp -R -n $build/$platformNode $dest/bin/node
-
-
-
-
- 
 
 echo "creating sarcat from meteor"
 cd meteor
@@ -65,7 +50,7 @@ echo "resetting meteor"
 meteor reset
 
 echo "building meteor"
-meteor build --architecture $architecture $dest
+meteor build --architecture $platformMeteor $dest
 
 cd $dest
 
@@ -81,13 +66,50 @@ mv bundle app
 rm meteor.tar.gz
 
 
+
+
+
+
+
+
+
+
+echo "creating mongodb"
+tar -zxvf $build/$platformMongo
+#unzip $build/$platformMongo
+mkdir -p $dest/bin/mongodb
+cp -R -n $platformMongoName/. $dest/bin/mongodb
+rm -rf $platformMongoName
+
+
+
+
+echo "creating node"
+mkdir -p $dest/bin/node/bin
+cp -R -n $build/$platformNode $dest/bin/node/bin
+
+node=$dest/bin/node/bin/node
+npm=$dest/bin/node/bin/npm
+
+
+ 
+
+
+
+
 echo "installing node dependencies"
 
-cd app/programs/server
+cd $dest/app/programs/server
 npm install
 
 chmod 777 *
 
-cd $home
+cd $dest
+chmod 777 *
+cd ../
+chmod 777 *
 
-zip -r build/$architecture.zip sarcat
+zip -r sarcat-$architecture.zip sarcat
+
+mv sarcat-$architecture.zip $home/build
+

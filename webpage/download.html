@@ -23,134 +23,161 @@
     </div>
     <div class="container">
         <div class="row">
-            <p>Download the SARCAT source code or a pre-built installer for your platform.</p>
             <h3>Click your operating system below to begin downloading SARCAT</h3>
             <hr>
             <div class="col-md-4 text-center">
-                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT">
-                    <i class="fa fa-windows fa-2x pull-left" id="appVer">Windows</i>v0.1.0</a>
+                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="http://raw.githubusercontent.com/Azimuth1/SARCAT/master/build/sarcat-os.windows.x86_64.zip">
+                    <i class="fa fa-windows fa-2x _pull-left" id="appVer"> Windows </i>
+                    <br>
+                    <small class="_pull-left">sarcat-os.windows.x86_64.zip</small></a>
             </div>
             <div class="col-md-4 text-center">
-                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="https://github.com/Azimuth1/SARCAT/archive/v0.0.1.tar.gz">
-                    <i class="fa fa-apple fa-2x pull-left" id="appVer">Mac</i>v0.1.0</a>
+                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="http://raw.githubusercontent.com/Azimuth1/SARCAT/master/build/sarcat-os.osx.x86_64.tar.gz">
+                    <i class="fa fa-apple fa-2x _pull-left" id="appVer"> Mac </i>
+                    <br><small class="_pull-left">sarcat-os.windows.x86_64.zip</small></a>
             </div>
             <div class="col-md-4 text-center">
-                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT">
-                    <i class="fa fa-linux fa-2x pull-left" id="appVer">Linux</i>v0.1.0</a>
+                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="http://raw.githubusercontent.com/Azimuth1/SARCAT/master/build/sarcat-os.linux.x86_64.tar.gz">
+                    <i class="fa fa-linux fa-2x _pull-left" id="appVer"> Linux </i>
+                    <br><small class="_pull-left">sarcat-os.linux.x86_64.tar.gz</small></a>
             </div>
         </div>
-        <hr>
-        <h1 class="text-uppercase strong">Easy Install</h1>
-        <h2>Windows</h2>
-        <ol>
-            <li>Download SARCAT package</li>
-            <li>Place your File in a directory of your choice and unzip</li>
-            <li>Inside the directory, click <span class="strong orange">mongodb-win32-i386-3.0.4-signed.msi</span> to install MongoDB into <span class="orange em">sarcat/bin/mongodb</span></li>
-            <li>Inside the directory, click <span class="strong orange">node-v0.10.36-x86.msi</span> to install Node.js into <span class="orange em">sarcat/bin/node</span></li>
-            <li>On the bottom left corner of the screen, click <strong class="orange">Run</strong> and type <code>cmd</code> into the text input</li>
-            <li>Navigate to the SARCAT directory <span class="em"> (ex: dir C:\Program Files\sarcat)</span></li>
-            <li>Run SARCAT by typing <code>bin/node/bin/node index.js</code></li>
-        </ol>
-        <h2>Mac/Linux</h2>
-        <ol>
-            <li>Download SARCAT package</li>
-            <li>Place your File in a directory of your choice and unzip</li>
-            <li>Open you Terminal by typing <code>Terminal</code> into the search bar</li>
-            <li>Navigate to the SARCAT directory <span class="em"> (ex: cd /Users/KyleK/github/sarcat)</span></li>
-            <li>Run SARCAT by typing <code>./run.sh</code></li>
-        </ol>
-        <hr>
-        <h1 class="text-uppercase strong">Install Node & Mongo From Source</h1>
-        <h2>1. Install <a href="https://nodejs.org">Node.js</a> v0.10.6</h2>
-        <p>SARCAT is built with Meteor - which makes it fast and reliable. Meteor has been tested up to <a href="https://nodejs.org/">node</a> version 0.10.36. If you are building from source, <a href="https://github.com/creationix/nvm">NVM</a> is a great way to use bash scripting to manage multiple active node.js versions.</p>
-        <p><em>Just click the link and follow install instructions for your platform.</em></p>
-        <ul>
-            <li><a href="http://nodejs.org/dist/v0.10.36/node.exe">Node for Windows</a></li>
-            <li><a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg">Node for Mac</a></li>
-            <li><a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz">Node for Linux</a></li>
-        </ul>
-        <h2>2. Install <a href="https://www.mongodb.org/">MongoDB</a></h2>
-        <p>Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4.
-            <br>
-        </p>
-        <ul>
-            <li><a href="https://www.mongodb.org/downloads">Download Mongo Source now!</a></li>
-        </ul>
-        <p> Or if you like, Mongo has great documentation to walk you throgh the install and be up and running quickly!</p>
-        <li><a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/">Mongo for Windows</a></li>
-        <li><a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/">Mongo for Mac</a></li>
-        <li><a href="http://docs.mongodb.org/manual/administration/install-on-linux/">Mongo for Linux</a></li>
-        </ul>
-
-
-<h2>3. Install SARCAT Source</h2>
- 
-
-        <p><em>You can get the latest .zip <a href="https://github.com/Azimuth1/SARCAT/releases"> here</a></em></p>
-        <h4><em>Or use git </em></h4>
-        <div><pre>$ git clone https://github.com/Azimuth1/SARCAT.git</pre></div>
-
-
-
-
-
-   
-        <h2>4. Open Your Shell<br></h2>
-        <ul>
-            <li>For Windows, click <code>start</code>&gt;<code>run</code> and type <code>cmd</code>
-            </li>
-            <li>For Mac, search "Terminal" to open the shell.
-            </li>
-            <li>If you are using Linux, I think you probably know this step.
-            </li>
-        </ul>
-   
-        <h2>5. Install Dependencies<br></h2>
-       
-        <div><pre>$ npm install</pre></div>
-
-
-        <h2>6. Build<br></h2>
-         <ul>
-            <li>Windows: <pre>./build.bat</pre>
-            </li>
-            <li>Mac/Linux<pre>$ ./build.sh</pre>
-            </li>
-          
-
-        </ul>
-
-
-
-        <h2>7. Run SARCAT<br></h2>
-        <p>Run As a Meteor App</p>
-        <div><pre>$ cd meteor</pre> <pre>meteor --settings settings.json</pre></div>
-        <p>Or run as a node app:</p>
-        <pre>$ mongod --dbpath {{USERHOME}}/sarcatdb</pre>
-        <pre>$ node sarcat/app/main.js</pre>
-
-        <hr>
-        <h1>Troubleshooting</h1>
-        <p>SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.</p>
-        <ul>
-            <li>Ensure proper priveleges are set on your machine and install paths</li>
-            <li>If you have problems with the binary installs, try installing from source</li>
-            <li>Feel free to contact us with any question or concerns you may have. This is an open source project and we encourage collaboration in order to create the best product possible!</a>
-            </li>
-        </ul>
-        <h2>Officially supported platforms</h2>
-        <ul>
-            <li>Mac: OS X 10.7 and above</li>
-            <li>Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012</li>
-            <li>Linux: x86 and x86_64 systems</li>
-        </ul>
-        <h2>Dependencies</h2>
-        <ul>
-            <li>Node.js v0.10.6</li>
-            <li>MongoDB v3.0.4</li>
-        </ul>
-        <hr>
-        <!--
+        <div class="row">
+            <h1 class="text-uppercase strong">Easy Install</h1>
+            <h2>Windows</h2>
+            <ol>
+                <li>Download the latest version of SARCAT for Windows</li>
+                <!--<ul class="list-inline pad1">
+                    <li>
+                        <a href="http://raw.githubusercontent.com/Azimuth1/SARCAT/master/build/sarcat-os.windows.x86_64.zip">
+                            <img src="https://nodejs.org/images/platform-icon-win.png" height="50" width="45" alt=""> Windows
+                            <small>sarcat-os.windows.x86_64.zip</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://raw.githubusercontent.com/Azimuth1/SARCAT/master/build/sarcat-os.osx.x86_64.tar.gz">
+                            <img src="https://nodejs.org/images/platform-icon-osx.png" height="50" width="45" alt=""> Mac
+                            <small>sarcat-os.osx.x86_64.tar.gz-</small>
+                        </a>
+                    </li>
+                    <li id="source">
+                        <a href="http://raw.githubusercontent.com/Azimuth1/SARCAT/master/build/sarcat-os.linux.x86_64.tar.gz">
+                            <img src="https://nodejs.org/images/platform-icon-generic.png" height="50" width="45" alt=""> Linux
+                            <small>sarcat-os.linux.x86_64.tar.gz</small>
+                        </a>
+                    </li>
+                </ul>-->
+                <li>Extract the file contents you a directory in your home folder.</li>
+                <li>On the bottom left corner of the screen, click <strong class="orange">Run</strong> and type <code>cmd</code> into the text input</li>
+                <li>Navigate to the SARCAT directory <span class="em"> (ex: dir C:\Program Files\sarcat)</span></li>
+                <li>Run SARCAT by typing <code>run</code></li>
+            </ol>
+            <h2>Mac/Linux</h2>
+            <ol>
+                <li>Download the latest version of SARCAT for Mac</li>
+                <li>Extract the file contents you a directory in your home folder.</li>
+                <li>Open you Terminal by typing <code>Terminal</code> into the search bar</li>
+                <li>Navigate to the SARCAT directory <span class="em"> (ex: cd /Users/KyleK/github/sarcat)</span></li>
+                <li>Run SARCAT by typing <code>./run.sh</code></li>
+                 <li>It should be up and running at: <a href="http://localhost:3000">http://localhost:3000</a></code></li>
+            </ol>
+            <hr>
+            <hr>
+            <h1 class="text-uppercase strong">Advanced Install</h1>
+            <h3>1. Download <a href="https://nodejs.org">Node.js</a> v0.10.36</h3>
+            <p>SARCAT is built with Meteor - which makes it fast and reliable. Meteor has been tested up to <a href="https://nodejs.org/">node</a> version 0.10.36. If you are building from source, <a href="https://github.com/creationix/nvm">NVM</a> is a great way to use bash scripting to manage multiple active node.js versions.</p>
+            <h3>Installation Steps</h3>
+            <ol>
+                <li>Download the installer from Nodes.js®</li>
+                <ul class="list-inline pad1">
+                    <li>
+                        <a href="https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi">
+                            <img src="https://nodejs.org/images/platform-icon-win.png" height="50" width="45" alt=""> Windows Installer
+                            <small>node-v0.10.36-x86.msi</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg">
+                            <img src="https://nodejs.org/images/platform-icon-osx.png" height="50" width="45" alt=""> Macintosh Installer
+                            <small>node-v0.10.36.pkg</small>
+                        </a>
+                    </li>
+                    <li id="source">
+                        <a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz">
+                            <img src="https://nodejs.org/images/platform-icon-generic.png" height="50" width="45" alt=""> Source Code
+                            <small>node-v0.10.36.tar.gz</small>
+                        </a>
+                    </li>
+                </ul>
+                <li>Run the installer (the .msi/.pkg file you downloaded in the previous step.)</li>
+                <li>Follow the prompts in the installer (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).</li>
+            </ol>
+            <hr>
+            <h3>2. Download <a href="https://nodejs.org">MongoDB</a> v0.10.36</h3>
+            <p>Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4.
+            </p>
+            <h3>Installation Steps</h3>
+            <ul>
+                <li><a href="https://www.mongodb.org/downloads">Download Mongo Source now!</a></li>
+            </ul>
+            <p> Or if you like, Mongo has great documentation to walk you throgh the install and be up and running quickly!</p>
+            <ul>
+                <li><a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/">Mongo for Windows</a></li>
+                <li><a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/">Mongo for Mac</a></li>
+                <li><a href="http://docs.mongodb.org/manual/administration/install-on-linux/">Mongo for Linux</a></li>
+            </ul>
+            <hr>
+            <h2>3. Install SARCAT From Source</h2>
+            <p><em>You can get the latest .zip <a href="https://github.com/Azimuth1/SARCAT/releases"> here</a></em></p>
+            <h4><em>Or use git </em></h4>
+            <div><pre>$ git clone https://github.com/Azimuth1/SARCAT.git</pre></div>
+            <hr><h2>4. Open Your Shell<br></h2>
+            <ul>
+                <li>For Windows, click <code>start</code>&gt;<code>run</code> and type <code>cmd</code>
+                </li>
+                <li>For Mac, search "Terminal" to open the shell.
+                </li>
+                <li>If you are using Linux, I think you probably know this step.
+                </li>
+            </ul>
+           <hr> <h2>5. Install Dependencies<br></h2>
+            <div><pre>$ npm install</pre></div>
+           <hr> <h2>6. Build<br></h2>
+            <ul>
+                <li>Windows: <pre>./build.bat</pre>
+                </li>
+                <li>Mac/Linux<pre>$ ./build.sh</pre>
+                </li>
+            </ul>
+            <hr>
+            <h2>7. Run SARCAT<br></h2>
+            <p>Run As a Meteor App</p>
+            <div><pre>$ cd meteor</pre> <pre>meteor --settings settings.json</pre></div>
+            <p>Or run as a node app:</p>
+            <pre>$ mongod --dbpath {{USERHOME}}/sarcatdb</pre>
+            <pre>$ node sarcat/app/main.js</pre>
+            <hr>
+            <h1>Troubleshooting</h1>
+            <p>SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.</p>
+            <ul>
+                <li>Ensure proper priveleges are set on your machine and install paths</li>
+                <li>If you have problems with the binary installs, try installing from source</li>
+                <li>Feel free to contact us with any question or concerns you may have. This is an open source project and we encourage collaboration in order to create the best product possible!</a>
+                </li>
+            </ul>
+            <h2>Officially supported platforms</h2>
+            <ul>
+                <li>Mac: OS X 10.7 and above</li>
+                <li>Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012</li>
+                <li>Linux: x86 and x86_64 systems</li>
+            </ul>
+            <h2>Dependencies</h2>
+            <ul>
+                <li>Node.js v0.10.6</li>
+                <li>MongoDB v3.0.4</li>
+            </ul>
+            <hr>
+            <!--
                 <h2>Hosted Options</h2>
                 <p>*Don't want to manage you server? We can take care of all your hosting needs.</p>
                
@@ -164,19 +191,19 @@
             <h2>License</h2>
             <h2>Feedback</h2>
 -->
-        </article>
-        <script>
-        var OSName = "unknown OS";
-        if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
-        if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
-        if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
-        if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
-        //document.getElementById('appVer').innerText = OSName;
-        //$('#downloadSARCAT').attr('href', config.downloads[OSName]);
-        </script>
-    </div>
-    <div id="footer">
-    </div>
+            </article>
+            <script>
+            var OSName = "unknown OS";
+            if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
+            if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
+            if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+            if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
+            //document.getElementById('appVer').innerText = OSName;
+            //$('#downloadSARCAT').attr('href', config.downloads[OSName]);
+            </script>
+        </div>
+        <div id="footer">
+        </div>
     </div>
 </body>
 
