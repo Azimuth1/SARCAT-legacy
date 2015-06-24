@@ -21,10 +21,9 @@ home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
 
 #dest folder
-dest=$(pwd)"/dist"
+dest=$(pwd)"/sarcat"
 
-#sarcat database directory
-database=$dest/sarcatdb
+
 
 #clear dest folder if it exists
 rm -rf $dest
@@ -37,8 +36,7 @@ mkdir $dest
 #creat /bin for mongo & node
 mkdir $dest/bin
 
-#create database folder
-mkdir $database
+
 
 #copy settings from meteor directory
 cp meteor/settings.json $dest
@@ -87,7 +85,6 @@ tar -zxvf meteor.tar.gz
 
 echo "/bundle --> /app"
 mv bundle app
-
 #remove zip file
 rm meteor.tar.gz
 
@@ -101,7 +98,7 @@ chmod 777 *
 
 cd $home
 
-tar -zcvf $architecture.tar.gz dist
+tar -zcvf $architecture.tar.gz sarcat
 mv $architecture.tar.gz build
 
 
