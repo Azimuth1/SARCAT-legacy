@@ -12,36 +12,36 @@ Meteor.startup(function() {
         }
         console.log("Using [ " + environment + " ] Meteor.settings");
     */
-    console.log('starting mongo');
+    console.log('starting sarcat');
     var METEOR_SETTINGS = JSON.parse(process.env.METEOR_SETTINGS);
-    //var environment = process.env.NODE_ENV; // || "development";
-    //console.log('NODE_ENV: ' + environment);
-    //var settings = METEOR_SETTINGS[environment];
-    //Meteor.settings = settings;
-    //console.log(Object.keys(settings));
-    //return
+
     config = Config.findOne();
     if (!config) {
         console.log('config:false')
         var makeEncryptionID = function() {
-                var text = "";
-                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                for (var i = 0; i < 23; i++)
-                    text += possible.charAt(Math.floor(Math.random() * possible.length));
-                return text;
-            }
-            //encryptionKey = "adsffe534tryertrrtweGe";
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (var i = 0; i < 23; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
         encryptionKey = makeEncryptionID();
-        // if (!Meteor.users.find().count()) {
+
+
+
         console.log('Creating default admin user.');
         var admin = Accounts.createUser(Meteor.settings.private.defaultUser);
         Roles.addUsersToRoles(admin, ['admin']);
         console.log('saving settings.config to mongodb');
         Meteor.settings.config.encryptionKey = encryptionKey;
+
+
+
         Config.insert(Meteor.settings.config);
         config = Meteor.settings.config;
     }
-    console.log(config.encryptionKey)
+
     Meteor.settings.public.encryptionKey = config.encryptionKey;
     Meteor.settings.private.encryptionKey = config.encryptionKey;
     Accounts.config({
@@ -66,4 +66,6 @@ Meteor.startup(function() {
         },
         cacheTime: 100,
     });
+
+    console.log('sarcat running at: ' + process.env.ROOT_URL)
 });

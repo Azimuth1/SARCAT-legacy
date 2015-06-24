@@ -23,6 +23,13 @@
     </div>
     <nav class="navbar navbar-inverse contentNav">
         <div class="container-fluid">
+            <div class="page auth">
+                <nav class="hidden-print">
+                    <div class="nav-group">
+                        <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
+                    </div>
+                </nav>
+            </div>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
@@ -34,20 +41,33 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {{#if createNewBtn}}
                 <ul class="nav navbar-nav">
-                    <li><a href="#" data-target="#createRecordModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> New Record</a></li>
-
-
+                    <li><a href="#" class="strong" data-target="#createRecordModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> New Record</a></li>
+                    <!---->
+                    {{#if isInRole 'admin'}}
+                    <!---->
+                    {{#if selectedRecords}}
+                    <li><a href="#" class="strong deleteRecord"><i class="glyphicon glyphicon-trash"></i>Delete Records</a>
+                    </li>
+                    <!---->
+                    {{/if}}
+                    <!---->
+                    {{/if}}
                 </ul>
-                
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> More<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" id="genReport"><i class="glyphicon glyphicon-folder-close"></i> View Report</a></li>
                             <li role="separator" class="divider"></li>
-                         
                             <li><a id="downloadRecords" href="#"><i class="fa fa-table"></i> Download CSV</a></li>
                             <li><a id="downloadRecordsJSON" href="#"><i class="fa">{..}</i> Download JSON</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <span class="btn-file" href="#" type="file">
+<input id="importData" type="file">
+    <i class="glyphicon glyphicon-import"></i> Import JSON
+</span>
+                            </li>
                             <li role="separator" class="divider"></li>
                             <li>
                                 <a class="uploadISRID" href="#"> <i class="glyphicon glyphicon-export"></i> Export to ISRID</a>
@@ -59,7 +79,6 @@
             </div>
         </div>
     </nav>
-
     <div class="tab-content content-scrollable pad2" style="top:50px;">
         {{#if userAlert}}
         <div class="fullScreen strong text-center">
@@ -69,7 +88,9 @@
         </div>
         {{/if}} {{#if hasRecords}}
         <!---->
-        {{> reactiveTable settings=settings}}
+        <div class="col-md-12">
+            {{> reactiveTable settings=settings}}
+        </div>
         <!---->
         {{else}}
         <!---->
