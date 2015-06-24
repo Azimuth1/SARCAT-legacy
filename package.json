@@ -14,7 +14,7 @@
   "main": "./index.js",
   "scripts": {
     "start": "node dist/app/main.js",
-    "postinstall":"./build.sh",
+    "_postinstall":"./build.sh",
     "startserver": "node scripts/server.js",
     "build": "./build.sh",
     "winbuild": "./winbuild.sh",

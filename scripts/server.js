@@ -130,11 +130,12 @@ if (fs.existsSync(demoApp + '/' + 'bin/mongodb/bin/mongod')) {
 
 var node = 'node';
 if (fs.existsSync(demoApp + '/' + 'bin/node/bin/node')) {
-    node = demoApp + '/' + 'bin/node/bin/node';
+   // node = demoApp + '/' + 'bin/node/bin/node';
 }
 
 
 
+console.log(sarcatdb,demoApp,mongod,node);
 
 
 

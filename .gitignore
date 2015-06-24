@@ -4,7 +4,7 @@ node_modules
 .ignore
 *.log
 
-*webpage
+webpage/bower_components
 main_logo
 /uploads/records/**
 */uploads/logo/*.png
