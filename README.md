@@ -25,67 +25,125 @@ face. The user then reaps the benefits with built in data analysis, reporting, m
 * _Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams._
 
 *** 
-##Officially supported platforms
+# Advanced Install
 
-Currently, SARCAT is officially supported on the following platforms:
+### 1\. Download [Node.js](https://nodejs.org) v0.10.36
 
-* Mac: OS X 10.7 and above
-* Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012
-* Linux: x86 and x86_64 systems
+SARCAT is built with Meteor - which makes it fast and reliable. Meteor has been tested up to [node](https://nodejs.org/) version 0.10.36\. If you are building from source, [NVM](https://github.com/creationix/nvm) is a great way to use bash scripting to manage multiple active node.js versions.
 
-*** 
+### Installation Steps
 
-Download the SARCAT source code or a pre-built installer for your platform.
+1.  Download the installer from Nodes.js®
 
-# Install From Source:
+*   [![](https://nodejs.org/images/platform-icon-win.png)Windows Installer <small>node-v0.10.36-x86.msi</small>](https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi)
+*   [![](https://nodejs.org/images/platform-icon-osx.png)Macintosh Installer <small>node-v0.10.36.pkg</small>](http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg)
+*   [![](https://nodejs.org/images/platform-icon-generic.png)Source Code <small>node-v0.10.36.tar.gz</small>](http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz)
 
-# 1. Install [Node.js](https://nodejs.org) v0.10.6<br>
-SARCAT is built with Meteor - which makes it fast and reliable. Meteor has been tested up to [node](https://nodejs.org/) version 0.10.36 
+3.  Run the installer (the .msi/.pkg file you downloaded in the previous step.)
+4.  Follow the prompts in the installer (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).
 
-*For Easy download, Just click the link and follow install instructions for your platform.*
-* Windows: [node.exe](http://nodejs.org/dist/v0.10.36/node.exe)
-* Mac: [node-v0.10.36.pkg](http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg)
-* Linux: [node-v0.10.36-linux-x64.tar.gz](http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz)
+* * *
 
+### 2\. Download [MongoDB](https://nodejs.org) v0.10.36
 
-## 2. Install [MongoDB](https://www.mongodb.org/)
-Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo!<br>
+Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4.
 
-* [Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)
-* [Mac](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
-* [Linux](http://docs.mongodb.org/manual/administration/install-on-linux/)
+### Installation Steps
 
+*   [Download Mongo Source now!](https://www.mongodb.org/downloads)
 
+Or if you like, Mongo has great documentation to walk you throgh the install and be up and running quickly!
 
-## 3. Open Your Shell<br>
-* For Windows, click ```start```>```run``` and type ```cmd```<br>
-* For Mac, search "Terminal" to open.<br>
+*   [Mongo for Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)
+*   [Mongo for Mac](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
+*   [Mongo for Linux](http://docs.mongodb.org/manual/administration/install-on-linux/)
 
+* * *
 
-## Download SARCAT
+## 3\. Install SARCAT From Source
 
- 
-_* Quick download will soon be provided from the website._
-```bash
-$ git clone https://github.com/Azimuth1/SARCAT.git
-```
+_You can get the latest .zip [here](https://github.com/Azimuth1/SARCAT/releases)_
 
+#### _Or use git_
 
-  Install dependencies:
-```bash
-$ npm install
-```
+<div>
 
-Run as a Meteor app:
-```bash
-$ npm test
-```
+<pre>$ git clone https://github.com/Azimuth1/SARCAT.git</pre>
+
+</div>
+
+* * *
+
+## 4\. Open Your Shell  
+
+*   For Windows, click `start`>`run` and type `cmd`
+*   For Mac, search "Terminal" to open the shell.
+*   If you are using Linux, I think you probably know this step.
+
+* * *
+
+## 5\. Install Dependencies  
+
+<div>
+
+<pre>$ npm install</pre>
+
+</div>
+
+* * *
+
+## 6\. Build  
+
+*   Windows:
+
+    <pre>./build.bat</pre>
+
+*   Mac/Linux
+
+    <pre>$ ./build.sh</pre>
+
+* * *
+
+## 7\. Run SARCAT  
+
+Run As a Meteor App
+
+<div>
+
+<pre>$ cd meteor</pre>
+
+<pre>meteor --settings settings.json</pre>
+
+</div>
 
 Or run as a node app:
-```bash
-$ npm start
-```
-    
+
+<pre>$ mongod --dbpath {{USERHOME}}/sarcatdb</pre>
+
+<pre>$ node sarcat/app/main.js</pre>
+
+* * *
+
+# Troubleshooting
+
+SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.
+
+*   Ensure proper priveleges are set on your machine and install paths
+*   If you have problems with the binary installs, try installing from source
+*   Feel free to contact us with any question or concerns you may have. This is an open source project and we encourage collaboration in order to create the best product possible!
+
+## Officially supported platforms
+
+*   Mac: OS X 10.7 and above
+*   Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012
+*   Linux: x86 and x86_64 systems
+
+## Dependencies
+
+*   Node.js v0.10.6
+*   MongoDB v3.0.4
+
+* * *
 ## Hosted Options
 *Don't want to manage you server? We can take care of all your hosting needs.
 ## Getting Started
