@@ -3,9 +3,15 @@
 set -e -u
 set -o pipefail
 
-architecture=os.windows.x86_32
-platformMongo=mongodb-win32-i386-3.0.4-signed.msi
-platformNode=node-v0.10.36-x86.msi
+
+architecture=os.linux.x86_64
+platformMongoName=mongodb-linux-x86_64-3.0.4
+platformMongo=$platformMongoName.tgz
+platformNodeName=node-v0.12.5-linux-x64
+platformNode=$platformNodeName.tar.gz
+
+
+
 
 
 #Root directory
@@ -31,7 +37,6 @@ mkdir $dest
 mkdir $dest/bin
 
 
-
 #copy settings from meteor directory
 cp meteor/settings.json $dest
 
@@ -44,19 +49,22 @@ cp run.sh $dest
 
 
 echo "creating mongodb"
+tar -zxvf $build/$platformMongo
+#unzip $build/$platformMongo
 mkdir -p $dest/bin/mongodb
-cp -R -n $build/$platformMongo $dest/bin/mongodb
+cp -R -n $platformMongoName/. $dest/bin/mongodb
+rm -rf $platformMongoName
 
 
 
 echo "creating node"
+tar -zxvf $build/$platformNode
+#unzip $build/node-v0.10.36-darwin-x64.tar.gz
 mkdir -p $dest/bin/node
-cp -R -n $build/$platformNode $dest/bin/node
-
-
-
-
- 
+cp -R -n $platformNodeName/. $dest/bin/node
+rm -rf $platformNodeName
+node=$dest/bin/node/bin/node
+npm=$dest/bin/node/bin/npm
 
 echo "creating sarcat from meteor"
 cd meteor
@@ -90,4 +98,9 @@ chmod 777 *
 
 cd $home
 
-zip -r build/$architecture.zip sarcat
+tar -zcvf $architecture.tar.gz sarcat
+mv $architecture.tar.gz build
+
+
+#$node dist/index.js
+

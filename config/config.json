@@ -4,8 +4,7 @@
         "ROOT_URL": "http://localhost.com",
         "PORT": 3000
     },
-    "database": "dist/sarcatdb",
-    "databaseName":"sarcatdb",
-    "dest": "dist"
+    "databaseDir": "",
+    "databaseName":"sarcatdb"
 
 }

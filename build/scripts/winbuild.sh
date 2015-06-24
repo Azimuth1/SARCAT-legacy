@@ -11,8 +11,7 @@ platformNode=node-v0.10.36-x86.msi
 #Root directory
 home=$(pwd)
 
-#directory of build files
-build=$(pwd)"/build/libs/"$architecture
+
 
 #dest folder
 dest=$(pwd)"/sarcat"
@@ -27,8 +26,6 @@ rm -rf $dest
 mkdir $dest
 
 
-#creat /bin for mongo & node
-mkdir $dest/bin
 
 
 
@@ -41,18 +38,6 @@ cp config/config.json $dest
 #copy scripts to run sarcat
 cp index.js $dest
 cp run.sh $dest
-
-
-echo "creating mongodb"
-mkdir -p $dest/bin/mongodb
-cp -R -n $build/$platformMongo $dest/bin/mongodb
-
-
-
-echo "creating node"
-mkdir -p $dest/bin/node
-cp -R -n $build/$platformNode $dest/bin/node
-
 
 
 
@@ -90,4 +75,4 @@ chmod 777 *
 
 cd $home
 
-zip -r build/$architecture.zip sarcat
+zip -r build/sarcat-$architecture.zip sarcat

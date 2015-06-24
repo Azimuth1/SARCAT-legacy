@@ -3,16 +3,21 @@
 set -e -u
 set -o pipefail
 
-architecture=os.windows.x86_32
-platformMongo=mongodb-win32-i386-3.0.4-signed.msi
-platformNode=node-v0.10.36-x86.msi
+
+architecture=os.linux.x86_64
+platformMongoName=mongodb-linux-x86_64-3.0.4
+platformMongo=$platformMongoName.tgz
+platformNodeName=node-v0.12.5-linux-x64
+platformNode=$platformNodeName.tar.gz
+
+
+
 
 
 #Root directory
 home=$(pwd)
 
-#directory of build files
-build=$(pwd)"/build/libs/"$architecture
+
 
 #dest folder
 dest=$(pwd)"/sarcat"
@@ -27,10 +32,6 @@ rm -rf $dest
 mkdir $dest
 
 
-#creat /bin for mongo & node
-mkdir $dest/bin
-
-
 
 #copy settings from meteor directory
 cp meteor/settings.json $dest
@@ -43,20 +44,8 @@ cp index.js $dest
 cp run.sh $dest
 
 
-echo "creating mongodb"
-mkdir -p $dest/bin/mongodb
-cp -R -n $build/$platformMongo $dest/bin/mongodb
 
 
-
-echo "creating node"
-mkdir -p $dest/bin/node
-cp -R -n $build/$platformNode $dest/bin/node
-
-
-
-
- 
 
 echo "creating sarcat from meteor"
 cd meteor
@@ -90,4 +79,8 @@ chmod 777 *
 
 cd $home
 
-zip -r build/$architecture.zip sarcat
+tar -zcvf "sarcat-"$architecture.tar.gz sarcat
+mv sarcat-$architecture.tar.gz build
+
+#$node dist/index.js
+

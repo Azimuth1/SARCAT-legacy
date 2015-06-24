@@ -3,16 +3,19 @@
 set -e -u
 set -o pipefail
 
-architecture=os.windows.x86_32
-platformMongo=mongodb-win32-i386-3.0.4-signed.msi
-platformNode=node-v0.10.36-x86.msi
+
+architecture=os.osx.x86_64
+platformMongoName=mongodb-osx-x86_64-3.0.4
+platformMongo=$platformMongoName.tgz
+platformNodeName=node-v0.10.36-darwin-x64
+platformNode=$platformNodeName.tar.gz
+
+
+
 
 
 #Root directory
 home=$(pwd)
-
-#directory of build files
-build=$(pwd)"/build/libs/"$architecture
 
 #dest folder
 dest=$(pwd)"/sarcat"
@@ -27,10 +30,6 @@ rm -rf $dest
 mkdir $dest
 
 
-#creat /bin for mongo & node
-mkdir $dest/bin
-
-
 
 #copy settings from meteor directory
 cp meteor/settings.json $dest
@@ -42,21 +41,6 @@ cp config/config.json $dest
 cp index.js $dest
 cp run.sh $dest
 
-
-echo "creating mongodb"
-mkdir -p $dest/bin/mongodb
-cp -R -n $build/$platformMongo $dest/bin/mongodb
-
-
-
-echo "creating node"
-mkdir -p $dest/bin/node
-cp -R -n $build/$platformNode $dest/bin/node
-
-
-
-
- 
 
 echo "creating sarcat from meteor"
 cd meteor
@@ -76,7 +60,6 @@ tar -zxvf meteor.tar.gz
 
 echo "/bundle --> /app"
 mv bundle app
-
 #remove zip file
 rm meteor.tar.gz
 
@@ -90,4 +73,14 @@ chmod 777 *
 
 cd $home
 
-zip -r build/$architecture.zip sarcat
+tar -zcvf "sarcat-"$architecture.tar.gz sarcat
+mv sarcat-$architecture.tar.gz build
+
+
+#$node dist/index.js
+
+
+
+
+
+
