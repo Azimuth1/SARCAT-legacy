@@ -1,4 +1,4 @@
-var config = require('./config.json');
+var config = require('./config/config.json');
 var METEOR_SETTINGS = require('./settings.json');
 var spawn = require('child_process')
     .spawn;

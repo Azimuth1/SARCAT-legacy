@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e -u
-set -o pipefail
 
 
 architecture=os.linux.x86_64
@@ -26,8 +24,7 @@ home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
 
 #dest folder
-dest=$(pwd)"/allbuilds/"$architecture"/"sarcat
-
+dest=$(pwd)"/dist"
 
 
 #clear dest folder if it exists
@@ -47,12 +44,12 @@ mkdir -p $dest/bin
 cp meteor/settings.json $dest
 
 #copy env config file
-cp config/config.json $dest
+cp -r config $dest
 
 #copy scripts to run sarcat
 cp index.js $dest
-cp run.sh $dest
-
+#cp run.sh $dest
+echo 'bin/node/bin/node index.js' >$dest/run.sh
 
 
 echo "creating sarcat from meteor"
@@ -103,14 +100,16 @@ echo "installing node dependencies"
 cd app/programs/server
 npm install
 
+
 chmod 777 *
 
-cd $dest
-cd ../
-rm -rf $home/build/sarcat-$architecture.zip
-tar -zcvf sarcat-$architecture.tar.gz sarcat
+cd $home
+newname=sarcat-$version-$architecture
+rm -rf $home/build/$newname.tar.gz
+mv $dest $newname
 
-mv sarcat-$architecture.tar.gz $home/build
 
-#$node dist/index.js
+tar -zcvf $newname.tar.gz $newname
+mv $newname $dest
+mv $newname.tar.gz $home/build
 

@@ -1,7 +1,4 @@
-#!/bin/bash
-
-set -e -u
-set -o pipefail
+#!/usr/bin/env bash
 
 
 architecture=os.osx.x86_64
@@ -13,15 +10,15 @@ platformNode=$platformNodeName.tar.gz
 
 
 
-
 #Root directory
 home=$(pwd)
 
 #directory of build files
 build=$(pwd)"/build/libs/"$architecture
 
-#dest folder
-dest=$(pwd)"/allbuilds/"$architecture"/"sarcat
+
+dest=$(pwd)"/dist"
+
 
 
 
@@ -42,12 +39,12 @@ mkdir -p $dest/bin
 cp meteor/settings.json $dest
 
 #copy env config file
-cp config/config.json $dest
+cp -r config $dest
 
 #copy scripts to run sarcat
 cp index.js $dest
-cp run.sh $dest
-
+#cp run.sh $dest
+echo 'bin/node/bin/node index.js' >$dest/run.sh
 
 
 echo "creating sarcat from meteor"
@@ -56,27 +53,40 @@ cd meteor
 echo "resetting meteor"
 meteor reset
 
+
+
+
 echo "building meteor"
 meteor build --architecture $architecture $dest
+#cd $home
 
+#cp -r meteor.tar.gz $dest
 
 
 
 cd $dest
+
 echo "unzipping meteor package for platform: "$architecture
+
 tar -zxvf meteor.tar.gz
-echo "/bundle --> /app"
+
 mv bundle app
+
 #remove zip file
 rm meteor.tar.gz
 
 
 
-
 echo "creating mongodb"
-tar -zxvf $build/$platformMongo
+echo $build
+
+
+
 #unzip $build/$platformMongo
 mkdir -p $dest/bin/mongodb
+
+
+tar -zxvf $build/$platformMongo
 cp -R -n $platformMongoName/. $dest/bin/mongodb
 rm -rf $platformMongoName
 
@@ -92,23 +102,27 @@ node=$dest/bin/node/bin/node
 npm=$dest/bin/node/bin/npm
 
 
-
+chmod -R 755 *
 echo "installing node dependencies"
 
 cd app/programs/server
 $npm install
 #mv bundle app
-chmod 777 *
-
-cd $dest
-cd ../
-rm -rf $home/build/sarcat-$architecture.zip
-tar -zcvf sarcat-$architecture.tar.gz sarcat
-
-mv sarcat-$architecture.tar.gz $home/build
 
 
-#$node dist/index.js
+cd $home
+chmod -R 755 *
+
+newname=sarcat-$version-$architecture
+rm -rf $home/build/$newname.tar.gz
+mv $dest $newname
+
+
+tar -zcvf $newname.tar.gz $newname
+mv $newname $dest
+mv $newname.tar.gz $home/build
+
+
 
 
 

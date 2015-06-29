@@ -1,6 +1,6 @@
 {
   "name": "sarcat",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "SAR data management tool",
   "author": "Azimuth1",
   "engines": {
@@ -10,12 +10,14 @@
     "type": "git",
     "url": "git://github.com/Azimuth1/SARCAT.git"
   },
-  "bin": {},
+  "bin": {
+    "sarcat": "build/scripts/buildall.sh"
+  },
   "main": "./index.js",
   "scripts": {
-    "start": "node dist/app/main.js",
-    "_postinstall":"./build.sh",
-    "startserver": "node scripts/server.js",
+    "start": "node dist/index.js",
+    "postinstall":"node scripts/run.js",
+    "buildall": "scripts/buildall.sh",
     "build": "./build.sh",
     "winbuild": "./winbuild.sh",
     "linbuild": "./linbuild.sh"
@@ -31,6 +33,8 @@
   "dependencies": {
     "body-parser": "^1.13.1",
     "express": "^4.13.0",
+    "getport": "^0.1.0",
+    "minimist": "^1.1.1",
     "request": "^2.58.0"
   },
   "preferGlobal": true,
