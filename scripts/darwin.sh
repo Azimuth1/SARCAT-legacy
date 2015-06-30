@@ -9,7 +9,6 @@ platformNode=$platformNodeName.tar.gz
 
 
 
-
 #Root directory
 home=$(pwd)
 
@@ -106,7 +105,9 @@ chmod -R 755 *
 echo "installing node dependencies"
 
 cd app/programs/server
+$npm install getport --save
 $npm install
+
 #mv bundle app
 
 

@@ -4,88 +4,144 @@ var spawn = require('child_process')
     .spawn;
 var fs = require('fs');
 var path = require('path');
-var env = Object.create(process.env);
-var meteorENV = config.env;
-env.MONGO_URL = meteorENV.MONGO_URL + '/' + config.databaseName;
-env.ROOT_URL = meteorENV.ROOT_URL || 'http://localhost.com';
-env.PORT = meteorENV.PORT || 3000;
-env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
-var dbRunning;
-var appRunning;
+var getport = require('getport');
+
 
 function getUserHome() {
     return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
-var databaseDir = config.databaseDir || getUserHome();
-console.log(databaseDir)
-var databaseName = config.databaseName || 'sarcatdb';
-var sarcatdb = path.join(databaseDir, databaseName);
-console.log('sarcatDB already exists: ' + sarcatdb);
-if (!fs.existsSync(sarcatdb)) {
-    console.log('creating sarcatDB: ' + sarcatdb);
-    fs.mkdirSync(sarcatdb);
-}
-var mongod = 'mongod';
-if (fs.existsSync(path.join(__dirname, 'bin', 'mongodb', 'bin'))) {
-    mongod = path.join(__dirname, 'bin', 'mongodb', 'bin', 'mongod')
-}
-node = 'node';
-if (fs.existsSync(path.join(__dirname, 'bin', 'node', 'bin'))) {
-    node = path.join(__dirname, 'bin', 'node', 'bin', 'node')
-}
-//var file = path.resolve(process.argv[2]);
+
+var trys = 0;
 var startSARCAT = {};
+var startDB = {};
 
-function runapp() {
-    var startScript = path.join(__dirname, 'app', 'main.js')
-    console.log(node, startScript);
-    startSARCAT = spawn(node, [startScript], {
-        env: env
-    });
-    startSARCAT.stdout.on('data', function (data) {
-        console.log('stdout: ' + data);
-    });
-    startSARCAT.stderr.on('data', function (data) {
-        startDB.kill('SIGINT');
-        console.log('stderr: ' + data);
-    });
-    startSARCAT.on('close', function (code) {
-        startDB.kill('SIGINT');
-        console.log('child process exited with code ' + code);
-    });
-}
-var startDB = spawn(mongod, ['--dbpath', sarcatdb]);
-startDB.stdout.on('data', function (data) {
-    console.log('stdout: ' + data);
-});
-startDB.stderr.on('data', function (data) {
-    console.log('stderr: ' + data);
-    //startDB.kill('SIGINT');
-});
-startDB.on('close', function (code) {
-    dbRunning = false;
-    console.log('child process exited with code ' + code);
-    process.exit()
-});
-var trys = 0
-var interval = setInterval(function () {
-    tryapp()
-}, 2000);
+var runapp = function(config) {
+    var node = 'node';
+    if (fs.existsSync(path.join(__dirname, 'bin', 'node', 'bin'))) {
+        node = path.join(__dirname, 'bin', 'node', 'bin', 'node')
+    }
+    var env = {};
+    env.MONGO_URL = config.MONGO_URL + ':' + config.databasePort + '/' + config.databaseName;
+    env.ROOT_URL = config.ROOT_URL || 'http://localhost.com';
+    env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
+    var sarcatPort = config.sarcatPort;
+    console.log(env.MONGO_URL);
+    getport(sarcatPort, function(err, port) {
+        if (err) {
+            if (startDB.pid) {
+                startDB.kill('SIGINT');
+            }
+            return console.warn(err);
+        }
+        if (startSARCAT.pid || !startDB.pid) {
+            return;
+        }
+        if (sarcatPort !== port) {
+            console.log('sarcat port ' + sarcatPort + ' is not available. Falling back to port ' + port);
+            env.PORT = port;
+        } else {
+            env.PORT = sarcatPort;
+        }
 
-function tryapp() {
-        console.log(trys)
-        if (trys > 5) {
-            return clearInterval(interval)
+        var startScript = path.join(__dirname, 'app', 'main.js')
+        startSARCAT = spawn(node, [startScript], {
+            env: env
+        });
+        startSARCAT.stdout.on('data', function(data) {
+              console.log('stdout: ' + data);
+        });
+        startSARCAT.stderr.on('data', function(data) {
+              console.log('stderr: ' + data);
+        });
+        startSARCAT.on('close', function(code) {
+            startSARCAT.kill('SIGINT');
+            if (startDB.pid) {
+                startDB.kill('SIGINT');
+            }
+            console.log('node child process exited with code ' + code);
+        });
+    });
+};
+
+
+var runmongo = function(config, cb) {
+    var databaseDir = config.databaseDir || getUserHome();
+    var databaseName = config.databaseName || 'sarcatdb';
+    var sarcatdb = path.join(databaseDir, databaseName);
+    var mongoPort = config.databasePort;
+
+    if (!fs.existsSync(sarcatdb)) {
+        console.log('creating sarcatDB: ' + sarcatdb);
+        fs.mkdirSync(sarcatdb);
+    } else {
+        console.log('Connecting to existing sarcatDB: ' + sarcatdb);
+    }
+    var mongod = 'mongod';
+    if (fs.existsSync(path.join(__dirname, 'bin', 'mongodb', 'bin'))) {
+        mongod = path.join(__dirname, 'bin', 'mongodb', 'bin', 'mongod')
+    }
+
+    getport(mongoPort, function(err, port) {
+        if (err) throw err
+        if (config.databasePort !== port) {
+            console.log('mongo port ' + mongoPort + ' is not available. Falling back to port ' + port);
+            config.databasePort = port;
+        }
+        console.log('starting mongo on port: ' + port);
+        startDB = spawn(mongod, ['--dbpath', sarcatdb, '--port', port]);
+        startDB.stdout.on('data', function(data) {
+            console.log('stdout: ' + data);
+        });
+        startDB.stderr.on('data', function(data) {
+             console.log('stderr: ' + data);
+        });
+        startDB.on('close', function(code) {
+            if (startSARCAT.pid) {
+                startSARCAT.kill('SIGINT');
+            }
+            startDB.kill('SIGINT');
+            console.log('mongo child process exited with code ' + code);
+            cb(null, code)
+        });
+        cb(config, err);
+    });
+};
+
+
+runmongo(config, function(conf, err) {
+
+    var interval = setInterval(function() {
+        tryapp()
+    }, 100);
+
+
+    var tryapp = function() {
+        if (trys > 100) {
+            return clearInterval(interval);
         }
         if (startSARCAT.pid) {
-            console.log('SARCAT has started!!!!');
+            console.log('SARCAT running on:' + conf.ROOT_URL + ':' + conf.sarcatPort);
             return clearInterval(interval)
         }
-        if (!startSARCAT.pid) {
-            console.log('SARCAT has not started');
-            runapp();
+        if (startDB.pid) {
+            console.log('Mongo running on port ' + conf.databasePort);
+            runapp(config);
             return trys++;
         }
+    };
+    if (err) {
+        console.log('err');
+        if (startSARCAT.pid) {
+            startSARCAT.kill('SIGINT');
+        }
+        if (startDB.pid) {
+            startDB.kill('SIGINT');
+        }
+        return trys = 1 / 0;
+        return clearInterval(interval);
+
     }
+});
+
     //lsof -i -P | grep -i "listen"
 
