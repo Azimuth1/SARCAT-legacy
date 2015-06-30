@@ -24,115 +24,8 @@ face. The user then reaps the benefits with built in data analysis, reporting, m
 
 * _Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams._
 
-*** 
-# Advanced Install
-
-### 1\. Download [Node.js](https://nodejs.org) v0.10.36
-
-SARCAT is built with Meteor - which makes it fast and reliable. Meteor has been tested up to [node](https://nodejs.org/) version 0.10.36\. If you are building from source, [NVM](https://github.com/creationix/nvm) is a great way to use bash scripting to manage multiple active node.js versions.
-
-### Installation Steps
-
-1.  Download the installer from Nodes.js®
-
-*   [![](https://nodejs.org/images/platform-icon-win.png)Windows Installer <small>node-v0.10.36-x86.msi</small>](https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi)
-*   [![](https://nodejs.org/images/platform-icon-osx.png)Macintosh Installer <small>node-v0.10.36.pkg</small>](http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg)
-*   [![](https://nodejs.org/images/platform-icon-generic.png)Source Code <small>node-v0.10.36.tar.gz</small>](http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz)
-
-3.  Run the installer (the .msi/.pkg file you downloaded in the previous step.)
-4.  Follow the prompts in the installer (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).
-
-* * *
-
-### 2\. Download [MongoDB](https://nodejs.org) v0.10.36
-
-Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4.
-
-### Installation Steps
-
-*   [Download Mongo Source now!](https://www.mongodb.org/downloads)
-
-Or if you like, Mongo has great documentation to walk you throgh the install and be up and running quickly!
-
-*   [Mongo for Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)
-*   [Mongo for Mac](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
-*   [Mongo for Linux](http://docs.mongodb.org/manual/administration/install-on-linux/)
-
-* * *
-
-## 3\. Install SARCAT From Source
-
-_You can get the latest .zip [here](https://github.com/Azimuth1/SARCAT/releases)_
-
-#### _Or use git_
-
-<div>
-
-<pre>$ git clone https://github.com/Azimuth1/SARCAT.git</pre>
-
-</div>
-
-* * *
-
-## 4\. Open Your Shell  
-
-*   For Windows, click `start`>`run` and type `cmd`
-*   For Mac, search "Terminal" to open the shell.
-*   If you are using Linux, I think you probably know this step.
-
-* * *
-
-## 5\. Install Dependencies  
-
-<div>
-
-<pre>$ npm install</pre>
-
-</div>
-
-* * *
-
-## 6\. Build  
-
-*   Windows:
-
-    <pre>./build.bat</pre>
-
-*   Mac/Linux
-
-    <pre>$ ./build.sh</pre>
-
-* * *
-
-## 7\. Run SARCAT  
-
-Run As a Meteor App
-
-<div>
-
-<pre>$ cd meteor</pre>
-
-<pre>meteor --settings settings.json</pre>
-
-</div>
-
-Or run as a node app:
-
-<pre>$ mongod --dbpath {{USERHOME}}/sarcatdb</pre>
-
-<pre>$ node sarcat/app/main.js</pre>
-
-* * *
-
-# Troubleshooting
-
-SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.
-
-*   Ensure proper priveleges are set on your machine and install paths
-*   If you have problems with the binary installs, try installing from source
-*   Feel free to contact us with any question or concerns you may have. This is an open source project and we encourage collaboration in order to create the best product possible!
-
-## Officially supported platforms
+***
+## Supported platforms
 
 *   Mac: OS X 10.7 and above
 *   Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012
@@ -142,16 +35,108 @@ SARCAT is intended to be used as a web server. If installing on a local network,
 
 *   Node.js v0.10.6
 *   MongoDB v3.0.4
+*   ***
+
+## Install latest release
+
+Download the [latest release](http://spa.tial.ly:8080/download.html) for your platform.
+
+1. Extract the compressed file in a directory in your home folder.
+2. Open the directory
+3. Click <code>start</code> to run SARCAT
+4. Click <code>stop</code> to stop SARCAT
+
+                
+                
+* * *
+## Install latest release (without node/mongo)
+If you already have node v0.10.36 & mongo installed on your system and prefer the terminal, this will make that install quicker for you and you can skip the first 2 steps. If you want to install node & mongo seperately, the instructions are below.
+
+#### 1. Download the installer from Nodes.js(v0.10.36)
+
+*   [Windows Installer <small>node-v0.10.36-x86.msi</small>](https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi)
+*   [Macintosh Installer <small>node-v0.10.36.pkg</small>](http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg)
+*   [Linux Installer <small>node-v0.10.36.tar.gz</small>](http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz)
+
+3.  Run the installer (the .msi/.pkg file you downloaded in the previous step.)
+4.  Follow the prompts in the installer (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).
+
+
+
+#### 2. Download the installer for MongoDB
+
+Mongo is the powerful database behind SARCAT. Follow the isntructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4.
+
+
+*   [Download Mongo now!](https://www.mongodb.org/downloads)
+
+Mongo has great [documentation](http://docs.mongodb.org/manual/) to walk you throgh the install and be up and running quickly!
+
+* Download the [latest release](http://spa.tial.ly:8080/download.html) (sans node/mongo) for your platform.
+* Extract the compressed file in a directory in your home folder.
+
+###3. Download SARCAT (without node/mongo)
+Download the [latest release](http://spa.tial.ly:8080/download.html) (sans node/mongo) for your platform.
+
+###4. Then.. 
+
+    cd SARCAT
+    npm install
+    npm start
 
 * * *
-## Hosted Options
-*Don't want to manage you server? We can take care of all your hosting needs.
+## Build from source
+_*Currently not supported on Windows_
+
+    git clone https://github.com/Azimuth1/SARCAT.git
+    cd SARCAT
+    npm install
+    npm start
+
+* * *
+
+
+##Files
+
+
+* <strong>SARCAT/config/config.json</strong>- Contains specific congurations for SARCAT on your server. DOn't change the default settings unless you have to and you know what you are doing!
+    * <strong>"sarcatPort": 3000</strong> - _port SARCAT will run on your server_
+    * <strong>"databaseDir": ""</strong> - _if left empty, your database will be install in your home directory._
+    * <strong>"databasePort": 3001</strong> - _port MongoDB will run on your server_
+    * <strong>"databaseName": "sarcatdb"</strong> - _name of your database (is saved to the location of your databaseDir parameter)_
+    * <strong>"MONGO_URL": "mongodb://localhost"</strong> - *default mongo connection settings*
+    * <strong>"ROOT_URL": "http://localhost.com"</strong> - *root url SARCAT will serve from*
+    
+
+
+* <strong>SARCAT/settings.json</strong>- Intitial config settings for the first time SARCAT is loaded. These are saved to the database afterwards.
+
+
+***
 ## Getting Started
-* Instructional Videos
-* Tutorials
+* Instructional Videos Coming Soon
+* * *
+##FAQ & Troubleshooting
+* How do a wipeout my database?
+* I can't find my records
+* I forgot my admin password!
+* I am havving trouble installing
 
-## Developer Resources
 
-## Participate!!!
-## License
+
+SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.
+
+*   Ensure proper priveleges are set on your machine and install paths
+*   Check firewall settings.
+*   Feel free to contact us with any question or concerns you may have. This is an open source project and we encourage collaboration in order to create the best product possible!
+
+
+
+
+
+* * *
+
+
+
 ## Feedback
+We would love to hear any feedback you have on the app.
