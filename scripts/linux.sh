@@ -48,8 +48,15 @@ cp -r config $dest
 
 #copy scripts to run sarcat
 cp index.js $dest
-#cp run.sh $dest
-echo 'bin/node/bin/node index.js' >$dest/run.sh
+
+
+echo '#!/usr/bin/env /Users/Kyle-Azimuth1/github/SARCAT/dist/bin/node/bin/node' > $dest/start
+cat index.js >> $dest/start
+
+echo 'killall sarcat' > $dest/stop
+
+chmod +x $dest/start
+chmod +x dest/stop
 
 
 echo "creating sarcat from meteor"
@@ -97,7 +104,7 @@ npm=$dest/bin/node/bin/npm
 
 echo "installing node dependencies"
 
-cd app/programs/server
+mv app/programs/server/package.json $dest
 npm install getport --save
 npm install
 
