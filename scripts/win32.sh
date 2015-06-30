@@ -37,7 +37,13 @@ cp -r config $dest
 #copy scripts to run sarcat
 cp index.js $dest
 
-echo '%CD%/bin/node/bin/node index.js' >$dest/run.bat
+echo '%CD%/bin/node/bin/node index.js' >$dest/start.bat
+echo 'taskkill /F /IM node.exe' > $dest/stop.bat
+
+chmod +x $dest/start
+chmod +x dest/stop
+
+
 
 
 
@@ -97,9 +103,13 @@ npm=$dest/bin/node/bin/npm
 
 echo "installing node dependencies"
 
-cd $dest/app/programs/server
-npm install getport --save
-npm install
+
+
+
+
+mv $dest/app/programs/server/package.json $dest
+$npm install getport --save
+$npm install
 
 
 
