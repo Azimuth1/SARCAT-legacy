@@ -98,6 +98,7 @@ npm=$dest/bin/node/bin/npm
 echo "installing node dependencies"
 
 cd app/programs/server
+npm install getport --save
 npm install
 
 

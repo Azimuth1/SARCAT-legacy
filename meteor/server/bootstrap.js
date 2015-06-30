@@ -67,5 +67,5 @@ Meteor.startup(function() {
         cacheTime: 100,
     });
 
-    console.log('sarcat running at: ' + process.env.ROOT_URL)
+    console.log('sarcat running at: ' + process.env.ROOT_URL + ':' + process.env.PORT)
 });
