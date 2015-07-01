@@ -1,17 +1,21 @@
 var map;
-Template.admin.onCreated(function (a) {
+Template.admin.onCreated(function(a) {
     Session.set('userView', 'admin');
 });
-Template.admin.onRendered(function (a) {
+Template.admin.onRendered(function(a) {
     var country = $('[name="agencyProfile.country"]').val();
     Session.set('country', $('[name="agencyProfile.country"]').val());
-    var logo = document.getElementById('agencyLogo');
-    logo.src = 'uploads/logo/' + Session.get('logo');
-    logo.style.display = 'inline';
+
+    // if (this.type.indexOf('image') >= 0) {
+    //   return 'upload/' + this.path;
+    // } else return 'file_icon.png';
+    //var logo = document.getElementById('agencyLogo');
+    //logo.src = 'uploads/logo/' + Session.get('logo');
+    //logo.style.display = 'inline';
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
     map = setAdminMap('adminMap', bounds);
-    this.data.users.forEach(function (d) {
+    this.data.users.forEach(function(d) {
         var role = d.roles[0];
         var id = d._id;
         $('input[name="role_' + id + '"][value="' + role + '"]')
@@ -19,19 +23,28 @@ Template.admin.onRendered(function (a) {
     });
 });
 Template.admin.helpers({
-    allowedStates: function () {
+    logoSrc: function(event, template) {
+        if (Session.get('logoSrc')) {
+            return Session.get('logoSrc');
+        }
+    },
+    hasLogo: function(event, template) {
+        var config = Session.get('config') || {};
+        return config.agencyLogo;
+    },
+    allowedStates: function() {
         var country = Session.get('country');
         var states = allowedStates(country);
         return states;
     },
-    internet: function () {
+    internet: function() {
         return navigator.onLine;
     },
-    hasHistory: function (a, b) {
+    hasHistory: function(a, b) {
         var audits = RecordsAudit.find().fetch();
         return audits.length ? true : false;
     },
-    RecordsAudit: function (a, b) {
+    RecordsAudit: function(a, b) {
         var audits = RecordsAudit.find().fetch();
 
         var fields = [{
@@ -69,63 +82,62 @@ Template.admin.helpers({
             showNavigationRowsPerPage: false,
         };
     },
-    userAlert: function (a, b) {
-        setTimeout(function () {
-            $('.userAlert').fadeOut(900, function () {
+    userAlert: function(a, b) {
+        setTimeout(function() {
+            $('.userAlert').fadeOut(900, function() {
                 Session.set('userAlert', null);
             })
         }, 500)
         return Session.get('userAlert');
     },
-    userAlertClass: function () {
+    userAlertClass: function() {
         return Session.get('userAlert').error ? 'bg-danger text-danger' : 'bg-success text-success';
     },
-    errorMessages: function () {
+    errorMessages: function() {
         return _.values(Session.get(ERRORS_KEY));
     },
-    errorClass: function (key) {
+    errorClass: function(key) {
         return Session.get(ERRORS_KEY)[key] && 'error';
     },
-    profileIncomplete: function () {
-        var profileKeys=Object.keys(Session.get('agencyProfile'));
+    profileIncomplete: function() {
+        var profileKeys = Object.keys(Session.get('agencyProfile'));
         var agencyProfile = Session.get('agencyProfile');
-        var done = _.compact(_.map(agencyProfile, function (d) {
-                return d;
-            }))
-            ;
-        return done.length===profileKeys.length ? '' : 'afPanel warning mar00 noBorder';
+        var done = _.compact(_.map(agencyProfile, function(d) {
+            return d;
+        }));
+        return done.length === profileKeys.length ? '' : 'afPanel warning mar00 noBorder';
     },
-    configs: function () {
+    configs: function() {
         return Session.get('config');
     },
-    userEmail: function () {
+    userEmail: function() {
         return this.emails[0].address;
     },
-    userRoleList: function () {
+    userRoleList: function() {
         var users = this.users.fetch()
-            .filter(function (d) {
+            .filter(function(d) {
                 return d._id !== Meteor.userId()
             });
         return users.length ? users : false;
     },
-    noUsers: function () {
+    noUsers: function() {
         var users = this.users.fetch()
-            .filter(function (d) {
+            .filter(function(d) {
                 return d._id !== Meteor.userId()
             });
         return !users.length;
     },
-    UploadImgFormData: function (a, b) {
+    UploadImgFormData: function(a, b) {
         return {
             type: 'logo'
         };
     },
-    uploadLogo: function (a, b) {
+    uploadLogo: function(a, b) {
         return {
-            finished: function (index, fileInfo, context) {
+            finished: function(index, fileInfo, context) {
                 Meteor.call('updateConfig', {
                     agencyLogo: fileInfo.name
-                }, function (err) {
+                }, function(err) {
                     if (err) {
                         return console.log(err);
                     }
@@ -136,31 +148,28 @@ Template.admin.helpers({
     },
 });
 Template.admin.events({
-    'change [name="agencyProfile.country"]': function (event, template) {
+    'change [name="agencyProfile.country"]': function(event, template) {
         return Session.set('country', event.currentTarget.value);
     },
-    'click .deleteLogo': function (event, template) {
+    'click .deleteLogo': function(event, template) {
         var r = confirm("Are you sure you want to delete your custom logo?");
         if (!r) {
             return;
         }
-        Meteor.call('removeLogo', function (err) {
-            console.log(err);
-        });
-        Meteor.call('updateConfig', {
-            agencyLogo: ''
-        }, function (err) {
+        Meteor.call('removeLogo', function(err) {
             if (err) {
-                return console.log(err);
+                console.log(err);
             }
-            //Meteor._reload.reload();
+
         });
+
+
     },
-    'click .removeUser': function (event, template) {
+    'click .removeUser': function(event, template) {
         var username = this.username;
         var r = confirm("Are you sure you want to delete user: " + this.username);
         if (r == true) {
-            Meteor.call('removeUser', this._id, function (err, d) {
+            Meteor.call('removeUser', this._id, function(err, d) {
                 console.log(d);
                 if (err) {
                     return console.log(err);
@@ -174,8 +183,8 @@ Template.admin.events({
             return;
         }
     },
-    'click .resetPassword': function (event, template) {
-        var genNewPassword = function () {
+    'click .resetPassword': function(event, template) {
+        var genNewPassword = function() {
             var text = "";
             var possible = "123456789";
             for (var i = 0; i < 5; i++)
@@ -188,7 +197,7 @@ Template.admin.events({
             var newPassword = genNewPassword();
             //var text = 'One Time Reset Password Code for ' + this.username + ' (' + this.emails[0].address + ')' + ': ' + newPassword + '\n';
             //alert(text);
-            Meteor.call('setPassword', this._id, newPassword, true, function (err, d) {
+            Meteor.call('setPassword', this._id, newPassword, true, function(err, d) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -201,13 +210,13 @@ Template.admin.events({
             return;
         }
     },
-    'change .adminUserRoles': function (event) {
+    'change .adminUserRoles': function(event) {
         var user = this._id;
         var origRole = this.roles[0];
         var username = this.username;
         var val = $('input[name="role_' + user + '"]:checked')
             .val();
-        Meteor.call('changeRole', user, val, function (err) {
+        Meteor.call('changeRole', user, val, function(err) {
             if (err) {
                 console.log(err);
             } else {
@@ -220,14 +229,14 @@ Template.admin.events({
     }
 });
 var hooksObject = {
-        onSuccess: function (insertDoc, updateDoc, currentDoc) {
+        onSuccess: function(insertDoc, updateDoc, currentDoc) {
             context = $(this.event.target).find('[type="submit"]');
             text = context.html();
             context.text('Saved....');
             context.delay(1000)
                 .animate({
                     opacity: 0
-                }, function () {
+                }, function() {
                     context.html(text)
                         .animate({
                             opacity: 1
@@ -237,11 +246,11 @@ var hooksObject = {
     }
     //AutoForm.addHooks(['formIdAgencyProfile', 'formIdAgencyMap', 'formIdConfig'], hooksObject);
 AutoForm.addHooks(null, hooksObject);
-var setAdminMap = function (context) {
+var setAdminMap = function(context) {
     var bounds = bounds || boundsString2Array(Session.get('bounds'));
     var map = L.map(context, {});
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function (x, e) {
+    var layers = _.object(_.map(defaultLayers, function(x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -256,10 +265,10 @@ var setAdminMap = function (context) {
                 fillOpacity: 0,
                 opacity: 0
             },
-            onLocationError: function (err) {
+            onLocationError: function(err) {
                 alert(err.message);
             },
-            onLocationOutsideMapBounds: function (context) {
+            onLocationOutsideMapBounds: function(context) {
                 alert(context.options.strings.outsideMapBoundsMsg);
             },
             locateOptions: {
@@ -268,7 +277,7 @@ var setAdminMap = function (context) {
         })
         .addTo(map);
     var searching;
-    $('#geolocate').on('click', function (e) {
+    $('#geolocate').on('click', function(e) {
         if (searching) {
             return;
         }
@@ -279,17 +288,17 @@ var setAdminMap = function (context) {
         searching = true;
         lc.start();
     });
-    map.on('locationfound', function (e) {
+    map.on('locationfound', function(e) {
         $('#geolocate')
             .remove();
         $('.mapCrosshair')
             .css('color', '#00CB00');
     });
-    map.on('locationerror', function () {
+    map.on('locationerror', function() {
         $('#geolocate')
             .html('Position could not be found - Drag map to set extent');
     });
-    map.on('moveend', function () {
+    map.on('moveend', function() {
         var bnds = map.getBounds()
             .toBBoxString();
         $('[name="bounds"]')
