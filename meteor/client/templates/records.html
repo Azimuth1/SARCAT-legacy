@@ -53,6 +53,7 @@
                     <!---->
                     {{/if}}
                 </ul>
+                 {{/if}}
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> More<span class="caret"></span></a>
@@ -61,21 +62,26 @@
                             <li role="separator" class="divider"></li>
                             <li><a id="downloadRecords" href="#"><i class="fa fa-table"></i> Download CSV</a></li>
                             <li><a id="downloadRecordsJSON" href="#"><i class="fa">{..}</i> Download JSON</a></li>
+                            {{#if isInRole 'admin,editor'}}
                             <li role="separator" class="divider"></li>
+                            
                             <li>
                                 <span class="btn-file" href="#" type="file">
 <input id="importData" type="file">
     <i class="glyphicon glyphicon-import"></i> Import JSON
 </span>
                             </li>
+                            {{/if}}
                             <li role="separator" class="divider"></li>
+                            {{#if isInRole 'admin'}}
                             <li>
                                 <a class="uploadISRID" href="#"> <i class="glyphicon glyphicon-export"></i> Export to ISRID</a>
                             </li>
+                            {{/if}}
                         </ul>
                     </li>
                 </ul>
-                {{/if}}
+               
             </div>
         </div>
     </nav>
