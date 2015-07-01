@@ -16,7 +16,7 @@ Meteor.methods({
         }
     },
     editUser: function(set, userId) {
-     
+
         Meteor.users.update(userId, set, function(error, result) {
             if (error) {
                 return error;
@@ -121,11 +121,11 @@ Meteor.methods({
         var update = Records.update(id, {
             $push: obj
         });
- 
+
         return update;
     },
     updateRecord: function(id, name, val) {
-       
+
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -202,29 +202,71 @@ Meteor.methods({
     },
     getFilesInPublicFolder: function(id) {
         var fs = Npm.require('fs');
-        var dir = '../web.browser/app/uploads/records/' + id;
-        if (!fs.existsSync(dir)) {
+        var path = Npm.require('path');
+
+        var dir = process.env.PWD;
+        var sarcatDir = path.join(dir, 'public/uploads');
+        if (process.env.sarcatDir) {
+            dir = process.env.sarcatDir;
+            sarcatDir = path.join(dir, 'app', 'programs', 'web.browser', 'app', 'uploads')
+
+        }
+
+
+
+        var filesDir = path.join(sarcatDir, 'records', id);
+        //var dir = '../web.browser/app/uploads/records/' + id;
+        if (!fs.existsSync(filesDir)) {
             return [];
         }
-        var files = fs.readdirSync('../web.browser/app/uploads/records/' + id);
+        var files = fs.readdirSync(filesDir);
         return files;
     },
     removeLogo: function() {
+
+
+
         var fs = Npm.require('fs');
-        var dirPath = process.env.PWD + '/public/uploads/logo';
+        var path = Npm.require('path');
+
+        var dir = process.env.PWD;
+        var sarcatDir = path.join(dir, 'public', 'uploads');
+        if (process.env.sarcatDir) {
+            dir = process.env.sarcatDir;
+            sarcatDir = path.join(dir, 'app', 'programs', 'web.browser', 'app', 'uploads')
+
+        }
+
+
+
+        var dir = process.env.sarcatDir || process.env.PWD;
+        var dirPath = path.join(sarcatDir, 'logo');
         try {
             var files = fs.readdirSync(dirPath);
         } catch (e) {
             return;
         }
-        if (files.length > 0)
+        if (files.length > 0) {
             for (var i = 0; i < files.length; i++) {
-                var filePath = dirPath + '/' + files[i];
+                var filePath = path.join(dirPath, files[i]);
                 if (fs.statSync(filePath)
                     .isFile()) {
                     fs.unlinkSync(filePath);
+
                 }
             }
+        }
+
+        Config.update(Config.findOne()
+            ._id, {
+                $set: {
+                    agencyLogo: ''
+                }
+            }
+        );
+
+
+
     },
     //["Maine", "Massachusetts", "Michigan", "Montana", "Nevada", "New Jersey", "New York", "North Carolina", "Ohio", "Pennsylvania", "Rhode Island", "Tennessee", "Texas", "Utah", "Washington", "Wisconsin", "Puerto Rico", "Maryland", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Minnesota", "Mississippi", "Missouri", "Nebraska", "New Hampshire", "New Mexico", "North Dakota", "Oklahoma", "Oregon", "South Carolina", "South Dakota", "Vermont", "Virginia", "West Virginia", "Wyoming"]
     setCountry: function(id) {
@@ -413,7 +455,7 @@ Meteor.methods({
         return val;
     },
     uploadISRID: function(toUpload) {
-    
+
         this.unblock();
         var url = Meteor.settings.private.sarcatServer + '/uploadISRID'
 
@@ -505,7 +547,7 @@ Meteor.methods({
         });
         return val;
     },
-    
+
 });
 Records.allow({
     remove: function() {

@@ -22,6 +22,10 @@ Template.signin.helpers({
     logoSrc: function(event, template) {
         return Session.get('logoSrc');
     },
+    hasLogo: function(event, template) {
+        var config = Session.get('config') || {};
+        return config.agencyLogo;
+    },
     defaultEmail: function() {
         return Session.get('defaultEmail');
         //return Meteor.settings.public.email;

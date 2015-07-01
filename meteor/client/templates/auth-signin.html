@@ -7,7 +7,8 @@
         </nav>
         <div class="content-scrollable">
             <div class="text-center agencyLogo">
-                <img src="{{logoSrc}}" onerror='this.style.display = "none"'>
+                {{#if hasLogo}}
+                <img src="{{logoSrc}}" onerror='this.style.display = "none"'> {{/if}}
             </div>
             <div class="wrapper-auth">
                 <div class="title-auth">
@@ -22,11 +23,11 @@
                     </div>
                     {{/if}} {{#unless resetPassword}}
                     <div class="input-symbol {{errorClass 'email'}}">
-                        <input type="email" name="email" placeholder="Your Email"/>
+                        <input type="email" name="email" placeholder="Your Email" />
                         <span class="tmp-icon-email" title="Your Email"></span>
                     </div>
                     <div class="input-symbol {{errorClass 'password'}}">
-                        <input type="password" name="password" placeholder="Password"/>
+                        <input type="password" name="password" placeholder="Password" />
                         <span class="tmp-icon-lock" title="Password"></span>
                     </div>
                     <button type="submit" id="signin" class="btn-primary btn-pad">Sign in</button>

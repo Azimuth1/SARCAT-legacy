@@ -30,7 +30,13 @@
                    
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                 <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
+
+                {{#if hasLogo}}
+                 <img src="{{logoSrc}}" onerror='this.style.display = "none"' class="hidden-xs">
+                {{/if}}
+                
+
+
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

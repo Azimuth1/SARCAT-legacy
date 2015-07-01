@@ -48,24 +48,58 @@ Meteor.startup(function() {
         loginExpirationInDays: null
     });
 
+        var dir = process.env.sarcatDir || process.env.PWD;
+
+var fs = Npm.require('fs');
+var path = Npm.require('path');
+
+var dir = process.env.PWD;
+var sarcatDir = path.join(dir,'public/uploads');
+if(process.env.sarcatDir){
+    dir = process.env.sarcatDir;
+    sarcatDir = path.join(dir,'app','programs','web.browser','app','uploads')
+
+}
+
+
+        UploadServer.init({
+            tmpDir: path.join(sarcatDir,'tmp'),
+            uploadDir: path.join(sarcatDir,'/'),
+            //tmpDir: dir + '/app/programs/web.browser/app/uploads/tmp',
+            //uploadDir: dir + '/app/programs/web.browser/app/uploads/',
+            getDirectory: function(fileInfo, formData) {
+                if (formData._id) {
+                    return '/records/' + formData._id;
+                }
+                if (formData.type === 'logo') {
+                    return '/logo';
+                }
+            },
+            cacheTime: 100,
+        });
 
 
 
 
-
-    UploadServer.init({
-        tmpDir: process.env.PWD + '/public/uploads/tmp',
-        uploadDir: process.env.PWD + '/public/uploads/',
-        getDirectory: function(fileInfo, formData) {
-            if (formData._id) {
-                return '/records/' + formData._id;
+        
+        WebApp.connectHandlers.use(function(req, res, next) {
+            var re = /^\/uploads\/(.*)$/.exec(req.url);
+            if (re !== null) {
+                var filePath = path.join(sarcatDir,re[1]);
+                //var filePath = dir + '/app/programs/web.browser/app/uploads/' + re[1];
+                var data = fs.readFileSync(filePath, data);
+                res.writeHead(200, {
+                    'Content-Type': 'image'
+                });
+                res.write(data);
+                res.end();
+            } else {
+                next();
             }
-            if (formData.type === 'logo') {
-                return '/logo';
-            }
-        },
-        cacheTime: 100,
-    });
+        });
 
+
+
+    console.log(dir);
     console.log('sarcat running at: ' + process.env.ROOT_URL + ':' + process.env.PORT)
 });
