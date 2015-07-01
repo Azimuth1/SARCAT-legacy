@@ -18,8 +18,8 @@ var runapp = function (config) {
     if (fs.existsSync(path.join(__dirname, 'bin', 'node', 'bin'))) {
         node = path.join(__dirname, 'bin', 'node', 'bin', 'node')
     }
-    var env = {};
-    //env.process.title = 'sarcat';
+    var env = Object.create( process.env );
+    env.sarcatDir = __dirname;
     env.MONGO_URL = config.MONGO_URL + ':' + config.databasePort + '/' + config.databaseName;
     env.ROOT_URL = config.ROOT_URL || 'http://localhost.com';
     env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
