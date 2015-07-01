@@ -27,7 +27,7 @@ face. The user then reaps the benefits with built in data analysis, reporting, m
 ***
 ## Supported platforms
 
-*   Mac: OS X 10.7 and above
+*   Mac: OS X 10.x
 *   Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012
 *   Linux: x86 and x86_64 systems
 
