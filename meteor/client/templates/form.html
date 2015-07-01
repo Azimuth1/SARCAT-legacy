@@ -466,7 +466,7 @@
                     <a class="list-group-item fileUpload" data="{{this}}">{{this}}</a> {{/each}}
                 </div>
                 <label class="control-label">Upload Files</label>
-                {{#if isInRole 'admin,editor'}} {{> upload_bootstrap formData=record multiple=true}} {{/if}}
+                {{#if isInRole 'admin,editor'}} {{> upload_bootstrap formData=record multiple=true callbacks=uploadFile}} {{/if}}
             </div>
         </div>
         <!--/Custom Questions-->

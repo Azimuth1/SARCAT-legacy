@@ -15,6 +15,8 @@ Template.form.onCreated(function(a, b) {
     Session.set('userView', this.data._id);
 });
 Template.form.onRendered(function() {
+
+
     var country = $('[name="incidentLocation.country"]').val();
     Session.set('country', $('[name="incidentLocation.country"]').val());
     var record = this.data;
@@ -31,17 +33,22 @@ Template.form.onRendered(function() {
     });
     var currentUnit = Session.get('measureUnits');
     var degree = record.incidentOperations.initialDirectionofTravel || 0;
-    $('.knob')
-        .knobKnob({
-            value: degree,
-            turn: function(ratio) {
-                var deg = parseInt(360 * ratio);
-                $('.knobVal')
-                    .html(deg);
-            }
-        });
+
+    if (!Roles.userIsInRole(Meteor.userId(), ['viewer'])) {
+        $('.knob')
+            .knobKnob({
+                value: degree,
+                turn: function(ratio) {
+                    var deg = parseInt(360 * ratio);
+                    $('.knobVal')
+                        .html(deg);
+                }
+            });
+    }
     $('.knobVal')
         .html(degree);
+
+
     /*if (!record.incidentLocation['state-province']) {
     Meteor.call('setStateProvince', record._id, function (err, d) {
         if (err) {
@@ -123,10 +130,18 @@ Template.form.onRendered(function() {
             format: 'MM/DD/YYYY HH:mm',
             sideBySide: true
         });
+
+
+    if (Roles.userIsInRole(Meteor.userId(), ['viewer'])) {
+        $('select, input, textarea, button').prop('disabled', true);
+    }
+
+
+
 });
 Template.form.helpers({
     record: function() {
-        return Session.get('record')
+        return Session.get('record');
     },
     allowedStates: function(a, b) {
         var country = Session.get('country');
@@ -496,7 +511,17 @@ Template.form.helpers({
         var initialDirectionofTravel_Boolean = this.incidentOperations.initialDirectionofTravel_Boolean === 'Yes' ? true : false;
         Session.set('initialDirectionofTravel_Boolean', initialDirectionofTravel_Boolean);
         return initialDirectionofTravel_Boolean ? 'show' : 'hide';
-    }
+    },
+    uploadFile: function(a, b) {
+        return {
+            finished: function(index, fileInfo, context) {
+                var record = Session.get('record');
+                Meteor.call('getFilesInPublicFolder', record._id, function(err, d) {
+                    Session.set('fileUploads', d)
+                });
+            }
+        };
+    },
 });
 Template.form.events({
     'change [name="incidentLocation.country"]': function(event, template) {
