@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-scripts/darwin.sh
-scripts/win32.sh
-scripts/linux.sh
+node scripts/run.js linux
+node scripts/run.js win32
+node scripts/run.js darwin

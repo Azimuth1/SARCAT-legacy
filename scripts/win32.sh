@@ -41,7 +41,7 @@ echo '%CD%/bin/node/bin/node index.js' >$dest/start.bat
 echo 'taskkill /F /IM node.exe' > $dest/stop.bat
 
 chmod +x $dest/start
-chmod +x dest/stop
+chmod +x $dest/stop
 
 
 

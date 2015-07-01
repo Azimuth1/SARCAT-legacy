@@ -50,10 +50,12 @@ cp -r config $dest
 cp index.js $dest
 
 
-echo '#!/usr/bin/env /Users/Kyle-Azimuth1/github/SARCAT/dist/bin/node/bin/node' > $dest/start
-cat index.js >> $dest/start
+cp scripts/start $dest
+cp scripts/stop $dest
 
-echo 'killall sarcat' > $dest/stop
+#echo '#!/usr/bin/env /Users/Kyle-Azimuth1/github/SARCAT/dist/bin/node/bin/node' > $dest/start
+#cat index.js >> $dest/start
+#echo 'killall sarcat' > $dest/stop
 
 chmod +x $dest/start
 chmod +x dest/stop

@@ -43,15 +43,16 @@ cp -r config $dest
 #copy scripts to run sarcat
 cp index.js $dest
 
-echo '#!/usr/bin/env /Users/Kyle-Azimuth1/github/SARCAT/dist/bin/node/bin/node' > $dest/start
-cat index.js >> $dest/start
 
-echo 'killall sarcat' > $dest/stop
+cp scripts/start $dest
+cp scripts/stop $dest
+
+#echo '#!/usr/bin/env /Users/Kyle-Azimuth1/github/SARCAT/dist/bin/node/bin/node' > $dest/start
+#cat index.js >> $dest/start
+#echo 'killall sarcat' > $dest/stop
 
 chmod +x $dest/start
-
-
-chmod +x dest/stop
+chmod +x $dest/stop
 
 echo "creating sarcat from meteor"
 cd meteor
