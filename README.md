@@ -114,7 +114,15 @@ _*Currently not supported on Windows_
 
 ***
 ## Getting Started
-* Instructional Videos Coming Soon
+
+Once SARCAT is installed, use the default username/password to begin setting up your profile:
+
+* Username: *admin@sarcat*
+* Password: *admin*
+
+
+Instructional Videos Coming Soon
+
 * * *
 ##FAQ & Troubleshooting
 * How do a wipeout my database?
