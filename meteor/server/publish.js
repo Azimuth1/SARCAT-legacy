@@ -8,7 +8,7 @@ Meteor.publish('records', function () {
 });
 
 Meteor.publish('item', function (filter) {
-    var encryptionKey = Meteor.settings.private.encryptionKey
+    var encryptionKey = Config.findOne().encryptionKey
     check(filter, String);
     if (this.userId) {
         var self = this;
@@ -111,7 +111,7 @@ Meteor.publish('roles', function () {
 Meteor.publish('config', function () {
     return Config.find({}, {
         fields: {
-            'encryptionKey': 0
+            //'encryptionKey': 0
         }
     });
 });

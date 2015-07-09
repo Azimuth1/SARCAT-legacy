@@ -115,6 +115,7 @@ Router.route('records', {
 Router.route('form', {
     path: '/form/:_id',
     waitOn: function () {
+
         return this.subscribe('item', this.params._id);
     },
     data: function () {
