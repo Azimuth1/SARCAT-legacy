@@ -1,3 +1,3 @@
 #!/bin/bash
 meteor reset
-meteor --settings settings.dev.json
+meteor --settings settings.json

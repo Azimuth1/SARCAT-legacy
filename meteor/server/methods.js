@@ -367,7 +367,7 @@ Meteor.methods({
         var dateTime = [date, time].join('');
         var latlngDate = [latlng, dateTime].join(',');
         var units = (record.measureUnits === 'Metric') ? 'units=si' : 'units=us';
-        var url = Meteor.settings.private.sarcatServer + '/weather/';
+        var url = Config.findOne().sarcatServer + '/weather/';
         //var url = 'http://api.forecast.io/forecast/' + forecastAPI + '/';
         url += latlngDate + '?';
         url += units;
@@ -457,7 +457,7 @@ Meteor.methods({
     uploadISRID: function(toUpload) {
 
         this.unblock();
-        var url = Meteor.settings.private.sarcatServer + '/uploadISRID'
+        var url = Config.findOne().sarcatServer + '/uploadISRID'
 
         return HTTP.post(url, toUpload);
     },
@@ -473,7 +473,7 @@ Meteor.methods({
         if (!coord1 || !coord2) {
             return false;
         }
-        var url = Meteor.settings.private.sarcatServer + '/elevation/';
+        var url = Config.findOne().sarcatServer + '/elevation/';
         url += 'latLngCollection=' + coord1.lat + ',' + coord1.lng + ',' + coord2.lat + ',' + coord2.lng;
         var result = HTTP.get(url);
         var data = result.data;

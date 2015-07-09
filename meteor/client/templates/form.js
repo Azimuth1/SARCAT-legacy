@@ -1,8 +1,9 @@
 var map;
 Template.form.onCreated(function(a, b) {
+    console.log(this.data)
     if (!Object.keys(this.data)
         .length) {
-        return Router.go('records');
+       // return Router.go('records');
     }
     Session.set('subjectTableView', 'Description');
     var record = this.data;
@@ -15,8 +16,6 @@ Template.form.onCreated(function(a, b) {
     Session.set('userView', this.data._id);
 });
 Template.form.onRendered(function() {
-
-
     var country = $('[name="incidentLocation.country"]').val();
     Session.set('country', $('[name="incidentLocation.country"]').val());
     var record = this.data;
@@ -33,7 +32,6 @@ Template.form.onRendered(function() {
     });
     var currentUnit = Session.get('measureUnits');
     var degree = record.incidentOperations.initialDirectionofTravel || 0;
-
     if (!Roles.userIsInRole(Meteor.userId(), ['viewer'])) {
         $('.knob')
             .knobKnob({
@@ -47,8 +45,6 @@ Template.form.onRendered(function() {
     }
     $('.knobVal')
         .html(degree);
-
-
     /*if (!record.incidentLocation['state-province']) {
     Meteor.call('setStateProvince', record._id, function (err, d) {
         if (err) {
@@ -130,14 +126,9 @@ Template.form.onRendered(function() {
             format: 'MM/DD/YYYY HH:mm',
             sideBySide: true
         });
-
-
     if (Roles.userIsInRole(Meteor.userId(), ['viewer'])) {
         $('select, input, textarea, button').prop('disabled', true);
     }
-
-
-
 });
 Template.form.helpers({
     record: function() {
@@ -236,17 +227,13 @@ Template.form.helpers({
                     return;
                 }
                 var recordSamp = record[d] || {};
-
-
                 var total = toCount ? null : Schemas[d]._firstLevelSchemaKeys.length;
                 total = field.newTotal || total;
                 total = total > count ? count : total;
                 var count = toCount ? field.total : Object.keys(recordSamp)
                     .length;
-
                 var label = Schemas.SARCAT._schema[d].label;
                 //console.log(d, count, total,field.newTotal)
-
                 var klass = (count === total || (!total && count)) ? 'primary-bg' : '';
                 total = total ? '/' + total : null;
                 var sum = [count, total].join('');
@@ -632,7 +619,6 @@ Template.form.events({
                 });
             }
         }
-
         /*var record = Session.get('record');
         if (!record || record.weather) {
             return;
@@ -727,12 +713,9 @@ Template.form.events({
         var id = Session.get('record')
             ._id;
         Meteor.call('setWeather', id, function(err, d) {
-
             if (err) {
                 $(event.target)
                     .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
-
-
                 return console.log(err);
             } else {}
         });
@@ -841,9 +824,9 @@ AutoForm.hooks({
         }
     }
 });
-var encryptionKey = Meteor.settings.public.encryptionKey;
+
 Records.before.update(function(userId, doc, fieldNames, modifier, options) {
-    //console.log(userId, doc, fieldNames, modifier, options)
+var encryptionKey = Session.get('config').encryptionKey;
     if (modifier && modifier.$set && Object.keys(modifier.$set)
         .length) {
         console.log(modifier)

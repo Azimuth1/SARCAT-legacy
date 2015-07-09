@@ -1,28 +1,8 @@
 {
-    "config": {
-        "bounds": "-143.61328125,11.350796722383684,106.34765625,62.99515845212052",
-        "measureUnits": "US",
-        "agencyProfile": {
-            "organization": "",
-            "country": "",
-            "street": "",
-            "city": "",
-            "state-province": "",
-            "county": "",
-            "phoneNum": ""
-        }
-    },
-    "private": {
-        "defaultUser": {
-            "email": "admin@sarcat",
-            "password": "admin",
-            "username": "Kyle K"
-        },
-        "sarcatServer": "http://spa.tial.ly:5000"
-    },
     "public": {
+        "sarcatServer": "http://spa.tial.ly:5000",
         "layers": {
-            "MapQuest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
+            "MapQluest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
             "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
             "MapQuest Aerial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg",
             "SARTOPO": "http://s3-us-west-1.amazonaws.com/caltopo/topo/{z}/{x}/{y}.png"
@@ -35,4 +15,3 @@
         }
     }
 }
-

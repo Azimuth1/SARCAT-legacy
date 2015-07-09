@@ -1,7 +1,5 @@
 Records = new Mongo.Collection('records');
 RecordsAudit = new Mongo.Collection('recordsAudit');
-
-Config = new Mongo.Collection('config');
 Records.lastRecord = function(type) {
     var lastRecords = Records.find({}, {
             sort: {
@@ -40,84 +38,11 @@ Records.defaultNum = function() {
     return nextLetter.toString();
 };
 Records.isDate = function(date) {
-        var isDate = (new Date(date) !== "Invalid Date" && !isNaN(new Date(date))) ? true : false;
-        return isDate ? moment(new Date(date))
-            .format('MM/DD/YYYY HH:mm') : date;
-    }
-    /*
-    function convertToC(fTempVal) {
-        return cTempVal = (fTempVal - 32) * (5 / 9);
-    }
+    var isDate = (new Date(date) !== "Invalid Date" && !isNaN(new Date(date))) ? true : false;
+    return isDate ? moment(new Date(date))
+        .format('MM/DD/YYYY HH:mm') : date;
+}
 
-    function convertToF(cTempVal) {
-        return (cTempVal * (9 / 5)) + 32;
-    }
-
-    convertDeg = function (val) {
-
-        function convertToC(fTempVal) {
-            return cTempVal = (fTempVal - 32) * (5 / 9);
-        }
-
-        function convertToF(cTempVal) {
-            return (cTempVal * (9 / 5)) + 32;
-        }
-
-        var config = Config.findOne();
-        var agencyProfile = config.agencyProfile;
-        var currentUnit = agencyProfile.measureUnits;
-        if (currentUnit === 'Metric') {
-            return val;
-        }
-        return convertToC(val);
-
-    };
-    */
-Schemas = {};
-Schemas.User = new SimpleSchema({
-    emails: {
-        type: [Object]
-    },
-    username: {
-        type: String,
-    },
-    'emails.$.address': {
-        type: String,
-        label: 'Email',
-        regEx: SimpleSchema.RegEx.Email
-    },
-    'emails.$.verified': {
-        type: Boolean
-    },
-    createdAt: {
-        type: Date
-    },
-    roles: {
-        type: Array,
-        autoform: {
-            firstOption: function() {
-                return "--";
-            }
-        },
-        allowedValues: ['pending','viewer', 'editor', 'admin'],
-        defaultValue: ['pending'],
-        optional: true,
-    },
-    'roles.$': {
-        type: String,
-        optional: true
-    },
-    services: {
-        type: Object,
-        blackbox: true
-    },
-    profile: {
-        type: Object,
-        blackbox: true,
-        optional: true
-    },
-});
-Meteor.users.attachSchema(Schemas.User);
 Schemas.admin = new SimpleSchema({
     userId: {
         type: String,
@@ -238,7 +163,6 @@ Schemas.recordInfo = new SimpleSchema({
     },
 });
 Schemas.incidentLocation = new SimpleSchema({
-
     country: {
         type: String,
         label: 'Incident Response Country',
@@ -286,18 +210,6 @@ Schemas.incidentLocation = new SimpleSchema({
         allowedValues: ['Unknown', 'Private', 'Commercial', 'County', 'State', 'NPS', 'USFS', 'BLM', 'Military', 'Native/Tribal', 'Navigable Water', 'Other'],
         label: 'Land Owner',
     },
-    /*    incidentEnvironment: {
-            type: String,
-            optional: true,
-            autoform: {
-                firstOption: function () {
-                    return "--";
-                }
-            },
-            allowedValues: ['Unknown', 'Land', 'Air', 'Water'],
-            label: 'Incident Environment',
-            defaultValue: 'Land'
-        },*/
     ecoregionDomain: {
         type: String,
         optional: true,
@@ -370,7 +282,6 @@ Schemas.incidentLocation = new SimpleSchema({
         label: 'Contact Method',
     },
 });
-
 Schemas.coords = new SimpleSchema({
     ippCoordinates: {
         type: Object,
@@ -1110,56 +1021,7 @@ Schemas.xComments = new SimpleSchema({
         }
     },
 });
-Schemas.customQuestions = new SimpleSchema({
-    'q1': {
-        type: String,
-        optional: true,
-        label: 'Custom Question 1',
-        autoform: {
-            rows: 3
-        }
-    },
-    'q2': {
-        type: String,
-        optional: true,
-        label: 'Custom Question 2',
-        autoform: {
-            rows: 3
-        }
-    },
-    'q3': {
-        type: String,
-        optional: true,
-        label: 'Custom Question 3',
-        autoform: {
-            rows: 3
-        }
-    },
-    'a1': {
-        type: String,
-        optional: true,
-        label: 'Custom Answer 1',
-        autoform: {
-            rows: 3
-        }
-    },
-    'a2': {
-        type: String,
-        optional: true,
-        label: 'Custom Answer 2',
-        autoform: {
-            rows: 3
-        }
-    },
-    'a3': {
-        type: String,
-        optional: true,
-        label: 'Custom Answer 3',
-        autoform: {
-            rows: 3
-        }
-    },
-});
+
 Schemas.timeLog = new SimpleSchema({
     'lastSeenDateTime': {
         type: String,
@@ -1345,7 +1207,6 @@ Schemas.SARCAT = new SimpleSchema({
         label: 'Incident Location/Details',
         defaultValue: {}
     },
-
     weather: {
         type: Schemas.weather,
         label: 'Weather',
@@ -1395,7 +1256,6 @@ Schemas.SARCAT = new SimpleSchema({
         type: Schemas.customQuestions,
         label: 'Custom Incident Questions',
         optional: true,
-        // defaultValue:{},
         autoValue: function() {
             if (this.isInsert) {
                 return Config.findOne()
@@ -1404,233 +1264,4 @@ Schemas.SARCAT = new SimpleSchema({
         }
     },
 });
-Schemas.agencyProfile = new SimpleSchema({
-    contactPerson: {
-        type: String,
-        label: 'Organization Contact',
-        defaultValue: ''
-    },
-    contactEmail: {
-        type: String,
-        label: 'Contact Email',
-        defaultValue: ''
-    },
-    organization: {
-        type: String,
-        label: 'Organization Name',
-        defaultValue: ''
-    },
-    country: {
-        type: String,
-        label: 'Country',
-        defaultValue: 'United States',
-        allowedValues: countryList.map(function(d) {
-            return d.country;
-        })
-    },
-    'city': {
-        type: String,
-        label: 'City',
-        defaultValue: ''
-    },
-    street: {
-        type: String,
-        label: 'Street',
-        defaultValue: ''
-    },
-    'state-province': {
-        type: String,
-        label: 'State/Province',
-        defaultValue: '---',
-    },
-    'county-region': {
-        type: String,
-        label: 'County',
-        optional: true
-    },
-    phoneNum: {
-        type: String,
-        label: 'Phone Number',
-        defaultValue: ''
-    }
-});
-Schemas.config = new SimpleSchema({
-    initSetup: {
-        type: Boolean,
-        defaultValue: true
-    },
-    encryptionKey: {
-        type: String,
-        optional: true
-    },
-    bounds: {
-        type: String,
-        optional: true,
-        defaultValue: "-143.61328125,11.350796722383684,106.34765625,62.99515845212052"
-    },
-    measureUnits: {
-        type: String,
-        label: 'Preferred Unit of Measurement',
-        defaultValue: 'US',
-        autoform: {
-            type: "select-radio",
-            options: function() {
-                return [{
-                    label: "US/Imperial",
-                    value: "US"
-                }, {
-                    label: 'Metric',
-                    value: "Metric"
-                }];
-            },
-        },
-    },
-    agencyLogo: {
-        type: String,
-        optional: true,
-    },
-    agencyProfile: {
-        type: Schemas.agencyProfile,
-        defaultValue: {},
-        label: 'Organization Profile'
-    },
-    internet: {
-        type: Boolean,
-        label: 'Connect To SARCAT Server to assist with autofill features (weather/elevation)?',
-        optional: true,
-        defaultValue: true
-    },
-    customQuestions: {
-        type: Schemas.customQuestions,
-        label: 'Create Customized Incident Questions For Your Team',
-        optional: true,
-        defaultValue: {}
-    },
-});
 Records.attachSchema(Schemas.SARCAT);
-Config.attachSchema(Schemas.config);
-/*
-Schemas.formEditions = new SimpleSchema({
-    type: {
-        type: String,
-        label: 'Choose SARCAT form level of detail',
-        defaultValue: 'Platinum Edition',
-        autoform: {
-            type: 'select-radio-inline',
-            options: function () {
-                return [{
-                    label: 'Platinum Edition',
-                    'value': 'Platinum Edition'
-                }, {
-                    label: 'Gold Edition',
-                    'value': 'Gold Edition'
-                }, {
-                    label: 'Silver Edition',
-                    'value': 'Silver Edition'
-                }, {
-                    label: 'Basic Edition',
-                    'value': 'Basic Edition'
-                }];
-            }
-        }
-    },
-    recordInfo: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.recordInfo._firstLevelSchemaKeys,
-        defaultValue: Schemas.recordInfo._firstLevelSchemaKeys,
-        label: 'Record Info',
-    },
-    'recordInfo.$': {
-        type: String
-    },
-    incident: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.incident._firstLevelSchemaKeys,
-        defaultValue: Schemas.incident._firstLevelSchemaKeys,
-        label: 'incident',
-    },
-    'incident.$': {
-        type: String
-    },
-    weather: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.weather._firstLevelSchemaKeys,
-        defaultValue: Schemas.weather._firstLevelSchemaKeys,
-        label: 'weather',
-    },
-    'weather.$': {
-        type: String
-    },
-    subjects: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.subjects._firstLevelSchemaKeys,
-        defaultValue: Schemas.subjects._firstLevelSchemaKeys,
-        label: 'subjects',
-    },
-    'subjects.$': {
-        type: String
-    },
-    incidentOperations: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.incidentOperations._firstLevelSchemaKeys,
-        defaultValue: Schemas.incidentOperations._firstLevelSchemaKeys,
-        label: 'incidentOperations',
-    },
-    'incidentOperations.$': {
-        type: String
-    },
-    incidentOutcome: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.incidentOutcome._firstLevelSchemaKeys,
-        defaultValue: Schemas.incidentOutcome._firstLevelSchemaKeys,
-        label: 'incidentOutcome',
-    },
-    'incidentOutcome.$': {
-        type: String
-    },
-    rescueDetails: {
-        type: Array,
-        autoform: {
-            firstOption: function () {
-                return "--";
-            }
-        },
-        allowedValues: Schemas.rescueDetails._firstLevelSchemaKeys,
-        defaultValue: Schemas.rescueDetails._firstLevelSchemaKeys,
-        label: 'resources',
-    },
-    'rescueDetails.$': {
-        type: String
-    },
-});
-*/
