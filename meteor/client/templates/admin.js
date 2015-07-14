@@ -48,27 +48,27 @@ Template.admin.helpers({
         var audits = RecordsAudit.find().fetch();
 
         var fields = [{
-                "key": "type",
-                "label": "type",
-                "fieldId": "type"
+                'key': 'type',
+                'label': 'type',
+                'fieldId': 'type'
             },
 
             {
-                "key": "userName",
-                "label": "userName",
-                "fieldId": "userName"
+                'key': 'userName',
+                'label': 'userName',
+                'fieldId': 'userName'
             }, {
-                "key": "field",
-                "label": "field",
-                "fieldId": "field"
+                'key': 'field',
+                'label': 'field',
+                'fieldId': 'field'
             }, {
-                "key": "value",
-                "label": "value",
-                "fieldId": "value"
+                'key': 'value',
+                'label': 'value',
+                'fieldId': 'value'
             }, {
-                "key": "date",
-                "label": "date",
-                "fieldId": "date"
+                'key': 'date',
+                'label': 'date',
+                'fieldId': 'date'
             }
         ];
         return {
@@ -76,7 +76,7 @@ Template.admin.helpers({
             collection: RecordsAudit,
             rowsPerPage: 100,
             //showFilter: true,
-            class: "table table-hover table-bordered table-condensed pointer",
+            class: 'table table-hover table-bordered table-condensed pointer',
             fields: fields,
             showNavigation: 'auto',
             showNavigationRowsPerPage: false,
@@ -116,14 +116,14 @@ Template.admin.helpers({
     userRoleList: function() {
         var users = this.users.fetch()
             .filter(function(d) {
-                return d._id !== Meteor.userId()
+                return d._id !== Meteor.userId();
             });
         return users.length ? users : false;
     },
     noUsers: function() {
         var users = this.users.fetch()
             .filter(function(d) {
-                return d._id !== Meteor.userId()
+                return d._id !== Meteor.userId();
             });
         return !users.length;
     },
@@ -296,7 +296,7 @@ var setAdminMap = function(context) {
     });
     map.on('locationerror', function() {
         $('#geolocate')
-            .html('Position could not be found - Drag map to set extent');
+            .html('Position could not be found - Drag map to set response area');
     });
     map.on('moveend', function() {
         var bnds = map.getBounds()

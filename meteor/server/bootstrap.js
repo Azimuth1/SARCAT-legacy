@@ -1,4 +1,4 @@
-Meteor.startup(function() {
+Meteor.startup(function () {
     /*
         var environment = process.env.METEOR_ENV || "development";
         var settings = JSON.parse(process.env.METEOR_SETTINGS);
@@ -17,21 +17,14 @@ Meteor.startup(function() {
     //var METEOR_SETTINGS = JSON.parse(process.env.METEOR_SETTINGS);
     config = Config.findOne();
     if (!config) {
-        console.log('config:false')
-        var makeEncryptionID = function() {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        console.log('config:false');
+        var makeEncryptionID = function () {
+            var text = '';
+            var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             for (var i = 0; i < 23; i++)
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
             return text;
-        }
-        console.log('Creating default admin user.');
-        var admin = Accounts.createUser({
-            "email": "admin@sarcat",
-            "password": "admin",
-            "username": "Default Admin"
-        });
-        Roles.addUsersToRoles(admin, ['admin']);
+        };
         console.log('saving settings.config to mongodb');
         //Meteor.settings.config.encryptionKey = encryptionKey;
         encryptionKey = makeEncryptionID();
@@ -40,15 +33,35 @@ Meteor.startup(function() {
         });
         config = Config.findOne();
     }
-    var publicSettings = (Meteor.settings && Meteor.settings.public) ? Meteor.settings.public : config; 
- 
-    _.each(config, function(d, e) {
-        if ((config[e] && publicSettings[e]) && !_.isEqual(config[e], publicSettings[e])) {
+
+
+
+
+    if (!Meteor.users.find().count()) {
+        console.log('Creating default admin user.');
+        var admin = Accounts.createUser({
+            'email': 'admin@sarcat',
+            'password': 'admin',
+            'username': 'Default Admin'
+        });
+        Roles.addUsersToRoles(admin, ['admin']);
+        Config.update(config._id, {
+            $set: {
+                initSetup: true
+            }
+        });
+    }
+
+
+
+
+    var publicSettings = (Meteor.settings && Meteor.settings.public) ? Meteor.settings.public : config;
+    _.each(publicSettings, function (d, e) {
+        if (!_.isEqual(config[e], publicSettings[e])) {
             console.log('Updating config: ' + e);
-            console.log(config[e] + ' --->   ' + publicSettings[e])
+            console.log(config[e] + ' --->   ' + publicSettings[e]);
             var obj = {};
             obj[e] = publicSettings[e];
-           
             Config.update(config._id, {
                 $set: obj
             });
@@ -92,7 +105,7 @@ Meteor.startup(function() {
         uploadDir: path.join(sarcatDir, '/'),
         //tmpDir: dir + '/app/programs/web.browser/app/uploads/tmp',
         //uploadDir: dir + '/app/programs/web.browser/app/uploads/',
-        getDirectory: function(fileInfo, formData) {
+        getDirectory: function (fileInfo, formData) {
             if (formData._id) {
                 return '/records/' + formData._id;
             }
@@ -102,7 +115,7 @@ Meteor.startup(function() {
         },
         cacheTime: 100,
     });
-    WebApp.connectHandlers.use(function(req, res, next) {
+    WebApp.connectHandlers.use(function (req, res, next) {
         var re = /^\/uploads\/(.*)$/.exec(req.url);
         if (re !== null) {
             var filePath = path.join(sarcatDir, re[1]);
@@ -120,3 +133,4 @@ Meteor.startup(function() {
     console.log(dir);
     console.log('sarcat running at: ' + process.env.ROOT_URL + ':' + process.env.PORT)
 });
+

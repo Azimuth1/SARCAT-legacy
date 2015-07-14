@@ -6,12 +6,6 @@
             "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
             "MapQuest Aerial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg",
             "SARTOPO": "http://s3-us-west-1.amazonaws.com/caltopo/topo/{z}/{x}/{y}.png"
-        },
-        "package": {
-            "name": "SARCAT",
-            "description": "Search and Rescue Incident Database.",
-            "owner": "Azimuth1",
-            "repo": "https://github.com/Azimuth1/SARCAT"
         }
     }
 }

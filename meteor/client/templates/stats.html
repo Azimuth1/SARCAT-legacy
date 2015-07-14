@@ -10,6 +10,13 @@
         <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
         <div id='recordsMap' style="width:100%;height:300px">
         </div>
+        
+
+
+
+
+
+<!--
         <div class="white-border">
             {{#each stats}}
             <div class="statInfo">
@@ -25,6 +32,30 @@
             </div>
             {{/each}}
         </div>
+-->
+
+        <div class="row white">
+            {{#each stats}}
+            <div class="white-border col-sm-12 pad00 mar2y white">
+                {{#if generateMap}} {{>reportMap this}} {{/if}} {{#each this.data}}
+                <div class="statInfo">
+                    <div class="chartTitle">{{this.field}}</div>
+                    <div class="cont">
+                        {{#each this.data}}
+                        <div class="_col-md-4 chartBody pad0x">
+                            <div class="stronger">{{this.key}}:</div>
+                            <div class="bod">{{this.val}}</div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            {{/each}}
+        </div>
+
+
+
         <hr>
         <div class="row">
             <div class="col-xs-12 mar2y">

@@ -1,70 +1,40 @@
-Template.stats.onCreated(function() {
-
+Template.stats.onCreated(function () {
     Session.set('userView', 'stats');
     Session.set('activeRecord', null);
     Session.set('currentRecords', []);
 });
-Template.stats.onRendered(function() {
-
-    var records = Records.find().fetch();
+Template.stats.onRendered(function () {
+    var records = Records.find()
+        .fetch();
     var stats = chartStats(records);
-    dateChart(records,stats);
+    dateChart(records, stats);
     recordsSetMap('recordsMap', records);
 });
 Template.stats.helpers({
-    currentRecords: function() {
+    currentRecords: function () {
         return Session.get('currentRecords')
             .length;
     },
-    stats: function() {
-        var data = Session.get('activeRecord');
-        if (!data) {
-            return;
-        }
-        var flatData = flatten(data, {});
-        var displayData = _.chain(flatData)
-            .map(function(d, e) {
-                var val = _.findWhere(allInputs, {
-                    field: e
-                });
-                if (val) {
-                    return {
-                        key: val.label,
-                        parent: val.parent,
-                        val: d
-                    };
-                }
-            })
-            .compact()
-            .value();
-        var subjects2 = subjectArrayForm(flatData, 'subject', 'Subjects');
-        var resources2 = resourceArrayForm(data);
-        displayData = _.flatten([displayData, subjects2, resources2]);
-        var displayData2 = _.chain(displayData)
-            .groupBy('parent')
-            .map(function(d, e) {
-
-                return {
-                    field: e,
-                    data: d
-                };
-            })
-            .value();
-
-        return displayData2;
+    stats: function () {
+        var data = Records.find(Session.get('activeRecord'))
+            .fetch();
+        var stats = genList(data);
+        return stats;
     },
 });
-var chartStats = function(records) {
+var chartStats = function (records) {
+
+
     var statDiv = d3.select('#recordss');
     var context = {};
     var height;
     var width;
     var margin;
-    context.countRecords = function(data) {
-        var makeFlat = function(records) {
-            var flatten = function(x, result, prefix) {
+    context.countRecords = function (data) {
+        var makeFlat = function (records) {
+            var flatten = function (x, result, prefix) {
                 if (_.isObject(x)) {
-                    _.each(x, function(v, k) {
+                    _.each(x, function (v, k) {
                         flatten(v, result, prefix ? prefix + '.' + k : k);
                     });
                 } else {
@@ -72,9 +42,9 @@ var chartStats = function(records) {
                 }
                 return result;
             };
-            // var allInputs = _.clone(allInputs);
+       
             var toGraph = _.chain(allInputs)
-                .map(function(d) {
+                .map(function (d) {
                     if (d.stats) {
                         return d;
                     }
@@ -82,17 +52,17 @@ var chartStats = function(records) {
                 .compact()
                 .value();
             return _.chain(records)
-                .map(function(d) {
+                .map(function (d) {
                     var flat = flatten(d, {});
-                    return _.pick(flat, toGraph.map(function(key) {
+                    return _.pick(flat, toGraph.map(function (key) {
                         return key.field;
                     }));
                 })
                 .value();
         };
-        var pluckDeepLinear = function(records, first, second, obj) {
+        var pluckDeepLinear = function (records, first, second, obj) {
             var data = _.chain(records)
-                .map(function(d) {
+                .map(function (d) {
                     return _.pluckDeep(d[first][second], obj);
                 })
                 .flatten()
@@ -100,20 +70,20 @@ var chartStats = function(records) {
             data = d3.layout.histogram()
                 .bins(5)
                 (data)
-                .map(function(a) {
+                .map(function (a) {
                     return {
                         data: a.length,
                         name: d3.extent(a)
                             .join('-')
                     };
                 });
-            return data.filter(function(d) {
+            return data.filter(function (d) {
                 return d.data;
             });
         };
-        var pluckDeepOrdinal = function(records, first, second, obj) {
+        var pluckDeepOrdinal = function (records, first, second, obj) {
             var data = _.chain(records)
-                .map(function(d) {
+                .map(function (d) {
                     var vals = _.pluckDeep(d[first][second], obj);
                     return vals;
                     // vals = Array(vals.length).join('a').split('');
@@ -122,7 +92,7 @@ var chartStats = function(records) {
                 .value();
             return _.chain(data)
                 .countBy(_.identity)
-                .map(function(d, e) {
+                .map(function (d, e) {
                     return {
                         data: d,
                         name: e
@@ -168,13 +138,13 @@ var chartStats = function(records) {
             },
             'count': pluckDeepLinear(data, 'resourcesUsed', 'resource', 'hours'),
         };
-        var etc = [ages, sexes, resType, resHours].filter(function(d) {
+        var etc = [ages, sexes, resType, resHours].filter(function (d) {
             return d.count.length;
         });
         var flattenedRecords = makeFlat(data);
         var grouped = _.chain(flattenedRecords)
-            .reduce(function(acc, obj) {
-                _.each(obj, function(value, key) {
+            .reduce(function (acc, obj) {
+                _.each(obj, function (value, key) {
                     if (!_.isArray(acc[key])) {
                         acc[key] = [];
                     }
@@ -183,9 +153,8 @@ var chartStats = function(records) {
                 return acc;
             }, {})
             .value();
-
         var count = _.chain(grouped)
-            .map(function(d, e) {
+            .map(function (d, e) {
                 var options1 = _.findWhere(allInputs, {
                     field: e
                 });
@@ -195,23 +164,22 @@ var chartStats = function(records) {
                     vals = d3.layout.histogram()
                         .bins(5)
                         (d)
-                        .map(function(a) {
+                        .map(function (a) {
                             return {
                                 data: a.length,
                                 name: d3.extent(a)
                                     .join('-')
                             };
                         });
-                    vals = vals.filter(function(d) {
+                    vals = vals.filter(function (d) {
                         return d.data;
                     });
-
                     options.xLabel = ' Value Ranges';
                     options.label += ' (Avg Distribution)';
                 } else {
                     vals = _.chain(d)
                         .countBy(_.identity)
-                        .map(function(d, e) {
+                        .map(function (d, e) {
                             return {
                                 data: d,
                                 name: e
@@ -224,28 +192,25 @@ var chartStats = function(records) {
                         .value();
                     options.xLabel = ' Values';
                 }
-
                 return {
                     options: options,
                     count: vals,
                 };
             })
-            .sortBy(function(d) {
+            .sortBy(function (d) {
                 return d.options.number;
             })
             .reverse()
-            .sortBy(function(d) {
+            .sortBy(function (d) {
                 return d.options.number + d.count.length;
             })
             .reverse()
             .value();
-
         var result = _.flatten([etc, count]);
-
         return result;
     };
     context.chartsObj = {};
-    context.drawGraph = function(d, cont) {
+    context.drawGraph = function (d, cont) {
         var options = d.options || {};
         var title = options.label || '';
         var klass = 'col-md-6 pad00';
@@ -267,8 +232,6 @@ var chartStats = function(records) {
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .style('border', '1px solid #e4e6e7')
-
-
         svg1.append('text')
             .attr('transform', 'translate(' + (width1) / 2 + ',' + margin.top / 2 + ')')
             .attr('class', 'title')
@@ -280,12 +243,9 @@ var chartStats = function(records) {
         context.chartsObj[options.field] = svg;
         return svg;
     };
-    context.drawBars = function(record, svg) {
-
+    context.drawBars = function (record, svg) {
         var data = record.count;
-
         var options = record.options || {};
-
         var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], 0.4);
         var y = d3.scale.linear()
@@ -299,10 +259,10 @@ var chartStats = function(records) {
             .ticks(4)
             .tickSize(-width, 0, 0)
             .tickFormat('');
-        x.domain(data.map(function(d) {
+        x.domain(data.map(function (d) {
             return d.name;
         }));
-        y.domain([0, d3.max(data, function(d) {
+        y.domain([0, d3.max(data, function (d) {
             return d.data;
         })]);
         svg.append('g')
@@ -311,7 +271,7 @@ var chartStats = function(records) {
             .append('text')
             .attr('class', 'y_label')
             .attr('transform', 'rotate(-90)')
-            .attr('y', -margin.left/2)
+            .attr('y', -margin.left / 2)
             .attr('dy', '.2em')
             .attr('x', -height / 2)
             .style('text-anchor', 'middle')
@@ -328,7 +288,7 @@ var chartStats = function(records) {
             .attr('y', margin.bottom * 0.75)
             .text(options.xLabel);
         var barColorIndex = 0;
-        var barColors = function() {
+        var barColors = function () {
             var colors = ['#b46928', '#cb812a'];
             barColorIndex++;
             return colors[barColorIndex % 2];
@@ -339,16 +299,16 @@ var chartStats = function(records) {
             .enter()
             .append('g')
             .attr('class', 'bar')
-            .attr('transform', function(d) {
+            .attr('transform', function (d) {
                 return 'translate(' + (((x.rangeBand() / 2) + x(d.name)) - (maxBarWidth / 2)) + ',' + y(d.data) + ')';
             });
         bar.append('rect')
             .attr('class', '_bar')
-            .attr('fill', function() {
+            .attr('fill', function () {
                 return barColors();
             })
             .attr('width', Math.min.apply(null, [x.rangeBand(), maxBarWidth]))
-            .attr('height', function(d) {
+            .attr('height', function (d) {
                 return height - y(d.data);
             });
         bar.append('text')
@@ -357,11 +317,11 @@ var chartStats = function(records) {
             .attr('y', -2)
             .attr('x', maxBarWidth / 2)
             .attr('text-anchor', 'middle')
-            .text(function(d) {
+            .text(function (d) {
                 return d.data;
             });
         var allXText = svg.selectAll('.x.axis .tick text');
-        var w = _.reduce(allXText[0], function(sum, el) {
+        var w = _.reduce(allXText[0], function (sum, el) {
             return sum + el.getBoundingClientRect()
                 .width;
         }, 0);
@@ -369,114 +329,43 @@ var chartStats = function(records) {
             svg.selectAll('.x.axis .tick text')
                 .style('text-anchor', 'middle')
                 .attr('dx', '-1em')
-                .attr('transform', function() {
+                .attr('transform', function () {
                     return 'rotate(-10)';
                 });
         }
     };
-    context.drawRecords = function(records) {
-        records.forEach(function(d) {
+    context.drawRecords = function (records) {
+        records.forEach(function (d) {
             var svg = context.drawGraph(d, statDiv);
             context.drawBars(d, svg);
         });
     };
-    context.redrawRecords = function(records) {
+    context.redrawRecords = function (records) {
         Session.set('currentRecords', records);
         $('.svgRecord')
             .children()
-            .remove()
+            .remove();
         if (records.length) {
             countedRecords = context.countRecords(records);
-            countedRecords.forEach(function(e) {
+            countedRecords.forEach(function (e) {
                 context.drawBars(e, context.chartsObj[e.options.field]);
             });
         }
     };
     Session.set('currentRecords', records);
-
     var initRecords = context.countRecords(records);
     context.drawRecords(initRecords);
     context.initRecords = initRecords;
     return context;
 };
-var resourceArrayForm = function(data) {
-    return _.chain(data.resourcesUsed.resource)
-        .sortBy(function(d) {
-            return -d.count;
-        })
-        .map(function(d, e) {
-            var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
-            return {
-                key: d.type,
-                parent: 'Resources Used',
-                val: sum
-            };
-        })
-        .value()
-};
-var subjectArrayForm = function(flatData, name, parent) {
-    return _.chain(flatData)
-        .map(function(d, e) {
-            if (e.indexOf('_key') > -1) {
-                return;
-            }
-            if (e.indexOf('.' + name + '.') > -1) {
-                return {
-                    key: e,
-                    val: d
-                };
-            }
-        })
-        .compact()
-        .groupBy(function(d) {
-            return d.key.substr(d.key.lastIndexOf('.') + 1);
-        })
-        .map(function(d, e) {
-            var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-               if (_.contains(hide, e)) {
-                return [];
-            }
-            var items = d.map(function(f) {
-                    return f.val;
-                })
-                .sort();
-            var sum = _.chain(items)
-                .reduce(function(counts, word) {
-                    counts[word] = (counts[word] || 0) + 1;
-                    return counts;
-                }, {})
-                .map(function(d, e) {
-                    return [d, e];
-                })
-                .sortBy(function(d) {
-                    return -d[0];
-                })
-                .map(function(d, e) {
-                    if (d[0] === 1) {
-                        return d[1];
-                    };
-                    return d[1] + '(' + d[0] + ')';
-                })
-                .value()
-                .join(', ');
-            return {
-                key: e,
-                parent: parent,
-                val: items.sort()
-                    .join(', '),
-                val: sum
-            };
-        })
-        .value();
-};
-var recordsSetMap = function(context, data) {
+var recordsSetMap = function (context, data) {
     var geojson;
     var obj = {};
     var map = L.map(context)
     obj.map = map;
     map.scrollWheelZoom.disable();
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function(x, e) {
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -534,7 +423,7 @@ var recordsSetMap = function(context, data) {
 
     function highlightFeature(e) {
         resetHighlight();
-        Session.set('activeRecord', this.feature.properties.record);
+        Session.set('activeRecord', this.feature.properties.record._id);
         var properties = this.feature.properties;
         var id = properties.id;
         var sib = properties.field.sib;
@@ -551,8 +440,8 @@ var recordsSetMap = function(context, data) {
             dashArray: '1',
             fillOpacity: 1
         });
-        sib.forEach(function(d) {
-            layerGroups[d].eachLayer(function(e) {
+        sib.forEach(function (d) {
+            layerGroups[d].eachLayer(function (e) {
                 if (e.feature.properties.id === id) {
                     activeFeatures.push({
                         layer: e,
@@ -574,7 +463,7 @@ var recordsSetMap = function(context, data) {
             layer.bringToFront();
         }
         var bounds;
-        activeFeatures.forEach(function(d) {
+        activeFeatures.forEach(function (d) {
             if (!bounds) {
                 bounds = d.layer.getBounds();
                 return;
@@ -586,30 +475,30 @@ var recordsSetMap = function(context, data) {
 
     function resetHighlight() {
         if (activeFeatures && activeFeatures.length) {
-            activeFeatures.forEach(function(e) {
+            activeFeatures.forEach(function (e) {
                 e.layer.setStyle(e.style);
             });
         }
         activeFeatures = [];
     }
-    map.on('click', function() {
+    map.on('click', function () {
         resetHighlight();
         Session.set('activeRecord', false);
     });
     layerGroup = L.featureGroup();
-    layerGroups = mapPoints.map(function(d) {
+    layerGroups = mapPoints.map(function (d) {
         var geojson = L.geoJson(null, {
-            style: function() {
+            style: function () {
                 return d.style;
             },
-            pointToLayer: function(feature, latlng) {
+            pointToLayer: function (feature, latlng) {
                 if (feature.properties.field.type === 'path') {
                     return;
                 } else {
                     return L.circleMarker(latlng, d.style);
                 }
             },
-            onEachFeature: function(feature, layer) {
+            onEachFeature: function (feature, layer) {
                 layer.on({
                     click: highlightFeature,
                     //mouseout: resetHighlight,
@@ -625,11 +514,11 @@ var recordsSetMap = function(context, data) {
             layer: geojson
         };
     });
-    layerGroups = _.object(_.map(layerGroups, function(x) {
+    layerGroups = _.object(_.map(layerGroups, function (x) {
         return [x.name, x.layer];
     }));
     //map.scrollWheelZoom.disable();
-    map.on('mousedown', function() {
+    map.on('mousedown', function () {
         if (activeFeatures.length) {
             resetHighlight(activeFeatures);
         }
@@ -637,9 +526,9 @@ var recordsSetMap = function(context, data) {
     var legend = L.control({
         position: 'bottomleft'
     });
-    legend.onAdd = function() {
+    legend.onAdd = function () {
         var div = L.DomUtil.create('div', 'info legend');
-        mapPoints.forEach(function(d) {
+        mapPoints.forEach(function (d) {
             div.innerHTML += '<div class="statLegend"><div class="small">' + d.text + '</div><div class="fa-marker ' + d.bg + '"></div></div>';
         });
         return div;
@@ -669,8 +558,8 @@ var recordsSetMap = function(context, data) {
             }
         });
     }
-    data.forEach(function(d) {
-        mapPoints.forEach(function(feature) {
+    data.forEach(function (d) {
+        mapPoints.forEach(function (feature) {
             var coords = d.coords[feature.val];
             if (coords && coords.lng && coords.lat) {
                 layerGroups[feature.val].addData({
@@ -698,3 +587,140 @@ var recordsSetMap = function(context, data) {
     layerGroup.addTo(map);
     return obj;
 };
+var genList = function (records) {
+    var resourceArrayForm = function (data) {
+        return _.chain(data.resourcesUsed.resource)
+            .sortBy(function (d) {
+                return -d.count;
+            })
+            .map(function (d) {
+                var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
+                return {
+                    key: d.type,
+                    parent: 'Resources Used',
+                    val: sum
+                };
+            })
+            .value();
+    };
+    var subjectArrayForm = function (flatData, name, parent) {
+        return _.chain(flatData)
+            .map(function (d, e) {
+                if (e.indexOf('_key') > -1) {
+                    return;
+                }
+                if (e.indexOf('.' + name + '.') > -1) {
+                    return {
+                        key: e,
+                        val: d
+                    };
+                }
+            })
+            .compact()
+            .groupBy(function (d) {
+                return d.key.substr(d.key.lastIndexOf('.') + 1);
+            })
+            .map(function (d, e) {
+                hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
+                if (_.contains(hide, e)) {
+                    return [];
+                }
+                var items = d.map(function (f) {
+                        return f.val;
+                    })
+                    .sort();
+                var sum = _.chain(items)
+                    .reduce(function (counts, word) {
+                        counts[word] = (counts[word] || 0) + 1;
+                        return counts;
+                    }, {})
+                    .map(function (d, e) {
+                        return [d, e];
+                    })
+                    .sortBy(function (d) {
+                        return -d[0];
+                    })
+                    .map(function (d, e) {
+                        if (d[0] === 1) {
+                            return d[1];
+                        };
+                        return d[1] + '(' + d[0] + ')';
+                    })
+                    .value()
+                    .join(', ');
+                return {
+                    key: e,
+                    parent: parent,
+                    val: items.sort()
+                        .join(', '),
+                    val: sum
+                };
+            })
+            .value();
+    };
+    if (!records || !records.length) {
+        return;
+    }
+    return records.map(function (data) {
+        if (!data) {
+            return {};
+        }
+        var displayData = _.chain(data)
+            .map(function (val, schema1) {
+                //console.log(val, schema1)
+                var ignore = ['_id', 'subjects', 'resourcesUsed'];
+                if (ignore.indexOf(schema1) !== -1) {
+                    return;
+                }
+                if (typeof (val) === 'string') {
+                    return;
+                }
+                var ignoreKeys = ['userId'];
+                var check = Schemas[schema1] || {};
+                var schema = check._schema || {};
+                var sar = Schemas.SARCAT._schema || {};
+                var parent = sar[schema1].label || 'other';
+           
+                var results = _.map(val, function (d, e) {
+                    var labelCheck = schema[e] || {};
+                    var label = labelCheck.label || e;
+                    if (_.contains(ignoreKeys, label)) {
+                        return;
+                    }
+                    if (typeof (d) === 'object') {
+                        d = _.map(d, function (d, e) {
+                                return e + ':' + d;
+                            })
+                            .join(',');
+                    }
+                    return {
+                        key: label,
+                        parent: parent,
+                        val: d
+                    };
+                });
+                return results;
+            })
+            .flatten()
+            .compact()
+            .value();
+        var subjects2 = subjectArrayForm(flatten(data, {}), 'subject', 'Subjects');
+        var resources2 = resourceArrayForm(data);
+        displayData = _.flatten([subjects2, resources2, displayData]);
+        displayData2 = _.chain(displayData)
+            .groupBy('parent')
+            .map(function (d, e) {
+                return {
+                    field: e,
+                    data: d
+                };
+            })
+            .value();
+        return {
+            _id: 'map-' + data._id,
+            data: displayData2,
+            record: data
+        };
+    });
+};
+

@@ -107,8 +107,9 @@ npm=$dest/bin/node/bin/npm
 echo "installing node dependencies"
 
 mv app/programs/server/package.json $dest
-npm install getport --save
 npm install
+npm install getport --save
+
 
 
 chmod 777 *

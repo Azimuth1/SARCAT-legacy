@@ -1,33 +1,34 @@
 var map;
-Template.form.onCreated(function(a, b) {
-    console.log(this.data)
+Template.form.onCreated(function (a, b) {
     if (!Object.keys(this.data)
         .length) {
-       // return Router.go('records');
+        // return Router.go('records');
     }
     Session.set('subjectTableView', 'Description');
     var record = this.data;
     r = record
     Session.set('record', record);
-    Tracker.autorun(function() {
+    Tracker.autorun(function () {
         Session.set('record', Records.findOne(record._id));
     });
     Session.set('editRecordInfo', 'list');
     Session.set('userView', this.data._id);
 });
-Template.form.onRendered(function() {
-    var country = $('[name="incidentLocation.country"]').val();
-    Session.set('country', $('[name="incidentLocation.country"]').val());
+Template.form.onRendered(function () {
+    var country = $('[name="incidentLocation.country"]')
+        .val();
+    Session.set('country', $('[name="incidentLocation.country"]')
+        .val());
     var record = this.data;
     map = formSetMap('formMap', record._id);
     var coords = getCoords(record);
-    coords.forEach(function(d) {
+    coords.forEach(function (d) {
         if (d.coords) {
             map.add(d);
         }
     });
     map.fitBounds();
-    Meteor.call('getFilesInPublicFolder', record._id, function(err, d) {
+    Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
         Session.set('fileUploads', d)
     });
     var currentUnit = Session.get('measureUnits');
@@ -36,7 +37,7 @@ Template.form.onRendered(function() {
         $('.knob')
             .knobKnob({
                 value: degree,
-                turn: function(ratio) {
+                turn: function (ratio) {
                     var deg = parseInt(360 * ratio);
                     $('.knobVal')
                         .html(deg);
@@ -53,14 +54,14 @@ Template.form.onRendered(function() {
     });
     }*/
     if (!record.incidentLocation.ecoregionDomain || !record.incidentLocation.ecoregionDivision) {
-        Meteor.call('setEcoRegion', record._id, function(err, d) {
+        Meteor.call('setEcoRegion', record._id, function (err, d) {
             if (err) {
                 return;
             }
         });
     }
     $('.subjectRescueRow')
-        .each(function() {
+        .each(function () {
             var val = $(this)
                 .find('[name*="status"]')
                 .val();
@@ -127,103 +128,100 @@ Template.form.onRendered(function() {
             sideBySide: true
         });
     if (Roles.userIsInRole(Meteor.userId(), ['viewer'])) {
-        $('select, input, textarea, button').prop('disabled', true);
+        $('select, input, textarea, button')
+            .prop('disabled', true);
     }
 });
 Template.form.helpers({
-    record: function() {
+    record: function () {
         return Session.get('record');
     },
-    allowedStates: function(a, b) {
+    allowedStates: function (a, b) {
         var country = Session.get('country');
-        //console.log(country)
         var states = allowedStates(country);
-        //console.log(states.length)
         return states;
     },
-    activeLayer: function(name) {
+    activeLayer: function (name) {
         var coords = this.coords;
         return coords[name] ? 'active' : '';
     },
-    toDateString: function(date) {
+    toDateString: function (date) {
         return;
-        console.log(date)
         if (!date) {
             return;
         }
         return date.toISOString()
             .split('T')[0];
     },
-    config: function() {
+    config: function () {
         return Session.get('config')
     },
-    formType: function() {
+    formType: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update' : 'disabled';
     },
-    formType2: function() {
+    formType2: function () {
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return highRole ? 'update-pushArray' : 'disabled';
     },
-    todosReady: function() {
+    todosReady: function () {
         return true;
     },
-    getObj: function(obj, name) {
+    getObj: function (obj, name) {
         return obj[name];
     },
-    getData: function(obj, name) {
+    getData: function (obj, name) {
         return this;
     },
-    current: function() {
+    current: function () {
         return Records.findOne(this._id)
     },
-    current2: function() {
+    current2: function () {
         return Records.findOne(this._id)
     },
-    Schemas: function() {
+    Schemas: function () {
         return Schemas;
     },
-    Records: function() {
+    Records: function () {
         return Records;
     },
-    hasRevisedPLS: function() {
+    hasRevisedPLS: function () {
         var record = this;
         return record.coords && record.coords['revisedLKP_PLS'];
     },
-    autoSaveMode: function() {
+    autoSaveMode: function () {
         return true;
     },
-    schemas: function() {
+    schemas: function () {
         var record = this;
         if (!record) {
             return;
         }
         var schemas = [{
-            "name": "incidentLocation",
+            'name': 'incidentLocation',
         }, {
-            "name": "timeLog",
+            'name': 'timeLog',
         }, {
-            "name": "subjects",
-            "total": record.subjects.subject.length,
-            "toCount": true
+            'name': 'subjects',
+            'total': record.subjects.subject.length,
+            'toCount': true
         }, {
-            "name": "weather"
+            'name': 'weather'
         }, {
-            "name": "findLocation"
+            'name': 'findLocation'
         }, {
-            "name": "incidentOutcome",
+            'name': 'incidentOutcome',
             newTotal: 7
         }, {
-            "name": "resourcesUsed",
-            "total": record.resourcesUsed.resource.length,
-            "toCount": true
+            'name': 'resourcesUsed',
+            'total': record.resourcesUsed.resource.length,
+            'toCount': true
         }];
         var summary = _.chain(schemas)
-            .map(function(field) {
+            .map(function (field) {
                 var d = field.name;
                 var toCount = field.toCount;
                 if (!Schemas[d]) {
-                    console.log(d)
                     return;
                 }
                 var recordSamp = record[d] || {};
@@ -233,7 +231,6 @@ Template.form.helpers({
                 var count = toCount ? field.total : Object.keys(recordSamp)
                     .length;
                 var label = Schemas.SARCAT._schema[d].label;
-                //console.log(d, count, total,field.newTotal)
                 var klass = (count === total || (!total && count)) ? 'primary-bg' : '';
                 total = total ? '/' + total : null;
                 var sum = [count, total].join('');
@@ -247,31 +244,31 @@ Template.form.helpers({
             .value();
         return summary;
     },
-    subjectKeys: function() {
+    subjectKeys: function () {
         return _.chain(Schemas.subjects._schema)
-            .filter(function(e, d) {
-                return d.indexOf("$.") > -1;
+            .filter(function (e, d) {
+                return d.indexOf('$.') > -1;
             })
-            .map(function(d) {
+            .map(function (d) {
                 return d.label;
             })
             .compact()
             .without('Name/Alias')
             .value();
     },
-    subjectKeysDesc: function() {
-        return ["Age", "Sex", "Weight", "Height", "Fitness Level", "Experience", "Equipment", "Clothing", "Survival training", "Local?"];
+    subjectKeysDesc: function () {
+        return ['Age', 'Sex', 'Weight', 'Height', 'Fitness Level', 'Experience', 'Equipment', 'Clothing', 'Survival training', 'Local?'];
     },
-    subjectKeysRescue: function() {
-        return ["Rescue Status", "Evacuation Method", "Mechanism", "Injury Type", "Illness", "Treatment by"];
+    subjectKeysRescue: function () {
+        return ['Rescue Status', 'Evacuation Method', 'Mechanism', 'Injury Type', 'Illness', 'Treatment by'];
     },
-    subjectKeysPersonal: function() {
-        return ["Full Name", "Address", "Home Phone", "Cell Phone", "Comments"];
+    subjectKeysPersonal: function () {
+        return ['Full Name', 'Address', 'Home Phone', 'Cell Phone', 'Comments'];
     },
-    test: function() {
+    test: function () {
         return this.coords;
     },
-    customQuestions_: function() {
+    customQuestions_: function () {
         var record = Session.get('record');
         if (!record || !record.customQuestions) {
             return;
@@ -279,44 +276,43 @@ Template.form.helpers({
         var keys = Object.keys(record.customQuestions)
         return keys && keys.length;
     },
-    hideCoord: function(d) {
+    hideCoord: function (d) {
         return this.coords[d] ? '' : 'hide';
     },
-    getSubjectsArray: function() {
+    getSubjectsArray: function () {
         var myArray = (this && this.subjects) ? this.subjects.subject : [];
-        return _.map(myArray, function(value, index) {
+        return _.map(myArray, function (value, index) {
             return {
                 value: value,
                 index: index,
-                name: "subjects.subject." + index
+                name: 'subjects.subject.' + index
             };
         });
     },
-    getSubjectsArrayDesc: function() {
+    getSubjectsArrayDesc: function () {
         var values = _.chain(Schemas.subjects._schema)
-            .map(function(e, d) {
-                var field = d.split("$.")[1];
+            .map(function (e, d) {
+                var field = d.split('$.')[1];
                 if (!field) {
                     return;
                 }
                 return {
                     options: e.allowedValues ? 'allowed' : null,
-                    field: d.split("$.")[1]
+                    field: d.split('$.')[1]
                 }
             })
             .compact()
-            .filter(function(d) {
-                var keep = ["age", "sex", "weight", "height", "physical_fitness", "experience", "equipment", "clothing", "survival_training", "local"];
+            .filter(function (d) {
+                var keep = ['age', 'sex', 'weight', 'height', 'physical_fitness', 'experience', 'equipment', 'clothing', 'survival_training', 'local'];
                 return _.contains(keep, d.field);
             })
             .without('_key')
             .value();
         var myArray = (this && this.subjects) ? this.subjects.subject : [];
-        //console.log(myArray);
-        return _.map(myArray, function(value, index) {
-            var fields = values.map(function(d) {
+        return _.map(myArray, function (value, index) {
+            var fields = values.map(function (d) {
                 var obj = {};
-                obj.name = "subjects.subject." + index + '.' + d.field;
+                obj.name = 'subjects.subject.' + index + '.' + d.field;
                 obj.options = d.options
                 return obj
             });
@@ -324,115 +320,115 @@ Template.form.helpers({
                 value: fields,
                 index: index,
                 _key: value._key,
-                name: "subjects.subject." + index
+                name: 'subjects.subject.' + index
             };
         });
     },
-    editRecordInfo: function(item) {
+    editRecordInfo: function (item) {
         return Session.equals('editRecordInfo', item);
     },
-    getSubjectsArrayRescue: function() {
+    getSubjectsArrayRescue: function () {
         var values = _.chain(Schemas.subjects._schema)
-            .map(function(e, d) {
-                var field = d.split("$.")[1];
+            .map(function (e, d) {
+                var field = d.split('$.')[1];
                 if (!field) {
                     return;
                 }
                 return {
                     options: e.allowedValues ? 'allowed' : null,
-                    field: d.split("$.")[1]
+                    field: d.split('$.')[1]
                 }
             })
             .compact()
-            .filter(function(d) {
-                var keep = ["status", "evacuationMethod", "mechanism", "injuryType", "illness", "treatmentby"];
+            .filter(function (d) {
+                var keep = ['status', 'evacuationMethod', 'mechanism', 'injuryType', 'illness', 'treatmentby'];
                 return _.contains(keep, d.field);
             })
             .without('_key')
             .value();
         var myArray = (this && this.subjects) ? this.subjects.subject : [];
-        return _.map(myArray, function(value, index) {
-            var fields = values.map(function(d) {
+        return _.map(myArray, function (value, index) {
+            var fields = values.map(function (d) {
                 var obj = {};
-                obj.name = "subjects.subject." + index + '.' + d.field;
+                obj.name = 'subjects.subject.' + index + '.' + d.field;
                 obj.options = d.options
                 return obj
             });
             return {
                 value: fields,
                 index: index,
-                name: "subjects.subject." + index
+                name: 'subjects.subject.' + index
             };
         });
     },
-    getSubjectsArrayPersonal: function() {
+    getSubjectsArrayPersonal: function () {
         var values = _.chain(Schemas.subjects._schema)
-            .map(function(e, d) {
-                var field = d.split("$.")[1];
+            .map(function (e, d) {
+                var field = d.split('$.')[1];
                 if (!field) {
                     return;
                 }
                 return {
                     options: e.allowedValues ? 'allowed' : null,
-                    field: d.split("$.")[1]
+                    field: d.split('$.')[1]
                 }
             })
             .compact()
-            .filter(function(d) {
-                var keep = ["name", "address", "homePhone", "cellPhone", "other"];
+            .filter(function (d) {
+                var keep = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                 return _.contains(keep, d.field);
             })
             .without('_key')
             .value();
         var myArray = (this && this.subjects) ? this.subjects.subject : [];
-        return _.map(myArray, function(value, index) {
-            var fields = values.map(function(d) {
+        return _.map(myArray, function (value, index) {
+            var fields = values.map(function (d) {
                 var obj = {};
-                obj.name = "subjects.subject." + index + '.' + d.field;
+                obj.name = 'subjects.subject.' + index + '.' + d.field;
                 obj.options = d.options
                 return obj
             });
             return {
                 value: fields,
                 index: index,
-                name: "subjects.subject." + index
+                name: 'subjects.subject.' + index
             };
         });
     },
-    getResourceArray: function() {
+    getResourceArray: function () {
         var myArray = (this && this.resourcesUsed) ? this.resourcesUsed.resource : [];
-        return _.map(myArray, function(value, index) {
+        return _.map(myArray, function (value, index) {
             return {
                 value: value,
                 index: index,
-                name: "resourcesUsed.resource." + index
+                name: 'resourcesUsed.resource.' + index
             };
         });
     },
-    getResourceArray2: function() {
+    getResourceArray2: function () {
         var values = _.chain(Schemas.resourcesUsed._schema)
-            .map(function(e, d) {
-                var field = d.split("$.")[1];
+            .map(function (e, d) {
+                var field = d.split('$.')[1];
                 if (!field) {
                     return;
                 }
                 return {
                     options: e.allowedValues ? 'allowed' : null,
-                    field: d.split("$.")[1]
+                    field: d.split('$.')[1]
                 }
             })
             .compact()
-            .filter(function(d) {
-                var keep = ["type", "count", "hours", "findResource"];
+            .filter(function (d) {
+                var keep = ['type', 'count', 'hours', 'findResource'];
                 return _.contains(keep, d.field);
             })
             .without('_key')
             .value();
         var myArray = (this && this.resourcesUsed) ? this.resourcesUsed.resource : [];
-        return _.map(myArray, function(value, index) {
-            var fields = values.map(function(d) {
+        return _.map(myArray, function (value, index) {
+            var fields = values.map(function (d) {
                 var obj = {};
-                obj.name = "resourcesUsed.resource." + index + '.' + d.field;
+                obj.name = 'resourcesUsed.resource.' + index + '.' + d.field;
                 obj.options = d.options
                 return obj
             });
@@ -440,43 +436,43 @@ Template.form.helpers({
                 value: fields,
                 index: index,
                 _key: value._key,
-                name: "resourcesUsed.resource." + index
+                name: 'resourcesUsed.resource.' + index
             };
         });
     },
-    subject: function() {
-        return _.map(this, function(d) {
+    subject: function () {
+        return _.map(this, function (d) {
             return d;
         });
     },
-    resourceKeys: function() {
+    resourceKeys: function () {
         return _.chain(Schemas.resourcesUsed._schema)
-            .filter(function(e, d) {
-                return d.indexOf("$.") > -1;
+            .filter(function (e, d) {
+                return d.indexOf('$.') > -1;
             })
-            .map(function(d) {
+            .map(function (d) {
                 return d.label;
             })
             .compact()
             .without('Name/Alias')
             .value();
     },
-    resources: function() {
+    resources: function () {
         return this.data.subjects.subject;
     },
-    resource: function() {
-        return _.map(this, function(d) {
+    resource: function () {
+        return _.map(this, function (d) {
             return d;
         });
     },
-    fileUploads: function(d) {
+    fileUploads: function (d) {
         return Session.get('fileUploads');
     },
-    subjectTableView: function(d) {
+    subjectTableView: function (d) {
         var isView = Session.equals('subjectTableView', d);
         return isView ? '' : 'hide';
     },
-    showFindLocation: function() {
+    showFindLocation: function () {
         var record = Session.get('record');
         if (!record) {
             return false;
@@ -485,7 +481,7 @@ Template.form.helpers({
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return (highRole && findCoord) ? true : false;
     },
-    disableFindLocationForm: function() {
+    disableFindLocationForm: function () {
         var record = Session.get('record');
         if (!record) {
             return;
@@ -494,16 +490,16 @@ Template.form.helpers({
         var highRole = Roles.userIsInRole(Meteor.user(), ['admin', 'editor']);
         return (highRole && findCoord) ? 'update' : 'disabled';
     },
-    initialDirectionofTravelClass: function() {
+    initialDirectionofTravelClass: function () {
         var initialDirectionofTravel_Boolean = this.incidentOperations.initialDirectionofTravel_Boolean === 'Yes' ? true : false;
         Session.set('initialDirectionofTravel_Boolean', initialDirectionofTravel_Boolean);
         return initialDirectionofTravel_Boolean ? 'show' : 'hide';
     },
-    uploadFile: function(a, b) {
+    uploadFile: function (a, b) {
         return {
-            finished: function(index, fileInfo, context) {
+            finished: function (index, fileInfo, context) {
                 var record = Session.get('record');
-                Meteor.call('getFilesInPublicFolder', record._id, function(err, d) {
+                Meteor.call('getFilesInPublicFolder', record._id, function (err, d) {
                     Session.set('fileUploads', d)
                 });
             }
@@ -511,65 +507,65 @@ Template.form.helpers({
     },
 });
 Template.form.events({
-    'change [name="incidentLocation.country"]': function(event, template) {
+    'change [name="incidentLocation.country"]': function (event, template) {
         return Session.set('country', event.currentTarget.value);
     },
-    'mouseout .travelDir': function(event, template) {
+    'mouseout .travelDir': function (event, template) {
         clicking = false;
         $('[name="incidentOperations.initialDirectionofTravel"]')
             .val($('.knobVal')
                 .html())
-            .trigger("change");
+            .trigger('change');
     },
-    'click .editRecordInfo': function(event) {
+    'click .editRecordInfo': function (event) {
         var item = event.target.getAttribute('data');
         return Session.set('editRecordInfo', item);
     },
-    'click .formNav': function(event, template) {
+    'click .formNav': function (event, template) {
         $('.collapse')
             .collapse('hide');
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'click .newSubject': function(event, template) {
+    'click .newSubject': function (event, template) {
         var record = Session.get('record');
-        Meteor.call('pushArray', record._id, 'subjects.subject', function(err, d) {
+        Meteor.call('pushArray', record._id, 'subjects.subject', function (err, d) {
             if (err) {
                 console.log(err);
             }
         });
     },
-    'click .removeSubject': function(event, template) {
+    'click .removeSubject': function (event, template) {
         var record = Session.get('record');
-        Meteor.call('removeSubject', record._id, event.target.getAttribute('data'), function(err) {
+        Meteor.call('removeSubject', record._id, event.target.getAttribute('data'), function (err) {
             if (err) {
                 console.log(err);
             }
         });
     },
-    'click .newResource': function(event, template) {
+    'click .newResource': function (event, template) {
         var record = Session.get('record');
-        Meteor.call('pushArray', record._id, 'resourcesUsed.resource', function(err, d) {
+        Meteor.call('pushArray', record._id, 'resourcesUsed.resource', function (err, d) {
             if (err) {
                 console.log(err);
             }
         });
     },
-    'click .removeResource': function(event, template) {
+    'click .removeResource': function (event, template) {
         var record = Session.get('record');
-        Meteor.call('removeResource', record._id, event.target.getAttribute('data'), function(err) {
+        Meteor.call('removeResource', record._id, event.target.getAttribute('data'), function (err) {
             if (err) {
                 console.log(err);
             }
         });
     },
-    'change .formNav': function(event, template) {
+    'change .formNav': function (event, template) {
         $('.collapse')
             .collapse('hide');
         $('#collapse_' + this.name)
             .collapse('toggle');
     },
-    'change .bsDateInput': function(event, template) {
+    'change .bsDateInput': function (event, template) {
         var record = Session.get('record');
         var name = event.target.name;
         if (name === 'timeLog.lastSeenDateTime' || name === 'timeLog.subjectLocatedDateTime' || name === 'timeLog.SARNotifiedDatetime') {
@@ -583,8 +579,7 @@ Template.form.events({
                 var duration = moment.duration(moment(endTime)
                     .diff(moment(startTime)));
                 var elapsedTime = Math.round(duration.asHours());
-                console.log(elapsedTime);
-                Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', elapsedTime, function(err, d) {
+                Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', elapsedTime, function (err, d) {
                     console.log(d);
                     if (err) {
                         return console.log(err);
@@ -592,8 +587,7 @@ Template.form.events({
                 });
             } else if ($('[name="timeLog.totalMissingHours"]')
                 .val()) {
-                Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', '', function(err, d) {
-                    console.log(d);
+                Meteor.call('updateRecord', record._id, 'timeLog.totalMissingHours', '', function (err, d) {
                     if (err) {
                         return console.log(err);
                     }
@@ -603,45 +597,26 @@ Template.form.events({
                 var duration = moment.duration(moment(endTime)
                     .diff(moment(startTimeSAR)));
                 var elapsedTime = Math.round(duration.asHours());
-                Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', elapsedTime, function(err, d) {
-                    console.log(d);
+                Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', elapsedTime, function (err, d) {
                     if (err) {
                         return console.log(err);
                     }
                 });
             } else if ($('[name="timeLog.totalSearchHours"]')
                 .val()) {
-                Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', '', function(err, d) {
-                    console.log(d);
+                Meteor.call('updateRecord', record._id, 'timeLog.totalSearchHours', '', function (err, d) {
                     if (err) {
                         return console.log(err);
                     }
                 });
             }
         }
-        /*var record = Session.get('record');
-        if (!record || record.weather) {
-            return;
-        }
-        Meteor.call('setWeather', record._id, {
-            unset: true
-        }, function(err, d) {
-            console.log(err, d)
-            if (err) {
-                $('.panel-title:contains("Weather")')
-                    .parent()
-                    .next()
-                    .prepend('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
-                return console.log(err);
-            }
-        });*/
     },
-    'click .mapPoints .btn': function(event, template) {
+    'click .mapPoints .btn': function (event, template) {
         e = event
         var context = template.$(event.currentTarget);
         var pointType = context.attr('data');
         var active = context.hasClass('active');
-        console.log(pointType)
         if (!map || pointType === 'ippCoordinates') {
             event.stopPropagation();
             return;
@@ -650,7 +625,6 @@ Template.form.events({
         var item = _.findWhere(coords, {
             val: pointType
         });
-        //console.log(active, item)
         if (!item) {
             return;
         };
@@ -664,7 +638,7 @@ Template.form.events({
             }
         }
     },
-    'click .fileUpload': function(event, template) {
+    'click .fileUpload': function (event, template) {
         var record = Session.get('record');
         var file = event.target.getAttribute('data');
         var url = '/uploads/records'
@@ -672,18 +646,16 @@ Template.form.events({
         url += '/' + file;
         window.open(url);
     },
-    'click .subjectTableView label': function(event, template) {
+    'click .subjectTableView label': function (event, template) {
         var dataAttr = event.currentTarget.children[0].getAttribute('data');
         Session.set('subjectTableView', dataAttr);
     },
-    'blur #formIdMap input': function(event, template) {
+    'blur #formIdMap input': function (event, template) {
         var record = Session.get('record');
         var name = event.target.name;
         var value = event.target.value;
-        console.log(name, value)
         if (name.indexOf('coords.') !== -1) {
             val = name.split('.');
-            console.log(val)
             if (val.length !== 3) {
                 return;
             }
@@ -693,7 +665,7 @@ Template.form.events({
             map.editPoint(val[1]);
         }
     },
-    'change [name*="subjects.subject"][name*="status"]': function(event) {
+    'change [name*="subjects.subject"][name*="status"]': function (event) {
         var val = event.target.value;
         var ind = event.target.getAttribute('name')
             .split('.')[2];
@@ -709,10 +681,10 @@ Template.form.events({
                 .attr('disabled', true);
         }
     },
-    'click #weatherBtn': function(event, template) {
+    'click #weatherBtn': function (event, template) {
         var id = Session.get('record')
             ._id;
-        Meteor.call('setWeather', id, function(err, d) {
+        Meteor.call('setWeather', id, function (err, d) {
             if (err) {
                 $(event.target)
                     .replaceWith('<p class="small em mar0y text-danger">Unable to retreive weather data</p>')
@@ -720,25 +692,25 @@ Template.form.events({
             } else {}
         });
     },
-    'click #mapCalcBtn': function(event, template) {
+    'click #mapCalcBtn': function (event, template) {
         var recordId = Session.get('record')
             ._id;
-        Meteor.call('setDistance', recordId, function(err, d) {
+        Meteor.call('setDistance', recordId, function (err, d) {
             if (err) {
                 return console.log(err);
             }
         });
-        Meteor.call('setBearing', recordId, 'findLocation.findBearing', function(err, d) {
+        Meteor.call('setBearing', recordId, 'findLocation.findBearing', function (err, d) {
             if (err) {
                 return console.log(err);
             }
         });
-        Meteor.call('setDispersionAngle', recordId, function(err, d) {
+        Meteor.call('setDispersionAngle', recordId, function (err, d) {
             if (err) {
                 return console.log(err);
             }
         });
-        Meteor.call('setEcoRegion', recordId, function(err, d) {
+        Meteor.call('setEcoRegion', recordId, function (err, d) {
             if (err) {
                 return console.log(err);
             }
@@ -747,7 +719,7 @@ Template.form.events({
             .internet) {
             return;
         }
-        Meteor.call('setElevation', recordId, function(err, d) {
+        Meteor.call('setElevation', recordId, function (err, d) {
             if (err) {
                 return console.log(err);
             }
@@ -758,15 +730,15 @@ Template.form.events({
             }
         });*/
     },
-    'change [name="incidentOperations.lkp_pls_Boolean"]': function(event) {
+    'change [name="incidentOperations.lkp_pls_Boolean"]': function (event) {
         var val = event.target.value;
-        console.log(val);
         var item = {
-            val: "revisedLKP_PLS",
-            name: "coords.revisedLKP_PLS",
-            text: "Revised IPP",
-            icon: 'fa-male',
-            color: 'red'
+            val: 'revisedLKP_PLS',
+            name: 'coords.revisedLKP_PLS',
+            text: 'Revised IPP',
+            icon: 'fa-times-circle-o',
+            color: 'darkred',
+            tColor: '#000'
         }
         if (val === 'Yes') {
             map.add(item);
@@ -778,7 +750,7 @@ Template.form.events({
             }
         }
     },
-    'change [name="incidentOutcome.incidentOutcome"]': function(event) {
+    'change [name="incidentOutcome.incidentOutcome"]': function (event) {
         var val = event.target.value;
         if (val !== 'Open/Suspended') {
             $('[name="incidentOutcome.suspensionReasons"]')
@@ -790,7 +762,7 @@ Template.form.events({
                 .removeClass('hide');
         }
     },
-    'change [name="incidentOutcome.injuredSearcher"]': function(event) {
+    'change [name="incidentOutcome.injuredSearcher"]': function (event) {
         var val = event.target.value;
         if (val === 'Yes') {
             $('[name="incidentOutcome.injuredSearcherDetails"]')
@@ -802,12 +774,12 @@ Template.form.events({
                 .addClass('hide');
         }
     },
-    'change [name="incidentOperations.initialDirectionofTravel_Boolean"]': function(event) {
+    'change [name="incidentOperations.initialDirectionofTravel_Boolean"]': function (event) {
         var val = event.target.value === 'Yes' ? true : false;
         Session.set('initialDirectionofTravel_Boolean', val);
         var record = Session.get('record');
         if (val) {} else {
-            Meteor.call('updateRecord', record._id, 'incidentOperations.initialDirectionofTravel', null, function(err, d) {
+            Meteor.call('updateRecord', record._id, 'incidentOperations.initialDirectionofTravel', null, function (err, d) {
                 if (err) {
                     return console.log(err);
                 }
@@ -817,33 +789,33 @@ Template.form.events({
 });
 AutoForm.hooks({
     updateResourceForm: {
-        onSuccess: function(insertDoc, updateDoc, currentDoc) {
+        onSuccess: function (insertDoc, updateDoc, currentDoc) {
             $('#updateResourceForm')
                 .find('input,select')
                 .val('');
         }
     }
 });
-
-Records.before.update(function(userId, doc, fieldNames, modifier, options) {
-var encryptionKey = Session.get('config').encryptionKey;
+Records.before.update(function (userId, doc, fieldNames, modifier, options) {
+    var encryptionKey = Session.get('config')
+        .encryptionKey;
     if (modifier && modifier.$set && Object.keys(modifier.$set)
         .length) {
-        console.log(modifier)
         var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-        var fields = Object.keys(modifier.$set)
-            .map(function(d) {
-                return {
-                    field: d.substr(d.lastIndexOf('.') + 1),
-                    name: d
-                }
-            });
-        console.log(fields)
-        _.each(fields, function(d) {
+        var fields = Object.keys(modifier.$set);
+        if (_.find(fields, function (d) {
+                return d.indexOf('subject') === -1;
+            })) {
+            return;
+        }
+        fields = fields.map(function (d) {
+            return {
+                field: d.substr(d.lastIndexOf('.') + 1),
+                name: d
+            };
+        });
+        _.each(fields, function (d) {
             if (_.contains(hide, d.field)) {
-                console.log(d)
-                    /*console.log(d.name,CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
-                        .toString())*/
                 modifier.$set[d.name] = CryptoJS.AES.encrypt(modifier.$set[d.name], encryptionKey)
                     .toString();
             }
@@ -851,19 +823,20 @@ var encryptionKey = Session.get('config').encryptionKey;
     }
 });
 AutoForm.addHooks(null, {
-    onSuccess: function(formType, result, c) {
-        //.log(this, formType, result, c);
-        var autoSaveChangedElement = this.autoSaveChangedElement || {};
+    onSuccess: function (formType, result, c) {
         var field;
         var value;
         if (formType === 'insert') {
             field = this.insertDoc.recordInfo.name;
-            value = this.insertDoc
+            value = this.insertDoc;
         } else if (this.autoSaveChangedElement) {
-            var autoSaveChangedElement = this.autoSaveChangedElement
+            var autoSaveChangedElement = this.autoSaveChangedElement;
             field = autoSaveChangedElement.name;
             value = autoSaveChangedElement.value;
+        } else {
+            return;
         }
+        value = typeof (value) === 'object' ? JSON.stringify(value) : value;
         RecordsAudit.insert({
             'type': formType,
             'recordId': this.docId,
@@ -877,7 +850,7 @@ AutoForm.addHooks(null, {
         });
     }
 });
-formSetMap = function(context, recordId) {
+formSetMap = function (context, recordId) {
     var markers = {};
     var paths = {};
     var coords = {};
@@ -890,7 +863,7 @@ formSetMap = function(context, recordId) {
         })
         .addTo(map);
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function(x, e) {
+    var layers = _.object(_.map(defaultLayers, function (x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -911,7 +884,7 @@ formSetMap = function(context, recordId) {
             .val(bounds)
             .trigger("change");
     });*/
-    obj.add = function(d) {
+    obj.add = function (d) {
         var val = d.val;
         if (!d.path) {
             coords[val] = d;
@@ -956,7 +929,7 @@ formSetMap = function(context, recordId) {
             obj.addPoly(d, latlngs);
         }
     };
-    obj.remove = function(d) {
+    obj.remove = function (d) {
         if (d.path) {
             obj.removePoly(d);
         } else {
@@ -964,7 +937,7 @@ formSetMap = function(context, recordId) {
             return;
         }
     };
-    obj.addPoly = function(d, latlngs) {
+    obj.addPoly = function (d, latlngs) {
         color = d.path.stroke;
         var polyline = L.polyline(latlngs, {
             color: color,
@@ -979,25 +952,25 @@ formSetMap = function(context, recordId) {
         var lineString = JSON.stringify(latlngs);
         if (!$('[name="' + d.name + '"]')
             .val()) {
-            Meteor.call('updateRecord', recordId, d.name, lineString, function(err, d) {
+            Meteor.call('updateRecord', recordId, d.name, lineString, function (err, d) {
                 if (err) {
                     return console.log(err);
                 }
             });
         }
-        polyline.on('click', function(d) {
+        polyline.on('click', function (d) {
             polyline.editing.enable();
         });
-        polyline.on('dblclick', function(d) {
+        polyline.on('dblclick', function (d) {
             polyline.editing.disable();
         });
         $('#formMap')
-            .on('mouseup', '.leaflet-editing-icon', function(d) {
-                drawnPaths.eachLayer(function(layer) {
+            .on('mouseup', '.leaflet-editing-icon', function (d) {
+                drawnPaths.eachLayer(function (layer) {
                     var name = layer.options.name;
                     if (layer._path) {
                         latlngs = layer.getLatLngs()
-                            .map(function(d) {
+                            .map(function (d) {
                                 return [d.lat, d.lng]
                             });
                         var lineString = JSON.stringify(latlngs);
@@ -1010,11 +983,11 @@ formSetMap = function(context, recordId) {
             })
             //var lineString = JSON.stringify(layer.toGeoJSON());
     };
-    obj.removePoly = function(d) {
+    obj.removePoly = function (d) {
         if (!d || !d.val) {
             return;
         }
-        Meteor.call('updateRecord', recordId, d.name, null, function(err, result) {
+        Meteor.call('updateRecord', recordId, d.name, null, function (err, result) {
             if (err) {
                 return console.log(err);
             }
@@ -1023,7 +996,7 @@ formSetMap = function(context, recordId) {
             delete coords[d.val];
         });
     };
-    obj.removePoint = function(d) {
+    obj.removePoint = function (d) {
         if (!d || !d.val) {
             return;
         }
@@ -1040,11 +1013,11 @@ formSetMap = function(context, recordId) {
         drawnPoints.removeLayer(marker);
         delete coords[d.val];
     };
-    obj.editPoint = function(name) {
+    obj.editPoint = function (name) {
         var coords = Records.findOne(recordId)
             .coords[name];
         var layer = drawnPoints.getLayers()
-            .filter(function(d) {
+            .filter(function (d) {
                 return d.options.name === 'coords.' + name;
             });
         if (!layer.length) {
@@ -1055,7 +1028,7 @@ formSetMap = function(context, recordId) {
     };
     var addLocations = ['_southWest', '_northEast'];
     //m = map
-    obj.addPoint = function(d) {
+    obj.addPoint = function (d) {
         var _coords = d.coords; // || map.getCenter();
         if (!d.coords) {
             var bounds = map.getBounds();
@@ -1097,21 +1070,21 @@ formSetMap = function(context, recordId) {
         drawnPoints.addLayer(marker);
         if (!$('[name="' + d.name + '.lng"]')
             .val()) {
-            Meteor.call('updateRecord', recordId, d.name + '.lng', _coords.lng, function(err, d) {
+            Meteor.call('updateRecord', recordId, d.name + '.lng', _coords.lng, function (err, d) {
                 if (err) {
                     return console.log(err);
                 }
             });
-            Meteor.call('updateRecord', recordId, d.name + '.lat', _coords.lat, function(err, d) {
+            Meteor.call('updateRecord', recordId, d.name + '.lat', _coords.lat, function (err, d) {
                 if (err) {
                     return console.log(err);
                 }
             });
         }
-        marker.on('dragend', function(event) {
+        marker.on('dragend', function (event) {
             var marker = event.target;
             var position = marker.getLatLng();
-            Meteor.call('updateRecord', recordId, d.name, position, function(err, res) {
+            Meteor.call('updateRecord', recordId, d.name, position, function (err, res) {
                 if (err) {
                     console.log(err);
                     return;
@@ -1120,7 +1093,7 @@ formSetMap = function(context, recordId) {
         });
         return marker;
     }
-    obj.fitBounds = function() {
+    obj.fitBounds = function () {
         map.fitBounds(drawnPoints.getBounds()
             .pad(0.5));
         drawnPaths.addTo(map);
@@ -1128,3 +1101,4 @@ formSetMap = function(context, recordId) {
     };
     return obj;
 }
+
