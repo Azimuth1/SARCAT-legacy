@@ -46,7 +46,7 @@
                     {{#if isInRole 'admin'}}
                     <!---->
                     {{#if selectedRecords}}
-                    <li><a href="#" class="strong deleteRecord"><i class="glyphicon glyphicon-trash"></i>Delete Records</a>
+                    <li><a href="#" class="strong deleteRecord"><i class="glyphicon glyphicon-trash"></i> Delete Records</a>
                     </li>
                     <!---->
                     {{/if}}
@@ -60,8 +60,8 @@
                         <ul class="dropdown-menu">
                             <li><a href="#" id="genReport"><i class="glyphicon glyphicon-folder-close"></i> View Report</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a id="downloadRecords" href="#"><i class="fa fa-table"></i> Download CSV</a></li>
-                            <li><a id="downloadRecordsJSON" href="#"><i class="fa">{..}</i> Download JSON</a></li>
+                            <li><a id="downloadRecords" href="#"><i class="fa fa-table"></i> Download Data (.csv)</a></li>
+                            <li><a id="downloadRecordsJSON" href="#"><i class="fa fa-download"></i> Download Backup (.json)</a></li>
                             {{#if isInRole 'admin,editor'}}
                             <li role="separator" class="divider"></li>
                             <li>
@@ -104,7 +104,13 @@
         <!---->
         {{#unless canCreateNewRecords}}
         <p class="text-center text-warning">Agency Profile must be setup by Admin to begin creating records</p>
-        {{/unless}} {{#if createNewBtn}}
+        {{/unless}} 
+
+<!--
+        {{#if createNewBtn}}
         <button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>{{/if}}
+-->
+
+
     </div>
 </template>
