@@ -1,20 +1,16 @@
 var mapDrawn;
-
-
-
-
-var getSelectedRecords = function() {
+var getSelectedRecords = function () {
     return $('.recordSel:checked')
-        .map(function() {
+        .map(function () {
             return this.value;
         })
         .toArray();
 };
-Template.records.onCreated(function() {
+Template.records.onCreated(function () {
     Session.set('activeRecord', false);
     Session.set('selectedRecords', getSelectedRecords());
 });
-Template.records.onRendered(function() {
+Template.records.onRendered(function () {
     records = Session.get('Records');
     Session.set('userView', 'records');
     var bounds = Session.get('bounds');
@@ -24,7 +20,7 @@ Template.records.onRendered(function() {
         'text': 'Incident Location'
     });
     $('#createRecordModal')
-        .on('shown.bs.modal', function() {
+        .on('shown.bs.modal', function () {
             AutoForm.resetForm('createRecordModalFormId');
             $('[name="recordInfo.incidentEnvironment"]')
                 .val('Land');
@@ -33,35 +29,34 @@ Template.records.onRendered(function() {
             mapDrawn.reset();
         });
     $('label:contains("Subject Category")')
-        //$('[name="incident.subject.category"]')
         .after('<span class="small em mar0y text-default"><a class="em" href="/profiles" target="_blank"}}"> *info</span>');
 });
 Template.records.helpers({
-    userAlert: function() {
-        setTimeout(function() {
+    userAlert: function () {
+        setTimeout(function () {
             $('.userAlert')
-                .fadeOut(900, function() {
+                .fadeOut(900, function () {
                     Session.set('userAlert', null);
                 });
         }, 1500);
         return Session.get('userAlert');
     },
-    userAlertClass: function() {
+    userAlertClass: function () {
         return Session.get('userAlert')
             .error ? 'bg-danger text-danger' : 'bg-success text-success';
     },
-    settings: function() {
+    settings: function () {
         var fields = _.chain(allInputs)
-            .filter(function(d) {
+            .filter(function (d) {
                 return d.tableList;
             })
-            .map(function(d) {
+            .map(function (d) {
                 return {
                     //headerClass: 'lightBlue-bg',
                     //cellClass: 'white-bg',
                     key: d.field,
                     fieldId: d.field,
-                    label: function() {
+                    label: function () {
                         return new Spacebars.SafeString('<span class="hideInTable strong">' + d.parent + ' - </span><i>' + d.label + '</i>');
                     },
                     hidden: d.tableVisible ? false : true,
@@ -77,10 +72,10 @@ Template.records.helpers({
                 key: 'cb',
                 sortable: false,
                 hideToggle: true,
-                label: function() {
+                label: function () {
                     return new Spacebars.SafeString('<input type="checkbox" class="recordSelAll">');
                 },
-                fn: function(value, obj) {
+                fn: function (value, obj) {
                     if (!obj.recordInfo) {
                         return;
                     }
@@ -101,44 +96,43 @@ Template.records.helpers({
             //showNavigationRowsPerPage: false,
         };
     },
-    Records: function() {
+    Records: function () {
         return Records;
     },
-    record: function() {
+    record: function () {
         return Session.get('record');
     },
-    hasRecords: function() {
+    hasRecords: function () {
         return Session.get('records')
             .length;
     },
-    createNewBtn: function() {
+    createNewBtn: function () {
         //return true;
         var agencyProfile = Session.get('agencyProfile');
-        var profile = _.compact(_.map(agencyProfile, function(d) {
+        var profile = _.compact(_.map(agencyProfile, function (d) {
                 return d;
             }))
             .length;
         var role = Roles.userIsInRole(Meteor.userId(), ['admin', 'editor']);
         return profile > 5 && role;
     },
-    canCreateNewRecords: function() {
+    canCreateNewRecords: function () {
         var profileKeys = Object.keys(Session.get('agencyProfile'));
         var agencyProfile = Session.get('agencyProfile');
-        var done = _.compact(_.map(agencyProfile, function(d) {
+        var done = _.compact(_.map(agencyProfile, function (d) {
             return d;
         }));
         return done.length === profileKeys.length;
-
     },
-    selectedRecords: function() {
+    selectedRecords: function () {
         return Session.get('selectedRecords');
     },
-    recordMap: function() {
+    recordMap: function () {
         return Session.get('recordMap');
     }
 });
 Template.records.events({
-    'click .reactive-table tr': function(event) {
+    'click .reactive-table tr': function (event) {
         if (!this._id || _.contains(event.target.classList, 'recordSel')) {
             return;
         }
@@ -147,10 +141,10 @@ Template.records.events({
             _id: this._id
         });
     },
-    'click .createSampleRecords': function() {
+    'click .createSampleRecords': function () {
         insertSampleRecords();
     },
-    'click .openRecord': function(event) {
+    'click .openRecord': function (event) {
         if (event.target.className === 'recordSel') {
             return;
         }
@@ -158,18 +152,18 @@ Template.records.events({
             _id: event.currentTarget.id
         });
     },
-    'click .deleteRecord': function() {
+    'click .deleteRecord': function () {
         var toDeleteIDs = $('.recordSel:checked')
-            .map(function() {
+            .map(function () {
                 return this.value;
             })
             .toArray();
         var toDelete = Session.get('records')
-            .filter(function(d) {
+            .filter(function (d) {
                 return _.contains(toDeleteIDs, d._id);
             });
         var names = toDelete
-            .map(function(d) {
+            .map(function (d) {
                 return d.recordInfo.name;
             });
         if (!toDelete.length) {
@@ -177,7 +171,7 @@ Template.records.events({
         }
         var message = 'Are you sure you want to delete the following records: ' + names.join(',');
         if (confirm(message)) {
-            Meteor.call('removeRecord', toDelete, function(error) {
+            Meteor.call('removeRecord', toDelete, function (error) {
                 if (error) {
                     return console.log(error);
                 }
@@ -187,7 +181,7 @@ Template.records.events({
             });
         }
     },
-    'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function(event, template) {
+    'blur [name="coords.ippCoordinates.lat"],[name="coords.ippCoordinates.lng"]': function (event, template) {
         var lat = template.$('[name="coords.ippCoordinates.lat"]')
             .val();
         var lng = template.$('[name="coords.ippCoordinates.lng"]')
@@ -199,10 +193,10 @@ Template.records.events({
         mapDrawn.editPoint(lat, lng);
         mapDrawn.fitBounds();
     },
-    'change .recordSel': function() {
+    'change .recordSel': function () {
         Session.set('selectedRecords', getSelectedRecords());
     },
-    'change .recordSelAll': function(event) {
+    'change .recordSelAll': function (event) {
         var checked = event.target.checked;
         var newVal = checked ? true : false;
         $('.recordSel')
@@ -210,20 +204,20 @@ Template.records.events({
         Session.set('recordSelAll', newVal);
         Session.set('selectedRecords', getSelectedRecords());
     },
-    'click #viewMap': function() {
+    'click #viewMap': function () {
         var currentMap = Session.get('recordMap');
         Session.set('recordMap', !currentMap);
         var newMap = !currentMap;
         if (newMap) {
-            setTimeout(function() {
+            setTimeout(function () {
                 recordsSetMap('recordsMap', Records.find()
                     .fetch());
             }, 100);
         }
     },
-    'click .uploadISRID': function() {
+    'click .uploadISRID': function () {
         var checked = $('.recordSel:checked')
-            .map(function() {
+            .map(function () {
                 return this.value;
             })
             .toArray();
@@ -233,7 +227,7 @@ Template.records.events({
                 return;
             }
             checked = Session.get('records')
-                .map(function(d) {
+                .map(function (d) {
                     return d._id;
                 });
         }
@@ -244,10 +238,10 @@ Template.records.events({
             })
             .fetch();
         var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-        allRecords.forEach(function(d) {
+        allRecords.forEach(function (d) {
             if (d.subjects && d.subjects.subject) {
-                _.each(d.subjects.subject, function(e) {
-                    _.each(e, function(g, h) {
+                _.each(d.subjects.subject, function (e) {
+                    _.each(e, function (g, h) {
                         if (_.contains(hide, h)) {
                             delete e[h];
                         }
@@ -257,7 +251,8 @@ Template.records.events({
         });
         var toUpload = {
             data: allRecords,
-            profile: Session.get('config').agencyProfile
+            profile: Session.get('config')
+                .agencyProfile
         };
         var r = confirm('Are you sure you want to upload ' + allRecords.length + ' records to ISRID Database?');
         if (!r) {
@@ -265,7 +260,7 @@ Template.records.events({
         }
         Meteor.call('uploadISRID', {
             data: toUpload
-        }, function(err,d) {
+        }, function (err, d) {
             if (err) {
                 return alert('Oops - there seems to be a problem uploading your data. \nPlease try again later');
             }
@@ -275,14 +270,13 @@ Template.records.events({
             });
         });
     },
-    'click #genReport': function() {
+    'click #genReport': function () {
         event.preventDefault();
         var checked = $('.recordSel:checked')
-            .map(function() {
+            .map(function () {
                 return this.value;
             })
             .toArray();
-
         if (!checked.length) {
             //alert ('No Records Selected - Select up to 5 records to view report');
             var con = confirm('No Records Selected - Generate report for all records?');
@@ -290,19 +284,18 @@ Template.records.events({
                 return;
             } else {
                 checked = Session.get('records')
-                    .map(function(d) {
+                    .map(function (d) {
                         return d._id;
                     });
             }
         }
-
         Router.go('report', {
             ids: checked.join('.')
         });
     },
-    'click #downloadRecords': function() {
+    'click #downloadRecords': function () {
         var checked = $('.recordSel:checked')
-            .map(function() {
+            .map(function () {
                 return this.value;
             })
             .toArray();
@@ -312,7 +305,7 @@ Template.records.events({
                 return;
             }
             checked = Session.get('records')
-                .map(function(d) {
+                .map(function (d) {
                     return d._id;
                 });
         }
@@ -322,10 +315,10 @@ Template.records.events({
                 }
             })
             .fetch();
-        var allRecordsFlat = allRecords.map(function(d) {
+        var allRecordsFlat = allRecords.map(function (d) {
             return flatten(d, {});
         });
-        var JSONToCSVConvertor = function(JSONData, ReportTitle) {
+        var JSONToCSVConvertor = function (JSONData, ReportTitle) {
             var arrData = typeof JSONData !== 'object' ? JSON.parse(JSONData) : JSONData;
             var CSV = '';
             var titleRow = '';
@@ -339,9 +332,7 @@ Template.records.events({
                 for (var index in arrData[i]) {
                     row += '' + arrData[i][index] + ',';
                 }
-
                 row.slice(0, row.length - 2);
-
                 CSV += row + '\r\n';
             }
             if (CSV === '') {
@@ -361,31 +352,16 @@ Template.records.events({
         JSONToCSVConvertor(allRecordsFlat, 'SARCAT EXPORT-' + new Date()
             .toLocaleString());
     },
-
-
-
-
-    'change .btn-file :file': function(evt) {
-
-
-
-
-
-
+    'change .btn-file :file': function (evt) {
         i = this;
-
-
-
         var files = evt.target.files; // FileList object
         f = files[0];
         var reader = new FileReader();
-        reader.onload = (function(theFile) {
-            return function(e) {
+        reader.onload = (function (theFile) {
+            return function (e) {
                 JsonObj = e.target.result
                 var parsedJSON = JSON.parse(JsonObj);
-
-
-                Meteor.call('importRecords', parsedJSON, function(error) {
+                Meteor.call('importRecords', parsedJSON, function (error) {
                     if (error) {
                         return console.log(error);
                     }
@@ -393,12 +369,10 @@ Template.records.events({
             };
         })(f);
         reader.readAsText(f, 'UTF-8');
-
-
     },
-    'click #downloadRecordsJSON': function() {
+    'click #downloadRecordsJSON': function () {
         var checked = $('.recordSel:checked')
-            .map(function() {
+            .map(function () {
                 return this.value;
             })
             .toArray();
@@ -408,7 +382,7 @@ Template.records.events({
                 return;
             }
             checked = Session.get('records')
-                .map(function(d) {
+                .map(function (d) {
                     return d._id;
                 });
         }
@@ -419,7 +393,7 @@ Template.records.events({
             })
             .fetch();
         var allRecordsFlat = allRecords
-        var JSONConvertor = function(JSONData, ReportTitle) {
+        var JSONConvertor = function (JSONData, ReportTitle) {
             var fileName = ReportTitle.replace(/ /g, '_');
             var uri = 'data:text/csv;charset=utf-8,' + escape(JSON.stringify(JSONData));
             var link = document.createElement('a');
@@ -436,15 +410,16 @@ Template.records.events({
 });
 AutoForm.hooks({
     createRecordModalFormId: {
-        beginSubmit: function() {},
-        endSubmit: function() {},
-        onSuccess: function(formType, result) {
+        beginSubmit: function () {},
+        endSubmit: function () {},
+        onSuccess: function (formType, result) {
             return Router.go('form', {
                 _id: result
             });
         },
-        onError: function(formType, error) {
+        onError: function (formType, error) {
             console.log(error);
         },
     }
 });
+
