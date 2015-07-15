@@ -3,7 +3,10 @@
 var path = require('path');
 var packageJSON = require('../package.json');
 process.env.version = packageJSON.version;
+
+
 var platform = process.argv[2] || process.platform;
+
 runscript(platform);
 
 function runscript(platform) {

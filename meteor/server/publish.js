@@ -1,4 +1,4 @@
-Meteor.publish('records', function () {
+Meteor.publish('records', function() {
     if (this.userId) {
         return Records.find({});
         //return Records.find({},{fields: {recordInfo: 1}});
@@ -7,23 +7,22 @@ Meteor.publish('records', function () {
     }
 });
 
-Meteor.publish('item', function (filter) {
+Meteor.publish('item', function(filter) {
     var encryptionKey = Config.findOne().encryptionKey
     check(filter, String);
     if (this.userId) {
         var self = this;
         var subHandle = Records.find(filter || {});
         var handle = subHandle.observeChanges({
-            added: function (id, fields) {
+            added: function(id, fields) {
                 console.log('added')
                 var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                 var allFields = fields.subjects.subject;
                 if (self.userId === subHandle.fetch()[0].admin.userId) {
-                 
-                    allFields.forEach(function (d, ind) {
-                        _.each(d, function (e, f) {
+                    allFields.forEach(function(d, ind) {
+                        _.each(d, function(e, f) {
                             if (_.contains(hide, f)) {
-console.log(allFields[ind][f], encryptionKey,CryptoJS.AES
+                                console.log(allFields[ind][f], encryptionKey, CryptoJS.AES
                                     .decrypt(allFields[ind][f], encryptionKey)
                                     .toString(CryptoJS.enc.Utf8))
                                 allFields[ind][f] = CryptoJS.AES
@@ -35,20 +34,19 @@ console.log(allFields[ind][f], encryptionKey,CryptoJS.AES
                 }
                 self.added("records", id, fields);
             },
-            changed: function (id, fields) {
+            changed: function(id, fields) {
                 console.log('changed')
                 if (fields.subjects) {
                     var hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
                     var allFields = fields.subjects.subject;
                     if (self.userId === subHandle.fetch()[0].admin.userId) {
-                   
-                        allFields.forEach(function (d, ind) {
-                            _.each(d, function (e, f) {
+                        allFields.forEach(function(d, ind) {
+                            _.each(d, function(e, f) {
                                 if (_.contains(hide, f)) {
                                     var dec = CryptoJS.AES
                                         .decrypt(allFields[ind][f], encryptionKey)
                                         .toString(CryptoJS.enc.Utf8);
-console.log(allFields[ind][f], encryptionKey)
+                                    console.log(allFields[ind][f], encryptionKey)
                                     allFields[ind][f] = dec;
                                 }
                             })
@@ -56,29 +54,27 @@ console.log(allFields[ind][f], encryptionKey)
                     }
                 }
                 self.changed("records", id, fields);
-
             },
-            removed: function (id) {
+            removed: function(id) {
                 self.removed("records", id);
             }
         });
         self.ready();
-        self.onStop(function () {
+        self.onStop(function() {
             handle.stop();
         });
     } else {
         this.ready();
     }
 });
-
-Meteor.publish('audit', function (id) {
+Meteor.publish('audit', function(id) {
     if (this.userId) {
         return RecordsAudit.find({});
     } else {
         this.ready();
     }
 });
-Meteor.publish('privateLists', function () {
+Meteor.publish('privateLists', function() {
     if (this.userId) {
         return Records.find({
             userId: this.userId
@@ -90,7 +86,7 @@ Meteor.publish('privateLists', function () {
         //this.ready();
     }
 });
-Meteor.publish('userData', function () {
+Meteor.publish('userData', function() {
     if (Roles.userIsInRole(this.userId, ['admin'])) {
         return Meteor.users.find();
     } else if (this.userId) {
@@ -105,17 +101,17 @@ Meteor.publish('userData', function () {
         this.ready();
     }
 });
-Meteor.publish('roles', function () {
+Meteor.publish('roles', function() {
     return Meteor.roles.find()
 })
-Meteor.publish('config', function () {
+Meteor.publish('config', function() {
     return Config.find({}, {
         fields: {
             //'encryptionKey': 0
         }
     });
 });
-Meteor.publish('adminDefault', function () {
+Meteor.publish('adminDefault', function() {
     return Meteor.users.find({
         emails: {
             $elemMatch: {
@@ -124,4 +120,3 @@ Meteor.publish('adminDefault', function () {
         }
     });
 });
-

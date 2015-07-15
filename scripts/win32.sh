@@ -15,7 +15,7 @@ home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
 
 #dest folder
-dest=$(pwd)"/dist"
+dest=$(pwd)"/build/"$architecture
 
 
 
@@ -35,7 +35,7 @@ cp meteor/settings.json $dest
 #copy env config file
 cp -r config $dest
 #copy scripts to run sarcat
-cp index.js $dest
+cp scripts/index.js $dest
 
 echo '%CD%/bin/node/bin/node index.js' >$dest/start.bat
 echo 'taskkill /F /IM node.exe' > $dest/stop.bat

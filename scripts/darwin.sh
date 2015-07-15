@@ -16,7 +16,7 @@ home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
 
 
-dest=$(pwd)"/dist"
+dest=$(pwd)"/build/"$architecture
 
 
 
@@ -41,7 +41,7 @@ cp meteor/settings.json $dest
 cp -r config $dest
 
 #copy scripts to run sarcat
-cp index.js $dest
+cp scripts/index.js $dest
 
 
 cp scripts/start $dest

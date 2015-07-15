@@ -1,4 +1,7 @@
 Meteor.startup(function () {
+
+
+
     /*
         var environment = process.env.METEOR_ENV || "development";
         var settings = JSON.parse(process.env.METEOR_SETTINGS);

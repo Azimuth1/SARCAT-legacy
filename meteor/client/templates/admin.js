@@ -5,13 +5,6 @@ Template.admin.onCreated(function(a) {
 Template.admin.onRendered(function(a) {
     var country = $('[name="agencyProfile.country"]').val();
     Session.set('country', $('[name="agencyProfile.country"]').val());
-
-    // if (this.type.indexOf('image') >= 0) {
-    //   return 'upload/' + this.path;
-    // } else return 'file_icon.png';
-    //var logo = document.getElementById('agencyLogo');
-    //logo.src = 'uploads/logo/' + Session.get('logo');
-    //logo.style.display = 'inline';
     var bounds = Session.get('bounds');
     var newBounds = boundsString2Array(bounds);
     map = setAdminMap('adminMap', bounds);
@@ -46,13 +39,11 @@ Template.admin.helpers({
     },
     RecordsAudit: function(a, b) {
         var audits = RecordsAudit.find().fetch();
-
         var fields = [{
                 'key': 'type',
                 'label': 'type',
                 'fieldId': 'type'
             },
-
             {
                 'key': 'userName',
                 'label': 'userName',
@@ -160,10 +151,7 @@ Template.admin.events({
             if (err) {
                 console.log(err);
             }
-
         });
-
-
     },
     'click .removeUser': function(event, template) {
         var username = this.username;

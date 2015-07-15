@@ -1,18 +1,7 @@
 <template name="admin">
     {{#if isInRole 'admin'}}
-
     <nav class="navbar navbar-inverse contentNav">
         <div class="container-fluid">
-       
-    <div class="page auth">
-        <nav class="hidden-print">
-            <div class="nav-group">
-                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
-            </div>
-        </nav>
-    </div>
-
-
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
@@ -21,53 +10,21 @@
                     <span class="icon-bar"></span>
                 </button>
             </div>
-         
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav" role="tablist">
                     <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
                     <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
                     <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
-                   
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-
-                {{#if hasLogo}}
-                 <img src="{{logoSrc}}" onerror='this.style.display = "none"' class="hidden-xs">
-                {{/if}}
-                
-
-
+                    {{#if hasLogo}}
+                    <img src="{{logoSrc}}" onerror='this.style.display = "none"' class="hidden-xs"> {{/if}}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container-fluid -->
     </nav>
-    <!--
-
-    <nav class="navbar navbar-fixed-top hidden-print" style="border-bottom:1px solid #fff">
-        <div class="fixed-container pad2x">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" role="tablist">
-                    <li role="presentation" class="active"><a href="#profile" aria-controls="home" role="tab" data-toggle="tab" class="white">Organization Profile</a> </li>
-                    <li role="presentation"><a href="#roles" aria-controls="profile" role="tab" data-toggle="tab" class="white">User Roles</a> </li>
-                    <li role="presentation"><a href="#history" aria-controls="profile" role="tab" data-toggle="tab" class="white">Editing History</a> </li>
-                    <li class="pull-right">
-                        <img id="agencyLogo" onerror='this.style.display = "none"' class="hidden-xs">
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
--->
     <div class="tab-content content-scrollable pad2" style="top:50px;">
         <div role="tabpanel" class="tab-pane active pad00" id="profile">
             <div class="_panel {{profileIncomplete}}">
@@ -95,18 +52,10 @@
                         <!---->
                         {{> afQuickField name="agencyProfile.state-province" options=allowedStates}}
                         <!---->
-
-                        {{#if afFieldValueIs name="agencyProfile.country" value="United States" }}
-
-
-                        {{> afQuickField name="agencyProfile.county-region"}}
-
+                        {{#if afFieldValueIs name="agencyProfile.country" value="United States" }} {{> afQuickField name="agencyProfile.county-region"}}
+                        <!---->
                         {{/if}}
-
-
-                        <div class="col-md-12 pad00">
-                            <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>Submit </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary mar1"><i class="glyphicon glyphicon-check"></i>Submit </button>
                         {{/autoForm}}
                     </div>
                 </div>
@@ -165,13 +114,15 @@
                     <h3 class="panel-title">Default SAR Response Area
                   </h3>
                 </div>
+                {{#if internet}}
+                <!---->
+                <div class="col-md-12 text-center mar2y" style="z-index:99;position:absolute">
+                    <div style="z-index:99" id='geolocate' class='btn btn-primary btn-lg'>Geolocate my position!</div>
+                </div>
+                <!---->
+                {{/if}}
                 <div class="panel-body afBody pad00 mar1">
                     <div id='adminMap' style="width:100%;height:500px">
-                        {{#if internet}}
-                        <!---->
-                        <a href='#' id='geolocate' class='map-ui-button'>Geolocate my position!</a>
-                        <!---->
-                        {{/if}}
                         <div class="mapCrosshair">+</div>
                     </div>
                     <div class="col-md-12 mar1y">
@@ -230,7 +181,7 @@
                                 <button data="{{this._id}}" type="button" class="pull-right btn btn-warning btn-xs resetPassword btn-block">Reset</button>
                             </td>
                             <td>
-                                <button data="{{this._id}}" type="button" class="pull-right btn btn-danger btn-xs glyphicon glyphicon-remove removeUser btn-block">Remove</button>
+                                <button data="{{this._id}}" type="button" class="pull-right btn btn-danger btn-xs removeUser btn-block"><span class="glyphicon glyphicon-remove"></span> Remove</button>
                             </td>
                         </tr>
                         {{/each}}

@@ -3,11 +3,9 @@
 </template>
 <template name="report">
     <div class="content-scrollable pad2">
-        <h3 class="panel-title text-center text-uppercase text-light">SARCAT Report</h3>
-        {{#unless generateMap}}
-        <p class="text-right small text-light em">Maps will not generate if more than 3 records are added to report</p>
-        {{/unless}} 
-
+        <h3 class="panel-title text-center text-uppercase text-light">SARCAT Report</h3> {{#unless generateMap}}
+        <div class="text-right em text-orange white hidden-print">* Auto-save enabled for all fields</div>
+        {{/unless}}
         <div class="row">
             {{#each stats}}
             <div class="white-border col-sm-12 pad00 mar2y white">

@@ -4,8 +4,7 @@ _This documentation is a work in progress. Many parts are incomplete at the mome
 ![alt tag](https://github.com/Azimuth1/SARCAT/blob/master/meteor/public/icon.png?raw=true)
 
 #SARCAT
-Search and Rescue Collection & Analysis Tool (SARCAT) is a web-hosted application that simplifies the collection and analysis of your team’s or agencies SAR data. Its goal is simple; make the collection of data easy, accurate, and standardized. This is accomplished with smartforms, auto-calculations, and an intuitive user inter-
-face. The user then reaps the benefits with built in data analysis, reporting, mapping, and the ability to contribute to ISRID. In this way, all SAR providers help each other.
+Search and Rescue Collection & Analysis Tool (SARCAT) is a web-hosted application that simplifies the collection and analysis of your team’s or agencies SAR data. Its goal is simple; make the collection of data easy, accurate, and standardized. This is accomplished with smartforms, auto-calculations, and an intuitive user interface. The user then reaps the benefits with built in data analysis, reporting, mapping, and the ability to contribute to ISRID.
 ##Key Features
 * _World-wide map interface with topographic, street, and aerial imagery. Simply drag icons onto the map to mark key locations (Initial Planning Point, Incident Location, Find Location, decision points, revised PLS/LKP, intended and actual route). _
 
@@ -16,13 +15,13 @@ face. The user then reaps the benefits with built in data analysis, reporting, m
 
 * _Administrative functions provide user control, customization of data fields, and preferences._
 
-* _Security features include user authentication with password encryption, NOSQL database logs all data entry, versioned database in case of accidental deletion, event log,optional personally identifiable information, if enabled, is encrypted_
+* _Security features include user authentication with password encryption, NOSQL database logs all data entry, event log, personally identifiable information also is encrypted_
 
 * _Visualize your data with built in dashboards, analysis tools, maps, and reports._
 
 * _Download your data into other programs. Export your data easily into ISRID._
 
-* _Can be hosted on your Linux/Unix or Microsoft server. Option for hosted version as well. Fully scalable for small or large teams._
+* _Can be hosted on Linux/Windows/Mac platforms. Option for hosted version coming soon as well. Fully scalable for small or large teams._
 
 ***
 ## Supported platforms
@@ -45,12 +44,20 @@ Download the [latest release](http://spa.tial.ly:8080/download.html) for your pl
 2. Open the directory
 3. Click <code>start</code> to run SARCAT
 4. Click <code>stop</code> to stop SARCAT
+5. Enjoy!
 
-                
+***
+
+## Getting Started
+
+Once SARCAT is installed, use the default username/password to begin setting up your profile:
+
+* Username: *admin@sarcat*
+* Password: *admin*
                 
 * * *
 ## Install latest release (without node/mongo)
-If you already have node v0.10.36 & mongo installed on your system and prefer the terminal, this will make that install quicker for you and you can skip the first 2 steps. If you want to install node & mongo seperately, the instructions are below.
+If you already have node v0.10.36 & mongo installed on your system and know your way around a bit more (or want to learn), this is for you. Instructions to install node & mongo are below.
 
 #### 1. Download the installer from Nodes.js(v0.10.36)
 
@@ -75,8 +82,8 @@ Mongo has great [documentation](http://docs.mongodb.org/manual/) to walk you thr
 * Download the [latest release](http://spa.tial.ly:8080/download.html) (sans node/mongo) for your platform.
 * Extract the compressed file in a directory in your home folder.
 
-###3. Download SARCAT (without node/mongo)
-Download the [latest release](http://spa.tial.ly:8080/download.html) (sans node/mongo) for your platform.
+###3. Download SARCAT
+Download the [latest release](http://spa.tial.ly:8080/download.html) (sans node/mongo) for your platform on github.
 
 ###4. Then.. 
 
@@ -85,18 +92,10 @@ Download the [latest release](http://spa.tial.ly:8080/download.html) (sans node/
     npm start
 
 * * *
-## Build from source
-_*Currently not supported on Windows_
-
-    git clone https://github.com/Azimuth1/SARCAT.git
-    cd SARCAT
-    npm install
-    npm start
-
-* * *
 
 
-##Files
+
+##Files structure
 
 
 * <strong>SARCAT/config/config.json</strong>- Contains specific congurations for SARCAT on your server. DOn't change the default settings unless you have to and you know what you are doing!
@@ -113,24 +112,34 @@ _*Currently not supported on Windows_
 
 
 ***
-## Getting Started
 
-Once SARCAT is installed, use the default username/password to begin setting up your profile:
-
-* Username: *admin@sarcat*
-* Password: *admin*
 
 
 Instructional Videos Coming Soon
 
 * * *
 ##FAQ & Troubleshooting
-* How do a wipeout my database?
-* I can't find my records
-* I forgot my admin password!
-* I am havving trouble installing
+
+* How is SARCAT installed?
+
+SARCAT is designed to be run on a server for an entire organization. Node & Mongodb are the backbones behind the scenes. If you know your way around these tools, you will be able to get the most out of SARCAT and the data. If you already have node & mongo running on your server, getting up and running with sarcat will be pretty easy for you. If not, dont worry - we compiled all the necessary dependencies into a zip file for your platform.
+
+* Where is my data stored?
+
+When SARCAT is installed, by default it will create the database in your home directory. If you wish to change this location, sinply open up config/config.json and create a path to your desired database directory.
+
+* How do I update SARCAT?
+
+If you are using git, you can just update the latest with a pull. if you downloaded the zip file, it is recommended at this time to download the latest version and run it from this extracted file. It will automatically connect to you latest database if you used the default sarcatdb in your home directory.
 
 
+
+* How do a wipeout my database and start over?
+
+As long as this is exactly what you want, you can delete your local copy of the database from your home directory. The next time you restart SARCAT it will be created again. Or change the database location from the above instructions.
+
+
+* I am _still_ having trouble installing
 
 SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.
 
@@ -140,11 +149,11 @@ SARCAT is intended to be used as a web server. If installing on a local network,
 
 
 
-
-
 * * *
 
 
 
 ## Feedback
-We would love to hear any feedback you have on the app.
+We would love to hear any feedback you have on the app. For technical support, contact *kyle.kalwarski@azimuth1.com*. For other general inqueries, contact Robert Koester at *robert@dbs-sar.com*
+
+And don't forget to check out our Lost Person Behavior mobile app available for iOS & Android today!

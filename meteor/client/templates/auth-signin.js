@@ -95,7 +95,6 @@ Template.signin.events({
             return;
         }
         Meteor.loginWithPassword(email, password, function(error, result) {
-
             if (Roles.userIsInRole(Meteor.userId(), ['pending'])) {
                 Meteor.logout();
                 template.$('form :input[type="password"]').val('');

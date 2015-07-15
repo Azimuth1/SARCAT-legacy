@@ -1,159 +1,25 @@
-var genList = function (records) {
-    var resourceArrayForm = function (data) {
-        return _.chain(data.resourcesUsed.resource)
-            .sortBy(function (d) {
-                return -d.count;
-            })
-            .map(function (d) {
-                var sum = 'Total Count: ' + d.count + ',Total Hours: ' + d.hours;
-                return {
-                    key: d.type,
-                    parent: 'Resources Used',
-                    val: sum
-                };
-            })
-            .value();
-    };
-    var subjectArrayForm = function (flatData, name, parent) {
-        return _.chain(flatData)
-            .map(function (d, e) {
-                if (e.indexOf('_key') > -1) {
-                    return;
-                }
-                if (e.indexOf('.' + name + '.') > -1) {
-                    return {
-                        key: e,
-                        val: d
-                    };
-                }
-            })
-            .compact()
-            .groupBy(function (d) {
-                return d.key.substr(d.key.lastIndexOf('.') + 1);
-            })
-            .map(function (d, e) {
-                hide = ['name', 'address', 'homePhone', 'cellPhone', 'other'];
-                if (_.contains(hide, e)) {
-                    return [];
-                }
-                var items = d.map(function (f) {
-                        return f.val;
-                    })
-                    .sort();
-                var sum = _.chain(items)
-                    .reduce(function (counts, word) {
-                        counts[word] = (counts[word] || 0) + 1;
-                        return counts;
-                    }, {})
-                    .map(function (d, e) {
-                        return [d, e];
-                    })
-                    .sortBy(function (d) {
-                        return -d[0];
-                    })
-                    .map(function (d, e) {
-                        if (d[0] === 1) {
-                            return d[1];
-                        };
-                        return d[1] + '(' + d[0] + ')';
-                    })
-                    .value()
-                    .join(', ');
-                return {
-                    key: e,
-                    parent: parent,
-                    val: items.sort()
-                        .join(', '),
-                    val: sum
-                };
-            })
-            .value();
-    };
-    if (!records || !records.length) {
-        return;
-    }
-    return records.map(function (data) {
-        if (!data) {
-            return {};
-        }
-        var displayData = _.chain(data)
-            .map(function (val, schema1) {
-                var ignore = ['_id', 'subjects', 'resourcesUsed'];
-                if (ignore.indexOf(schema1) !== -1) {
-                    return;
-                }
-                if (typeof (val) === 'string') {
-                    return;
-                }
-                var ignoreKeys = ['userId'];
-                var check = Schemas[schema1] || {};
-                var schema = check._schema || {};
-                var sar = Schemas.SARCAT._schema || {};
-                var parent = sar[schema1].label || 'other';
-                var results = _.map(val, function (d, e) {
-                    var labelCheck = schema[e] || {};
-                    var label = labelCheck.label || e;
-                    if (_.contains(ignoreKeys, label)) {
-                        return;
-                    }
-                    if (typeof (d) === 'object') {
-                        d = _.map(d, function (d, e) {
-                                return e + ':' + d;
-                            })
-                            .join(',');
-                    }
-                    return {
-                        key: label,
-                        parent: parent,
-                        val: d
-                    };
-                });
-                return results;
-            })
-            .flatten()
-            .compact()
-            .value();
-        var subjects2 = subjectArrayForm(flatten(data, {}), 'subject', 'Subjects');
-        var resources2 = resourceArrayForm(data);
-        displayData = _.flatten([subjects2, resources2, displayData]);
-        displayData2 = _.chain(displayData)
-            .groupBy('parent')
-            .map(function (d, e) {
-                return {
-                    field: e,
-                    data: d
-                };
-            })
-            .value();
-        return {
-            _id: 'map-' + data._id,
-            data: displayData2,
-            record: data
-        };
-    });
-};
-Template.report.onCreated(function () {
+Template.report.onCreated(function() {
     da = this.data;
     Session.set('userView', 'report');
 });
-Template.reportMap.onRendered(function () {
+Template.reportMap.onRendered(function() {
     reportSetMap(this.data, this.$('.aa')[0]);
 });
-Template.report.onRendered(function () {
+Template.report.onRendered(function() {
     var stats = genList(this.data);
     Session.set('stats', stats);
 });
 Template.report.helpers({
-    stats: function () {
+    stats: function() {
         return Session.get('stats');
     },
-    generateMap: function () {
+    generateMap: function() {
         var _stats = Session.get('stats') || [];
         var hasStats = _stats.length < 4 ? true : false;
         return hasStats;
     },
 });
-var reportSetMap = function (record, id) {
+var reportSetMap = function(record, id) {
     var d = record.record;
     var geojson;
     var obj = {};
@@ -161,7 +27,7 @@ var reportSetMap = function (record, id) {
     obj.map = map;
     map.scrollWheelZoom.disable();
     var defaultLayers = Meteor.settings.public.layers;
-    var layers = _.object(_.map(defaultLayers, function (x, e) {
+    var layers = _.object(_.map(defaultLayers, function(x, e) {
         return [e, L.tileLayer(x)];
     }));
     var firstLayer = Object.keys(layers)[0];
@@ -218,9 +84,9 @@ var reportSetMap = function (record, id) {
         }
     }];
     layerGroup = L.featureGroup();
-    layerGroups = mapPoints.map(function (d) {
+    layerGroups = mapPoints.map(function(d) {
         var geojson = L.geoJson(null, {
-            pointToLayer: function (feature, latlng) {
+            pointToLayer: function(feature, latlng) {
                 if (feature.properties.field.type === 'path') {
                     color = d.path.stroke;
                     var polyline = L.polyline(latlng, {
@@ -251,7 +117,7 @@ var reportSetMap = function (record, id) {
             layer: geojson
         };
     });
-    layerGroups = _.object(_.map(layerGroups, function (x) {
+    layerGroups = _.object(_.map(layerGroups, function(x) {
         return [x.name, x.layer];
     }));
 
@@ -278,7 +144,7 @@ var reportSetMap = function (record, id) {
             }
         });
     }
-    mapPoints.forEach(function (feature) {
+    mapPoints.forEach(function(feature) {
         var coords = d.coords[feature.val];
         if (coords && coords.lng && coords.lat) {
             layerGroups[feature.val].addData({
@@ -295,7 +161,7 @@ var reportSetMap = function (record, id) {
             });
         } else if (coords && feature.path) {
             coords = JSON.parse(coords);
-            coords = coords.map(function (item, i) {
+            coords = coords.map(function(item, i) {
                 return [item[1], item[0]];
             });
             layerGroups[feature.val].addData({
@@ -324,4 +190,3 @@ var reportSetMap = function (record, id) {
     layerGroup.addTo(map);
     return obj;
 };
-

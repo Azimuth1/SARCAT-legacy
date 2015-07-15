@@ -1,6 +1,6 @@
 AutoForm.addInputType("bootstrap-datetimepicker", {
     template: "afBootstrapDateTimePicker",
-    valueIn: function (val, atts) {
+    valueIn: function(val, atts) {
         // datetimepicker expects the date to represent local time,
         // so we need to adjust it if there's a timezoneId specified
         var timezoneId = atts.timezoneId;
@@ -15,7 +15,7 @@ AutoForm.addInputType("bootstrap-datetimepicker", {
         }
         return val;
     },
-    valueOut: function () {
+    valueOut: function() {
         var m = this.data("DateTimePicker");
         if (!m) {
             return m;
@@ -35,32 +35,32 @@ AutoForm.addInputType("bootstrap-datetimepicker", {
         return m.toDate();
     },
     valueConverters: {
-        "string": function (val) {
+        "string": function(val) {
             return (val instanceof Date) ? val.toString() : val;
         },
-        "stringArray": function (val) {
+        "stringArray": function(val) {
             if (val instanceof Date) {
                 return [val.toString()];
             }
             return val;
         },
-        "number": function (val) {
+        "number": function(val) {
             return (val instanceof Date) ? val.getTime() : val;
         },
-        "numberArray": function (val) {
+        "numberArray": function(val) {
             if (val instanceof Date) {
                 return [val.getTime()];
             }
             return val;
         },
-        "dateArray": function (val) {
+        "dateArray": function(val) {
             if (val instanceof Date) {
                 return [val];
             }
             return val;
         }
     },
-    contextAdjust: function (context) {
+    contextAdjust: function(context) {
         if (context.atts.timezoneId) {
             context.atts["data-timezone-id"] = context.atts.timezoneId;
         }
@@ -77,7 +77,7 @@ Template.afBootstrapDateTimePicker.helpers({
         return atts;
     }
 });
-Template.afBootstrapDateTimePicker.rendered = function () {
+Template.afBootstrapDateTimePicker.rendered = function() {
     var $input = this.$('input');
     var data = this.data;
     var opts = data.atts.dateTimePickerOptions || {};
@@ -93,7 +93,7 @@ Template.afBootstrapDateTimePicker.rendered = function () {
     var dtp = $input.data("DateTimePicker");
     dtp.setDate(data.value);
     // set and reactively update values
-    this.autorun(function () {
+    this.autorun(function() {
         var data = Template.currentData();
         var dtp = $input.data("DateTimePicker");
         /*// set field value
@@ -124,11 +124,10 @@ if (data.value instanceof Date) {
         }
     });
 };
-Template.afBootstrapDateTimePicker.destroyed = function () {
+Template.afBootstrapDateTimePicker.destroyed = function() {
     var dtp = this.$('input')
         .data("DateTimePicker");
     if (dtp) {
         dtp.destroy();
     }
 };
-

@@ -1,20 +1,8 @@
 <template name="stats">
-    <div class="page auth _contentNav">
-        <nav class="hidden-print">
-            <div class="nav-group">
-                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
-            </div>
-        </nav>
-    </div>
     <div class="tab-content content-scrollable pad2">
         <h3 class="panel-title text-center text-uppercase text-light">Click a Point to View Detailed Record Information</h3>
         <div id='recordsMap' style="width:100%;height:300px">
         </div>
-        
-
-
-
-
         <div class="row white">
             {{#each stats}}
             <div class="white-border col-sm-12 pad00 mar2y white">
@@ -34,9 +22,6 @@
             </div>
             {{/each}}
         </div>
-
-
-
         <hr>
         <div class="row">
             <div class="col-xs-12 mar2y">

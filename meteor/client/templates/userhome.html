@@ -1,13 +1,5 @@
 <template name="userhome">
-            <div class="page auth _contentNav">
-                <nav class="hidden-print">
-                    <div class="nav-group">
-                        <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
-                    </div>
-                </nav>
-            </div>
-
-    <div class="tab-content content-scrollable pad2">
+    <div class="tab-content content-scrollable pad1 pad4y">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{{currentUser.username}} Settings
@@ -38,7 +30,9 @@
                     </h3>
             </div>
             <div class="panel-body afBody pad00">
-                {{> reactiveTable settings=settings}}
+                <div class="table-responsive">
+                    {{> reactiveTable settings=settings}}
+                </div>
             </div>
         </div>
         {{/if}}
