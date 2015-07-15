@@ -1,8 +1,8 @@
 {
-    "version": "v0.0.1",
-    "downloads": {
-        "MacOS": "https://github.com/Azimuth1/SARCAT/archive/v0.0.1.tar.gz",
-        "Windows": "https://github.com/Azimuth1/SARCAT/archive/v0.0.1.zip"
-
-    }
+    "sarcatPort": 4000,
+    "databaseDir": "./",
+    "databasePort": 4001,
+    "databaseName": "sarcatdb",
+    "MONGO_URL": "mongodb://localhost",
+    "ROOT_URL": "http://localhost.com"
 }
