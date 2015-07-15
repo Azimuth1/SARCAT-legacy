@@ -7,6 +7,10 @@ webpage/bower_components
 main_logo
 npm-debug.log
 build/libs/*
-build/**
+build/os.osx.x86_64
+build/os.linux.x86_64
+build/os.windows.x86_64
+
+
 allbuilds
 public/uploads/records/*

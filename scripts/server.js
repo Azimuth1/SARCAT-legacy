@@ -19,22 +19,16 @@ var sarcatserver = express();
 sarcatserver.use(bodyParser.json({
     limit: '500mb'
 }));
-
 var dir = 'uploads';
 var uploadDir = path.join(page, dir);
-
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }
-
-
 sarcatserver.post('/uploadISRID', function(req, res) {
     // console.log(req.body)
     var profile = req.body.profile;
-
     var agency = profile.organization;
     var data = req.body.data;
-
     var fileName = agency + '-' + createDate();
     fs.writeFile(uploadDir + '/' + fileName + '.json', JSON.stringify(req.body), function(err, d) {
         console.log(err, d)
@@ -78,108 +72,22 @@ sarcatserver.listen(sarcatServerPort);
 console.log('now serving sarcatServer on: ' + sarcatServerPort);
 
 
+var spawn = require('child_process')
+    .spawn;
 var demoApp = path.join(__dirname, '../', 'dist');
 
 
 
-
-
-
-
-
-
-
-var config = require(path.join(demoApp,'config.json'));
-var METEOR_SETTINGS = require(path.join(demoApp,'settings.json'));
-var spawn = require('child_process')
-    .spawn;
-var fs = require('fs');
-var path = require('path');
-var env = Object.create(process.env);
-var meteorENV = config.env;
-env.MONGO_URL = meteorENV.MONGO_URL + '/' + config.databaseName;
-env.ROOT_URL = meteorENV.ROOT_URL || 'http://localhost.com';
-env.PORT = meteorENV.PORT || 3000;
-env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
-var dbRunning;
-var appRunning;
-
-function getUserHome() {
-    return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-}
-var databaseDir = config.databaseDir || getUserHome();
-console.log(databaseDir)
-var databaseName = config.databaseName || 'sarcatdb';
-var sarcatdb = path.join(databaseDir, databaseName);
-console.log('sarcatDB already exists: ' + sarcatdb);
-if (!fs.existsSync(sarcatdb)) {
-    console.log('creating sarcatDB: ' + sarcatdb);
-    fs.mkdirSync(sarcatdb);
-}
-var mongod = 'mongod';
-if (fs.existsSync(path.join(demoApp, 'bin', 'mongodb', 'bin'))) {
-    mongod = path.join(demoApp, 'bin', 'mongodb', 'bin', 'mongod')
-}
-node = 'node';
-if (fs.existsSync(path.join(demoApp, 'bin', 'node', 'bin'))) {
-    node = path.join(demoApp, 'bin', 'node', 'bin', 'node')
-}
-//var file = path.resolve(process.argv[2]);
-var startSARCAT = {};
-
-function runapp() {
-    var startScript = path.join(demoApp, 'app', 'main.js')
-    console.log(node, startScript);
-    startSARCAT = spawn(node, [startScript], {
-        env: env
-    });
-    startSARCAT.stdout.on('data', function (data) {
-        console.log('stdout: ' + data);
-    });
-    startSARCAT.stderr.on('data', function (data) {
-        startDB.kill('SIGINT');
-        console.log('stderr: ' + data);
-    });
-    startSARCAT.on('close', function (code) {
-        startDB.kill('SIGINT');
-        console.log('child process exited with code ' + code);
-    });
-}
-var startDB = spawn(mongod, ['--dbpath', sarcatdb]);
-startDB.stdout.on('data', function (data) {
+var startScript = path.join(demoApp, 'index.js')
+startSARCAT = spawn('node', [startScript]);
+startSARCAT.stdout.on('data', function(data) {
     console.log('stdout: ' + data);
 });
-startDB.stderr.on('data', function (data) {
+startSARCAT.stderr.on('data', function(data) {
+
     console.log('stderr: ' + data);
-    //startDB.kill('SIGINT');
 });
-startDB.on('close', function (code) {
-    dbRunning = false;
+startSARCAT.on('close', function(code) {
+
     console.log('child process exited with code ' + code);
-    process.exit()
 });
-var trys = 0
-var interval = setInterval(function () {
-    tryapp()
-}, 2000);
-
-function tryapp() {
-        console.log(trys)
-        if (trys > 5) {
-            return clearInterval(interval)
-        }
-        if (startSARCAT.pid) {
-            console.log('SARCAT has started!!!!');
-            return clearInterval(interval)
-        }
-        if (!startSARCAT.pid) {
-            console.log('SARCAT has not started');
-            runapp();
-            return trys++;
-        }
-    }
-    //lsof -i -P | grep -i "listen"
-
-
-
-
