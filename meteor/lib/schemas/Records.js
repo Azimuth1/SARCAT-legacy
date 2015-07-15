@@ -42,7 +42,6 @@ Records.isDate = function(date) {
     return isDate ? moment(new Date(date))
         .format('MM/DD/YYYY HH:mm') : date;
 }
-
 Schemas.admin = new SimpleSchema({
     userId: {
         type: String,
@@ -506,14 +505,14 @@ Schemas.findLocation = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/Woods', 'Ice/Snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard'],
+        allowedValues: ['Unknown', 'Brush', 'Canyon', 'Cave', 'Drainage', 'Field', 'Forest/Woods', 'Ice/Snow', 'Structure', 'Road', 'Rock', 'Scrub', 'Trail', 'Vehicle', 'Lake/Pond/Water', 'Wetland', 'Yard', 'Other'],
         label: 'Find Feature',
         optional: true
     },
     'foundSecondary': {
         type: String,
         label: 'Found Secondary',
-        optional: true
+        optional: true,
     },
     'detectability': {
         type: String,
@@ -1021,7 +1020,6 @@ Schemas.xComments = new SimpleSchema({
         }
     },
 });
-
 Schemas.timeLog = new SimpleSchema({
     'lastSeenDateTime': {
         type: String,

@@ -1,10 +1,5 @@
 <template name="signin">
     <div class="page auth">
-        <nav class="hidden-print">
-            <div class="nav-group">
-                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
-            </div>
-        </nav>
         <div class="content-scrollable">
             <div class="text-center agencyLogo">
                 {{#if hasLogo}}
@@ -30,7 +25,7 @@
                         <input type="password" name="password" placeholder="Password" />
                         <span class="tmp-icon-lock" title="Password"></span>
                     </div>
-                    <button type="submit" id="signin" class="btn-primary btn-pad">Sign in</button>
+                    <button type="submit" id="signin" class="btn-primary btn-block mar2y pad2">Sign in</button>
                     {{/unless}}
                     <!---->
                     {{#if resetPassword}}
@@ -42,7 +37,7 @@
                         <input type="password" name="confirm" placeholder="Confirm New Password" />
                         <span class="tmp-icon-lock" title="Confirm Password"></span>
                     </div>
-                    <button type="submit" id="resetPassword" class="btn-primary btn-pad">Update Password</button>
+                    <button type="submit" id="resetPassword" class="btn-primary btn-block mar2y pad2">Update Password</button>
                     <!---->
                     {{/if}}
                 </form>

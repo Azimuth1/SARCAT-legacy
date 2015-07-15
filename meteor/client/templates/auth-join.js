@@ -87,7 +87,6 @@ Template.join.events({
             username: [firstname, lastname].join(' ')
                 //profile:{role:'dd'}
         }, function(error) {
-
             if (Roles.userIsInRole(Meteor.userId(), ['pending'])) {
                 Meteor.logout();
                 template.$('form :input[type="password"]').val('');
@@ -95,10 +94,6 @@ Template.join.events({
                     confirm: 'Awaiting Account Approval'
                 });
             }
-
-
-
-
             if (error) {
                 return Session.set(ERRORS_KEY, {
                     'none': error.reason

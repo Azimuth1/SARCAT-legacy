@@ -814,22 +814,11 @@ a {
     }
 }
 
-.leaflet-container a.map-ui-button {
-    background: @color-greenish;
-    border: 1px solid @color-light;
-    color: #FFF;
-    display: block;
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    width: 160px;
-    margin: -20px 0 0 -80px;
-    z-index: 100;
-    text-align: center;
-    padding: 10px;
-    border-radius: 3px;
-    z-index: 3;
-    font-size: initial;
+.leaflet-container .map-ui-button {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  z-index: 3;
 }
 
 .leaflet-container a.map-ui-button:hover {
@@ -1151,17 +1140,17 @@ btn.btn-success {
     padding: 0;
 }
 
-
 .btn-file {
-display: block;
-  padding: 3px 20px;
-  clear: both;
-  font-weight: normal;
-  line-height: 1.42857143;
-  color: #333;
-  white-space: nowrap;
-  cursor:pointer;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+  
+    white-space: nowrap;
+    cursor: pointer;
 }
+
 .btn-file input[type=file] {
     position: absolute;
     top: 0;
@@ -1178,6 +1167,13 @@ display: block;
     display: block;
 }
 
+.table.reactive-table {
+    tbody tr:hover {
+        background-color: @color-turq;
+        color: @color-white;
+        cursor: pointer;
+    }
+}
 
 .table {
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
@@ -1203,16 +1199,10 @@ display: block;
         background-color: @color-white;
         color: @color-blue;
     }
-    tbody tr:hover {
-        background-color: @color-turq;
-        color: @color-white;
-        cursor: pointer;
-    }
     tbody td {
         border-color: @color-light;
         padding: 1px;
         vertical-align: middle;
-        
     }
     .form-group {
         margin: 0;
@@ -1497,4 +1487,16 @@ p.acr b {
         // font-style: italic;
         color: @color-light;
     }
+}
+
+.resourceCB {
+    margin-right: 10px;
+    margin-left: 10px;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.resourceCB input {
+    margin-top: 0px;
+    margin-left: -15px;
 }

@@ -23,13 +23,6 @@
     </div>
     <nav class="navbar navbar-inverse contentNav">
         <div class="container-fluid">
-            <div class="page auth">
-                <nav class="hidden-print">
-                    <div class="nav-group">
-                        <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
-                    </div>
-                </nav>
-            </div>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
@@ -42,16 +35,6 @@
                 {{#if createNewBtn}}
                 <ul class="nav navbar-nav">
                     <li><a href="#" class="strong" data-target="#createRecordModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> New Record</a></li>
-                    <!---->
-                    {{#if isInRole 'admin'}}
-                    <!---->
-                    {{#if selectedRecords}}
-                    <li><a href="#" class="strong deleteRecord"><i class="glyphicon glyphicon-trash"></i> Delete Records</a>
-                    </li>
-                    <!---->
-                    {{/if}}
-                    <!---->
-                    {{/if}}
                 </ul>
                 {{/if}}
                 <ul class="nav navbar-nav navbar-right">
@@ -65,10 +48,12 @@
                             {{#if isInRole 'admin,editor'}}
                             <li role="separator" class="divider"></li>
                             <li>
-                                <span class="btn-file" href="#" type="file">
-<input id="importData" type="file">
-    <i class="glyphicon glyphicon-import"></i> Import JSON
-</span>
+                                <a class="pad00">
+                                    <span class="btn-file" href="#" type="file">
+                                    <input id="importData" type="file">
+                                    <i class="glyphicon glyphicon-import"></i> Import JSON
+                                </span>
+                                </a>
                             </li>
                             {{/if}}
                             <li role="separator" class="divider"></li>
@@ -77,6 +62,9 @@
                                 <a class="uploadISRID" href="#"> <i class="glyphicon glyphicon-export"></i> Export to ISRID</a>
                             </li>
                             {{/if}}
+                            <li>
+                                <a class="deleteRecord" href="#"> <i class="glyphicon glyphicon-trash"></i> Delete Records</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -92,7 +80,7 @@
         </div>
         {{/if}} {{#if hasRecords}}
         <!---->
-        <div class="col-md-12">
+        <div class="col-md-12 table-responsive">
             {{> reactiveTable settings=settings}}
         </div>
         <!---->
@@ -104,13 +92,10 @@
         <!---->
         {{#unless canCreateNewRecords}}
         <p class="text-center text-warning">Agency Profile must be setup by Admin to begin creating records</p>
-        {{/unless}} 
-
-<!--
+        {{/unless}}
+        <!--
         {{#if createNewBtn}}
         <button class="btn btn-default pull-left createSampleRecords">Create Sample Records</button>{{/if}}
 -->
-
-
     </div>
 </template>

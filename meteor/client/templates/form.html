@@ -3,19 +3,6 @@
     </div>
 </template>
 <template name="form">
-    <!--    <nav class="contentNav hidden-print">
-        <div class="container-fluid">
-            <div class="formNav1">
-                {{#each schemas}}
-                <div data="{{this.field}}" class="formNav btn btn-sm pad0 btn-default_btn {{this.klass}}">
-                    {{this.field}}
-                    <div class="bod">{{this.sum}}</div>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-    </nav>
--->
     <nav class="contentNav hidden-print">
         <div class="container-fluid text-center">
             {{#each schemas}}
@@ -24,9 +11,8 @@
             {{/each}}
         </div>
     </nav>
-    
     <div class="tab-content content-scrollable pad2" style="top:72px;">
-    <div class="text-right em text-orange white">* Auto-save enabled for all fields</div>
+        <div class="text-right em text-orange white">* Auto-save enabled for all fields</div>
         <div class="panel panel-default" style="min-height:400px">
             <div class="panel-heading">
                 <h3 class="panel-title">Incident Map</h3>
@@ -382,6 +368,7 @@
                     </h3>
             </div>
             <div class="panel-body afBody pad00" style="overflow-x: scroll;">
+                <div id="addResources" class="small col-md-12"></div>
                 {{#autoForm id="editSubjectForm2" type="update" collection='Records' autosave=true doc=current setArrayItems=true class="pad00 col-md-12 hideLabel hideHeader" }}
                 <table class="mar1yb table table-bordered table-condensed" style="table-layout: fixed;">
                     <thead class='lightBlue-bg'>
@@ -389,7 +376,7 @@
                             {{#each resourceKeys}}
                             <th class='text-center afTable col-md-1 text-capitalize' style="padding: 5px 0;">{{this}}</th>
                             {{/each}}
-                            <th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Resource</th>
+                            <!--<th class='afTable col-md-1' style="font-size: .8em;width:'9.09%'">Remove Resource</th>-->
                         </tr>
                     </thead>
                     <tbody class='white-bg'>
@@ -400,18 +387,11 @@
                                 {{> afQuickField name=this.name options=this.options }}
                             </td>
                             {{/each}}
-                            <td class="padsm">
-                                {{#if isInRole 'admin,editor'}}
-                                <button data="{{this._key}}" type="button" class="pull-right btn btn-warning btn-sm _glyphicon _glyphicon-remove removeResource btn-block btn-sm">Remove</button>
-                                {{/if}}
-                            </td>
                         </tr>
                         {{/each}}
                     </tbody>
                 </table>
-                {{/autoForm}} {{#if isInRole 'admin,editor'}}
-                <button type="submit" class="newResource btn btn-primary mar0">New Resource</button>
-                {{/if}}
+                {{/autoForm}} {{#if isInRole 'admin,editor'}} {{/if}}
                 <div class="col-md-12">
                     <hr> {{> quickForm collection='Records' validation="submit" doc=current class="hideSubmit hideHeader recordForm2" id='formdIdResources' autosave=true type=formType fields="resourcesUsed.numTasks,resourcesUsed.totalPersonnel,resourcesUsed.totalManHours,resourcesUsed.distanceTraveled,resourcesUsed.totalCost"}}
                 </div>

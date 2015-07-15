@@ -1,5 +1,5 @@
-Meteor.startup(function () {
-    Tracker.autorun(function () {
+Meteor.startup(function() {
+    Tracker.autorun(function() {
         var config = Config.findOne();
         if (config) {
             Session.set('records', Records.find()
@@ -16,17 +16,17 @@ Meteor.startup(function () {
         }
     });
 });
-Handlebars.registerHelper('json', function (context) {
+Handlebars.registerHelper('json', function(context) {
     return JSON.stringify(context);
 });
-Handlebars.registerHelper('isEqual', function (a, b) {
+Handlebars.registerHelper('isEqual', function(a, b) {
     return a === b;
 });
 Router.configure({
     layoutTemplate: 'appBody',
     notFoundTemplate: 'appNotFound',
     loadingTemplate: 'appLoading',
-    waitOn: function () {
+    waitOn: function() {
         return [
             Meteor.subscribe('userData'),
             Meteor.subscribe('config'),
@@ -34,14 +34,14 @@ Router.configure({
             Meteor.subscribe('audit'),
         ];
     },
-    onBeforeAction: function () {
+    onBeforeAction: function() {
         if (Config.findOne()
             .initSetup) {
             Router.go('adminSetup');
         }
         this.next();
     },
-    action: function () {
+    action: function() {
         if (this.ready()) {
             this.render();
         } else {
@@ -51,7 +51,7 @@ Router.configure({
 });
 Router.route('home', {
     path: '/',
-    action: function () {
+    action: function() {
         if (Meteor.user()) {
             if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
                 Router.go('admin');
@@ -66,14 +66,14 @@ Router.route('home', {
 Router.route('adminSetup', {
     path: '/adminSetup',
     //layoutTemplate: null,
-    onBeforeAction: function () {
+    onBeforeAction: function() {
         if (!Config.findOne()
             .initSetup) {
             Router.go('home');
         }
         this.next();
     },
-    action: function () {
+    action: function() {
         if (this.ready()) {
             this.render();
         }
@@ -86,10 +86,10 @@ Router.route('profiles');
 Router.route('about');
 Router.route('userhome', {
     path: '/userhome',
-    waitOn: function () {
+    waitOn: function() {
         return this.subscribe('records');
     },
-    action: function () {
+    action: function() {
         if (!Meteor.userId()) {
             Router.go('home');
         }
@@ -100,10 +100,10 @@ Router.route('userhome', {
 });
 Router.route('records', {
     path: '/records',
-    waitOn: function () {
+    waitOn: function() {
         return this.subscribe('records');
     },
-    action: function () {
+    action: function() {
         if (!Meteor.userId()) {
             Router.go('home');
         }
@@ -114,17 +114,16 @@ Router.route('records', {
 });
 Router.route('form', {
     path: '/form/:_id',
-    waitOn: function () {
-
+    waitOn: function() {
         return this.subscribe('item', this.params._id);
     },
-    data: function () {
+    data: function() {
         var params = this.params;
         return Records.findOne({
             _id: params._id
         });
     },
-    action: function () {
+    action: function() {
         if (!Meteor.userId()) {
             Router.go('home');
         }
@@ -135,10 +134,10 @@ Router.route('form', {
 });
 Router.route('stats', {
     path: '/stats',
-    waitOn: function () {
+    waitOn: function() {
         return this.subscribe('records');
     },
-    action: function () {
+    action: function() {
         if (!Meteor.userId()) {
             Router.go('home');
         }
@@ -149,10 +148,10 @@ Router.route('stats', {
 });
 Router.route('report', {
     path: '/report/:ids',
-    waitOn: function () {
+    waitOn: function() {
         return this.subscribe('records');
     },
-    data: function () {
+    data: function() {
         var checked = this.params.ids.split('.');
         var allRecords = Records.find({
                 '_id': {
@@ -162,7 +161,7 @@ Router.route('report', {
             .fetch();
         return allRecords;
     },
-    action: function () {
+    action: function() {
         if (!Meteor.userId()) {
             Router.go('home');
         }
@@ -174,17 +173,17 @@ Router.route('report', {
 });
 Router.route('admin', {
     path: '/admin',
-    waitOn: function () {
+    waitOn: function() {
         return this.subscribe('userData');
     },
-    data: function () {
+    data: function() {
         var obj = {};
         obj.users = Meteor.users.find();
         obj.records = Records.find();
         obj.title = 'ddd';
         return obj;
     },
-    action: function () {
+    action: function() {
         if (!Meteor.userId() || !Roles.userIsInRole(Meteor.userId(), ['admin'])) {
             Router.go('home');
         }
@@ -200,4 +199,3 @@ meteor remove insecure
 meteor remove autopublish
 Resource Responses
 */
-

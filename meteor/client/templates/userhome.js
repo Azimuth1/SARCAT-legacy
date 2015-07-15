@@ -1,48 +1,48 @@
 var map;
-Template.userhome.onCreated(function (a) {
+Template.userhome.onCreated(function(a) {
     Session.set('editUserInfo', false);
     Session.set('userView', 'userhome');
     t = this
 });
-Template.admin.onRendered(function (a) {
+Template.admin.onRendered(function(a) {
     t = this
 });
 Template.userhome.helpers({
-    currentUser: function () {
+    currentUser: function() {
         return Meteor.user();
     },
-    userAlert: function (a, b) {
-        setTimeout(function () {
-            $('.userAlert').fadeOut(500, function () {
+    userAlert: function(a, b) {
+        setTimeout(function() {
+            $('.userAlert').fadeOut(500, function() {
                 Session.set('userAlert', null);
             })
         }, 500)
         return Session.get('userAlert');
     },
-    userAlertClass: function () {
+    userAlertClass: function() {
         return Session.get('userAlert').error ? 'bg-danger text-danger' : 'bg-success text-success';
     },
-    configs: function () {
+    configs: function() {
         return Session.get('config');
     },
-    userEmail: function () {
+    userEmail: function() {
         return this.emails[0].address;
     },
-    editUserInfo: function () {
+    editUserInfo: function() {
         return Session.get('editUserInfo');
     },
-    btnTextDisabled: function () {
+    btnTextDisabled: function() {
         var current = Session.get('editUserInfo');
         return current ? 'Cancel' : 'Edit Username/Email';
     },
-    settings: function () {
-        var fields = _.chain(allInputs).filter(function (d) {
+    settings: function() {
+        var fields = _.chain(allInputs).filter(function(d) {
             return d.tableVisible;
-        }).map(function (d) {
+        }).map(function(d) {
             return {
                 key: d.field,
                 fieldId: d.field,
-                label: function () {
+                label: function() {
                     return new Spacebars.SafeString('<span class="hideInTable strong">' + d.parent + ' - </span><i>' + d.label + '</i>');
                 },
                 hidden: d.tableVisible ? false : true,
@@ -68,13 +68,13 @@ Template.userhome.helpers({
     },
 });
 Template.userhome.events({
-    'click .resetUserPassword': function (event, template) {
-        Meteor.call('setPassword', Meteor.userId(), null, true, function (err, d) {
+    'click .resetUserPassword': function(event, template) {
+        Meteor.call('setPassword', Meteor.userId(), null, true, function(err, d) {
             console.log(err, d)
             if (err) {
                 console.log(err);
             } else {
-                Meteor.logout(function () {
+                Meteor.logout(function() {
                     Session.set('adminRole', false);
                     Session.set('passwordReset', false);
                     //Router.go('signin');
@@ -87,12 +87,12 @@ Template.userhome.events({
             Router.go('signin');
         });*/
     },
-    'click .editUserInfo': function (event, template) {
+    'click .editUserInfo': function(event, template) {
         var current = Session.get('editUserInfo');
         Session.set('editUserInfo', !current);
         event.target.blur();
     },
-    'click .reactive-table tr': function (event) {
+    'click .reactive-table tr': function(event) {
         if (!this._id || _.contains(event.target.classList, "recordSel")) {
             return;
         }

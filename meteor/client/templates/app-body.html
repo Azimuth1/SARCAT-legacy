@@ -21,8 +21,6 @@
             <div>
                 {{#if lists}}
                 <div class="quickDash">
-                    <!--<div class="quickTitle">Quick DashBoard
-                    </div>-->
                     {{#each summary}}
                     <div>
                         <span class="quickName">
@@ -39,9 +37,14 @@
         </div>
         <div class="content-overlay hidden-print"></div>
         <div id="content-container">
-         
-                {{#each thisArray}} {{> yield}} {{/each}}
-       
+            <div class="page auth">
+                <nav class="hidden-print nav-left">
+                    <div class="nav-group">
+                        <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered white"></span></a>
+                    </div>
+                </nav>
+            </div>
+            {{#each thisArray}} {{> yield}} {{/each}}
         </div>
     </div>
 </template>

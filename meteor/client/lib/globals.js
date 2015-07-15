@@ -186,13 +186,6 @@ allInputs = [{
         "parent": "Incident Outcome/Rescue",
         "stats": true
     }, {
-        "field": "incidentOutcome.suspensionReasons",
-        "count": [],
-        "label": "Suspension Reasons",
-        "tableList": true,
-        "parent": "Incident Outcome/Rescue",
-        "stats": true
-    }, {
         "field": "resourcesUsed.distanceTraveled",
         "count": [],
         "label": "Total Distance Traveled",
@@ -208,15 +201,17 @@ allInputs = [{
         "parent": "Resources Used",
         "stats": true,
         number: true
-    }, {
-        "field": "resourcesUsed.totalCost",
-        "count": [],
-        "label": "Total Cost",
-        "tableList": true,
-        "parent": "Resources Used",
-        "stats": true,
-        number: true
-    }, {
+    },
+    /* {
+            "field": "resourcesUsed.totalCost",
+            "count": [],
+            "label": "Total Cost",
+            "tableList": true,
+            "parent": "Resources Used",
+            "stats": true,
+            number: true
+        }, */
+    {
         "field": "resourcesUsed.totalManHours",
         "count": [],
         "label": "Total Man Hours",
@@ -238,14 +233,12 @@ allInputs = [{
         "label": "Last Seen Date/Time",
         "tableList": true,
         "parent": "timeLog",
-
     }, {
         "field": "timeLog.SARNotifiedDatetime",
         "count": [],
         "label": "SAR Notified Date/Time",
         "tableList": true,
         "parent": "timeLog",
-
     }, {
         "field": "timeLog.subjectLocatedDateTime",
         "count": [],
@@ -283,7 +276,5 @@ allInputs = [{
         "tableList": false,
         "parent": "Comments",
         "stats": false
-
     }
-
 ];

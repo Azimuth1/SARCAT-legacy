@@ -1,3 +1,3 @@
-Template.about.created = function () {
+Template.about.created = function() {
     Session.set('userView', 'about');
 };

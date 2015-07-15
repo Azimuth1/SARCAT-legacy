@@ -1,43 +1,44 @@
 {
-  "name": "sarcat",
-  "version": "0.2.0",
-  "description": "SAR data management tool",
-  "author": "Azimuth1",
-  "engines": {
-    "node": "~0.10.36"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/Azimuth1/SARCAT.git"
-  },
-  "bin": {
-    "sarcat": "scripts/buildall.sh",
-    "sarcat": "node dist/index.js"
-  },
-  "main": "./index.js",
-  "scripts": {
-    "start": "node dist/index.js",
-    "postinstall": "node scripts/run.js",
-    "buildall": "scripts/buildall.sh",
-    "darwin": "node scripts/run.js darwin",
-    "win32": "node scripts/run.js win32",
-    "linux": "node scripts/run.js linux",
-    "test": "node dist/index.js > my_app_log.log 2> my_app_err.log"
-  },
-  "bugs": {
-    "url": "https://github.com/Azimuth1/SARCAT/issues"
-  },
-  "keywords": [
-    "sar",
-    "search and rescue"
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.13.1",
-    "express": "^4.13.0",
-    "minimist": "^1.1.1",
-    "request": "^2.58.0"
-  },
-  "preferGlobal": true,
-  "private": true
+    "name": "sarcat",
+    "version": "0.3.0",
+    "description": "SAR data management tool",
+    "author": "Azimuth1",
+    "engines": {
+        "node": "~0.10.36"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/Azimuth1/SARCAT.git"
+    },
+    "bin": {
+        "sarcat": "node dist/index.js"
+    },
+    "main": "./index.js",
+    "scripts": {
+        "start": "node dist/index.js",
+        "postinstall": "node scripts/run.js buildlocal",
+        "buildlocal": "scripts/buildlocal.sh",
+        "buildall": "scripts/buildall.sh",
+        "darwin": "node scripts/run.js darwin",
+        "win32": "node scripts/run.js win32",
+        "linux": "node scripts/run.js linux",
+        "test": "node dist/index.js > my_app_log.log 2> my_app_err.log"
+    },
+    "bugs": {
+        "url": "https://github.com/Azimuth1/SARCAT/issues"
+    },
+    "keywords": [
+        "sar",
+        "search and rescue"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "body-parser": "^1.13.1",
+        "express": "^4.13.0",
+        "getport": "^0.1.0",
+        "minimist": "^1.1.1",
+        "request": "^2.58.0"
+    },
+    "preferGlobal": true,
+    "private": true
 }

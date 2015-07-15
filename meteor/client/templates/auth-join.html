@@ -1,10 +1,5 @@
 <template name="join">
     <div class="page auth">
-        <nav>
-            <div class="nav-group">
-                <a href="#" class="js-menu nav-item"><span class="tmp-icon-list-unordered"></span></a>
-            </div>
-        </nav>
         <div class="content-scrollable">
             {{#if logoSrc}}
             <div class="text-center agencyLogo">
@@ -16,7 +11,6 @@
                     <!-- <h2 class="h1 mar00">SARCAT</h2>-->
                     <p class="acr"><b>s</b>earch<b>a</b>nd<b>r</b>escue<b>c</b>ollection &<b>a</b>nalysis<b>t</b>ool</p>
                 </div>
-
                 <form>
                     {{#if errorMessages}}
                     <div class="list-errors">
@@ -46,7 +40,7 @@
                         <input type="password" name="confirm" placeholder="Confirm Password" />
                         <span class="tmp-icon-lock" title="Confirm Password"></span>
                     </div>
-                    <button type="submit" class="btn-primary btn-pad">
+                    <button type="submit" class="btn-primary btn-block mar2y pad2">
                         <span class="tmp-icon-user-add" aria-hidden="true"></span>Join Now</button>
                     <a href="{{pathFor 'signin'}}" class="link-auth-alt">Have an account? Sign in</a>
                 </form>

@@ -76,13 +76,11 @@ Template.adminSetup.events({
             }
             var username = [firstname, lastname].join(' ');
             Meteor.call('createAdmin', username, email, password, function() {
-
                 Meteor.loginWithPassword(email, password, function() {
                     Meteor.call('removeUser', _id);
                     Router.go('home', Meteor.user());
                 });
             });
-
         }
     }
 });

@@ -7,6 +7,6 @@ webpage/bower_components
 main_logo
 npm-debug.log
 build/libs/*
-dist
+build/**
 allbuilds
 public/uploads/records/*

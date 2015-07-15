@@ -1,0 +1,529 @@
+{
+  "format": "javascript-image-pre1",
+  "arch": "os.osx.x86_64",
+  "load": [
+    {
+      "sourceMap": "packages/underscore.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/underscore.js"
+    },
+    {
+      "node_modules": "npm/meteor/node_modules",
+      "sourceMap": "packages/meteor.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/meteor.js"
+    },
+    {
+      "sourceMap": "packages/reload.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/reload.js"
+    },
+    {
+      "sourceMap": "packages/json.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/json.js"
+    },
+    {
+      "sourceMap": "packages/base64.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/base64.js"
+    },
+    {
+      "sourceMap": "packages/ejson.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/ejson.js"
+    },
+    {
+      "node_modules": "npm/logging/node_modules",
+      "sourceMap": "packages/logging.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/logging.js"
+    },
+    {
+      "sourceMap": "packages/routepolicy.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/routepolicy.js"
+    },
+    {
+      "sourceMap": "packages/tracker.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/tracker.js"
+    },
+    {
+      "sourceMap": "packages/deps.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/deps.js"
+    },
+    {
+      "sourceMap": "packages/htmljs.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/htmljs.js"
+    },
+    {
+      "sourceMap": "packages/html-tools.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/html-tools.js"
+    },
+    {
+      "sourceMap": "packages/blaze-tools.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/blaze-tools.js"
+    },
+    {
+      "sourceMap": "packages/spacebars-compiler.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/spacebars-compiler.js"
+    },
+    {
+      "sourceMap": "packages/jquery.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jquery.js"
+    },
+    {
+      "sourceMap": "packages/id-map.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/id-map.js"
+    },
+    {
+      "sourceMap": "packages/ordered-dict.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/ordered-dict.js"
+    },
+    {
+      "sourceMap": "packages/random.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/random.js"
+    },
+    {
+      "sourceMap": "packages/geojson-utils.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/geojson-utils.js"
+    },
+    {
+      "sourceMap": "packages/minimongo.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/minimongo.js"
+    },
+    {
+      "sourceMap": "packages/observe-sequence.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/observe-sequence.js"
+    },
+    {
+      "sourceMap": "packages/reactive-var.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/reactive-var.js"
+    },
+    {
+      "sourceMap": "packages/blaze.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/blaze.js"
+    },
+    {
+      "sourceMap": "packages/templating.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/templating.js"
+    },
+    {
+      "sourceMap": "packages/spacebars.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/spacebars.js"
+    },
+    {
+      "sourceMap": "packages/ui.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/ui.js"
+    },
+    {
+      "sourceMap": "packages/boilerplate-generator.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/boilerplate-generator.js",
+      "assets": {
+        "boilerplate_web.browser.html": "assets/packages/boilerplate-generator/boilerplate_web.browser.html",
+        "boilerplate_web.cordova.html": "assets/packages/boilerplate-generator/boilerplate_web.cordova.html"
+      }
+    },
+    {
+      "sourceMap": "packages/webapp-hashing.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/webapp-hashing.js"
+    },
+    {
+      "node_modules": "npm/webapp/node_modules",
+      "sourceMap": "packages/webapp.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/webapp.js"
+    },
+    {
+      "sourceMap": "packages/check.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/check.js"
+    },
+    {
+      "sourceMap": "packages/retry.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/retry.js"
+    },
+    {
+      "sourceMap": "packages/callback-hook.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/callback-hook.js"
+    },
+    {
+      "node_modules": "npm/ddp/node_modules",
+      "sourceMap": "packages/ddp.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/ddp.js"
+    },
+    {
+      "sourceMap": "packages/binary-heap.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/binary-heap.js"
+    },
+    {
+      "node_modules": "npm/mongo/node_modules",
+      "sourceMap": "packages/mongo.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/mongo.js"
+    },
+    {
+      "sourceMap": "packages/autoupdate.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/autoupdate.js"
+    },
+    {
+      "sourceMap": "packages/meteor-platform.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/meteor-platform.js"
+    },
+    {
+      "sourceMap": "packages/iron_core.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_core.js"
+    },
+    {
+      "sourceMap": "packages/iron_dynamic-template.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_dynamic-template.js",
+      "assets": {
+        "dynamic_template.html": "assets/packages/iron_dynamic-template/dynamic_template.html"
+      }
+    },
+    {
+      "sourceMap": "packages/iron_layout.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_layout.js",
+      "assets": {
+        "default_layout.html": "assets/packages/iron_layout/default_layout.html"
+      }
+    },
+    {
+      "sourceMap": "packages/iron_url.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_url.js"
+    },
+    {
+      "sourceMap": "packages/iron_middleware-stack.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_middleware-stack.js"
+    },
+    {
+      "sourceMap": "packages/iron_location.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_location.js"
+    },
+    {
+      "sourceMap": "packages/reactive-dict.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/reactive-dict.js"
+    },
+    {
+      "sourceMap": "packages/iron_controller.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_controller.js"
+    },
+    {
+      "node_modules": "npm/iron_router/node_modules",
+      "sourceMap": "packages/iron_router.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/iron_router.js",
+      "assets": {
+        "lib/templates.html": "assets/packages/iron_router/lib/templates.html"
+      }
+    },
+    {
+      "sourceMap": "packages/less.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/less.js"
+    },
+    {
+      "node_modules": "npm/npm-bcrypt/node_modules",
+      "sourceMap": "packages/npm-bcrypt.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/npm-bcrypt.js"
+    },
+    {
+      "sourceMap": "packages/accounts-base.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/accounts-base.js"
+    },
+    {
+      "sourceMap": "packages/sha.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/sha.js"
+    },
+    {
+      "sourceMap": "packages/srp.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/srp.js"
+    },
+    {
+      "node_modules": "npm/email/node_modules",
+      "sourceMap": "packages/email.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/email.js"
+    },
+    {
+      "sourceMap": "packages/accounts-password.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/accounts-password.js"
+    },
+    {
+      "node_modules": "npm/aldeed_simple-schema/node_modules",
+      "sourceMap": "packages/aldeed_simple-schema.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/aldeed_simple-schema.js"
+    },
+    {
+      "sourceMap": "packages/aldeed_autoform.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/aldeed_autoform.js"
+    },
+    {
+      "sourceMap": "packages/aldeed_collection2.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/aldeed_collection2.js"
+    },
+    {
+      "sourceMap": "packages/alanning_roles.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/alanning_roles.js"
+    },
+    {
+      "sourceMap": "packages/url.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/url.js"
+    },
+    {
+      "node_modules": "npm/http/node_modules",
+      "sourceMap": "packages/http.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/http.js"
+    },
+    {
+      "sourceMap": "packages/fortawesome_fontawesome.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/fortawesome_fontawesome.js"
+    },
+    {
+      "sourceMap": "packages/d3.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/d3.js"
+    },
+    {
+      "node_modules": "npm/tomi_upload-server/node_modules",
+      "sourceMap": "packages/tomi_upload-server.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/tomi_upload-server.js"
+    },
+    {
+      "sourceMap": "packages/tomi_upload-jquery.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/tomi_upload-jquery.js"
+    },
+    {
+      "sourceMap": "packages/mrt_moment.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/mrt_moment.js"
+    },
+    {
+      "sourceMap": "packages/momentjs_moment.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/momentjs_moment.js"
+    },
+    {
+      "sourceMap": "packages/tsega_bootstrap3-datetimepicker.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/tsega_bootstrap3-datetimepicker.js"
+    },
+    {
+      "sourceMap": "packages/aslagle_reactive-table.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/aslagle_reactive-table.js"
+    },
+    {
+      "sourceMap": "packages/twbs_bootstrap.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/twbs_bootstrap.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-core.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-core.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-base64.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-base64.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-md5.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-md5.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-evpkdf.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-evpkdf.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-cipher-core.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-cipher-core.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-padding.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-padding.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-mode.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-mode.js"
+    },
+    {
+      "sourceMap": "packages/jparker_crypto-aes.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/jparker_crypto-aes.js"
+    },
+    {
+      "sourceMap": "packages/matb33_collection-hooks.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/matb33_collection-hooks.js"
+    },
+    {
+      "sourceMap": "packages/session.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/session.js"
+    },
+    {
+      "sourceMap": "packages/livedata.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/livedata.js"
+    },
+    {
+      "path": "packages/global-imports.js"
+    },
+    {
+      "path": "app/lib/data/countryList.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/lib/schemas/A.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/lib/schemas/Config.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/lib/schemas/Records.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/lib/schemas/User.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/data/EcoRegionGeojson.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/data/USAStatesGeojson.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/data/countryGeojson.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/bootstrap.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/methods.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/pip.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "path": "app/server/publish.js",
+      "assets": {
+        "backup/sample.json": "assets/app/backup/sample.json",
+        "backup/sarcatExport-July-15th-2_15_1-19-48am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-19-48am.json",
+        "backup/sarcatExport-July-15th-2_15_1-23-30am.json": "assets/app/backup/sarcatExport-July-15th-2_15_1-23-30am.json"
+      }
+    },
+    {
+      "sourceMap": "packages/service-configuration.js.map",
+      "sourceMapRoot": "packages",
+      "path": "packages/service-configuration.js"
+    }
+  ]
+}
