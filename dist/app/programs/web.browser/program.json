@@ -2,13 +2,13 @@
   "format": "web-program-pre1",
   "manifest": [
     {
-      "path": "c61e63cab9b22f4d159065491cacfa94de871280.js",
+      "path": "7169eb434a4bc685265a573b8389165915450892.js",
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/c61e63cab9b22f4d159065491cacfa94de871280.js",
-      "size": 3306838,
-      "hash": "c61e63cab9b22f4d159065491cacfa94de871280"
+      "url": "/7169eb434a4bc685265a573b8389165915450892.js",
+      "size": 3306840,
+      "hash": "7169eb434a4bc685265a573b8389165915450892"
     },
     {
       "path": "07b1073a9118687a671f857e22f57380c3d88832.css",
@@ -621,15 +621,6 @@
       "url": "/uploads/logo/.gitignore",
       "size": 70,
       "hash": "15d6d7c4aaf862ae9fb8c34b564604dfcf6cd278"
-    },
-    {
-      "path": "app/uploads/logo/promo3.png",
-      "where": "client",
-      "type": "asset",
-      "cacheable": false,
-      "url": "/uploads/logo/promo3.png",
-      "size": 344479,
-      "hash": "656a734b6cbc26da4c94085ad46ffe9db78f118b"
     },
     {
       "path": "app/uploads/records/.gitignore",

@@ -1184,7 +1184,7 @@ Schemas.SARCAT = new SimpleSchema({
     timeLog: {
         type: Schemas.timeLog,
         optional: true,
-        label: 'Incident Time Log',
+        label: 'Incident TimeLog',
         defaultValue: {}
     },
     incidentOperations: {
