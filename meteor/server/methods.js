@@ -230,14 +230,9 @@ Meteor.methods({
     getFilesInPublicFolder: function(id) {
         var fs = Npm.require('fs');
         var path = Npm.require('path');
-        var dir = process.env.PWD;
-        var sarcatDir = path.join(dir, 'public', 'uploads');
-        if (process.env.sarcatDir) {
-            dir = process.env.sarcatDir;
-            sarcatDir = path.join(dir, 'app', 'programs', 'web.browser', 'app', 'uploads')
-        }
-        var filesDir = path.join(sarcatDir, 'records', id);
-        //var dir = '../web.browser/app/uploads/records/' + id;
+        var dir = process.env.sarcatStorage ? process.env.sarcatStorage : process.env.PWD;
+        var sarcatUploads = path.join(dir, 'public', 'uploads');
+        var filesDir = path.join(sarcatUploads, 'records', id);
         if (!fs.existsSync(filesDir)) {
             return [];
         }

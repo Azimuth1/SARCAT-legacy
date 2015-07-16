@@ -22,21 +22,404 @@
     <div id="header">
     </div>
     <div class="container">
-        <h1>More documentation coming soon!</h1>
-        <p>With SARCAT, our goal is to create a standard for best practices within the Search & Rescue community. In order to make that happen, wel welcome as much feedback as possible. Is there something you think is missing? Or do you have recommendations? We want to hear all of your feedback in order to save you time and help you accomplish your data management goals faster</p>
-        <hr>
-        <!--<div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/DNH9Oy-wOKA" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-        -->
-        <p>for more detailed information, check out our <a href="https://github.com/Azimuth1/SARCAT">Github</a> page</p>
-        <hr>
-        <h2 id="license">License</h2>
-        <p class="small">
-            The MIT License (MIT) Copyright (c) 2015 Azimuth1 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-        </p>
+<h1 id="sarcat">SARCAT</h1>
+
+<p><img src="https://github.com/Azimuth1/SARCAT/blob/master/meteor/public/icon.png?raw=true" alt="alt tag" title=""></p>
+
+<hr>
+
+
+<h1 id="basic-installation"><strong>Basic Installation</strong></h1>
+
+<p><em>This is the easiest way to install SARCAT. You simply download a zipped file which contains everything you need to get up and running.</em></p>
+
+<blockquote>
+  <h4 id="supported-platforms"><strong>Supported platforms</strong></h4>
+  
+  <ul>
+  <li>Mac: OS X 10.x</li>
+  <li>Windows: Microsoft Windows 7, Windows 8.1, Windows Server 2008, Windows Server 2012</li>
+  <li>Linux: x86 and x86_64 systems</li>
+  </ul>
+</blockquote>
+
+<h2 id="to-install-the-latest-release">To Install the latest release:</h2>
+
+<p></p><ul> <br>
+<li>First, download the <a href="http://spa.tial.ly:8080/download.html">latest release</a> for your platform from the download section of the website.</li>
+<li>Then, follow instructions below for extracting the zipped SARCAT package. <br></li></ul><p></p>
+
+<blockquote>
+  <h4 id="extracting-the-sarcat-package-on-your-local-machine"><strong>EXTRACTING THE SARCAT PACKAGE ON YOUR LOCAL MACHINE: </strong> <br></h4>
+  
+  <p><em>SARCAT is downloaded as a .zip file (.tar for Binux/Mac). Being a server application, this would normally involve seperate installations of server-side software. However, we have done the work to compile all of the binaries for you to get up and running quickly!</em> <br>
+  </p><ol><li>Create a new home directory for SARCAT within your home directory. For windows, this can be <strong><em>C:\Users(user-name)\sarcat</em></strong>. Any location should be fine. But this will ensure proper privileges.</li>
+  <li>Move the downloaded zipped file to your home sarcat folder</li>
+  <li>Right-click the file and select <strong>Extract All</strong>. </li>
+  <li>For your destination, choose your newly create SARCAT home directory (<strong><em>C:\Users(user-name)\sarcat</em></strong>).</li>
+  <li>Once extracted, navigate into the directory.</li>
+  <li>Click <code>start</code> to run SARCAT.</li>
+  <li>Open you browser and go to <a href="http://www.localhost:3000"></a><a href="http://www.localhost:3000">http://www.localhost:3000</a> to begin.</li>
+  <li>Click <code>stop</code> to stop SARCAT.</li>
+  <li>Enjoy!</li></ol>
+  <p></p>
+  
+  <hr>
+</blockquote>
+
+<h1 id="folder-structure"><strong>Folder structure</strong></h1>
+
+<p><strong>Home Directory</strong> <br>
+ |– sarcat-{version}-{platform}</p>
+
+<pre><code>|-- index.js
+|-- package.json
+|-- settings.json
+|-- start
+|-- stop
+
+|-- app/
+    |-- !
+
+|-- bin/
+    | -- !
+
+|-- config/
+    |-- config.json
+
+|-- node_modules/
+    |-- !
+</code></pre>
+
+
+
+<h3 id="indexjs"><strong>| - -index.js</strong></h3>
+
+<blockquote>
+  <p><em>node scripts that runs SARCAT</em></p>
+</blockquote>
+
+
+
+<h3 id="packagejson"><strong>| - -package.json</strong></h3>
+
+<blockquote>
+  <p><em>npm modules needed to run SARCAT.</em></p>
+</blockquote>
+
+<h3 id="settingsjson"><strong>| - -settings.json</strong></h3>
+
+<blockquote>
+  <p><em>node scripts that meteor depends on for the build. Leave the default values for now!</em></p>
+</blockquote>
+
+<h3 id="start"><strong>| - -start</strong></h3>
+
+<blockquote>
+  <p><em>bash script to easily start SARCAT</em></p>
+</blockquote>
+
+<h3 id="stop"><strong>| - -stop</strong></h3>
+
+<blockquote>
+  <p><em>bash script to easily stop SARCAT</em>        </p>
+</blockquote>
+
+<h4 id="configconfigjson"><strong>| - - config/config.json</strong></h4>
+
+<blockquote>
+  <p><em>Important environment variables for running SARCAT on your server. Leave the default values unless you know what you are doing!</em> <br>
+  <strong>sarcatPort</strong> <br>
+  Port SARCAT will run on your server. Default is 300 <br>
+  <strong>sarcatStorage</strong> <br>
+  If left empty, your personal SARCAT files and database will be install in your home directory in  <strong>{userHome}/sarcatData</strong>. Be careful if you change this or your data may not update when you upgrade your version of SARCAT <br>
+  <strong>databasePort</strong> <br>
+  Port MongoDB will run on your server. Default is 301 <br>
+  <strong>databaseName</strong> <br>
+  Name of your database instance. Default is sarcatdb. It is saved to the location of your databaseDir parameter. <br>
+  <strong>MONGO_URL</strong> <br>
+  Default mongo connection settings to locahost. <br>
+  <strong>ROOT_URL</strong> <br>
+  Root url SARCAT will serve from. Generally should be localhost</p>
+</blockquote>
+
+<hr>
+
+<h1 id="manuel"><strong>Manuel</strong></h1>
+
+
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p><em>Once SARCAT is installed and running, use the default username/password to begin setting up your profile at <a href="http://localhost:3000">http://localhost:3000</a>:</em>. This ensures only you can get it started.</p>
+
+<blockquote>
+  <p><strong>Username</strong>: <em>admin@sarcat</em> <br>
+  <strong>Password</strong> <em>admin</em></p>
+</blockquote>
+
+<hr>
+
+
+
+<h2 id="admin-tools">Admin Tools</h2>
+
+<p><em>The admin tools page is only accessible to users with an admin level privilege. Here, you can manage your projects and user-base.</em></p>
+
+<blockquote>
+  <h4 id="organization-profile"><strong>Organization Profile:</strong></h4>
+  
+  <ul>
+  <li><strong>Organization Information</strong>  <br>
+  <em>Create a profile for your organzation before you can create any records.</em></li>
+  <li><p><strong>Custom Settings/Preferences</strong> </p>
+  
+  <ul><li>Upload your organization logo to customize the look and feel of SARCAT.</li>
+  <li>Allow a connection to the SARCAT servers. these currently will assist you with getting weather and elevation information. More features will be added in the future!</li>
+  <li>Choose a unit of measurement for your team.</li></ul></li>
+  <li><p><strong>Custom Incident Questions</strong> </p></li>
+  <li><em>Generate custom questions to fill out for incidents. We understand every team has unique needs and this will help make sure you get the data recorded that you depend on!</em></li>
+  <li><strong>Default SAR Response Area</strong> </li>
+  <li><em>Set this map on your default response area in order to more quickly create records.</em></li>
+  </ul>
+</blockquote>
+
+<hr>
+
+<blockquote>
+  <h4 id="user-roles"><strong>User Roles:</strong></h4>
+  
+  <ul>
+  <li><p><strong>Adding New Users</strong>  <br>
+  The admin must approve all new users. When a user signs up, they will be notified that their account is pending admin approval. There are 4 main roles within SARCAT:</p>
+  
+  <ul><li>Pending - Default role. Users cannot login.</li>
+  <li>Viewer - Users can view Records but not create them.</li>
+  <li>Editor - Users can create and edit any records.</li>
+  <li>Admin - You can control the admin dashboard!</li></ul></li>
+  <li><p><strong>Password Reset</strong> <br>
+  If a user forget their password, you can click this for a one time reset code. Give them this code in order to reset their password</p></li>
+  <li><p><strong>Remove Users</strong> <br>
+  Remove users for your database</p></li>
+  </ul>
+</blockquote>
+
+<hr>
+
+<blockquote>
+  <h4 id="editing-history"><strong>Editing History:</strong></h4>
+  
+  <p><em>SARCAT tracks a history of all user edits here.</em></p>
+</blockquote>
+
+<hr>
+
+<h2 id="incident-records">Incident Records</h2>
+
+<p><em>This is the main page to display a table of all records. It can be sorted and displayed by multiple incident fields. In addition the following options will appear on the page for authorized users. Photos to come!</em></p>
+
+<h4 id="create-a-record"><strong>Create a Record</strong></h4>
+
+<p><em>Once you have your profile set up, creating records is a breeze. This modal that pops up contains the required information to begin a new record. Drag the point on the map to the incident location and fill in data. Once you have a records, the Record ID and Mission ID will display the previously used values for your reference</em></p>
+
+<h4 id="downloading-records"><strong>Downloading Records</strong></h4>
+
+<p><em>You can download your records as a .csv and open in Excel. You can also download in JSON format. This is good for backups, as you can import these records (see below)</em></p>
+
+<h4 id="importing-records-into-sarcat"><strong>Importing Records into SARCAT</strong></h4>
+
+<p><em>Navigate to a JSON file from exported records to load them into SARCAT again.</em></p>
+
+<h4 id="exporting-records-to-isrid"><strong>Exporting Records to ISRID</strong></h4>
+
+<p><em>A single button click will send your data to the ISRID servers. Only the admin can see this</em></p>
+
+<h4 id="view-reports"><strong>View Reports</strong></h4>
+
+<p><em>Select records and click View Report to see a summary of the incidents. If none are selected, you will have a report generated for all records. After 3 records, the map will not display data due to map API usage limits.</em></p>
+
+<hr>
+
+<h2 id="editing-an-incident">Editing An Incident</h2>
+
+<p><em>And now for data entry! SARCAT makes life easier by assisting with inputs. Our goal is to optimize this as much as possible to make sure you are spending less time inserting data and more time analyzing your workflow. All of these value auto-save, so you don’t have to worry about filling out an entire form and forgetting to save it!</em> </p>
+
+<blockquote>
+  <h4 id="incident-categories"><strong>Incident Categories:</strong></h4>
+  
+  <ul>
+  <li><strong>Incident Map</strong>  <br>
+  <em>Click the buttons above the map to add/remove geospatial data from your incident </em></li>
+  <li><strong>Record Info</strong>  <br>
+  <em>This is the primary information filled in when you created the record</em></li>
+  <li><strong>Incident Location/Details</strong>  <br>
+  <em>Dropdowns assist with pick values about your location</em></li>
+  <li><strong>Incident TimeLog</strong>  <br>
+  <em>24 hour time is used here. Total time is also generated based on these values</em></li>
+  <li><strong>Subject Info</strong>  <br>
+  <em>Add subject information for the missing parties. The personal information is encrypted and only the creator or admins can view this information</em></li>
+  <li><strong>Weather</strong>  <br>
+  <em>If connection is enabled to the SARCAT servers, this data can be auto-calculated once you have add the Incident Date and Incident Location.</em></li>
+  <li><strong>Find Location</strong>  <br>
+  <em>Information pertaining to the find. This is activated when the Find Coordinate is place on the map</em></li>
+  <li><strong>Incident Outcome/Rescue</strong>  <br>
+  <em>Details pertaining to the rescue.</em></li>
+  <li><strong>Resources Used</strong>  <br>
+  <em>Select resources with the checkboxes to add to the list.</em></li>
+  <li><strong>Comments</strong> <br>
+  <em>Write anything you want pertaining to the search here</em> <br>
+  <em>lalalalalalala.</em></li>
+  <li><strong>Saved Incident Files</strong>  <br>
+  <em>You can also upload data and manage it within SARCAT! It currently will serve images and other various reports (.pdf/.doc/.csv). This is saved to your <strong>/sarcatDATA</strong> directory</em></li>
+  </ul>
+</blockquote>
+
+<hr>
+
+<h2 id="sarcat-stats">SARCAT Stats</h2>
+
+
+
+<h4 id="record-map"><strong>Record Map</strong></h4>
+
+<p><em>this shows all of your records in a single map. The incident location and find location (if available) have a single crows-path line drawn between them. You can selected these records to view information pertaining to the individual record</em></p>
+
+<h4 id="reactive-charts"><strong>Reactive charts</strong></h4>
+
+<p><em>The more data you have, the more you will notice trends. You can select a date range and display stats based on when your incidents happened.</em></p>
+
+<hr>
+
+<hr>
+
+<h2 id="faq-troubleshooting"><strong>FAQ &amp; Troubleshooting</strong></h2>
+
+<p><strong><em>How is SARCAT installed?</em></strong></p>
+
+<ul>
+<li>SARCAT is designed to be run on a server for an entire organization. Node &amp; Mongodb are the backbones behind the scenes. If you know your way around these tools, you will be able to get the most out of SARCAT and the data. If you already have node &amp; mongo running on your server, getting up and running with sarcat will be pretty easy for you. If not, dont worry - we compiled all the necessary dependencies into a zip file for your platform.</li>
+</ul>
+
+<p><strong><em>Where is my data stored?</em></strong></p>
+
+<ul>
+<li>When SARCAT is installed, by default it will create the database in your home directory. If you wish to change this location, simply open up config/config.json and change the value of <strong>sarcatStorage</strong>.</li>
+</ul>
+
+<p><strong><em>Can I change my default ports?</em></strong></p>
+
+<ul>
+<li>Yes! inside of config/config.json you have the ability to change your default ports of <strong>sarcatPort</strong> &amp; <strong>databasePort</strong>.</li>
+</ul>
+
+<p><strong><em>How do I update SARCAT?</em></strong></p>
+
+<ul>
+<li>If you are using git, you can just update the latest with a pull. if you downloaded the zip file, extract it into your home SARCAT directory. It will automatically connect to you latest database if you used the default sarcatdb in your home directory. If you changed this, update the config to reflect your desired settings.</li>
+</ul>
+
+<p><strong><em>How do a wipeout my database and start over?</em></strong></p>
+
+<ul>
+<li>As long as this is exactly what you want, you can delete your local copy of the <strong>/sarcatData</strong> from your home directory. The next time you restart SARCAT it will be created again. Or you can simply change the database by updating the config.json.</li>
+</ul>
+
+<p><strong><em>I am _still_ having trouble installing!</em></strong></p>
+
+<ul>
+<li><p>SARCAT is intended to be used as a web server. If installing on a local network, you may need to contact your administrator to be granted access rights to install. While the steps and dependencies are minimal for this software, proper knowledge of your network is important to ensure quality.</p></li>
+<li><p>Ensure proper priveleges are set on your machine and install paths</p></li>
+<li>Check firewall settings.</li>
+<li>You may have mongo already running on your machine and unable to create a new port for it. Check out <a href="http://www.howtogeek.com/145882/how-to-kill-a-process-from-the-cli-in-windows/">this reference</a> to kill a running process </li>
+<li>If you have npm installed, you can try removing your <strong>/node_modules</strong> directory and <code>npm install</code> to install again.</li>
+<li>Feel free to contact us with any question or concerns you may have. This is an open source project and we encourage collaboration in order to create the best product possible!</li>
+</ul>
+
+<hr>
+
+
+
+<h1 id="feedback">Feedback</h1>
+
+<p>We would love to hear any feedback you have on the app. For technical support, contact <em>kyle.kalwarski@azimuth1.com</em>. For other general inqueries, contact Robert Koester at <em>robert@dbs-sar.com</em></p>
+
+<p>And don’t forget to check out our Lost Person Behavior mobile app available for iOS &amp; Android today!</p>
+
+<hr>
+
+
+
+<h2 id="more-documentation-to-come">More Documentation to come!</h2>
+
+<hr>
+
+<h1 id="advanced-installation"><strong>Advanced Installation</strong></h1>
+
+<p><em>If you already have node v0.10.36 &amp; mongo installed on your system and know your way around a bit more (or want to learn), this is for you. Or if you want to learn, this is your chance! Follow instructions bellow to build the latest release from source</em></p>
+
+<blockquote>
+  <h4 id="dependencies"><strong>DEPENDENCIES:</strong></h4>
+  
+  <p><strong>Node.js v0.10.6</strong>  <br>
+  <em>Select your installer below. Follow the prompts (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).</em></p>
+  
+  <ul>
+  <li><a href="https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi">Windows Installer <small>node-v0.10.36-x86.msi</small></a></li>
+  <li><a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg">Macintosh Installer <small>node-v0.10.36.pkg</small></a></li>
+  <li><a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz">Linux Installer <small>node-v0.10.36.tar.gz</small></a></li>
+  </ul>
+  
+  <p><strong>MongoDB v3.0.4</strong> <br>
+  <em>Mongo is the powerful database behind SARCAT. Follow the instructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4. Mongo has great <a href="http://docs.mongodb.org/manual/">documentation</a> to walk you through the install to be up and running quickly!</em></p>
+  
+  <ul>
+  <li><a href="https://www.mongodb.org/downloads">Download Mongo now!</a></li>
+  </ul>
+</blockquote>
+
+<hr>
+
+
+
+<h2 id="download-sarcat">Download SARCAT</h2>
+
+<ul>
+<li>Make sure you have the required dependencies. Then download the standalone version (w/out node/mongo) <a href="http://spa.tial.ly:8080/download.html">here</a> </li>
+<li><p>Or if you are feeling up to the challenge, you can download the full source code from github!</p>
+
+<p>git clone <a href="https://github.com/Azimuth1/SARCAT">https://github.com/Azimuth1/SARCAT</a> <br>
+cd SARCAT <br>
+npm install <br>
+npm start</p></li>
+</ul>
+
+<hr>
+
+
+
+<h3 id="build-commands-development-only"><strong>Build Commands (development only)</strong></h3>
+
+
+
+<h4 id="build-for-your-current-users-platform"><strong>Build for your current user’s platform:</strong></h4>
+
+<blockquote>
+  <p><code>npm install</code> <br>
+  <code>npm run postinstall</code></p>
+</blockquote>
+
+
+
+<h4 id="build-for-target-platform"><strong>Build for target platform:</strong></h4>
+
+<blockquote>
+  <p><strong>Windows: </strong> <br>
+  <code>node scripts/run.js win32</code> <br>
+  <strong>Mac: </strong> <br>
+  <code>node scripts/run.js darwin</code> <br>
+  <strong>Linux: </strong> <br>
+  <code>node scripts/run.js linux</code></p>
+</blockquote>
     </div>
     <div id="footer" style="margin-top:400px">
     </div>
