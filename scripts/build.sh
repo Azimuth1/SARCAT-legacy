@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 
-#architecture=os.windows.x86_64
+#architecture=os.linux.x86_64
 #version=0.4.0
+
+
 if [ "$architecture" == "os.windows.x86_64" ]; then
 	compress=zip
 	meteorArc=os.windows.x86_32
@@ -14,33 +16,56 @@ fi
 home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
 newname=sarcat-$version-$architecture
-dest=$(pwd)"/"$newname
+dest=$(pwd)"/"$newname/app
+targetDir=$(pwd)"/"$newname
+
+
+
 
 
 
 rm -rf $dest
-mkdir -p $dest/bin
+mkdir -p $dest
 
-cp -r $build/* $dest/bin/
 
-cp meteor/settings.json $dest
-cp -r config $dest
-cp scripts/index.js $dest
+
+cd $dest
+(cd $home/meteor && meteor reset && meteor build --architecture $meteorArc $dest)
+#cp -r $home/meteor.tar.gz $dest
+tar -zxvf meteor.tar.gz
+
+rm $dest/meteor.tar.gz
+(cd $dest/bundle/programs/server && npm install)
+
+
+
+
+cp $home/meteor/settings.json $dest
+cp $home/scripts/index.js $dest
+cp -r $home/config $targetDir
+
+
+
+
+
+
+
+
 
 
 
 
 
 if [ "$architecture" == "os.windows.x86_64" ]; then
-echo '%CD%/bin/node/bin/node index.js' >$dest/start.bat
-echo 'taskkill /F /IM node.exe' > $dest/stop.bat
-chmod +x $dest/start
-chmod +x $dest/stop
+echo '%CD%/app/bin/node/bin/node app/index.js' >$targetDir/start.bat
+echo 'taskkill /F /IM node.exe' > $targetDir/stop.bat
+chmod +x $targetDir/start
+chmod +x $targetDir/stop
 else
-cp scripts/start $dest
-cp scripts/stop $dest
-chmod +x $dest/start
-chmod +x $dest/stop
+cp $home/scripts/start $targetDir
+cp $home/scripts/stop $targetDir
+chmod +x $targetDir/start
+chmod +x $targetDir/stop
 fi
 
 
@@ -50,6 +75,11 @@ fi
 
 
 
+
+
+
+mkdir $dest/bin
+cp -r $build/* $dest/bin
 
 
 
@@ -73,13 +103,9 @@ done
 
 
 if [ "$architecture" == "os.windows.x86_64" ]; then
-	npm=npm
+	#npm=npm
 	mkdir -p node/bin
 	mv node.exe node/bin
-else
-	#npm=`find . -name "npm" -type l` 
-	#npm=./bin/node/bin/npm
-	npm=npm
 fi
 
 
@@ -91,19 +117,11 @@ fi
 
 
 
-(cd $home/meteor && meteor reset && meteor build --architecture $meteorArc $dest)
-cd $dest
-#cp -r $home/meteor.tar.gz $dest
-tar -zxvf meteor.tar.gz
-
-mv bundle app
-rm $dest/meteor.tar.gz
 
 
-mv app/programs/server/package.json $dest
-$npm install
-$npm install getport
-chmod -R 755 *
+
+
+#chmod -R 755 *
 
 
 
@@ -120,10 +138,12 @@ fi
 mv $newname.$compress $home/build
 
 if [ "$targetCurrent" == true ]; then
-	mv $dest dist
+	rm -rf $home/dist
+	sudo mv $targetDir dist
 else
 	#mv $dest $home/build
-	rm -rf $dest
+	echo removing $dest
+	rm -rf $targetDir
 fi
 
 

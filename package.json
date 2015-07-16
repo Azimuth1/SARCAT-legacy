@@ -15,8 +15,8 @@
     },
     "main": "./index.js",
     "scripts": {
-        "start": "node dist/index.js",
-        "postinstall": "node scripts/run.js",
+        "start": "node dist/app/index.js",
+        "build": "node scripts/run.js",
         "buildall": "scripts/buildall.sh",
         "darwin": "node scripts/run.js darwin",
         "win32": "node scripts/run.js win32",
