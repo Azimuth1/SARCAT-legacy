@@ -15,6 +15,10 @@ var server = http.createServer(webpage)
     .listen(webpagePort);
 webpage.use('/', express.static(page));
 console.log('now serving webpage on: ' + webpagePort)
+
+
+
+
 var sarcatserver = express();
 sarcatserver.use(bodyParser.json({
     limit: '500mb'
@@ -24,6 +28,10 @@ var uploadDir = path.join(page, dir);
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }
+
+
+
+
 sarcatserver.post('/uploadISRID', function(req, res) {
     // console.log(req.body)
     var profile = req.body.profile;
@@ -81,11 +89,11 @@ var demoApp = path.join(__dirname, '../', 'dist/app');
 var startScript = path.join(demoApp, 'index.js')
 startSARCAT = spawn('node', [startScript]);
 startSARCAT.stdout.on('data', function(data) {
-    console.log('stdout: ' + data);
+    //console.log('stdout: ' + data);
 });
 startSARCAT.stderr.on('data', function(data) {
 
-    console.log('stderr: ' + data);
+    //console.log('stderr: ' + data);
 });
 startSARCAT.on('close', function(code) {
 
