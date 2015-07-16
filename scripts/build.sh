@@ -26,10 +26,32 @@ cp -r $build/* $dest/bin/
 cp meteor/settings.json $dest
 cp -r config $dest
 cp scripts/index.js $dest
+
+
+
+
+
+if [ "$architecture" == "os.windows.x86_64" ]; then
+echo '%CD%/bin/node/bin/node index.js' >$dest/start.bat
+echo 'taskkill /F /IM node.exe' > $dest/stop.bat
+chmod +x $dest/start
+chmod +x $dest/stop
+else
 cp scripts/start $dest
 cp scripts/stop $dest
 chmod +x $dest/start
 chmod +x $dest/stop
+fi
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -88,7 +110,7 @@ chmod -R 755 *
 cd $home
 rm -rf $home/build/$newname.$compress
 if [ "$architecture" == "os.windows.x86_64" ]; then
-	zip -r $newname.$compress $dest
+	zip -r $newname.$compress $newname
 else
 	tar -zcvf $newname.$compress $newname
 fi
@@ -100,8 +122,8 @@ mv $newname.$compress $home/build
 if [ "$targetCurrent" == true ]; then
 	mv $dest dist
 else
-	mv $dest $home/build
-	#rm -rf $dest
+	#mv $dest $home/build
+	rm -rf $dest
 fi
 
 
