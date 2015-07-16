@@ -108,8 +108,8 @@ echo "installing node dependencies"
 
 
 mv $dest/app/programs/server/package.json $dest
-$npm install
-$npm install getport --save
+npm install
+npm install getport --save
 
 
 

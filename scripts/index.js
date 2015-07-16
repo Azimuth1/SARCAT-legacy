@@ -8,26 +8,37 @@ var fs = require('fs');
 var path = require('path');
 var getport = require('getport');
 process.title = 'sarcat';
-
-function getUserHome() {
+var getUserHome = function() {
     return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+};
+var sarcatStorageLoc = config.sarcatStorage || getUserHome();
+var sarcatStorage = path.join(sarcatStorageLoc, 'sarcatData');
+if (!fs.existsSync(sarcatStorage)) {
+    console.log('creating sarcatStorage directory: ' + sarcatStorage);
+    fs.mkdirSync(sarcatStorage);
+    fs.mkdirSync(path.join(sarcatStorage, 'public'));
+    fs.mkdirSync(path.join(sarcatStorage, 'public', 'uploads'));
+    fs.mkdirSync(path.join(sarcatStorage, 'public', 'uploads', 'tmp'));
+} else {
+    console.log('Using  existing sarcatStorage directory: ' + sarcatStorage);
 }
 var trys = 0;
 var startSARCAT = {};
 var startDB = {};
-var runapp = function (config) {
+var runapp = function(config) {
     var node = 'node';
     if (fs.existsSync(path.join(__dirname, 'bin', 'node', 'bin'))) {
         node = path.join(__dirname, 'bin', 'node', 'bin', 'node')
     }
-    var env = Object.create( process.env );
-    env.sarcatDir = __dirname;
+    var env = Object.create(process.env);
+    //env.sarcatDir = __dirname;
+    env.sarcatStorage = sarcatStorage;
     env.MONGO_URL = config.MONGO_URL + ':' + config.databasePort + '/' + config.databaseName;
     env.ROOT_URL = config.ROOT_URL || 'http://localhost.com';
     env.METEOR_SETTINGS = JSON.stringify(METEOR_SETTINGS) || '{}';
     var sarcatPort = config.sarcatPort;
     console.log(env.MONGO_URL);
-    getport(sarcatPort, function (err, port) {
+    getport(sarcatPort, function(err, port) {
         if (err) {
             if (startDB.pid) {
                 startDB.kill('SIGINT');
@@ -47,10 +58,10 @@ var runapp = function (config) {
         startSARCAT = spawn(node, [startScript], {
             env: env
         });
-        startSARCAT.stdout.on('data', function (data) {
+        startSARCAT.stdout.on('data', function(data) {
             console.log('stdout: ' + data);
         });
-        startSARCAT.stderr.on('data', function (data) {
+        startSARCAT.stderr.on('data', function(data) {
             console.log('stderr: ' + data);
         });
         /*startSARCAT.on('close', function (code) {
@@ -63,10 +74,9 @@ var runapp = function (config) {
         startSARCAT.on('exit', process.exit);
     });
 };
-var runmongo = function (config, cb) {
-    //var env = {};
+var runmongo = function(config, cb) {
     //env.process.title = 'sarcat';
-    var databaseDir = config.databaseDir || getUserHome();
+    var databaseDir = sarcatStorage;
     var databaseName = config.databaseName || 'sarcatdb';
     var sarcatdb = path.join(databaseDir, databaseName);
     var mongoPort = config.databasePort;
@@ -80,7 +90,7 @@ var runmongo = function (config, cb) {
     if (fs.existsSync(path.join(__dirname, 'bin', 'mongodb', 'bin'))) {
         mongod = path.join(__dirname, 'bin', 'mongodb', 'bin', 'mongod')
     }
-    getport(mongoPort, function (err, port) {
+    getport(mongoPort, function(err, port) {
         if (err) throw err
         if (config.databasePort !== port) {
             console.log('mongo port ' + mongoPort + ' is not available. Falling back to port ' + port);
@@ -88,10 +98,10 @@ var runmongo = function (config, cb) {
         }
         console.log('starting mongo on port: ' + port);
         startDB = spawn(mongod, ['--dbpath', sarcatdb, '--port', port]);
-        startDB.stdout.on('data', function (data) {
+        startDB.stdout.on('data', function(data) {
             console.log('stdout: ' + data);
         });
-        startDB.stderr.on('data', function (data) {
+        startDB.stderr.on('data', function(data) {
             console.log('stderr: ' + data);
         });
         /*startDB.on('close', function (code) {
@@ -106,7 +116,7 @@ var runmongo = function (config, cb) {
         cb(config, err);
     });
 };
-runmongo(config, function (conf, err) {
+runmongo(config, function(conf, err) {
     if (err) {
         throw err;
     }
@@ -114,7 +124,7 @@ runmongo(config, function (conf, err) {
         runapp(config);
     }
 });
-process.on('uncaughtException', function () {
+process.on('uncaughtException', function() {
     if (startSARCAT.pid) {
         startSARCAT.kill('SIGINT');
     }
@@ -122,7 +132,7 @@ process.on('uncaughtException', function () {
         startDB.kill('SIGINT');
     }
 });
-process.on('SIGTERM', function () {
+process.on('SIGTERM', function() {
     if (startSARCAT.pid) {
         startSARCAT.kill('SIGINT');
     }
@@ -130,7 +140,7 @@ process.on('SIGTERM', function () {
         startDB.kill('SIGINT');
     }
 });
-process.on('exit', function (code) {
+process.on('exit', function(code) {
     if (startSARCAT.pid) {
         startSARCAT.kill('SIGINT');
     }
@@ -138,5 +148,4 @@ process.on('exit', function (code) {
         startDB.kill('SIGINT');
     }
 });
-    //lsof -i -P | grep -i "listen"
-
+//lsof -i -P | grep -i "listen"

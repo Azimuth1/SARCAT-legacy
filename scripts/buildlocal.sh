@@ -6,18 +6,13 @@
 #Root directory
 home=$(pwd)
 
-
-
 dest=$(pwd)"/dist"
-
 
 #clear dest folder if it exists
 rm -rf $dest
 
-
 #create new destination folder
 mkdir -p $dest
-
 
 
 #copy settings from meteor directory
@@ -65,8 +60,8 @@ rm meteor.tar.gz
 
 chmod -R 755 *
 
-cd app/programs/server
-#mv app/programs/server/package.json $dest
+
+mv app/programs/server/package.json $dest
 npm install
 
 npm install getport --save

@@ -24,7 +24,7 @@
             }
         },
         allowedValues: ['pending','viewer', 'editor', 'admin'],
-        defaultValue: ['pending'],
+        defaultValue: ['editor'],
         optional: true,
     },
     'roles.$': {

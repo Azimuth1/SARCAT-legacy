@@ -11,10 +11,8 @@ platformNode=$platformNodeName.tar.gz
 
 #Root directory
 home=$(pwd)
-
 #directory of build files
 build=$(pwd)"/build/libs/"$architecture
-
 
 dest=$(pwd)"/build/"$architecture
 
