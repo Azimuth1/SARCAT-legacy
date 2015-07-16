@@ -10,4 +10,16 @@ nvm use 0.10.36
 forever start scripts/server.js
 
 
-#forever stop scripts/server.js
+sudo forever start scripts/webpage2.js
+forever stop scripts/webpage2.js
+
+
+/Users/Kyle-Azimuth1/github/SARCAT/dist/app/bundle/programs/server/app/lib/schemas
+
+
+scp -r ~/github/SARCAT/dist/app/bundle/programs/server/app/lib/schemas/User.js kyle@spa.tial.ly:/home/kyle/sarcat_main/dist/app/bundle/programs/server/app/lib/schemas/User.
+
+
+scp -r ~/github/SARCAT/dist/app/bundle/programs/server/app/lib/schemas/User.js kyle@spa.tial.ly:/home/kyle/sarcat_main/
+
+sudo mv /home/kyle/sarcat_main/User.js dist/app/bundle/programs/server/app/lib/schemas/User.js
