@@ -1,13 +1,12 @@
-(function() {
-    Meteor.startup(function() {
-
+(function () {
+    Meteor.startup(function () {
         console.log('starting sarcat');
         //console.log(process.env.METEOR_SETTINGS);
         //var METEOR_SETTINGS = JSON.parse(process.env.METEOR_SETTINGS);
         config = Config.findOne();
         if (!config) {
             console.log('config:false');
-            var makeEncryptionID = function() {
+            var makeEncryptionID = function () {
                 var text = '';
                 var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                 for (var i = 0; i < 23; i++)
@@ -22,7 +21,8 @@
             });
             config = Config.findOne();
         }
-        if (!Meteor.users.find().count()) {
+        if (!Meteor.users.find()
+            .count()) {
             console.log('Creating default admin user.');
             var admin = Accounts.createUser({
                 'email': 'admin@sarcat',
@@ -37,7 +37,7 @@
             });
         }
         var publicSettings = (Meteor.settings && Meteor.settings.public) ? Meteor.settings.public : config;
-        _.each(publicSettings, function(d, e) {
+        _.each(publicSettings, function (d, e) {
             if (!_.isEqual(config[e], publicSettings[e])) {
                 console.log('Updating config: ' + e);
                 console.log(config[e] + ' --->   ' + publicSettings[e]);
@@ -84,7 +84,7 @@
         UploadServer.init({
             tmpDir: path.join(sarcatUploads, 'tmp'),
             uploadDir: path.join(sarcatUploads, '/'),
-            getDirectory: function(fileInfo, formData) {
+            getDirectory: function (fileInfo, formData) {
                 if (formData._id) {
                     return '/records/' + formData._id;
                 }
@@ -94,8 +94,7 @@
             },
             cacheTime: 100,
         });
-
-        WebApp.connectHandlers.use(function(req, res, next) {
+        WebApp.connectHandlers.use(function (req, res, next) {
             var re = /^\/uploads\/(.*)$/.exec(req.url);
             if (re !== null) {
                 var filePath = path.join(sarcatUploads, re[1]);

@@ -1,0 +1,13 @@
+scp ~/github/SARCAT/build/sarcat-0.5.0-os.linux.x86_64.tar.gz kyle@spa.tial.ly:/home/kyle/sarcat_main
+scp -r ~/github/SARCAT/webpage/ kyle@spa.tial.ly:/home/kyle/sarcat_main
+scp -r ~/github/SARCAT/scripts/ kyle@spa.tial.ly:/home/kyle/sarcat_main
+
+tar -zxvf sarcat-0.5.0-os.linux.x86_64.tar.gz
+rm sarcat-0.5.0-os.linux.x86_64.tar.gz
+rm -rf dist
+mv sarcat-0.5.0-os.linux.x86_64 dist
+nvm use 0.10.36
+forever start scripts/server.js
+
+
+#forever stop scripts/server.js
