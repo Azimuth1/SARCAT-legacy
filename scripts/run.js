@@ -5,15 +5,18 @@ var path = require('path');
 var packageJSON = require('../package.json');
 var platforms = {
     darwin: 'os.osx.x86_64',
-    win32: 'os.windows.x86_64',
+    win32: 'os.windows.x86_32',
+    win64: 'os.windows.x86_64',
     linux: 'os.linux.x86_64'
 };
-var targetCurrent = process.argv[2] ? false : true;
+var plat = process.argv[2];
+var targetCurrent = plat ? false : true;
 var platform = process.argv[2] || process.platform;
 var architecture = platforms[platform];
 process.env.version = packageJSON.version;
 process.env.architecture = architecture;
 process.env.targetCurrent = targetCurrent
+process.env.windows = (plat=== 'win32' || plat === 'win64') ? true : false;
 runscript(platform);
 
 function runscript(platform) {

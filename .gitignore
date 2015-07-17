@@ -14,3 +14,4 @@ build/os.windows.x86_64
 
 allbuilds
 public/uploads/records/*
+dist
