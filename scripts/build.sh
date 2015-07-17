@@ -5,7 +5,7 @@
 #version=0.4.0
 
 
-if [ "$architecture" == "os.windows.x86_64" ]; then
+if [ "$windows" == true ]; then
 	compress=zip
 	meteorArc=os.windows.x86_32
 else
@@ -56,7 +56,7 @@ cp -r $home/config $targetDir
 
 
 
-if [ "$architecture" == "os.windows.x86_64" ]; then
+if [ "$windows" == true ]; then
 echo '%CD%/app/bin/node/bin/node app/index.js' >$targetDir/start.bat
 echo 'taskkill /F /IM node.exe' > $targetDir/stop.bat
 chmod +x $targetDir/start
@@ -102,7 +102,7 @@ rm -rf "$f"
 done
 
 
-if [ "$architecture" == "os.windows.x86_64" ]; then
+if [ "$windows" == true ]; then
 	#npm=npm
 	mkdir -p node/bin
 	mv node.exe node/bin
@@ -120,14 +120,13 @@ fi
 
 
 
-
-#chmod -R 755 *
-
-
-
+cd $targetDir
+chmod -R 755 *
 cd $home
+
+
 rm -rf $home/build/$newname.$compress
-if [ "$architecture" == "os.windows.x86_64" ]; then
+if [ "$windows" == true ]; then
 	zip -r $newname.$compress $newname
 else
 	tar -zcvf $newname.$compress $newname
@@ -142,7 +141,7 @@ if [ "$targetCurrent" == true ]; then
 	sudo mv $targetDir dist
 else
 	#mv $dest $home/build
-	echo removing $dest
+	echo removing $targetDir
 	rm -rf $targetDir
 fi
 

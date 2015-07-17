@@ -11,7 +11,7 @@
         "url": "git://github.com/Azimuth1/SARCAT.git"
     },
     "bin": {
-        "sarcat": "node dist/index.js"
+        "jshint": "./dist/bin/sarcat"
     },
     "main": "./index.js",
     "scripts": {
@@ -20,6 +20,7 @@
         "buildall": "scripts/buildall.sh",
         "darwin": "node scripts/run.js darwin",
         "win32": "node scripts/run.js win32",
+        "win64": "node scripts/run.js win64",
         "linux": "node scripts/run.js linux",
         "test": "node dist/index.js > my_app_log.log 2> my_app_err.log"
     },

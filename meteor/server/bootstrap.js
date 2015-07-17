@@ -1,6 +1,6 @@
 (function () {
     Meteor.startup(function () {
-        console.log('starting sarcat');
+        console.log('starting sarcat server');
         //console.log(process.env.METEOR_SETTINGS);
         //var METEOR_SETTINGS = JSON.parse(process.env.METEOR_SETTINGS);
         config = Config.findOne();

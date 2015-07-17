@@ -303,12 +303,12 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
 
 
 ## **Advanced Installation** ##
-*If you already have node v0.10.36 & mongo installed on your system and know your way around a bit more (or want to learn), this is for you. Or if you want to learn, this is your chance! Follow instructions bellow to build the latest release from source*
+*If you already have node & mongo installed on your system and know your way around a bit more (or want to learn), this is for you. Or if you want to learn, this is your chance! Follow instructions bellow to build the latest release from source*
 
 ## **DEPENDENCIES:** ##
 
 
-#### **Node.js v0.10.6** ####
+#### **Node.js v0.10.6 - v0.12.4** ####
  *Select your installer below. Follow the prompts (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).*
 
  - [Windows Installer <small>node-v0.10.36-x86.msi</small>](https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi)
@@ -335,13 +335,6 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
     npm install
     npm build
     npm start
-
-
-
-
-
-
-
 
 
 #### **Build for target platform:** ####
