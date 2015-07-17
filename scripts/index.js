@@ -8,15 +8,13 @@ var fs = require('fs');
 var path = require('path');
 var net = require('net');
 process.title = 'sarcat';
-/*
-var logFile = function(text) {
-    text+=a.toISOString()+' - \n';
-    fs.appendFile(__dirname + 'sarcat.log', text, function(err) {
-        if (err) console.log('-');
-    });
-};*/
+console.log('begin');
+var writeLog = function(text) {
+    console.log(text);
+    fs.appendFileSync('msg.log', text + '\n');
+};
 var checkNodeVersion = function() {
-    return process.version
+    return process.version;
 };
 var getUserHome = function() {
     return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
@@ -46,16 +44,170 @@ var getport = function(start, end, cb) {
         cb(null, start);
     });
 };
+PIDLog = function() {
+    var exec = require('child_process').exec;
+    var execSync = require('child_process').execSync;
+
+    var context = {};
+    var file = path.join(__dirname, 'pidLog.json');
+    var pidLog = {
+        dbLogs: [],
+        nodeLogs: [],
+    };
+    var isWin = /^win/.test(process.platform);
+
+    var isRunning = function(pid) {
+        var err = null;
+        var result = null;
+        var tryKill = function(pid, type) {
+            var result;
+            try {
+                result = process.kill(pid, type);
+                return result;
+            } catch (e) {
+                return e.code === 'EPERM';
+            }
+        };
+        if (typeof pid !== 'number') {
+            err = 'you must pass a pid as the first argument';
+        } else {
+            result = tryKill(pid);
+        }
+        return result || err;
+    };
+
+    createLog = function(file, obj) {
+        writeLog('writing PID Log file to ' + file);
+        fs.writeFileSync(file, JSON.stringify(obj));
+    };
+    readLog = function(file) {
+        return require(file);
+    };
+    context.addToLog = function(type, pid) {
+        pidLog[type].push(pid);
+        fs.writeFileSync(file, JSON.stringify(pidLog));
+    };
+    context.removeFromLog = function(type, pid) {
+        var array = pidLog[type];
+        array = array.filter(function(d) {
+            return d !== pid;
+        });
+
+        pidLog[type] = array;
+        fs.writeFileSync(file, JSON.stringify(pidLog));
+        return pidLog;
+    };
+
+    context.killAll = function(cb) {
+        var dbLogs = pidLog.dbLogs;
+        var toKill = dbLogs.length;
+        if (!toKill) {
+            writeLog('nothing to kill');
+            return cb(pidLog.dbLogs);
+        }
+        var killed = 0;
+        var done = function() {
+            writeLog(toKill, killed);
+            return cb(pidLog.dbLogs);
+        };
+
+        var kill = function(pid) {
+            writeLog('!!!!' + pid + '!!!!');
+            var running = isRunning(pid);
+            if (!running) {
+                writeLog('PID: ' + pid + ' is not running');
+                context.removeFromLog('dbLogs', pid);
+                killed = killed + 1;
+                if (toKill === killed) {
+
+                    return done();
+                }
+            } else {
+                writeLog('else');
+                //var child = exec('kill ' + pid);
+                //child.on('close', function(code, signal) {
+                writeLog('child process terminated due to receipt of signal ' + running);
+                context.removeFromLog('dbLogs', pid);
+                killed = killed + 1;
+                if (toKill === killed) {
+                    return done();
+                }
+                //});
+            }
+        };
+
+        dbLogs.forEach(function(pid) {
+            kill(pid);
+        });
+
+    };
+
+    context.killAll = function(type, cb) {
+
+        var dbLogs = pidLog[type];
+
+        // var nodeLogs = pidLog.nodeLogs;
+
+        var toKill = dbLogs.length;
+        if (!toKill) {
+            writeLog('nothing to kill');
+            return cb(pidLog[type]);
+        }
+        var killed = 0;
+        var done = function() {
+            writeLog(toKill, killed);
+            return cb(pidLog[type]);
+        };
+
+        var kill = function(pid) {
+            writeLog('!!!!' + pid + '!!!!');
+            var running = isRunning(pid);
+            if (!running) {
+                writeLog('PID: ' + pid + ' is not running');
+                context.removeFromLog(type, pid);
+                killed = killed + 1;
+                if (toKill === killed) {
+
+                    return done();
+                }
+            } else {
+                writeLog('else');
+                writeLog('child process terminated due to receipt of signal ' + running);
+                context.removeFromLog(type, pid);
+                killed = killed + 1;
+                if (toKill === killed) {
+                    return done();
+                }
+            }
+        };
+
+        dbLogs.forEach(function(pid) {
+            kill(pid);
+        });
+
+    };
+
+    if (fs.existsSync(file)) {
+        pidLog = readLog(file);
+    } else {
+
+        createLog(file, pidLog);
+    }
+
+    context.dbLogs = pidLog.dbLogs;
+    return context;
+};
+
 var sarcatStorageLoc = config.sarcatStorage || getUserHome();
 var sarcatStorage = path.join(sarcatStorageLoc, 'sarcatData');
 if (!fs.existsSync(sarcatStorage)) {
-    console.log('creating sarcatStorage directory: ' + sarcatStorage);
+    writeLog('creating sarcatStorage directory: ' + sarcatStorage);
     fs.mkdirSync(sarcatStorage);
     fs.mkdirSync(path.join(sarcatStorage, 'public'));
     fs.mkdirSync(path.join(sarcatStorage, 'public', 'uploads'));
     fs.mkdirSync(path.join(sarcatStorage, 'public', 'uploads', 'tmp'));
 } else {
-    console.log('Using  existing sarcatStorage directory: ' + sarcatStorage);
+    writeLog('Using  existing sarcatStorage directory: ' + sarcatStorage);
 }
 var startSARCAT = {};
 var startDB = {};
@@ -85,24 +237,25 @@ var runapp = function(config) {
             process.kill('SIGINT');
         }
         if (sarcatPort !== port) {
-            console.log('sarcat port ' + sarcatPort + ' is not available. trying port ' + port);
+            writeLog('sarcat port ' + sarcatPort + ' is not available. trying port ' + port);
             env.PORT = port;
         } else {
             env.PORT = sarcatPort;
         }
         var startScript = path.join(__dirname, 'bundle', 'main.js');
-        console.log(startScript, env);
+        writeLog(startScript, env);
         startSARCAT = spawn(node, [startScript], {
             env: env,
         });
+        PIDLogs.addToLog('nodeLogs', startSARCAT.pid);
         startSARCAT.stdout.on('data', function(data) {
-            console.log('sarcat-out: ' + data);
+            writeLog('sarcat-out: ' + data);
         });
         startSARCAT.stderr.on('data', function(data) {
-            console.log('stderr: ' + data);
+            writeLog('stderr: ' + data);
         });
         /*startSARCAT.on('close', function(code) {
-            console.log('closing sarcat: ' + code);
+            writeLog('closing sarcat: ' + code);
             process.kill('SIGINT');
         });*/
         startSARCAT.on('exit', process.exit);
@@ -115,22 +268,21 @@ var runmongo = function(config, cb) {
     var sarcatdb = path.join(databaseDir, databaseName);
     var mongoPort = config.databasePort;
     if (!fs.existsSync(sarcatdb)) {
-        console.log('creating sarcatDB: ' + sarcatdb);
+        writeLog('creating sarcatDB: ' + sarcatdb);
         fs.mkdirSync(sarcatdb);
     } else {
-        console.log('Connecting to existing sarcatDB: ' + sarcatdb);
+        writeLog('Connecting to existing sarcatDB: ' + sarcatdb);
     }
     var mongodLock = path.join(sarcatdb, 'mongod.lock');
-    /*if (fs.existsSync(mongodLock)) {
-        var stats = fs.statSync(mongodLock)
-        var fileSizeInBytes = stats["size"];
-        console.log('mongod.lock size: ' + fileSizeInBytes)
+    if (fs.existsSync(mongodLock)) {
+        var stats = fs.statSync(mongodLock);
+        var fileSizeInBytes = stats.size;
+        writeLog('mongod.lock size: ' + fileSizeInBytes);
         if (fileSizeInBytes) {
             console.warn('mongodb is locked. It was not shut down correctly or already in use');
-            //return process.kill('SIGINT');
-            //fs.unlink(mongodLock);
+            fs.unlink(mongodLock);
         }
-    }*/
+    }
     var mongod = 'mongod';
     if (fs.existsSync(path.join(__dirname, 'bin', 'mongodb', 'bin'))) {
         mongod = path.join(__dirname, 'bin', 'mongodb', 'bin', 'mongod');
@@ -141,36 +293,62 @@ var runmongo = function(config, cb) {
             return console.warn('cannot create mongo port: ' + err);
         }
         if (config.databasePort !== port) {
-            console.log('mongo port ' + mongoPort + ' is not available. Trying port ' + port);
+            writeLog('mongo port ' + mongoPort + ' is not available. Trying port ' + port);
             config.databasePort = port;
         }
-        console.log('starting mongo\n', mongod, '\n--dbpath', sarcatdb, '\n--port', port);
+        writeLog('starting mongo\n', mongod, '\n--dbpath', sarcatdb, '\n--port', port);
         startDB = spawn(mongod, ['--dbpath', sarcatdb, '--port', port]);
+        PIDLogs.addToLog('dbLogs', startDB.pid);
+        writeLog(startDB.pid);
         startDB.stdout.on('data', function(data) {
-            console.log('mongo-out: ' + data);
+            //writeLog('mongo-out: ' + data);
             //logFile(data);
         });
         startDB.stderr.on('data', function(data) {
-            console.log('stderr: ' + data);
+            writeLog('stderr: ' + data);
         });
         /*startDB.on('close', function(code) {
-            console.log('closing sarcatdb: ' + code);
+            writeLog('closing sarcatdb: ' + code);
             process.kill('SIGINT');
         });*/
         startDB.on('exit', process.exit);
         cb(config, err);
     });
 };
-runmongo(config, function(conf, err) {
-    if (err) {
-        throw err;
-    }
-    setTimeout(function() {
-        if (startDB.pid) {
-            runapp(config);
+
+var startSarcat = function() {
+    runmongo(config, function(conf, err) {
+        if (err) {
+            throw err;
         }
-    }, 2000);
+        console.log('ready to start sarcat!!');
+        setTimeout(function() {
+            if (startDB.pid) {
+                runapp(config);
+            }
+        }, 2000);
+    });
+};
+
+PIDLogs = new PIDLog();
+PIDLogs.killAll('dbLogs', function(running1) {
+    writeLog(running1.length + ' running mongod processes');
+    if (running1.length) {
+        return writeLog('Existing PID: ' + running1);
+    }
+    PIDLogs.killAll('nodeLogs', function(running) {
+        writeLog(running.length + ' running node processes');
+        if (running.length) {
+            return writeLog('Existing PID: ' + running);
+        }
+        console.log('ready to start the database!!');
+        setTimeout(function() {
+            startSarcat();
+        }, 2000);
+
+    });
 });
+
 process.on('uncaughtException', function() {
     if (startSARCAT.pid) {
         startSARCAT.kill('SIGINT');
