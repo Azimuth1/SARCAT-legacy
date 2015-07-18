@@ -4,5 +4,5 @@
     "databasePort": 27017,
     "databaseName": "sarcatdb",
     "MONGO_URL": "mongodb://localhost",
-    "ROOT_URL": "http://localhost.com"
+    "ROOT_URL": "http://localhost"
 }
