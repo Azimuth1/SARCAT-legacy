@@ -46,7 +46,7 @@
 5. For your destination, choose your SARCAT home directory (e.g. ***C:\Users\\{username}\sarcat***).
 6. Once extracted, navigate into the new app directory. (e.g. ***C:\Users\\{username}\sarcat\sarcat-{version}-{platform}***)
 8. Click <code>start</code> to run SARCAT. This will open a terminal to run the server and database for the software.
-9. Open your web browser and go to http://www.localhost:3000 to begin.
+9. Open your web browser and go to http://localhost:3000/ to begin.
 10. Click <code>stop</code> to stop SARCAT. Or ***Ctrl+C*** into the current terminal session. Be careful to exit correctly or the process may not fully end.
 11. Enjoy!
 
@@ -123,7 +123,7 @@ Root url SARCAT will serve from. Generally should be localhost.
 
 ## Getting Started ##
 
-* Once SARCAT is installed and running, use the default username/password (**Username**: ***admin@sarcat***, **Password**: ***admin***) to begin setting up your profile at **http://localhost:3000**. This ensures only you can do the initial setup.
+* Once SARCAT is installed and running, use the default username/password (**Username**: ***admin@sarcat***, **Password**: ***admin***) to begin setting up your profile at **http://localhost:3000/**. This ensures only you can do the initial setup.
 
 
     
