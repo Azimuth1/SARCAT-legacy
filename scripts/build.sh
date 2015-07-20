@@ -54,12 +54,15 @@ fi
 
 
 
+cd app/bin/node/bin
+node ../../../index.js
 
 
 if [ "$windows" == true ]; then
-echo '%CD%/app/bin/node/bin/node app/index.js' >$targetDir/start.bat
-echo -e 'taskkill /F /IM mongod.exe' > $targetDir/stop2.bat
-echo -e '%CD%/app/bin/node/bin/node app/index.js stop' >$targetDir/stop.bat
+#echo '%CD%/app/bin/node/bin/node app/index.js' >$targetDir/start.bat
+echo -e 'cd app/bin/node/bin\nnode ../../../index.js' >$targetDir/start.bat
+#echo -e 'taskkill /F /IM mongod.exe' > $targetDir/stop2.bat
+echo -e 'cd app/bin/node/bin\nnode ../../../index.js stop' >$targetDir/stop.bat
 
 
 chmod +x $targetDir/start

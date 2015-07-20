@@ -498,6 +498,26 @@ Schemas.incidentOperations = new SimpleSchema({
     }
 });
 Schemas.findLocation = new SimpleSchema({
+    'distanceIPP': {
+        type: String,
+        label: 'Distance From IPP',
+        optional: true
+    },
+    'dispersionAngle': {
+        type: String,
+        label: 'Dispersion Angle (deg)',
+        optional: true
+    },
+    'findBearing': {
+        type: String,
+        label: 'Find Bearing (deg)',
+        optional: true
+    },
+    'elevationChange': {
+        type: String,
+        label: 'Elevation Change',
+        optional: true
+    },
     'findFeature': {
         type: String,
         autoform: {
@@ -523,26 +543,6 @@ Schemas.findLocation = new SimpleSchema({
         },
         allowedValues: ['Unknown', 'Excellent', 'Good', 'Fair', 'Poor'],
         label: 'Detectability',
-        optional: true
-    },
-    'distanceIPP': {
-        type: String,
-        label: 'Distance From IPP',
-        optional: true
-    },
-    'dispersionAngle': {
-        type: String,
-        label: 'Dispersion Angle (deg)',
-        optional: true
-    },
-    'findBearing': {
-        type: String,
-        label: 'Find Bearing (deg)',
-        optional: true
-    },
-    'elevationChange': {
-        type: String,
-        label: 'Elevation Change',
         optional: true
     },
     'trackOffset': {
@@ -940,7 +940,7 @@ Schemas.resourcesUsed = new SimpleSchema({
                 return "--";
             }
         },
-        allowedValues: ["ATV", "Bike", "Boat", "Boats", "CERT", "Cave", "Containment", "Diver", "Dog-Airscent", "Dog-Disaster", "Dog-Tracking", "Dog-Trailing", "Dogs", "EMS", "Family/Friend", "Fire", "Fixed Wing", "GSAR", "Grid", "Hasty", "Helicopter", "Horseback rider", "Investigation", "Law", "Other", "Parks", "Patrol", "Public", "Sweep", "Swiftwater", "Tracker", "USAR", "Emergent Volunteers", "Unknown"],
+        allowedValues: ["ATV", "Bike", "Boat", "Boats", "CERT", "Cave", "Containment", "Diver", "Dog-Airscent", "Dog-Disaster", "Dog-Tracking", "Dog-Trailing", "Dogs", "EMS", "Family/Friend", "Fire", "Fixed Wing", "GSAR", "Helicopter", "Horseback rider", "Investigation", "Law", "Other", "Parks", "Patrol", "Public", "Swiftwater", "Tracker", "USAR", "Emergent Volunteers", "Unknown"],
         label: 'Resource Type',
         optional: true
     },
