@@ -1,0 +1,34 @@
+{
+  "name": "mapbox.js",
+  "main": "mapbox.js",
+  "version": "2.1.1",
+  "homepage": "https://github.com/mapbox/mapbox.js",
+  "authors": [
+    "Mapbox"
+  ],
+  "description": "Mapbox Javascript API",
+  "keywords": [
+    "mapbox",
+    "leaflet",
+    "maps",
+    "map"
+  ],
+  "license": "See LICENSE.md",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "examples"
+  ],
+  "_release": "2.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.1.1",
+    "commit": "009f78c4abbb935580b7df0bed15268e9a58ac60"
+  },
+  "_source": "git://github.com/mapbox/mapbox.js-bower.git",
+  "_target": "~2.1.1",
+  "_originalSource": "mapbox.js",
+  "_direct": true
+}

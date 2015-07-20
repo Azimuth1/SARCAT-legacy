@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="SARCAT">
+    <meta name="author" content="Azimuth1.com">
+    <title>SARCAT</title>
+    <script src="libs/jquery.min.js"></script>
+    <script src="main.js"></script>
+    <script>
+    $(function() {
+        $("#header").load("templates/header.html");
+        $("#footer").load("templates/footer.html");
+    });
+    </script>
+</head>
+
+<body>
+    <div id="header">
+    </div>
+    <div class="container">
+        <div class="row">
+            <h3>Click your operating system below to begin downloading SARCAT</h3>
+            <hr>
+            <div class="col-md-4 text-center">
+                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="download/sarcat-0.5.0-os.windows.x86_64.zip">
+                    <i class="fa fa-windows fa-2x _pull-left" id="appVer"> Windows </i>
+                    <br>
+                    <small class="_pull-left">sarcat-0.5.0-os.windows.x86_64</small></a>
+            </div>
+            <div class="col-md-4 text-center">
+                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="download/sarcat-0.5.0-os.osx.x86_64.tar.gz">
+                    <i class="fa fa-apple fa-2x _pull-left" id="appVer"> Mac </i>
+                    <br><small class="_pull-left">sarcat-0.5.0-os.osx.x86_64.tar.gz</small></a>
+            </div>
+            <div class="col-md-4 text-center">
+                <a class="btn btn-xl btn-success pad2" id="downloadSARCAT" href="download/sarcat-0.5.0-os.linux.x86_64.tar.gz">
+                    <i class="fa fa-linux fa-2x _pull-left" id="appVer"> Linux </i>
+                    <br><small class="_pull-left">sarcat-0.5.0-os.linux.x86_64.tar.gz</small></a>
+            </div>
+        </div>
+        <div class="row">
+
+
+
+
+
+
+
+<h4 id="supported-platforms"><strong>Supported platforms</strong></h4>
+
+<ul>
+<li>Mac: OS X 10.x</li>
+<li>Windows: Microsoft Windows 7, Windows 8.1</li>
+<li>Linux: 32-bit Linux, 64-bit Linux</li>
+</ul>
+
+<hr>
+
+
+
+<h1 id="basic-installation"><strong>Basic Installation</strong></h1>
+
+<p><em>This is the easiest way to install SARCAT. You simply download a compressed source containing everything you need to get up and running. Keep in mind that although SARCAT is designed to be run as a server application, it has been specially wrapped to run as a standalone product on your desktop.</em></p>
+
+
+
+<h2 id="to-install-the-latest-release">To Install the latest release:</h2>
+
+<ol>
+<li><p>First, download the latest release for your platform here. This is a compressed file <em>(zip/tar.fz)</em> targetting your operating system.</p></li>
+<li><p>Create a SARCAT home directory on your machine. <strong>Ensure this is a location where you have owner privileges.</strong>  Below is a recommended guide for where this should be done:</p>
+
+<ul><li><strong>Windows:</strong>  <br>
+<em>C:\Users\{username}\sarcat</em></li>
+<li><strong>Mac:</strong>  <br>
+<em>/Users/{username}/sarcat</em></li></ul></li>
+<li><p>Drag the downloaded zipped file into your SARCAT home directory.</p></li>
+<li>Right-click the file and select <strong>Extract All</strong>. </li>
+<li>For your destination, choose your SARCAT home directory (e.g. <strong><em>C:\Users\{username}\sarcat</em></strong>).</li>
+<li>Once extracted, navigate into the new app directory. (e.g. <strong><em>C:\Users\{username}\sarcat\sarcat-{version}-{platform}</em></strong>)</li>
+<li>Click <code>start</code> to run SARCAT. This will open a terminal to run the server and database for the software.</li>
+<li>Open your web browser and go to <a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a> to begin.</li>
+<li>Click <code>stop</code> to stop SARCAT. Or <strong><em>Ctrl+C</em></strong> into the current terminal session. Be careful to exit correctly or the process may not fully end.</li>
+<li>Enjoy!</li>
+</ol>
+
+<hr>
+
+
+
+           <h2 class="text-uppercase strong">Docs</h2>
+
+            <p>for more detailed information on using SARCAT, check out our <a href="http://spa.tial.ly:8080/docs.html">Docs</a> page</p>
+            
+
+
+
+            <h2 class="text-uppercase strong">Source</h2>
+
+            <p>for more detailed information, check out our <a href="https://github.com/Azimuth1/SARCAT">Github</a> page</p>
+            
+            <!--
+                <h2>Hosted Options</h2>
+                <p>*Don't want to manage you server? We can take care of all your hosting needs.</p>
+               
+            <h2>Getting Started</h2>
+            <ul>
+                <li>Instructional Videos</li>
+                <li>Tutorials</li>
+            </ul>
+            <h2>Developer Resources</h2>
+            <h2>Participate!!!</h2>
+            <h2>License</h2>
+            <h2>Feedback</h2>
+-->
+            </article>
+            <script>
+            var OSName = "unknown OS";
+            if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
+            if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
+            if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+            if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
+            //document.getElementById('appVer').innerText = OSName;
+            //$('#downloadSARCAT').attr('href', config.downloads[OSName]);
+            </script>
+        </div>
+        <div id="footer">
+        </div>
+    </div>
+</body>
+
+</html>
+</script>

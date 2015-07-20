@@ -10,10 +10,7 @@
         "type": "git",
         "url": "git://github.com/Azimuth1/SARCAT.git"
     },
-    "bin": {
-        "jshint": "./dist/bin/sarcat"
-    },
-    "main": "./index.js",
+    "main": "./scripts/index.js",
     "scripts": {
         "start": "node dist/app/index.js",
         "build": "node scripts/run.js",

@@ -341,6 +341,28 @@ PIDLogs.killAll('dbLogs', function(running1) {
         if (running.length) {
             return writeLog('Existing PID: ' + running);
         }
+
+        var stop = process.argv[2] === 'stop' ? true : false;
+        if (stop) {
+
+            var databaseDir = sarcatStorage;
+            var databaseName = config.databaseName || 'sarcatdb';
+            var sarcatdb = path.join(databaseDir, databaseName);
+
+            var mongodLock = path.join(sarcatdb, 'mongod.lock');
+            if (fs.existsSync(mongodLock)) {
+                var stats = fs.statSync(mongodLock);
+                var fileSizeInBytes = stats.size;
+                writeLog('mongod.lock size: ' + fileSizeInBytes);
+                if (fileSizeInBytes) {
+                    console.warn('mongodb is locked. Removing Lock');
+                    fs.unlink(mongodLock);
+                }
+            }
+
+            return console.log('All running processes killed');
+        }
+
         console.log('ready to start the database!!');
         setTimeout(function() {
             startSarcat();

@@ -1,8 +1,0 @@
-{
-    "sarcatPort": 4000,
-    "databaseDir": "./",
-    "databasePort": 4001,
-    "databaseName": "sarcatdb",
-    "MONGO_URL": "mongodb://localhost",
-    "ROOT_URL": "http://localhost.com"
-}
