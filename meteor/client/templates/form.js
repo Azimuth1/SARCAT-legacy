@@ -1144,6 +1144,9 @@ formSetMap = function(context, recordId) {
     obj.fitBounds = function() {
         map.fitBounds(drawnPoints.getBounds()
             .pad(0.5));
+        if (drawnPoints.getLayers.length < 2) {
+            map.setZoom(13)
+        }
         drawnPaths.addTo(map);
         drawnPoints.addTo(map);
     };
