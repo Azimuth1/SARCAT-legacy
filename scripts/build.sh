@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 
-#architecture=os.linux.x86_64
-#version=0.4.0
+
 
 
 if [ "$windows" == true ]; then
@@ -15,23 +14,21 @@ fi
 
 home=$(pwd)
 build=$(pwd)"/build/libs/"$architecture
-newname=sarcat-$version-$architecture
-dest=$(pwd)"/"$newname/app
-targetDir=$(pwd)"/"$newname
+buildName=sarcat-$version-$architecture
+targetDir=$home/$buildName
+dest=$targetDir/app
+rm -rf $targetDir
 
 
 
 
 
-
-rm -rf $dest
 mkdir -p $dest
-
 
 
 cd $dest
 (cd $home/meteor && meteor reset && meteor build --architecture $meteorArc $dest)
-#cp -r $home/meteor.tar.gz $dest
+#cp -r $home/.test/meteor.tar.gz $dest
 tar -zxvf meteor.tar.gz
 
 rm $dest/meteor.tar.gz
@@ -50,7 +47,10 @@ cp -r $home/config $targetDir
 
 
 
-
+if [ "$targetCurrent" == true ]; then
+	mv $targetDir $home/dist
+	exit
+fi
 
 
 
@@ -58,7 +58,10 @@ cp -r $home/config $targetDir
 
 if [ "$windows" == true ]; then
 echo '%CD%/app/bin/node/bin/node app/index.js' >$targetDir/start.bat
-echo 'taskkill /F /IM node.exe' > $targetDir/stop.bat
+echo -e 'taskkill /F /IM mongod.exe' > $targetDir/stop2.bat
+echo -e '%CD%/app/bin/node/bin/node app/index.js stop' >$targetDir/stop.bat
+
+
 chmod +x $targetDir/start
 chmod +x $targetDir/stop
 else
@@ -80,10 +83,6 @@ fi
 
 mkdir $dest/bin
 cp -r $build/* $dest/bin
-
-
-
-
 
 cd $dest/bin
 
@@ -117,37 +116,27 @@ fi
 
 
 
-
-
-
 cd $targetDir
 chmod -R 755 *
 cd $home
 
 
-rm -rf $home/build/$newname.$compress
+
+
+
+
+
 if [ "$windows" == true ]; then
-	zip -r $newname.$compress $newname
+	zip -r $buildName.$compress $buildName
 else
-	tar -zcvf $newname.$compress $newname
+	tar -zcvf $buildName.$compress $buildName
 fi
 
 
 
-mv $newname.$compress $home/build
-
-if [ "$targetCurrent" == true ]; then
-	rm -rf $home/dist
-	sudo mv $targetDir dist
-else
-	#mv $dest $home/build
-	echo removing $targetDir
-	rm -rf $targetDir
-fi
-
-
-
-
+mv $buildName.$compress $home/build/downloads
+echo removing $targetDir
+rm -rf $targetDir
 
 echo DONE!
 

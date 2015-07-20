@@ -8,19 +8,19 @@ var bodyParser = require('body-parser');
 var sarcatServerPort = 5000;
 var webpagePort = 80;
 //
-var page = path.join(__dirname, '../', 'webpage');
-var config = require('../config/config.json');
+
 var webpage = express();
-var server = http.createServer(webpage)
-    .listen(webpagePort);
-webpage.use('/', express.static(page));
-console.log('now serving webpage on: ' + webpagePort)
+http.createServer(webpage).listen(webpagePort);
+webpage.use('/', express.static('web'));
+webpage.use('/download', express.static('downloads'));
+
+console.log('now serving webpage on: ' + webpagePort);
 var sarcatserver = express();
 sarcatserver.use(bodyParser.json({
     limit: '500mb'
 }));
 var dir = 'uploads';
-var uploadDir = path.join(page, dir);
+var uploadDir = 'uploads';
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }
@@ -71,12 +71,9 @@ sarcatserver.get('/elevation/*', function(req, res) {
 sarcatserver.listen(sarcatServerPort);
 console.log('now serving sarcatServer on: ' + sarcatServerPort);
 
-
 var spawn = require('child_process')
     .spawn;
-var demoApp = path.join(__dirname, '../', 'dist/app');
-
-
+var demoApp = path.join(__dirname, 'dist/app');
 
 var startScript = path.join(demoApp, 'index.js')
 startSARCAT = spawn('node', [startScript]);

@@ -23,3 +23,12 @@ scp -r ~/github/SARCAT/dist/app/bundle/programs/server/app/lib/schemas/User.js k
 scp -r ~/github/SARCAT/dist/app/bundle/programs/server/app/lib/schemas/User.js kyle@spa.tial.ly:/home/kyle/sarcat_main/
 
 sudo mv /home/kyle/sarcat_main/User.js dist/app/bundle/programs/server/app/lib/schemas/User.js
+
+
+
+scp ~/github/SARCAT/build/sarcat-0.5.0-os.osx.x86_64.tar.gz kyle@spa.tial.ly:/home/kyle/sarcat_main/webpage/downloads
+
+
+
+architecture=os.osx.x86_64
+version=0.5.0
