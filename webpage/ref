@@ -32,3 +32,12 @@ scp ~/github/SARCAT/build/sarcat-0.5.0-os.osx.x86_64.tar.gz kyle@spa.tial.ly:/ho
 
 architecture=os.osx.x86_64
 version=0.5.0
+
+
+
+map zoom level on load
+find location group calculated results together
+Other - blank - let user fill it in
+list types of rescue for user to check off - add cave mine/tunnel/rescue/structural/building rescue?
+
+helipcopert - fixed line/long-line rescue
