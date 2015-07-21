@@ -322,31 +322,32 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
 
 
 ## **Download SARCAT** ##
-* Make sure you have the required dependencies. Then clone or download the master source from github [here](https://github.com/Azimuth1/SARCAT/archive/master.zip).
+* Make sure you have the required dependencies. Then clone or download the master source from github [here](https://github.com/Azimuth1/SARCAT/archive/master.zip).*
+
    git clone https://github.com/Azimuth1/SARCAT
    cd SARCAT
+
+## **Install Dependencies:** ##
    npm install
-   npm build
 
 
+## **Build for target platform:** ##
+*Not supported for windows - download pre-packaged version.*
+   npm run build
 
-## **Run packaged:** ##
+## **Run packaged version:** ##
    npm start
 
 
 
 ## **Run standalone:** ##
 
-## **Start Mongodb** ##
+### **Start Mongodb** ###
     mkdir -p ~/sarcatData/sarcatdb
     mongod --dbpath ~/sarcatData/sarcatdb --port 27017
     
     
-## **Start SARCAT** ##
-    git clone https://github.com/Azimuth1/SARCAT
-    cd SARCAT
-    npm install
-    npm build
+### **Start SARCAT** ###
     cd dist/app
     export MONGO_URL=mongodb://localhost:27017/sarcatdb
     export PORT=3000
