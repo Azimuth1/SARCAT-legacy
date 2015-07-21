@@ -322,9 +322,7 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
 
 
 ## **Download SARCAT** ##
-* Make sure you have the required dependencies. Then clone or download the master source from github [here](https://github.com/Azimuth1/SARCAT/archive/master.zip).  
-
-
+* Make sure you have the required dependencies. Then clone or download the master source from github [here](https://github.com/Azimuth1/SARCAT/archive/master.zip).
    git clone https://github.com/Azimuth1/SARCAT
    cd SARCAT
    npm install
