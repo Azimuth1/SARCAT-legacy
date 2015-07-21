@@ -19,66 +19,17 @@
 </head>
 
 <body>
-    <div id="header">
-    </div>
+    <div id="header"></div>
     <div class="container">
-
-
-<h1 id="sarcat">SARCAT</h1>
-
-<p><img src="https://github.com/Azimuth1/SARCAT/blob/master/meteor/public/icon.png?raw=true" alt="alt tag" title=""></p>
-
-<hr>
-
-
-
-
-
-<h4 id="supported-platforms"><strong>Supported platforms</strong></h4>
-
-<ul>
-<li>Mac: OS X 10.x</li>
-<li>Windows: Microsoft Windows 7, Windows 8.1</li>
-<li>Linux: 32-bit Linux, 64-bit Linux</li>
-</ul>
-
-<hr>
-
-
-
-<h1 id="basic-installation"><strong>Basic Installation</strong></h1>
-
-<p><em>This is the easiest way to install SARCAT. You simply download a compressed source containing everything you need to get up and running. Keep in mind that although SARCAT is designed to be run as a server application, it has been specially wrapped to run as a standalone product on your desktop.</em></p>
-
-
-
-<h2 id="to-install-the-latest-release">To Install the latest release:</h2>
-
-<ol>
-<li><p>First, download the <a href="http://spa.tial.ly:8080/download.html">latest release</a> for your platform from the download section of the SARCAT website. This is a compressed file <em>(zip/tar.fz)</em> targetting your operating system.</p></li>
-<li><p>Create a SARCAT home directory on your machine. <strong>Ensure this is a location where you have owner privileges.</strong>  Below is a recommended guide for where this should be done:</p>
-
-<ul><li><strong>Windows:</strong>  <br>
-<em>C:\Users\{username}\sarcat</em></li>
-<li><strong>Mac:</strong>  <br>
-<em>/Users/{username}/sarcat</em></li></ul></li>
-<li><p>Drag the downloaded zipped file into your SARCAT home directory.</p></li>
-<li>Right-click the file and select <strong>Extract All</strong>. </li>
-<li>For your destination, choose your SARCAT home directory (e.g. <strong><em>C:\Users\{username}\sarcat</em></strong>).</li>
-<li>Once extracted, navigate into the new app directory. (e.g. <strong><em>C:\Users\{username}\sarcat\sarcat-{version}-{platform}</em></strong>)</li>
-<li>Click <code>start</code> to run SARCAT. This will open a terminal to run the server and database for the software.</li>
-<li>Open your web browser and go to <a href="http://localhost:3000/" target="_blank">http://www.localhost:3000</a> to begin.</li>
-<li>Click <code>stop</code> to stop SARCAT. Or <strong><em>Ctrl+C</em></strong> into the current terminal session. Be careful to exit correctly or the process may not fully end.</li>
-<li>Enjoy!</li>
-</ol>
-
-<hr>
+        <h1 id="sarcat">SARCAT</h1>
+        <p><img src="https://github.com/Azimuth1/SARCAT/blob/master/meteor/public/icon.png?raw=true" alt="alt tag" title=""></p>
+        <hr>
 
 
 
 <h1 id="folder-structure"><strong>Folder structure</strong></h1>
 
-<p>|– C:\Users\{username}\sarcat-{version}-{platform}</p>
+<p>|â€“ C:\Users\{username}\sarcat-{version}-{platform}</p>
 
 <pre><code>|-- start (Click to start SARCAT)
 |-- stop (Click to stop SARCAT)
@@ -146,7 +97,7 @@ Root url SARCAT will serve from. Generally should be localhost.</li>
 <h2 id="getting-started">Getting Started</h2>
 
 <ul>
-<li><p>Once SARCAT is installed and running, use the default username/password (<strong>Username</strong>: <strong><em>admin@sarcat</em></strong>, <strong>Password</strong>: <strong><em>admin</em></strong>) to begin setting up your profile at <strong><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></strong>. This ensures only you can do the initial setup.</p></li>
+<li><p>Once SARCAT is installed and running, use the default username/password (<strong>Username</strong>: <strong><em>admin@sarcat</em></strong>, <strong>Password</strong>: <strong><em>admin</em></strong>) to begin setting up your profile at <strong><a href="http://localhost:3000/">http://localhost:3000/</a></strong>. This ensures only you can do the initial setup.</p></li>
 <li><p>Go to the Admin Tools section on the left to begin setting up your profile.</p></li>
 </ul>
 
@@ -268,7 +219,7 @@ Root url SARCAT will serve from. Generally should be localhost.</li>
 
 <h2 id="editing-an-incident"><strong>Editing An Incident</strong></h2>
 
-<p><em>And now for data entry! SARCAT makes life easier by assisting with inputs. Our goal is to optimize this as much as possible to make sure you are spending less time inserting data and more time analyzing your workflow. All of these value auto-save, so you don’t have to worry about filling out an entire form and forgetting to save it!</em> </p>
+<p><em>And now for data entry! SARCAT makes life easier by assisting with inputs. Our goal is to optimize this as much as possible to make sure you are spending less time inserting data and more time analyzing your workflow. All of these value auto-save, so you donâ€™t have to worry about filling out an entire form and forgetting to save it!</em> </p>
 
 
 
@@ -435,78 +386,13 @@ Root url SARCAT will serve from. Generally should be localhost.</li>
 
 <p>We would love to hear any feedback you have on the app. For technical support, contact <em>kyle.kalwarski@azimuth1.com</em>. For other general inqueries, contact Robert Koester at <em>robert@dbs-sar.com</em></p>
 
-<p>And don’t forget to check out our Lost Person Behavior mobile app available for iOS &amp; Android today!</p>
+<p>And donâ€™t forget to check out our Lost Person Behavior mobile app available for iOS &amp; Android today!</p>
 
 <hr>
 
 
 
-<h2 id="more-documentation-to-come">More Documentation to come!</h2>
-
-<hr>
-
-
-
-<h2 id="advanced-installation"><strong>Advanced Installation</strong></h2>
-
-<p><em>If you already have node v0.10.36 &amp; mongo installed on your system and know your way around a bit more (or want to learn), this is for you. Or if you want to learn, this is your chance! Follow instructions bellow to build the latest release from source</em></p>
-
-
-
-<h2 id="dependencies"><strong>DEPENDENCIES:</strong></h2>
-
-
-
-<h4 id="nodejs-v0106"><strong>Node.js v0.10.6</strong></h4>
-
-<p><em>Select your installer below. Follow the prompts (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).</em></p>
-
-<ul>
-<li><a href="https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi">Windows Installer <small>node-v0.10.36-x86.msi</small></a></li>
-<li><a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36.pkg">Macintosh Installer <small>node-v0.10.36.pkg</small></a></li>
-<li><a href="http://nodejs.org/dist/v0.10.36/node-v0.10.36-linux-x64.tar.gz">Linux Installer <small>node-v0.10.36.tar.gz</small></a></li>
-</ul>
-
-
-
-<h4 id="mongodb-v304"><strong>MongoDB v3.0.4</strong></h4>
-
-<p><em>Mongo is the powerful database behind SARCAT. Follow the instructions to get up and running with mongo! SARCAT has been tested with the latest version: v3.0.4. Mongo has great <a href="http://docs.mongodb.org/manual/">documentation</a> to walk you through the install to be up and running quickly!</em></p>
-
-<ul>
-<li><a href="https://www.mongodb.org/downloads">Download Mongo now!</a></li>
-</ul>
-
-<hr>
-
-
-
-<h2 id="download-sarcat"><strong>Download SARCAT</strong></h2>
-
-<ul>
-<li><p>Make sure you have the required dependencies. Then download the standalone version (w/out node/mongo) from github <a href="https://github.com/Azimuth1/SARCAT/archive/master.zip">here</a>.  </p>
-
-<p>git clone <a href="https://github.com/Azimuth1/SARCAT">https://github.com/Azimuth1/SARCAT</a> <br>
-cd SARCAT <br>
-npm install <br>
-npm build <br>
-npm start</p></li>
-</ul>
-
-
-
-<h4 id="build-for-target-platform"><strong>Build for target platform:</strong></h4>
-
-<ul>
-<li><strong>Windows:</strong> <br>
-<code>node scripts/run.js win32</code></li>
-<li><strong>Mac:</strong> <br>
-<code>node scripts/run.js darwin</code></li>
-<li><strong>Linux:</strong> <br>
-<code>node scripts/run.js linux</code></li>
-</ul>
-
-
+        
     </div>
     <div id="footer" style="margin-top:400px">
     </div>

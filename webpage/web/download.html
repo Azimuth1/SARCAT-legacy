@@ -54,7 +54,7 @@
 
 <ul>
 <li>Mac: OS X 10.x</li>
-<li>Windows: Microsoft Windows 7, Windows 8.1</li>
+<li>Windows: 64-bit, Microsoft Windows 7, Windows 8.1</li>
 <li>Linux: 32-bit Linux, 64-bit Linux</li>
 </ul>
 
@@ -62,62 +62,40 @@
 
 
 
+
+
 <h1 id="basic-installation"><strong>Basic Installation</strong></h1>
 
-<p><em>This is the easiest way to install SARCAT. You simply download a compressed source containing everything you need to get up and running. Keep in mind that although SARCAT is designed to be run as a server application, it has been specially wrapped to run as a standalone product on your desktop.</em></p>
+<p><em>Download the compressed source code containing everything you need to get up and running. Keep in mind that although SARCAT is designed to be run as a standalone server application, it has been specially wrapped to run as a standalone product on your desktop.</em></p>
 
-
+<p>For advanced intallation instructions, check out our <a href="https://github.com/Azimuth1/SARCAT">Github</a> page</p>
 
 <h2 id="to-install-the-latest-release">To Install the latest release:</h2>
 
 <ol>
-<li><p>First, download the latest release for your platform here. This is a compressed file <em>(zip/tar.fz)</em> targetting your operating system.</p></li>
+<li><p>First, download the <a href="http://sarcat.azimuth1.com/download.html">latest release</a> for your platform from the download section of the SARCAT website. This is a compressed file <em>(zip/tar.fz)</em> targeting your operating system.</p></li>
 <li><p>Create a SARCAT home directory on your machine. <strong>Ensure this is a location where you have owner privileges.</strong>  Below is a recommended guide for where this should be done:</p>
 
-<ul><li><strong>Windows:</strong>  <br>
-<em>C:\Users\{username}\sarcat</em></li>
-<li><strong>Mac:</strong>  <br>
-<em>/Users/{username}/sarcat</em></li></ul></li>
-<li><p>Drag the downloaded zipped file into your SARCAT home directory.</p></li>
-<li>Right-click the file and select <strong>Extract All</strong>. </li>
-<li>For your destination, choose your SARCAT home directory (e.g. <strong><em>C:\Users\{username}\sarcat</em></strong>).</li>
-<li>Once extracted, navigate into the new app directory. (e.g. <strong><em>C:\Users\{username}\sarcat\sarcat-{version}-{platform}</em></strong>)</li>
-<li>Click <code>start</code> to run SARCAT. This will open a terminal to run the server and database for the software.</li>
-<li>Open your web browser and go to <a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a> to begin.</li>
-<li>Click <code>stop</code> to stop SARCAT. Or <strong><em>Ctrl+C</em></strong> into the current terminal session. Be careful to exit correctly or the process may not fully end.</li>
-<li>Enjoy!</li>
+<pre><code>Windows: C:/Users/{username}/sarcat
+Mac: /Users/{username}/sarcat
+</code></pre></li>
+<li><p>Move the compressed(.zip/.gz) SARCAT folder into your SARCAT home directory.</p></li>
+<li>Right-click the folder and select <strong>Extract All</strong>. (For Mac/Linux, just double click to extract) </li>
+<li><p>When prompted, choose your SARCAT home directory as the location to extract to.</p>
+
+<pre><code>/Users/{username}/sarcat
+</code></pre></li>
+<li><p>Once extracted, navigate into the new application directory.</p>
+
+<pre><code>/Users/{username}/sarcat/sarcat-{version}-{platform}
+</code></pre></li>
+<li><p>Click <code>start</code> to run SARCAT. This will open a command prompt/terminal which initiates the server and database for the software.</p></li>
+<li>If notified that SARCAT is running, open your web browser and go to <a href="http://localhost:3000/">http://localhost:3000/</a> to begin.</li>
+<li>Click <code>stop</code> to stop SARCAT (or <strong><em>Ctrl+C</em></strong> into the current terminal session). Be careful to exit correctly or the process may not fully end.</li>
+<li>Enjoy - Check out our <a href="/docs.html">docs page</a> for usage details!</li>
 </ol>
 
-<hr>
 
-
-
-           <h2 class="text-uppercase strong">Docs</h2>
-
-            <p>for more detailed information on using SARCAT, check out our <a href="http://spa.tial.ly:8080/docs.html">Docs</a> page</p>
-            
-
-
-
-            <h2 class="text-uppercase strong">Source</h2>
-
-            <p>for more detailed information, check out our <a href="https://github.com/Azimuth1/SARCAT">Github</a> page</p>
-            
-            <!--
-                <h2>Hosted Options</h2>
-                <p>*Don't want to manage you server? We can take care of all your hosting needs.</p>
-               
-            <h2>Getting Started</h2>
-            <ul>
-                <li>Instructional Videos</li>
-                <li>Tutorials</li>
-            </ul>
-            <h2>Developer Resources</h2>
-            <h2>Participate!!!</h2>
-            <h2>License</h2>
-            <h2>Feedback</h2>
--->
-            </article>
             <script>
             var OSName = "unknown OS";
             if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
