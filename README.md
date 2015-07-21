@@ -296,19 +296,14 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
 
 ----------
 
-## More Documentation to come! ##
-
-
-----------
-
 
 ## **Advanced Installation** ##
 *If you already have node & mongo installed on your system and know your way around a bit more (or want to learn), this is for you. Or if you want to learn, this is your chance! Follow instructions bellow to build the latest release from source*
 
-## **DEPENDENCIES:** ##
+## **Dependencies:** ##
 
 
-#### **Node.js v0.10.6 - v0.12.4** ####
+#### **Node.js v0.10.6####
  *Select your installer below. Follow the prompts (Accept the license agreement, click the NEXT button a bunch of times and accept the default installation settings).*
 
  - [Windows Installer <small>node-v0.10.36-x86.msi</small>](https://nodejs.org/dist/v0.10.36/node-v0.10.36-x86.msi)
@@ -327,14 +322,14 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
 
 
 ## **Download SARCAT** ##
-* Make sure you have the required dependencies. Then download the standalone version (w/out node/mongo) from github [here](https://github.com/Azimuth1/SARCAT/archive/master.zip).  
+* Make sure you have the required dependencies. Then clone or download the master source from github [here](https://github.com/Azimuth1/SARCAT/archive/master.zip).  
 
 
-    git clone https://github.com/Azimuth1/SARCAT
-    cd SARCAT
-    npm install
-    npm build
-    npm start
+   git clone https://github.com/Azimuth1/SARCAT
+   cd SARCAT
+   npm install
+   npm build
+   npm start
 
 
 #### **Run standalone:** ####
