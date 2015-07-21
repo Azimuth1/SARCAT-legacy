@@ -50,7 +50,7 @@
 
 6. Once extracted, navigate into the new application directory.
 
-		Users/{username}/sarcat/sarcat-{version}-{platform}
+		/Users/{username}/sarcat/sarcat-{version}-{platform}
         
         
 8. Click <code>start</code> to run SARCAT. This will open a command prompt/terminal which initiates the server and database for the software.
