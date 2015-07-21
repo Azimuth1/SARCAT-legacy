@@ -44,7 +44,7 @@
 
 3. Move the compressed(.zip/.gz) SARCAT folder into your SARCAT home directory.
 4. Right-click the folder and select **Extract All**. (For Mac/Linux, just double click to extract) 
-5. When prompted, choose your SARCAT home directory
+5. When prompted, choose your SARCAT home directory as the location to extract to.
 
 		/Users/{username}/sarcat
 
