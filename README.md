@@ -337,6 +337,26 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
     npm start
 
 
+#### **Run standalone:** ####
+
+#### **Start Mongodb** ####
+    mkdir -p ~/sarcatData/sarcatdb
+    mongod --dbpath ~/sarcatData/sarcatdb --port 27017
+    
+    
+#### **Start SARCAT** ####
+    git clone https://github.com/Azimuth1/SARCAT
+    cd SARCAT
+    npm install
+    npm build
+    cd dist/app
+    export MONGO_URL=mongodb://localhost:27017/sarcatdb
+    export PORT=3000
+    export ROOT_URL=http://localhost/
+    export METEOR_SETTINGS=$(<settings.json)
+    node bundle/main.js
+
+
 #### **Build for target platform:** ####
 * **Windows:**
 `node scripts/run.js win32`
