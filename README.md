@@ -43,8 +43,8 @@
 
 3. Drag the downloaded zipped (.zip/.gz) file into your SARCAT home directory.
 4. Right-click the file and select **Extract All**. (For Mac/Linux, just double click to extract) 
-5. For your destination, choose your SARCAT home directory (e.g. ***C:\Users\\{username}\sarcat***).
-6. Once extracted, navigate into the new app directory. (e.g. ***C:\Users\\{username}\sarcat\sarcat-{version}-{platform}***)
+5. For your destination, choose your SARCAT home directory (e.g. ***C:/Users/{username}/sarcat***).
+6. Once extracted, navigate into the new app directory. (e.g. ***C:/Users/{username}/sarcat/sarcat-{version}-{platform}***)
 8. Click <code>start</code> to run SARCAT. This will open a terminal to run the server and database for the software.
 9. Open your web browser and go to http://localhost:3000/ to begin.
 10. Click <code>stop</code> to stop SARCAT. Or ***Ctrl+C*** into the current terminal session. Be careful to exit correctly or the process may not fully end.
