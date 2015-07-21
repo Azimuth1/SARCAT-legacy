@@ -332,7 +332,7 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
 
 
 ## **Build for target platform:** ##
-*Not supported for windows - download pre-packaged version.*
+* Not supported for windows - download pre-packaged version. *
    npm run build
 
 ## **Run packaged version:** ##
