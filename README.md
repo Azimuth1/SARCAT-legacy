@@ -330,14 +330,14 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
    npm start
 
 
-#### **Run standalone:** ####
+## **Run standalone:** ##
 
-#### **Start Mongodb** ####
+## **Start Mongodb** ##
     mkdir -p ~/sarcatData/sarcatdb
     mongod --dbpath ~/sarcatData/sarcatdb --port 27017
     
     
-#### **Start SARCAT** ####
+## **Start SARCAT** ##
     git clone https://github.com/Azimuth1/SARCAT
     cd SARCAT
     npm install
@@ -350,7 +350,7 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
     node bundle/main.js
 
 
-#### **Build for target platform:** ####
+## **Build for target platform:** ##
 * **Windows:**
 `node scripts/run.js win32`
 * **Mac:**
