@@ -327,7 +327,12 @@ And don't forget to check out our Lost Person Behavior mobile app available for 
    cd SARCAT
    npm install
    npm build
+
+
+
+## **Run packaged:** ##
    npm start
+
 
 
 ## **Run standalone:** ##
