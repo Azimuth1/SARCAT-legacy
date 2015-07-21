@@ -32,16 +32,16 @@
 
 
 ## To Install the latest release: ##
-1. First, download the [latest release](http://spa.tial.ly:8080/download.html) for your platform from the download section of the SARCAT website. This is a compressed file *(zip/tar.fz)* targetting your operating system.
+1. First, download the [latest release](http://spa.tial.ly:8080/download.html) for your platform from the download section of the SARCAT website. This is a compressed file *(zip/tar.fz)* targeting your operating system.
 
 2. Create a SARCAT home directory on your machine. **Ensure this is a location where you have owner privileges.**  Below is a recommended guide for where this should be done:
 * **Windows:** 
-*C:\Users\\{username}\sarcat*
+*C:/Users/{username}/sarcat*
 * **Mac:** 
 */Users/{username}/sarcat*
 
 
-3. Drag the downloaded zipped file into your SARCAT home directory.
+3. Drag the downloaded zipped (.zip/.gz) file into your SARCAT home directory.
 4. Right-click the file and select **Extract All**. (For Mac/Linux, just double click to extract) 
 5. For your destination, choose your SARCAT home directory (e.g. ***C:\Users\\{username}\sarcat***).
 6. Once extracted, navigate into the new app directory. (e.g. ***C:\Users\\{username}\sarcat\sarcat-{version}-{platform}***)
