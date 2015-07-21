@@ -27,6 +27,7 @@
 
 ----------
 
+
 # **Basic Installation** #
 *This is the easiest way to install SARCAT. You simply download a compressed source containing everything you need to get up and running. Keep in mind that although SARCAT is designed to be run as a server application, it has been specially wrapped to run as a standalone product on your desktop.*
 
@@ -35,22 +36,27 @@
 1. First, download the [latest release](http://spa.tial.ly:8080/download.html) for your platform from the download section of the SARCAT website. This is a compressed file *(zip/tar.fz)* targeting your operating system.
 
 2. Create a SARCAT home directory on your machine. **Ensure this is a location where you have owner privileges.**  Below is a recommended guide for where this should be done:
-* **Windows:** 
-*C:/Users/{username}/sarcat*
-* **Mac:** 
-*/Users/{username}/sarcat*
+
+		Windows: C:/Users/{username}/sarcat
+		Mac: /Users/{username}/sarcat
 
 
-3. Drag the downloaded zipped (.zip/.gz) file into your SARCAT home directory.
-4. Right-click the file and select **Extract All**. (For Mac/Linux, just double click to extract) 
-5. For your destination, choose your SARCAT home directory (e.g. ***C:/Users/{username}/sarcat***).
-6. Once extracted, navigate into the new app directory. (e.g. ***C:/Users/{username}/sarcat/sarcat-{version}-{platform}***)
-8. Click <code>start</code> to run SARCAT. This will open a terminal to run the server and database for the software.
-9. Open your web browser and go to http://localhost:3000/ to begin.
-10. Click <code>stop</code> to stop SARCAT. Or ***Ctrl+C*** into the current terminal session. Be careful to exit correctly or the process may not fully end.
+
+3. Move the compressed(.zip/.gz) SARCAT folder into your SARCAT home directory.
+4. Right-click the folder and select **Extract All**. (For Mac/Linux, just double click to extract) 
+5. When prompted, choose your SARCAT home directory
+
+		/Users/{username}/sarcat
+
+6. Once extracted, navigate into the new application directory.
+
+		Users/{username}/sarcat/sarcat-{version}-{platform}
+        
+        
+8. Click <code>start</code> to run SARCAT. This will open a command prompt/terminal which initiates the server and database for the software.
+9. If notified that SARCAT is running, open your web browser and go to http://localhost:3000/ to begin.
+10. Click <code>stop</code> to stop SARCAT (or ***Ctrl+C*** into the current terminal session). Be careful to exit correctly or the process may not fully end.
 11. Enjoy!
-
-
 
 
 
