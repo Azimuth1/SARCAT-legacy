@@ -22,7 +22,7 @@
 
 #### **Supported platforms** ####
 * Mac: OS X 10.x
-* Windows: Microsoft Windows 7, Windows 8.1
+* Windows: 64-bit, Microsoft Windows 7, Windows 8.1
 * Linux: 32-bit Linux, 64-bit Linux
 
 ----------
