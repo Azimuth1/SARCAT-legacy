@@ -307,7 +307,7 @@ Template.records.events({
             for (var i = 0; i < arrData.length; i++) {
                 var row = '';
                 for (var index in arrData[i]) {
-                    row += '' + arrData[i][index] + ',';
+                    row += '"' + arrData[i][index] + '",';
                 }
                 row.slice(0, row.length - 2);
                 CSV += row + '\r\n';
@@ -355,7 +355,6 @@ Template.records.events({
         JSONToCSVConvertor(allRecordsFlat, 'sarcatExport-' + moment().format('MMMM-Do-YYYY_h-mm-ssa'));
     },
     'change .btn-file :file': function(evt) {
-        console.log('!')
         i = this;
         var files = evt.target.files;
         f = files[0];
