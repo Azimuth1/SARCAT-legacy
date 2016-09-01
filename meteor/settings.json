@@ -2,9 +2,9 @@
     "public": {
         "sarcatServer": "http://spa.tial.ly:5000",
         "layers": {
-            "MapQuest-OSM": "http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg",
+            "ESRI-Topo": "http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+            "ESRI-Imagery": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             "OpenStreetMap": "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            "MapQuest Aerial": "http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg",
             "SARTOPO": "http://s3-us-west-1.amazonaws.com/caltopo/topo/{z}/{x}/{y}.png"
         }
     }
