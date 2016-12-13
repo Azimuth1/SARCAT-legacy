@@ -26,7 +26,7 @@ sudo mv /home/kyle/sarcat_main/User.js dist/app/bundle/programs/server/app/lib/s
 
 
 
-scp ~/github/SARCAT/build/sarcat-0.5.0-os.osx.x86_64.tar.gz kyle@spa.tial.ly:/home/kyle/sarcat_main/webpage/downloads
+scp ~/github/SARCAT/webpage/web/* kyle@spa.tial.ly:/home/kyle/sarcat/web/
 
 
 
@@ -41,3 +41,12 @@ Other - blank - let user fill it in
 list types of rescue for user to check off - add cave mine/tunnel/rescue/structural/building rescue?
 
 helipcopert - fixed line/long-line rescue
+
+
+
+scp ~/github/SARCAT/build/downloads/sarcat-0.5.0-os.windows.x86_64.zip kyle@spa.tial.ly:/home/kyle/sarcat/downloads/
+
+
+scp ~/github/SARCAT/build/downloads/* kyle@spa.tial.ly:/home/kyle/sarcat/downloads/
+
+
