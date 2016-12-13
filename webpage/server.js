@@ -55,7 +55,7 @@ var createDate = function() {
     return yyyy + '-' + (mm[1] ? mm : '0' + mm[0]) + '-' + (dd[1] ? dd : '0' + dd[0]) + '_' + hh + ':' + mm + ':' + ss;
 };
 sarcatserver.get('/weather/*', function(req, res) {
-    var item = req.url.replace('/weather/', 'http://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/');
+    var item = req.url.replace('/weather/', 'https://api.forecast.io/forecast/f3da6c91250a43b747f7ace5266fd1a4/');
     console.log(item);
     var x = request.get(item);
     req.pipe(x);
