@@ -5,7 +5,7 @@
                 <div class="title-auth">
                     <p class="acr"><b>s</b>earch<b>a</b>nd<b>r</b>escue<b>c</b>ollection &<b>a</b>nalysis<b>t</b>ool</p>
                 </div>
-                {{#if currentUser}}
+              
                 <p class="white em"> Create a new admin account! </p>
                 <form>
                     {{#if errorMessages}}
@@ -27,23 +27,7 @@
                     <div class="input-symbol {{errorClass 'confirm'}}">
                         <input type="password" name="confirm" placeholder="Confirm Password" /> <span class="tmp icon-lock" title="Confirm Password"></span> </div>
                     <button type="submit" class="btn-primary btn-block mar2y pad2"> <span class="tmp icon-user-add" aria-hidden="true"></span>Create Account</button>
-                </form> {{else}}
-                <p class="white em"> Please login with default admin account </p>
-                <form>
-                    {{#if errorMessages}}
-                    <div class="list-errors">
-                        {{#each errorMessages}}
-                        <div class="list-item">{{this}}</div>
-                        {{/each}}
-                    </div>
-                    {{/if}}
-                    <div class="input-symbol {{errorClass 'email'}}">
-                        <input type="email" name="email" placeholder="Email" /> <span class="tmp icon-email" title="Email"></span> </div>
-                    <div class="input-symbol {{errorClass 'password'}}">
-                        <input type="password" name="password" placeholder="Password" /> <span class="tmp icon-lock" title="Password"></span> </div>
-                    <button type="submit" class="btn-primary btn-block mar2y pad2">Sign in</button>
-                </form>
-                {{/if}}
+                </form> 
             </div>
         </div>
     </div>

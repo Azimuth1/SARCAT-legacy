@@ -1,5 +1,5 @@
 Meteor.methods({
-    getFilesInBackupFolder: function() {
+    getFilesInBackupFolder: function () {
         var fs = Npm.require('fs');
         var path = Npm.require('path');
         var myPath = fs.realpathSync('.');
@@ -14,7 +14,7 @@ Meteor.methods({
         });*/
         return files;
     },
-    backupJSON: function(name, json) {
+    backupJSON: function (name, json) {
         console.log(name)
         fs = Npm.require('fs');
         path = Npm.require('path');
@@ -27,34 +27,33 @@ Meteor.methods({
         var buffer = JSON.stringify(json)
         fs.writeFileSync(filePath, buffer);
     },
-    importRecords: function(data) {
-   
-        data.forEach(function(d) {
+    importRecords: function (data) {
+        data.forEach(function (d) {
             Records.insert(d);
         });
     },
-    removeUser: function(userId) {
+    removeUser: function (userId) {
         if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
             var remove = Meteor.users.remove(userId);
             return remove;
         }
     },
-    editUser: function(set, userId) {
-        Meteor.users.update(userId, set, function(error, result) {
+    editUser: function (set, userId) {
+        Meteor.users.update(userId, set, function (error, result) {
             if (error) {
                 return error;
             }
             return result;
         });
     },
-    encryptionKey: function(set, userId) {
+    encryptionKey: function (set, userId) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
         return Config.findOne()
             .encryptionKey
     },
-    setPassword: function(userId, password, passwordReset) {
+    setPassword: function (userId, password, passwordReset) {
         if (password) {
             var logout = Accounts.setPassword(userId, password, {
                 logout: false
@@ -67,10 +66,7 @@ Meteor.methods({
         });
         return update;
     },
-    createAdmin: function(username, email, password, id) {
-        if (!Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+    createAdmin: function (username, email, password, id) {
         var newAdmin = Accounts.createUser({
             email: email,
             password: password,
@@ -80,7 +76,7 @@ Meteor.methods({
             $set: {
                 roles: ['admin']
             }
-        }, function(error, result) {
+        }, function (error, result) {
             return (error, result);
         });
         Config.update(Config.findOne()
@@ -90,31 +86,30 @@ Meteor.methods({
                 }
             });
     },
-    addRole: function(id, role) {
+    addRole: function (id, role) {
         Roles.addUsersToRoles(id, [role]);
     },
-    updateConfig: function(val) {
+    updateConfig: function (val) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
         Config.update(Config.findOne()
             ._id, {
                 $set: val
-            }
-        );
+            });
         return true;
     },
-    addRecord: function(list) {
+    addRecord: function (list) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
         return Records.insert(list);
     },
-    removeRecord: function(records) {
+    removeRecord: function (records) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        var id = records.map(function(d) {
+        var id = records.map(function (d) {
             return d._id;
         })
         Records.remove({
@@ -122,7 +117,7 @@ Meteor.methods({
                 $in: id
             }
         });
-        records.forEach(function(d) {
+        records.forEach(function (d) {
             RecordsAudit.insert({
                 'type': 'remove',
                 'recordId': id,
@@ -137,7 +132,7 @@ Meteor.methods({
         });
         return true;
     },
-    pushArray: function(id, name, val) {
+    pushArray: function (id, name, val) {
         var obj = {};
         obj[name] = val || {};
         var update = Records.update(id, {
@@ -145,7 +140,7 @@ Meteor.methods({
         });
         return update;
     },
-    pullArray: function(id, name, val) {
+    pullArray: function (id, name, val) {
         var obj = {};
         obj[name] = val || {};
         console.log(obj);
@@ -154,7 +149,7 @@ Meteor.methods({
         });
         return update;
     },
-    updateRecord: function(id, name, val) {
+    updateRecord: function (id, name, val) {
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -163,7 +158,7 @@ Meteor.methods({
         var update = Records.update(id, {
             $set: obj
         });
-        val = typeof(val) === 'object' ? JSON.stringify(val) : val;
+        val = typeof (val) === 'object' ? JSON.stringify(val) : val;
         RecordsAudit.insert({
             'type': 'update',
             'recordId': id,
@@ -177,7 +172,7 @@ Meteor.methods({
         });
         return update;
     },
-    defaultAdmin: function() {
+    defaultAdmin: function () {
         var defaultAdmin = Meteor.users.find({
                 emails: {
                     $elemMatch: {
@@ -188,14 +183,14 @@ Meteor.methods({
             .count();
         return defaultAdmin ? true : false;
     },
-    deleteUser: function(targetUserId, group) {
+    deleteUser: function (targetUserId, group) {
         var loggedInUser = Meteor.user();
         if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['manage-users', 'support-staff'], group)) {
             throw new Meteor.Error(403, 'Access denied');
         }
         Roles.setUserRoles(targetUserId, [], group);
     },
-    changeRole: function(user, val) {
+    changeRole: function (user, val) {
         //RecordsAudit.remove({})
         if (Roles.userIsInRole(Meteor.userId(), ['admin'])) {
             Meteor.users.update(user, {
@@ -205,9 +200,9 @@ Meteor.methods({
             });
         }
     },
-    removeSubject: function(recordId, subjectId) {
+    removeSubject: function (recordId, subjectId) {
         var newSubjects = Records.findOne(recordId)
-            .subjects.subject.filter(function(d) {
+            .subjects.subject.filter(function (d) {
                 return d._key !== subjectId;
             });
         Records.update(recordId, {
@@ -216,9 +211,9 @@ Meteor.methods({
             }
         })
     },
-    removeResource: function(recordId, resourceId) {
+    removeResource: function (recordId, resourceId) {
         var newResource = Records.findOne(recordId)
-            .resourcesUsed.resource.filter(function(d) {
+            .resourcesUsed.resource.filter(function (d) {
                 return d._key !== resourceId;
             });
         Records.update(recordId, {
@@ -227,7 +222,7 @@ Meteor.methods({
             }
         })
     },
-    getFilesInPublicFolder: function(id) {
+    getFilesInPublicFolder: function (id) {
         var fs = Npm.require('fs');
         var path = Npm.require('path');
         var dir = process.env.sarcatStorage ? process.env.sarcatStorage : process.env.PWD;
@@ -239,7 +234,7 @@ Meteor.methods({
         var files = fs.readdirSync(filesDir);
         return files;
     },
-    removeLogo: function() {
+    removeLogo: function () {
         var fs = Npm.require('fs');
         var path = Npm.require('path');
         var dir = process.env.PWD;
@@ -269,11 +264,10 @@ Meteor.methods({
                 $set: {
                     agencyLogo: ''
                 }
-            }
-        );
+            });
     },
     //["Maine", "Massachusetts", "Michigan", "Montana", "Nevada", "New Jersey", "New York", "North Carolina", "Ohio", "Pennsylvania", "Rhode Island", "Tennessee", "Texas", "Utah", "Washington", "Wisconsin", "Puerto Rico", "Maryland", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Minnesota", "Mississippi", "Missouri", "Nebraska", "New Hampshire", "New Mexico", "North Dakota", "Oklahoma", "Oregon", "South Carolina", "South Dakota", "Vermont", "Virginia", "West Virginia", "Wyoming"]
-    setCountry: function(id) {
+    setCountry: function (id) {
         var record = Records.findOne(id);
         var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
@@ -295,7 +289,7 @@ Meteor.methods({
         });
         return result;
     },
-    setStateProvince: function(id) {
+    setStateProvince: function (id) {
         var record = Records.findOne(id);
         var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
@@ -317,7 +311,7 @@ Meteor.methods({
         });
         return result;
     },
-    setEcoRegion: function(id) {
+    setEcoRegion: function (id) {
         var record = Records.findOne(id);
         var coord = record.coords.ippCoordinates;
         coord = [coord.lng, coord.lat];
@@ -342,7 +336,7 @@ Meteor.methods({
         });
         return result;
     },
-    setWeather: function(id, options) {
+    setWeather: function (id, options) {
         var options = options || {};
         var internet = Config.findOne()
             .internet;
@@ -395,7 +389,7 @@ Meteor.methods({
         });
         return dailyData;
     },
-    setBearing: function(id, field) {
+    setBearing: function (id, field) {
         function radians(n) {
             return n * (Math.PI / 180);
         }
@@ -412,10 +406,8 @@ Meteor.methods({
             var dLong = endLong - startLong;
             var dPhi = Math.log(Math.tan(endLat / 2.0 + Math.PI / 4.0) / Math.tan(startLat / 2.0 + Math.PI / 4.0));
             if (Math.abs(dLong) > Math.PI) {
-                if (dLong > 0.0)
-                    dLong = -(2.0 * Math.PI - dLong);
-                else
-                    dLong = (2.0 * Math.PI + dLong);
+                if (dLong > 0.0) dLong = -(2.0 * Math.PI - dLong);
+                else dLong = (2.0 * Math.PI + dLong);
             }
             return parseInt((degrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0);
         }
@@ -438,7 +430,7 @@ Meteor.methods({
         });
         return val;
     },
-    setDispersionAngle: function(id) {
+    setDispersionAngle: function (id) {
         var field = 'findLocation.dispersionAngle';
         var record = Records.findOne(id);
         var obj = {};
@@ -459,13 +451,13 @@ Meteor.methods({
         });
         return val;
     },
-    uploadISRID: function(toUpload) {
+    uploadISRID: function (toUpload) {
         this.unblock();
         var url = Config.findOne()
             .sarcatServer + '/uploadISRID'
         return HTTP.post(url, toUpload);
     },
-    setElevation: function(id) {
+    setElevation: function (id) {
         var record = Records.findOne(id);
         Records.update(id, {
             $unset: {
@@ -505,23 +497,20 @@ Meteor.methods({
         });
         return result;
     },
-    setDistance: function(id) {
-        var haversine = function(start, end, options) {
-            var toRad = function(num) {
+    setDistance: function (id) {
+        var haversine = function (start, end, options) {
+            var toRad = function (num) {
                 return num * Math.PI / 180;
             }
             var km = 6371
             var mile = 3960
             options = options || {}
-            var R = options.unit === 'mile' ?
-                mile :
-                km
+            var R = options.unit === 'mile' ? mile : km
             var dLat = toRad(end.lat - start.lat)
             var dLon = toRad(end.lng - start.lng)
             var lat1 = toRad(start.lat)
             var lat2 = toRad(end.lat)
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
             if (options.threshold) {
                 return options.threshold > (R * c)
@@ -554,41 +543,42 @@ Meteor.methods({
     },
 });
 Records.allow({
-    remove: function() {
+    remove: function () {
         return true;
     },
-    update: function(a, b) {
+    update: function (a, b) {
         return true;
     },
-    insert: function() {
+    insert: function () {
         return true;
     }
 });
 RecordsAudit.allow({
-    insert: function() {
+    insert: function () {
         return true;
     },
-    remove: function() {
+    remove: function () {
         return true;
     },
 });
 Config.allow({
-    'update': function() {
+    'update': function () {
         return true;
     },
-    'insert': function() {
+    'insert': function () {
         return true;
     }
 });
 Meteor.users.allow({
-    'remove': function(userId, doc) {
+    'remove': function (userId, doc) {
         if (Roles.userIsInRole(userId, ['admin'])) {
             return true;
         }
     },
-    'update': function(userId, doc) {
+    'update': function (userId, doc) {
         if (Roles.userIsInRole(userId, ['admin'])) {
             return true;
         }
     }
 });
+

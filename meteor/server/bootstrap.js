@@ -23,19 +23,22 @@
         }
         if (!Meteor.users.find()
             .count()) {
-            console.log('Creating default admin user.');
+            /*console.log('Creating default admin user.');
             var admin = Accounts.createUser({
                 'email': 'admin@sarcat',
                 'password': 'admin',
                 'username': 'Default Admin'
             });
-            Roles.addUsersToRoles(admin, ['admin']);
+            Roles.addUsersToRoles(admin, ['admin']);*/
             Config.update(config._id, {
                 $set: {
                     initSetup: true
                 }
             });
         }
+
+
+
         var publicSettings = (Meteor.settings && Meteor.settings.public) ? Meteor.settings.public : config;
         _.each(publicSettings, function (d, e) {
             if (!_.isEqual(config[e], publicSettings[e])) {
