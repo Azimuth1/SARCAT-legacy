@@ -1,27 +1,4 @@
-Template.stats.onCreated(function() {
-    Session.set('userView', 'stats');
-    Session.set('activeRecord', null);
-    Session.set('currentRecords', []);
-});
-Template.stats.onRendered(function() {
-    var records = Records.find()
-        .fetch();
-    var stats = chartStats(records);
-    dateChart(records, stats);
-    recordsSetMap('recordsMap', records);
-});
-Template.stats.helpers({
-    currentRecords: function() {
-        return Session.get('currentRecords')
-            .length;
-    },
-    stats: function() {
-        var data = Records.find(Session.get('activeRecord'))
-            .fetch();
-        var stats = genList(data);
-        return stats;
-    },
-});
+mapItem = null;
 var chartStats = function(records) {
     var statDiv = d3.select('#recordss');
     var context = {};
@@ -57,9 +34,23 @@ var chartStats = function(records) {
                 })
                 .value();
         };
+        var getNested = function(obj, args) {
+            obj = obj || {};
+            args = args || [];
+            for (var i = 0; i < args.length; i++) {
+                if (!obj || !obj.hasOwnProperty(args[i])) {
+                    return false;
+                }
+                obj = obj[args[i]];
+            }
+            return obj;
+        };
         var pluckDeepLinear = function(records, first, second, obj) {
             var data = _.chain(records)
                 .map(function(d) {
+                    var ok = getNested(d, [first, second]);
+                    if (!ok) { return []; }
+                    //if (!d[first]) { return []; }
                     return _.pluckDeep(d[first][second], obj);
                 })
                 .flatten()
@@ -78,10 +69,15 @@ var chartStats = function(records) {
                 return d.data;
             });
         };
+
         var pluckDeepOrdinal = function(records, first, second, obj) {
             var data = _.chain(records)
                 .map(function(d) {
+                    //if (!d[first]) { return []; }
+                    var ok = getNested(d, [first, second]);
+                    if (!ok) { return []; }
                     var vals = _.pluckDeep(d[first][second], obj);
+                    //var vals = getNested(d, first, second, obj);
                     return vals;
                     // vals = Array(vals.length).join('a').split('');
                 })
@@ -210,7 +206,7 @@ var chartStats = function(records) {
     context.drawGraph = function(d, cont) {
         var options = d.options || {};
         var title = options.label || '';
-        var klass = 'col-md-6 pad00';
+        var klass = 'chartDiv col-xs-12 col-md-6 pad00';
         margin = {
             top: 40,
             right: 5,
@@ -228,7 +224,7 @@ var chartStats = function(records) {
         var svg1 = container.append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
-            .style('border', '1px solid #e4e6e7')
+            .style('border', '1px solid #e4e6e7');
         svg1.append('text')
             .attr('transform', 'translate(' + (width1) / 2 + ',' + margin.top / 2 + ')')
             .attr('class', 'title')
@@ -241,10 +237,14 @@ var chartStats = function(records) {
         return svg;
     };
     context.drawBars = function(record, svg) {
+        /*if (record.options.field !== 'incidentOutcome.scenario' && record.options.field !== 'recordInfo.subjectCategory' && record.options.field !== 'recordInfo.status') {
+            return;
+        }
+        console.log(record, svg);*/
         var data = record.count;
         var options = record.options || {};
-        var x = d3.scale.ordinal()
-            .rangeRoundBands([0, width], 0.4);
+        x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], 0.2);
         var y = d3.scale.linear()
             .rangeRound([height, 0]);
         var xAxis = d3.svg.axis()
@@ -290,34 +290,44 @@ var chartStats = function(records) {
             barColorIndex++;
             return colors[barColorIndex % 2];
         };
-        var maxBarWidth = 50;
+        //var maxBarWidth = 50;
+
+        //var barW = Math.min.apply(null, [x.rangeBand() / 2, maxBarWidth]);
+        var barW = x.rangeBand();
+        var halfBarW = barW / 2;
+
         var bar = svg.selectAll('.bar')
             .data(data)
             .enter()
             .append('g')
             .attr('class', 'bar')
             .attr('transform', function(d) {
-                return 'translate(' + (((x.rangeBand() / 2) + x(d.name)) - (maxBarWidth / 2)) + ',' + y(d.data) + ')';
+                //var xTrans = (((x.rangeBand() / 2) + x(d.name)) - (maxBarWidth / 2));
+                var xTrans = (x(d.name));
+
+                return 'translate(' + xTrans + ',' + y(d.data) + ')';
             });
         bar.append('rect')
             .attr('class', '_bar')
             .attr('fill', function() {
                 return barColors();
             })
-            .attr('width', Math.min.apply(null, [x.rangeBand(), maxBarWidth]))
+            .attr('width', barW)
             .attr('height', function(d) {
                 return height - y(d.data);
             });
-        bar.append('text')
+        var barText = bar.append('text')
             .attr('class', 'barText')
             //.attr('dy', '1.75em')
-            .attr('y', -2)
-            .attr('x', maxBarWidth / 2)
+            .attr('y', function(d) {
+                return height - y(d.data) - 2;
+            })
+            .attr('x', halfBarW)
             .attr('text-anchor', 'middle')
             .text(function(d) {
                 return d.data;
             });
-        var allXText = svg.selectAll('.x.axis .tick text');
+        /*var allXText = svg.selectAll('.x.axis .tick text');
         var w = _.reduce(allXText[0], function(sum, el) {
             return sum + el.getBoundingClientRect()
                 .width;
@@ -329,7 +339,90 @@ var chartStats = function(records) {
                 .attr('transform', function() {
                     return 'rotate(-10)';
                 });
+        }*/
+
+
+
+        //d3.selectAll('.chartDiv svg').each(function() {
+        // var self = d3.select(svg);
+        // ss = svg;
+
+        var w = svg.node().getBoundingClientRect().width * 0.8;
+        xAx = svg.selectAll('.x.axis');
+        text0 = xAx.selectAll('.tick text');
+        if (!text0.size()) {
+            return;
         }
+        // return
+
+        //svg = ss;
+
+        /*var text = text0
+            .nodes()
+            .filter(function(e) {
+                return e.textContent;
+            });
+        var bbox = text
+            .map(function(d) {
+                return d.getBoundingClientRect();
+            });
+
+
+        var textW = _.reduce(bbox, function(e, f) {
+            return e + f.width;
+        }, 0);*/
+        var texts = text0[0];
+        var widths = texts.map(function(el) {
+            return el.getBoundingClientRect()
+                .width;
+        });
+        var maxW = Math.max.apply(null, widths);
+        var getWidth = function() {
+            return widths.reduce(function(d, e) { return d + e; });
+        };
+
+        var isOK = function(check, ang) {
+            return (w > (check * 0.85)) || ang <= -90;
+        };
+
+        var textWInit = getWidth();
+        var gap = x.rangeExtent()[1] / x.range().length;
+        var okInit = (gap > maxW) && isOK(textWInit);
+        if (okInit) { return; }
+        text0
+            .attr('transform', 'rotate(-90)')
+            .style({
+                'text-anchor': 'start',
+                'dominant-baseline': 'central'
+            })
+            .attr('dx', 16)
+            .attr('y', 0)
+            .attr('dy', 0);
+        let xAxNode = xAx.node();
+        xAxNode.parentNode.appendChild(xAxNode);
+        barText.style('font-size', '0.8em');
+        /*return;
+        rot = function(rotate) {
+            text0.attr('transform', function() {
+                return 'rotate(' + rotate + ')';
+            });
+        };
+        text0
+            .style('text-anchor', 'middle')
+            .attr('dx', '-1em');
+        var deg = -10;
+        var spin = true;
+        while (spin) {
+            rot(deg);
+            textW = getWidth();
+            var ok = isOK(textW, deg);
+            if (ok) {
+                spin = false;
+            } else {
+                deg = deg - 10;
+            }
+
+        }*/
     };
     context.drawRecords = function(records) {
         records.forEach(function(d) {
@@ -338,29 +431,40 @@ var chartStats = function(records) {
         });
     };
     context.redrawRecords = function(records) {
+        _records = records;
         Session.set('currentRecords', records);
         $('.svgRecord')
             .children()
             .remove();
+        mapItem.filter(records);
+
         if (records.length) {
             countedRecords = context.countRecords(records);
             countedRecords.forEach(function(e) {
                 context.drawBars(e, context.chartsObj[e.options.field]);
             });
         }
+
     };
     Session.set('currentRecords', records);
+    $('#recordss').children().remove();
     var initRecords = context.countRecords(records);
     context.drawRecords(initRecords);
     context.initRecords = initRecords;
     return context;
 };
 var recordsSetMap = function(context, data) {
-    var geojson;
     var obj = {};
-    var map = L.map(context)
+    var exists = mapItem && mapItem.map && mapItem.map.remove;
+    if (exists) {
+        mapItem.map.remove();
+    }
+
+    var map = L.map(context);
     obj.map = map;
+
     map.scrollWheelZoom.disable();
+    var layerGroups;
     var defaultLayers = Meteor.settings.public.layers;
     var layers = _.object(_.map(defaultLayers, function(x, e) {
         return [e, L.tileLayer(x)];
@@ -381,7 +485,6 @@ var recordsSetMap = function(context, data) {
         style: {
             fillColor: '#ba5552',
             color: '#931111',
-            fillOpacity: 0.8,
             opacity: 0.8,
             weight: 1,
             radius: 6,
@@ -408,15 +511,24 @@ var recordsSetMap = function(context, data) {
         bg: 'bg-green',
         style: {
             fillColor: '#449D44',
-            color: '#449D44',
+            color: '#225022',
             opacity: 0.8,
             weight: 1,
             radius: 6,
             fillOpacity: 0.7
         }
     }];
-    activeFeatures = [];
+    var activeFeatures = [];
     Session.set('activeFeatures', activeFeatures);
+
+    function resetHighlight() {
+        if (activeFeatures && activeFeatures.length) {
+            activeFeatures.forEach(function(e) {
+                e.layer.setStyle(e.style);
+            });
+        }
+        activeFeatures = [];
+    }
 
     function highlightFeature(e) {
         resetHighlight();
@@ -467,22 +579,15 @@ var recordsSetMap = function(context, data) {
             }
             bounds.extend(d.layer.getBounds());
         });
-        map.fitBounds(bounds);
+        map.fitBounds(bounds, { maxZoom: 15 });
     }
 
-    function resetHighlight() {
-        if (activeFeatures && activeFeatures.length) {
-            activeFeatures.forEach(function(e) {
-                e.layer.setStyle(e.style);
-            });
-        }
-        activeFeatures = [];
-    }
+
     map.on('click', function() {
         resetHighlight();
         Session.set('activeRecord', false);
     });
-    layerGroup = L.featureGroup();
+    var layerGroup = L.featureGroup();
     layerGroups = mapPoints.map(function(d) {
         var geojson = L.geoJson(null, {
             style: function() {
@@ -514,7 +619,6 @@ var recordsSetMap = function(context, data) {
     layerGroups = _.object(_.map(layerGroups, function(x) {
         return [x.name, x.layer];
     }));
-    //map.scrollWheelZoom.disable();
     map.on('mousedown', function() {
         if (activeFeatures.length) {
             resetHighlight(activeFeatures);
@@ -533,14 +637,24 @@ var recordsSetMap = function(context, data) {
     legend.addTo(map);
 
     function ipp2find(d, feature) {
-        var ipp = d.coords.ippCoordinates;
-        var find = d.coords.findCoord;
-        if (!ipp || !find) {
+        var isNumber = function(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        };
+
+        var ipp = d.coords.ippCoordinates || {};
+        var find = d.coords.findCoord || {};
+
+
+        var lat0 = ipp.lat % 90;
+        var lng0 = ipp.lng % 180;
+        var lat1 = find.lat % 90;
+        var lng1 = find.lng % 180;
+        if (!isNumber(lat0) || !isNumber(lat1) || !isNumber(lng0) || !isNumber(lng1)) {
             return;
         }
         var latlngs = [
-            [ipp.lng, ipp.lat],
-            [find.lng, find.lat]
+            [lng0, lat0],
+            [lng1, lat1]
         ];
         layerGroups[feature.val].addData({
             'type': 'Feature',
@@ -555,10 +669,14 @@ var recordsSetMap = function(context, data) {
             }
         });
     }
+
     data.forEach(function(d) {
         mapPoints.forEach(function(feature) {
-            var coords = d.coords[feature.val];
-            if (coords && coords.lng && coords.lat) {
+            var coords = d.coords[feature.val] || {};
+            var lat = coords.lat % 90;
+            var lng = coords.lng % 180;
+            if (lng && lat) {
+
                 layerGroups[feature.val].addData({
                     'type': 'Feature',
                     'properties': {
@@ -568,19 +686,113 @@ var recordsSetMap = function(context, data) {
                     },
                     'geometry': {
                         'type': 'Point',
-                        'coordinates': [coords.lng, coords.lat]
+                        'coordinates': [lng, lat]
                     }
                 });
             } else if (feature.type === 'path') {
-                ipp2find(d, feature)
+                ipp2find(d, feature);
             }
         });
     });
     var layerGroupBounds = layerGroup.getBounds();
-    if (Object.keys(layerGroupBounds)
-        .length) {
+    if (Object.keys(layerGroupBounds).length) {
         map.fitBounds(layerGroupBounds);
     }
     layerGroup.addTo(map);
+
+    obj.layerGroup = layerGroup;
+    obj.filter = function(filter) {
+        console.log('!!!')
+        var arr = filter ? filter : data;
+        //f = filter;
+        //return
+        var layers = layerGroup.getLayers();
+        layers.forEach(function(d) {
+            d.clearLayers();
+        });
+        //if(layerGroup && layerGroup.getLayers){}
+        //layerGroup.clearLayers();
+        arr.forEach(function(d) {
+            mapPoints.forEach(function(feature) {
+                var coords = d.coords[feature.val] || {};
+                var lat = coords.lat % 90;
+                var lng = coords.lng % 180;
+                if (lng && lat) {
+
+                    layerGroups[feature.val].addData({
+                        'type': 'Feature',
+                        'properties': {
+                            record: d,
+                            field: feature,
+                            id: d._id
+                        },
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [lng, lat]
+                        }
+                    });
+                } else if (feature.type === 'path') {
+                    ipp2find(d, feature);
+                }
+            });
+        });
+        var layerGroupBounds = layerGroup.getBounds();
+        if (Object.keys(layerGroupBounds).length) {
+            map.fitBounds(layerGroupBounds);
+        }
+    };
     return obj;
 };
+Template.stats.onCreated(function() {
+    Session.set('userView', 'stats');
+    Session.set('activeRecord', null);
+    Session.set('currentRecords', []);
+});
+Template.stats.onRendered(function() {
+    var records = Records.find()
+        .map(function(d) {
+            var ok = d.timeLog && d.timeLog.lastSeenDateTime;
+            if (!ok) { return d; }
+            d.date = new Date(d.timeLog.lastSeenDateTime);
+            return d;
+        });
+    Session.set('recordCount', records.length);
+
+    //var stats = chartStats(records);
+    // var mapItem=dateChart(records, stats);
+    mapItem = recordsSetMap('recordsMap', records);
+
+    resizeend = function() {
+        console.log('resizeend');
+
+        stats = chartStats(records);
+        dateChart(records, stats);
+    };
+    var throttled = _.debounce(resizeend, 300);
+    $(window)
+        .resize(throttled);
+    resizeend();
+
+
+
+
+});
+Template.stats.onDestroyed(function() {
+    $(window).off('resize');
+    mapItem = null;
+});
+Template.stats.helpers({
+    totalRecords: function() {
+        return Session.get('recordCount');
+    },
+    currentRecords: function() {
+        return Session.get('currentRecords')
+            .length;
+    },
+    stats: function() {
+        var data = Records.find(Session.get('activeRecord'))
+            .fetch();
+        var stats = genList(data);
+        return stats;
+    },
+});

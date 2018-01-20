@@ -1,19 +1,20 @@
-dateChart = function (records, stats) {
-    records = _.chain(records)
-        .filter(function (d, i) {
+dateChart = function(arr, stats) {
+    _arr = arr;
+    _stats = stats;
+
+    //arr=_arr;stats=_stats;
+    //var stats = _stats;
+    var records = _.chain(arr)
+        .filter(function(d) {
             return d.timeLog && d.timeLog.lastSeenDateTime;
-        })
-        .map(function (d) {
-            d.date = parseDate(d.timeLog.lastSeenDateTime);
-            return d;
         })
         .compact()
         .value();
     if (!records.length) {
         return false;
     }
-    var dates = records
-    var extent = d3.extent(records, function (d) {
+    var dates = records;
+    var extent = d3.extent(records, function(d) {
         if (d.timeLog && d.timeLog.lastSeenDateTime) {
             return new Date(d.timeLog.lastSeenDateTime);
         }
@@ -21,18 +22,18 @@ dateChart = function (records, stats) {
     var minYear = extent[0];
     var maxYear = extent[1];
     // Various formatters.
-    var formatNumber = d3.format(',d');
-    var formatChange = d3.format('+,d');
-    var formatDate = d3.time.format('%B %d, %Y');
-    var formatTime = d3.time.format('%I:%M %p');
-    var nestByDate = d3.nest()
-        .key(function (d) {
-            return d3.time.day(d.date);
-        });
+    /* var formatNumber = d3.format(',d');
+     var formatChange = d3.format('+,d');
+     var formatDate = d3.time.format('%B %d, %Y');
+     var formatTime = d3.time.format('%I:%M %p');
+     var nestByDate = d3.nest()
+         .key(function(d) {
+             return d3.time.day(d.date);
+         });*/
     // Create the crossfilter for the relevant dimensions and groups.
     record = crossfilter(records);
-    var all = record.groupAll();
-    var date = record.dimension(function (d) {
+    // var all = record.groupAll();
+    var date = record.dimension(function(d) {
         return d.date;
     });
     dates = date.group(d3.time.day);
@@ -42,9 +43,10 @@ dateChart = function (records, stats) {
         bottom: 20,
         left: 20
     };
+    //$('#date-chart').children().remove();
     var rangeW = parseInt($('#date-chart')
         .width() * 1);
- 
+
     charts = [
         barChart()
         .dimension(date)
@@ -54,50 +56,40 @@ dateChart = function (records, stats) {
             .domain([minYear, maxYear])
             .rangeRound([0, rangeW])
         )
-        /*,
-                barChart()
-                .dimension(date)
-                .group(dates)
-                .round(d3.time.day.round)
-                .x(d3.time.scale()
-                    .domain([minYear, maxYear])
-                    .rangeRound([0, 10 * 90])
-                )*/
+
     ];
     var chart = d3.selectAll('.chart')
         .data(charts)
-        .each(function (chart) {
+        .each(function(chart) {
             chart.on('brush', renderAll)
                 .on('brushend', renderAll);
         });
+
     // Render the total.
-    d3.selectAll('#total')
-        .text(formatNumber(record.size()));
+    //d3.selectAll('#total').text(formatNumber(record.size()));
     renderAll();
     // Renders the specified chart or list.
     function render(method) {
-            d3.select(this)
-                .call(method);
-        }
-        // Whenever the brush moves, re-rendering everything.
-    function renderAll() {
-            chart.each(render);
-            // d3.select('#active').text(formatNumber(all.value()));
-        }
-        // Like d3.time.format, but faster.
-    function parseDate(d) {
-        return new Date(d);
+        d3.select(this)
+            .call(method);
     }
-    window.filter = function (filters) {
-        filters.forEach(function (d, i) {
+    // Whenever the brush moves, re-rendering everything.
+    function renderAll() {
+        chart.each(render);
+        // d3.select('#active').text(formatNumber(all.value()));
+    }
+    // Like d3.time.format, but faster.
+   
+    window.filter = function(filters) {
+        filters.forEach(function(d, i) {
             charts[i].filter(d);
         });
         renderAll();
     };
-    window.reset = function (i) {
+    window.reset = function(i) {
         charts[i].filter(null);
         renderAll();
-        stats.redrawRecords(records);
+        stats.redrawRecords(arr);
     };
 
     function barChart() {
@@ -121,7 +113,7 @@ dateChart = function (records, stats) {
             var width = x.range()[1];
             var height = y.range()[0];
             y.domain([0, group.top(1)[0].value]);
-            div.each(function () {
+            div.each(function() {
                 var div = d3.select(this),
                     g = div.select('g');
                 if (g.empty()) {
@@ -145,7 +137,7 @@ dateChart = function (records, stats) {
                         .data(['background', 'foreground'])
                         .enter()
                         .append('path')
-                        .attr('class', function (d) {
+                        .attr('class', function(d) {
                             return d + ' bar';
                         })
                         .datum(group.all());
@@ -204,46 +196,46 @@ dateChart = function (records, stats) {
                 return 'M' + (0.5 * x) + ',' + y + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) + 'V' + (2 * y - 6) + 'A6,6 0 0 ' + e + ' ' + (.5 * x) + ',' + (2 * y) + 'Z' + 'M' + (2.5 * x) + ',' + (y + 8) + 'V' + (2 * y - 8) + 'M' + (4.5 * x) + ',' + (y + 8) + 'V' + (2 * y - 8);
             }
         }
-        brush.on('brushstart.chart', function () {
+        brush.on('brushstart.chart', function() {
             var div = d3.select(this.parentNode.parentNode.parentNode);
             div.select('.title a')
                 .style('display', null);
         });
-        brush.on('brush.chart', function () {
+        brush.on('brush.chart', function() {
             extent = brush.extent();
         });
-        brush.on('brushend.chart', function () {
-            var dateRange = records.filter(function (d) {
+        brush.on('brushend.chart', function() {
+            var dateRange = records.filter(function(d) {
                 return new Date(d.date) >= extent[0] && new Date(d.date) <= extent[1];
             });
             if (extent[0].toDateString() === extent[1].toDateString()) {
-                return stats.redrawRecords(records);
+                return stats.redrawRecords(arr);
             }
             stats.redrawRecords(dateRange);
         });
-        chart.margin = function (_) {
-            if (!arguments.length) {return margin;}
+        chart.margin = function(_) {
+            if (!arguments.length) { return margin; }
             margin = _;
             return chart;
         };
-        chart.x = function (_) {
-            if (!arguments.length) {return x;}
+        chart.x = function(_) {
+            if (!arguments.length) { return x; }
             x = _;
             axis.scale(x);
             brush.x(x);
             return chart;
         };
-        chart.y = function (_) {
+        chart.y = function(_) {
             if (!arguments.length) return y;
             y = _;
             return chart;
         };
-        chart.dimension = function (_) {
+        chart.dimension = function(_) {
             if (!arguments.length) return dimension;
             dimension = _;
             return chart;
         };
-        chart.filter = function (_) {
+        chart.filter = function(_) {
             if (_) {
                 brush.extent(_);
                 dimension.filterRange(_);
@@ -254,12 +246,12 @@ dateChart = function (records, stats) {
             brushDirty = true;
             return chart;
         };
-        chart.group = function (_) {
+        chart.group = function(_) {
             if (!arguments.length) return group;
             group = _;
             return chart;
         };
-        chart.round = function (_) {
+        chart.round = function(_) {
             if (!arguments.length) return round;
             round = _;
             return chart;
@@ -267,27 +259,27 @@ dateChart = function (records, stats) {
         return d3.rebind(chart, brush, 'on');
     }
 }
-var stackedBar = function (d, color, context) {
+var stackedBar = function(d, color, context) {
     z = d;
     var data = _.chain(d.count)
-        .map(function (e, name) {
+        .map(function(e, name) {
             var _data = e.data;
             var keys = _.keys(_data);
             if (keys.length > 20) {
                 return;
             }
             var sortedData = _.chain(_data)
-                .map(function (f, name2) {
+                .map(function(f, name2) {
                     return {
                         name: name2,
                         data: f
                     };
                 })
-                .sortBy(data, function (a, b) {
+                .sortBy(data, function(a, b) {
                     return a.length;
                 })
                 .value();
-            var newData = _.object(_.map(sortedData, function (x) {
+            var newData = _.object(_.map(sortedData, function(x) {
                 return [x.name, x.data];
             }));
             newData.name = e.name;
@@ -337,7 +329,7 @@ var stackedBar = function (d, color, context) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient('left')
-        //.tickFormat(d3.format('.2s'));
+    //.tickFormat(d3.format('.2s'));
     var svg = context
         .append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -345,17 +337,17 @@ var stackedBar = function (d, color, context) {
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
     colorCont = {};
-    data.forEach(function (d, i) {
+    data.forEach(function(d, i) {
         var color = d3.scale.ordinal()
             .range(['#5D2E2C', '#6E3B49', '#744F6A', '#6B6788', '#53819D', '#3799A2', '#3AB098', '#67C283', '#A1D06B', '#E2D85D']);
         color.domain(d3.keys(d)
-            .filter(function (key) {
+            .filter(function(key) {
                 return key;
             }));
         colorCont[d.name] = color;
         var y0 = 0;
         d.ages = color.domain()
-            .map(function (name) {
+            .map(function(name) {
                 return {
                     name: name,
                     y0: y0,
@@ -364,7 +356,7 @@ var stackedBar = function (d, color, context) {
             });
         d.total = d.ages[d.ages.length - 1].y1;
     });
-    data.sort(function (a, b) {
+    data.sort(function(a, b) {
         return b.total - a.total;
     });
     /*data.forEach(function (e) {
@@ -372,10 +364,10 @@ var stackedBar = function (d, color, context) {
             return b.total;
         });
     });*/
-    x.domain(data.map(function (d) {
+    x.domain(data.map(function(d) {
         return d.name;
     }));
-    y.domain([0, d3.max(data, function (d) {
+    y.domain([0, d3.max(data, function(d) {
         return d.total;
     })]);
     svg.append('g')
@@ -396,29 +388,29 @@ var stackedBar = function (d, color, context) {
         .enter()
         .append('g')
         .attr('class', 'g')
-        .attr('transform', function (d) {
+        .attr('transform', function(d) {
             return 'translate(' + x(d.name) + ',0)';
         });
     rect = state.selectAll('rect')
-        .data(function (d) {
+        .data(function(d) {
             return d.ages;
         })
         .enter()
         .append('rect')
         .attr('width', x.rangeBand())
-        .attr('y', function (d) {
+        .attr('y', function(d) {
             return y(d.y1);
         })
-        .attr('height', function (d) {
+        .attr('height', function(d) {
             return y(d.y0) - y(d.y1);
         })
-        .style('fill', function (d) {
+        .style('fill', function(d) {
             var parent = d3.select(this.parentNode)
                 .datum()
                 .name;
             return colorCont[parent](d.name);
         })
-        .on('mouseover', function (d) {
+        .on('mouseover', function(d) {
             //console.log(this);
             self = d3.select(this);
             var parent = d3.select(this.parentNode)
@@ -431,7 +423,7 @@ var stackedBar = function (d, color, context) {
                 .attr('x', xPos + 3)
                 .attr('y', yPos + 3)
                 .attr('class', 'tooltips')
-                .text(function (d) {
+                .text(function(d) {
                     var name = self.datum()
                         .name;
                     var count = parent.datum()[name];
@@ -439,7 +431,7 @@ var stackedBar = function (d, color, context) {
                 });
             // }
         })
-        .on('mouseout', function () {
+        .on('mouseout', function() {
             var self = d3.select(this);
             svg.select('.tooltips')
                 .remove();
@@ -448,11 +440,11 @@ var stackedBar = function (d, color, context) {
     svg.selectAll('.x.axis .tick text')
         .style('text-anchor', 'end')
         .attr('dx', '-.5em')
-        .attr('transform', function (d) {
+        .attr('transform', function(d) {
             return 'rotate(-15)';
         });
 };
-var _drawGraph = function (d, color, context) {
+var _drawGraph = function(d, color, context) {
     console.log(d)
     var data = d.count;
     var options = d.options || {};
@@ -490,7 +482,7 @@ var _drawGraph = function (d, color, context) {
     var y = d3.scale.linear()
         .rangeRound([width, 0]);
     var svg1 = container.append('svg')
-        .style('background', function (d) {
+        .style('background', function(d) {
             return color
         })
         .attr('width', width + margin.left + margin.right)
@@ -512,10 +504,10 @@ var _drawGraph = function (d, color, context) {
         }])
         .enter()
         .append('stop')
-        .attr('offset', function (d) {
+        .attr('offset', function(d) {
             return d.offset;
         })
-        .attr('stop-color', function (d) {
+        .attr('stop-color', function(d) {
             return d.color;
         });
     svg1.append('g')
@@ -527,10 +519,10 @@ var _drawGraph = function (d, color, context) {
         .attr('fill', brighter2);
     var svg = svg1.append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-    x.domain(data.map(function (d) {
+    x.domain(data.map(function(d) {
         return d.name;
     }));
-    y.domain([0, d3.max(data, function (d) {
+    y.domain([0, d3.max(data, function(d) {
         return d.data;
     })]);
     bar = svg.selectAll('.bar')
@@ -538,13 +530,13 @@ var _drawGraph = function (d, color, context) {
         .enter()
         .append('g')
         .attr('class', 'bar')
-        .attr('transform', function (d) {
+        .attr('transform', function(d) {
             return 'translate(' + 0 + ',' + x(d.name) + ')';
         });
     bar.append('rect')
         .attr('class', '_bar')
         .attr('height', x.rangeBand())
-        .attr('width', function (d) {
+        .attr('width', function(d) {
             return width - y(d.data);
         })
         .attr('stroke', brighter)
@@ -553,12 +545,11 @@ var _drawGraph = function (d, color, context) {
         .attr('fill', brighter2)
         .attr('dy', '.75em')
         .attr('y', x.rangeBand() / 2)
-        .attr('x', function (d) {
+        .attr('x', function(d) {
             return width / 2;
         })
         .attr('text-anchor', 'middle')
-        .text(function (d) {
+        .text(function(d) {
             return d.name + ' (' + d.data + ')';
         });
 }
-
