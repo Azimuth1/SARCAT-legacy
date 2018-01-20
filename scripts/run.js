@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var path = require('path');
+//var fs = require('fs');
+//var path = require('path');
 var packageJSON = require('../package.json');
 var platforms = {
     darwin: 'os.osx.x86_64',
@@ -9,27 +9,27 @@ var platforms = {
     win64: 'os.windows.x86_64',
     linux: 'os.linux.x86_64'
 };
+console.log('node-version: ' + process.version);
 var plat = process.argv[2];
 var targetCurrent = plat ? false : true;
 var platform = process.argv[2] || process.platform;
 var architecture = platforms[platform];
 process.env.version = packageJSON.version;
 process.env.architecture = architecture;
-process.env.targetCurrent = targetCurrent
-process.env.windows = (plat=== 'win32' || plat === 'win64') ? true : false;
-runscript(platform);
+process.env.targetCurrent = targetCurrent;
+process.env.windows = (plat === 'win32' || plat === 'win64') ? true : false;
+
 
 function runscript(platform) {
-    var execFile = require('child_process')
-        .execFile;
+    //var execFile = require('child_process').execFile;
     //var file = path.resolve(process.argv[2]);
-    var file = 'scripts/build.sh'
+    var file = 'scripts/build.sh';
     console.log(file);
     console.log(platform);
     console.log('Running %s', file);
     var spawn = require('child_process')
         .spawn;
-    var startScript = file; //spath.join(__dirname, 'app', 'main.js')
+    // var startScript = file; //spath.join(__dirname, 'app', 'main.js')
     startSARCAT = spawn(file, [], {
         env: process.env
     });
@@ -43,3 +43,4 @@ function runscript(platform) {
         console.log('child process exited with code ' + code);
     });
 }
+runscript(platform);

@@ -399,7 +399,7 @@ var chartStats = function(records) {
             .attr('dx', 16)
             .attr('y', 0)
             .attr('dy', 0);
-        let xAxNode = xAx.node();
+        var xAxNode = xAx.node();
         xAxNode.parentNode.appendChild(xAxNode);
         barText.style('font-size', '0.8em');
         /*return;

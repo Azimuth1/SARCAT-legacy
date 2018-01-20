@@ -8,7 +8,7 @@ main_logo
 npm-debug.log
 
 
-
+test
 build/libs/*
 public/uploads/records/*
 dist
