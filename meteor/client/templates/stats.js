@@ -206,7 +206,7 @@ var chartStats = function(records) {
     context.drawGraph = function(d, cont) {
         var options = d.options || {};
         var title = options.label || '';
-        var klass = 'chartDiv col-xs-12 col-md-6 pad00';
+        var klass = 'chartDiv col-xs-12 col-md-6 pad0 text-center';
         margin = {
             top: 40,
             right: 5,
@@ -215,14 +215,15 @@ var chartStats = function(records) {
         };
         var container = cont
             .append('div')
-            .attr('class', klass)
-            .append('div')
-            .attr('class', 'mar0x mar1y text-center');
+            .attr('class', klass);
+        //.append('div')
+        //.attr('class', 'mar0x mar1y text-center');
         var width1 = parseInt(container.style('width'));
         width = width1 - margin.left - margin.right;
         height = 300 - margin.top - margin.bottom;
         var svg1 = container.append('svg')
-            .attr('width', width + margin.left + margin.right)
+            .attr('width', '100%')
+            //.attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .style('border', '1px solid #e4e6e7');
         svg1.append('text')
@@ -702,7 +703,6 @@ var recordsSetMap = function(context, data) {
 
     obj.layerGroup = layerGroup;
     obj.filter = function(filter) {
-        console.log('!!!')
         var arr = filter ? filter : data;
         //f = filter;
         //return

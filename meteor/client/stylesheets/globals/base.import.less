@@ -225,7 +225,7 @@ em {
     margin: 5px;
 }
 
-.recordForm .panel > .panel-heading {
+.recordForm .panel>.panel-heading {
     background-color: #018996;
     color: #FFF;
     border-color: #018996;
@@ -386,6 +386,8 @@ em {
 input[type="text"]:focus {
     color: black
 }
+
+
 /* Margin
 ------------------------------------------------------- */
 
@@ -478,6 +480,8 @@ input[type="text"]:focus {
     margin-left: 80px;
     margin-right: 80px;
 }
+
+
 /* Padding
 ------------------------------------------------------- */
 
@@ -644,8 +648,7 @@ a {
     bottom: 0;
     left: 0;
     width: auto;
-    height: auto;
-    //overflow: scroll;
+    height: auto; //overflow: scroll;
     padding-right: 0;
 }
 
@@ -656,8 +659,7 @@ a {
     bottom: 0;
     left: 0;
     width: auto;
-    height: auto;
-    //overflow-y: auto;
+    height: auto; //overflow-y: auto;
     //background: @color-light;
     padding: 10px;
 }
@@ -733,16 +735,14 @@ a {
         shape-rendering: crispEdges;
     }
     .axis line {
-        shape-rendering: crispEdges;
-        //stroke-width:.5;
-        stroke: #0a151b;
-        //stroke-dasharray: 2, 2;
+        shape-rendering: crispEdges; //stroke-width:.5;
+        stroke: #0a151b; //stroke-dasharray: 2, 2;
     }
     .x.axis text {
         fill: #a2d9e7;
     }
     .barText {
-        fill: #a2d9e7;
+        fill: #fff;
     }
     .title {
         font-size: 14px;
@@ -815,10 +815,10 @@ a {
 }
 
 .leaflet-container .map-ui-button {
-  position: absolute;
-  top: 5%;
-  left: 50%;
-  z-index: 3;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    z-index: 3;
 }
 
 .leaflet-container a.map-ui-button:hover {
@@ -1076,7 +1076,9 @@ btn.btn-success {
     color: @color-white;
     border-color: @color-orange;
     background: @color-orange;
-    &:hover, active, focus {
+    &:hover,
+    active,
+    focus {
         color: @color-orange2;
         background: @color-light;
         outline-color: @color-orange;
@@ -1088,7 +1090,9 @@ btn.btn-success {
         color: @color-white;
         border-color: @color-blue;
         background: @color-blue;
-        &:hover, active, focus {
+        &:hover,
+        active,
+        focus {
             color: @color-white;
             border-color: @color-blue;
             background: @color-blue;
@@ -1100,26 +1104,28 @@ btn.btn-success {
 .btn.btn-default {
     color: @color-greenish;
     border-color: @color-light;
-    &:hover, active, focus {
+    &:hover,
+    active,
+    focus {
         background: @color-blue;
         color: @color-light;
     }
 }
 
-.navbar-inverse .navbar-nav > li > a {
+.navbar-inverse .navbar-nav>li>a {
     color: @color-light;
 }
 
-.navbar-inverse .navbar-nav > .open > a,
-.navbar-inverse .navbar-nav > .open > a:hover,
-.navbar-inverse .navbar-nav > .open > a:focus {
+.navbar-inverse .navbar-nav>.open>a,
+.navbar-inverse .navbar-nav>.open>a:hover,
+.navbar-inverse .navbar-nav>.open>a:focus {
     color: #FFF;
     background-color: @color-navyBlue;
 }
 
-.navbar-inverse .navbar-nav > .active > a,
-.navbar-inverse .navbar-nav > .active > a:hover,
-.navbar-inverse .navbar-nav > .active > a:focus {
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a:hover,
+.navbar-inverse .navbar-nav>.active>a:focus {
     color: @color-navyBlue;
     background-color: @color-light;
 }
@@ -1130,8 +1136,7 @@ btn.btn-success {
     background: @color-navyBlue;
     border-radius: 0;
     img {
-        max-height: 42px;
-        //border: 1px solid #fff;
+        max-height: 42px; //border: 1px solid #fff;
     }
 }
 
@@ -1146,7 +1151,7 @@ btn.btn-success {
     clear: both;
     font-weight: normal;
     line-height: 1.42857143;
-  
+
     white-space: nowrap;
     cursor: pointer;
 }
@@ -1244,16 +1249,14 @@ btn.btn-success {
         shape-rendering: crispEdges;
     }
     .axis line {
-        shape-rendering: crispEdges;
-        //stroke-width:.5;
-        stroke: #0a151b;
-        //stroke-dasharray: 2, 2;
+        shape-rendering: crispEdges; //stroke-width:.5;
+        stroke: #0a151b; //stroke-dasharray: 2, 2;
     }
     .x.axis text {
         fill: #a2d9e7;
     }
     .barText {
-        fill: #a2d9e7;
+        fill: #fff;
     }
     .title {
         font-size: 14px;
@@ -1395,7 +1398,7 @@ btn.btn-success {
     border-color: #2CC5D2;
 }
 
-.panel-primary > .panel-heading {
+.panel-primary>.panel-heading {
     background-color: #2CC5D2;
     color: #FFF;
     border-color: #2CC5D2;
@@ -1471,8 +1474,7 @@ p.acr b {
     padding: 10px;
     .quickTitle {
         font-weight: bolder;
-        color: @color-white;
-        //text-transform: //uppercase;
+        color: @color-white; //text-transform: //uppercase;
         font-size: 1.5em;
         text-align: center;
     }
@@ -1501,6 +1503,6 @@ p.acr b {
     margin-left: -15px;
 }
 
-.pull-right > .dropdown-menu{
-      font-size: .9em;
+.pull-right>.dropdown-menu {
+    font-size: .9em;
 }

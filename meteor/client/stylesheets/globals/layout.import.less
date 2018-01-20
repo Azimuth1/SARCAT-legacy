@@ -34,8 +34,7 @@ body {
 
 #content-container {
     background: linear-gradient(#022E38, #3D5C7F);
-    .position(absolute, 0, 0, 0, 0);
-    //.transition(all 200ms ease-out);
+    .position(absolute, 0, 0, 0, 0); //.transition(all 200ms ease-out);
     //.transform(translate3d(0, 0, 0));
     opacity: 1;
     @media screen and (min-width: 40em) {
@@ -45,8 +44,7 @@ body {
         .position(absolute, 0, 0, 0, 0);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-    }
-    // Toggle menu on mobile
+    } // Toggle menu on mobile
     .menu-open & {
         .transform(translate3d(@menu-width, 0, 0));
         opacity: .85;
@@ -66,8 +64,7 @@ body {
     .menu-open & {
         .transform(translate3d(@menu-width, 0, 0));
         z-index: 1;
-    }
-    // Hide overlay on desktop
+    } // Hide overlay on desktop
     @media screen and (min-width: 40em) {
         display: none;
     }
@@ -85,15 +82,14 @@ body {
 }
 
 .agencyLogo {
-  
-        margin-top: 10px;
-        img {
-        padding:2px;
-            border: 2px solid @color-light;
-            max-width: 200px;
-            max-height: 200px;
-        }
-    
+
+    margin-top: 10px;
+    img {
+        padding: 2px;
+        border: 2px solid @color-light;
+        max-width: 200px;
+        max-height: 200px;
+    }
 }
 
 @media print {
@@ -106,7 +102,6 @@ body {
         -webkit-box-shadow: none !important;
         box-shadow: none !important;
     }*/
-    
     #menu {
         display: none;
         width: 0 !important;
@@ -125,18 +120,27 @@ body {
             width: 100%;
             height: 100%;
             .content-scrollable {
+                background: #fff !important;
                 color: initial !important;
-                background-color: #21465D !important;
-                background: #21465D !important;
+                background-color: #fff !important;
+                //background: #21465D !important;
                 size: letter !important;
                 position: relative;
                 counter-increment: myIndex;
                 page-break-after: always;
                 overflow-y: initial;
             }
+            @page {
+                size: letter portrait;
+                height: 11in;
+                width: 85in;
+            }
+            .chartDiv {
+                width: 100% !important; //overflow:hidden
+            }
         }
     }
-    #recordss svg text{
+    #recordss svg text {
         color: #000 !important;
     }
     #recordss svg {
