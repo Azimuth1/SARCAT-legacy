@@ -251,7 +251,7 @@ Schemas.incidentLocation = new SimpleSchema({
             }
         },
         allowedValues: ['Unknown', 'Mountain', 'Hilly', 'Flat', 'Water'],
-        label: 'Terrrain',
+        label: 'Terrain',
     },
     landCover: {
         type: String,
