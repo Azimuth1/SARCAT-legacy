@@ -19,9 +19,6 @@ fortawesome:fontawesome
 d3
 tomi:upload-server
 tomi:upload-jquery
-#meteorhacks:npm
-#npm-container
-#mrt:moment-timezone
 tsega:bootstrap3-datetimepicker@=3.1.3_3
 aslagle:reactive-table
 twbs:bootstrap@3.3.2
