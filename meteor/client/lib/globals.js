@@ -125,7 +125,7 @@ allInputs = [{
     }, {
         "field": "incidentLocation.terrain",
         "count": [],
-        "label": "Terrrain",
+        "label": "Terrain",
         "tableList": true,
         "parent": "Incident Location",
         "stats": true
